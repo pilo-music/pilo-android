@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">پیلو</string>
+    <string name="exit_message">"برای خروج دوباره دکمه بازگشت را فشار دهید</string>
+</resources>

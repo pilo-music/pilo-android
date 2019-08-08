@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/activity_vertical_margin"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/activity_vertical_margin"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_circle_play_black" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/font"
+        android:gravity="start"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@color/colorDark"
+        android:textSize="@dimen/small_font_size"
+        tools:text="محدی احمدوند" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/font"
+        android:gravity="start"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:text="دوستت دارم"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/small_font_size" />
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/music_item"
+        app:riv_corner_radius="5dp" />
+
+</LinearLayout>

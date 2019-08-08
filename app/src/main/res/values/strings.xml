@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Pilo</string>
+    <string name="exit_message">"برای خروج دوباره دکمه بازگشت را فشار دهید</string>
+</resources>
