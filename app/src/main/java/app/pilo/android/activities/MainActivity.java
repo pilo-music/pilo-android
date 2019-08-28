@@ -9,20 +9,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import app.pilo.android.R;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
+import app.pilo.android.helpers.LocalHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import me.ibrahimsn.lib.NiceBottomBar;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.bottomBar)
-    NiceBottomBar bottomBar;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomBar;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         setupBottomNavigation();
+        LocalHelper.updateResources(this,"fa");
     }
 
     private void loadFragment(Fragment fragment, String tag) {
@@ -58,28 +61,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        bottomBar.setBottomBarCallback(new NiceBottomBar.BottomBarCallback() {
-            @Override
-            public void onItemSelect(int i) {
-                switch (i) {
-                    case 0:
-                        loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
-                        break;
-                    case 1:
-                        loadFragment(new BrowserFragment(), "MAIN_BROWSER_FRAGMENT");
-                        break;
-                    case 2:
-                        loadFragment(new SearchFragment(), "MAIN_SEARCH_FRAGMENT");
-                        break;
-                    case 3:
-                        loadFragment(new ProfileFragment(), "MAIN_PROFILE_FRAGMENT");
-                        break;
-                }
+        bottomBar.setSelectedItemId(0);
+        loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
+        bottomBar.setOnNavigationItemSelectedListener(navigationItem -> {
+            switch (navigationItem.getItemId()) {
+                case R.id.homeFragment:
+                    loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
+                    break;
+                case R.id.browserFragment:
+                    loadFragment(new BrowserFragment(), "MAIN_BROWSER_FRAGMENT");
+                    break;
+                case R.id.searchFragment:
+                    loadFragment(new SearchFragment(), "MAIN_SEARCH_FRAGMENT");
+                    break;
+                case R.id.profileFragment:
+                    loadFragment(new ProfileFragment(), "MAIN_PROFILE_FRAGMENT");
+                    break;
             }
-
-            @Override
-            public void onItemReselect(int i) {
-            }
+            return true;
         });
     }
 

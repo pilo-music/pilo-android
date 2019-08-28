@@ -37,7 +37,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
-    implementation 'com.github.ibrahimsn98:NiceBottomBar:1.8'
+    implementation 'com.github.volsahin:bottomify-navigation-view:v1.0.1'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:3.0.3'
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layoutDirection="ltr"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        app:cardElevation="0dp"
+        android:layout_margin="1dp"
+        app:cardBackgroundColor="#f9f9f9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp">
+
+        <LinearLayout
+            android:padding="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_music_vertical_list_item_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_circle_play_black" />
+
+            <TextView
+                android:id="@+id/tv_music_vertical_list_item_artist"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/font"
+                android:gravity="center"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size"
+                tools:text="بهزاد لیتو" />
+
+            <TextView
+                android:id="@+id/tv_music_vertical_list_item_music"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/font"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/normal_font_size"
+                tools:text="خاک" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_music_vertical_list_item_image"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/music_item"
+                android:textSize="@dimen/small_font_size"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#E4E4E4" />
+</LinearLayout>

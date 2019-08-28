@@ -4,21 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_vertical_margin"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/riv_video_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
+            android:minHeight="200dp"
+            android:src="@drawable/video_sample"
             app:riv_corner_radius="10dp"
-            app:riv_mutate_background="true"
-            tools:src="@drawable/music_item" />
+            app:riv_mutate_background="true" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -46,16 +49,18 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/tv_video_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:fontFamily="@font/font_bold"
+        android:fontFamily="@font/font"
         android:gravity="center"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/normal_font_size"
         tools:text="دختر ترک" />
 
     <TextView
+        android:id="@+id/tv_video_item_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
