@@ -27,10 +27,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
-            app:cardBackgroundColor="@color/colorDark"
+            app:cardBackgroundColor="#D05E5E5E"
             app:cardCornerRadius="5dp">
 
             <TextView
@@ -39,12 +39,12 @@
                 android:fontFamily="@font/font"
                 android:gravity="center"
                 android:paddingStart="8dp"
-                android:paddingTop="5dp"
+                android:paddingTop="3dp"
                 android:paddingEnd="8dp"
-                android:paddingBottom="5dp"
-                android:text="Video"
+                android:paddingBottom="3dp"
+                android:text="MP4"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/small_font_size" />
+                android:textSize="10sp" />
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 

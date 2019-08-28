@@ -15,7 +15,7 @@
         app:cardBackgroundColor="#f9f9f9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="5dp">
+        app:cardCornerRadius="8dp">
 
         <LinearLayout
             android:padding="7dp"
@@ -26,8 +26,8 @@
 
             <ImageView
                 android:id="@+id/img_music_vertical_list_item_play"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/ic_circle_play_black" />
 
             <TextView
@@ -38,7 +38,7 @@
                 android:fontFamily="@font/font"
                 android:gravity="center"
                 android:textColor="@color/colorDark"
-                android:textSize="@dimen/normal_font_size"
+                android:textSize="@dimen/small_font_size"
                 tools:text="بهزاد لیتو" />
 
             <TextView
@@ -49,13 +49,13 @@
                 android:fontFamily="@font/font"
                 android:gravity="center"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/normal_font_size"
+                android:textSize="@dimen/small_font_size"
                 tools:text="خاک" />
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/riv_music_vertical_list_item_image"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/music_item"
