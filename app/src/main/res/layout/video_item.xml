@@ -4,21 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin">
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/riv_video_item_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="center"
-            android:minHeight="200dp"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/video_sample"
             app:riv_corner_radius="10dp"
             app:riv_mutate_background="true" />
@@ -52,7 +50,9 @@
         android:id="@+id/tv_video_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:fontFamily="@font/font"
         android:gravity="center"
         android:textColor="@color/colorPrimaryDark"
@@ -64,7 +64,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:fontFamily="@font/font"
         android:gravity="center"
         android:text="علیرضا روزگار"

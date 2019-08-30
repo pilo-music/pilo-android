@@ -47,8 +47,6 @@ public class HomeFragment extends Fragment {
 
     @BindView(R.id.view_pager_videos)
     ViewPager view_pager_videos;
-    @BindView(R.id.dots_indicator_videos)
-    DotsIndicator dotsIndicator;
     @BindView(R.id.tv_video_carousel_title)
     TextView tv_video_carousel_title;
     @BindView(R.id.tv_video_carousel_show_more)
@@ -97,7 +95,6 @@ public class HomeFragment extends Fragment {
         tv_video_carousel_title.setText(R.string.video_carousel_last);
         VideoViewPagerAdapter adapter = new VideoViewPagerAdapter(getActivity(), videos);
         view_pager_videos.setAdapter(adapter);
-        dotsIndicator.setViewPager(view_pager_videos);
     }
 
     private void setupLastVerticalMusicList() {
@@ -142,6 +139,7 @@ public class HomeFragment extends Fragment {
             video.setTitle("لجباز");
             video.setImage("https://dl.pilo.app/cover/Lajbaz_5d150b560f29a.jpg");
             video.setSlug("شهرام-شب-پره-لجباز");
+            video.setArtist_name("سوگند");
             video.setIsbest(0);
             videos.add(video);
         }
