@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         setupBottomNavigation();
-        LocalHelper.updateResources(this,"fa");
+        LocalHelper.updateResources(this, "fa");
     }
 
     private void loadFragment(Fragment fragment, String tag) {
@@ -85,19 +85,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         try {
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                finish();
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                    fm.popBackStack();
+                }
             } else {
-                this.doubleBackToExitPressedOnce = true;
-                Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show();
-                new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    finish();
+                } else {
+                    this.doubleBackToExitPressedOnce = true;
+                    Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+                }
             }
         } catch (
                 Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+
+    public void switchContent(int id, Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(id, fragment, fragment.toString());
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     @Override
