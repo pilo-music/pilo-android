@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.adapters.AlbumCarouselAdapter;
 import app.pilo.android.adapters.ArtistCarouselAdapter;
 import app.pilo.android.adapters.MusicCarouselAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.VideoViewPagerAdapter;
+import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
@@ -52,6 +54,15 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.tv_video_carousel_show_more)
     TextView tv_video_carousel_show_more;
 
+    @BindView(R.id.rc_album_carousel)
+    RecyclerView rc_album_carousel;
+    @BindView(R.id.tv_album_carousel_title)
+    TextView tv_album_carousel_title;
+    @BindView(R.id.tv_album_carousel_show_more)
+    TextView tv_album_carousel_show_more;
+
+
+
     @BindView(R.id.rc_music_vertical)
     RecyclerView rc_music_vertical;
     @BindView(R.id.tv_music_vertical_title)
@@ -62,6 +73,7 @@ public class HomeFragment extends Fragment {
     private List<Music> musics;
     private List<Artist> artists;
     private List<Video> videos;
+    private List<Album> albums;
 
 
     @Nullable
@@ -73,6 +85,7 @@ public class HomeFragment extends Fragment {
         setupBestMusicCarousel();
         setupArtistCarousel();
         setupVideoViewPager();
+        setupAlbumViewPager();
         setupLastVerticalMusicList();
         return view;
     }
@@ -97,6 +110,13 @@ public class HomeFragment extends Fragment {
         view_pager_videos.setAdapter(adapter);
     }
 
+    private void setupAlbumViewPager() {
+        tv_album_carousel_title.setText(R.string.album_carousel_last);
+        AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(getActivity(), albums);
+        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        rc_album_carousel.setAdapter(albumCarouselAdapter);
+    }
+
     private void setupLastVerticalMusicList() {
         tv_music_vertical_title.setText(R.string.music_vertical_last);
         MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(getActivity(), musics);
@@ -108,6 +128,7 @@ public class HomeFragment extends Fragment {
         musics = new ArrayList<>();
         artists = new ArrayList<>();
         videos = new ArrayList<>();
+        albums = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             Music music = new Music();
             music.setId(1487);
@@ -122,6 +143,21 @@ public class HomeFragment extends Fragment {
             music.setArtist_name("سالار عقیلی");
             music.setArtist_slug("سالار-عقیلی");
             musics.add(music);
+        }
+        for (int i = 0; i < 12; i++) {
+            Album album = new Album();
+            album.setId(1487);
+            album.setSlug("سالار-عقیلی-نگار");
+            album.setTitle("نگار");
+            album.setImage("https://dl.pilo.app/cover/Negar_5d42aea52529a.jpg");
+            album.setUrl("https://dl.pilo.app/music/Negar_5d42aea551412.mp3");
+            album.setIsbest(1);
+            album.setHas_like(0);
+            album.setHas_bookmark(0);
+            album.setArtist_id(124);
+            album.setArtist_name("سالار عقیلی");
+            album.setArtist_slug("سالار-عقیلی");
+            albums.add(album);
         }
 
         for (int i = 0; i < 12; i++) {
@@ -141,6 +177,7 @@ public class HomeFragment extends Fragment {
             video.setSlug("شهرام-شب-پره-لجباز");
             video.setArtist_name("سوگند");
             video.setIsbest(0);
+            video.setUrl("https://dl.pilo.app/video/Shahram%20Shabpareh%20-%20Lajbaz%20%5B720%5D.mp4");
             videos.add(video);
         }
     }

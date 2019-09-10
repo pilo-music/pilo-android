@@ -11,7 +11,7 @@ public class Music {
     private int has_bookmark;
     private int artist_id;
     private String artist_name;
-    String artist_slug;
+    private String artist_slug;
 
     public int getId() {
         return id;

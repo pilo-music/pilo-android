@@ -10,9 +10,11 @@
     <string name="carousel_show_more">نمایش همه</string>
     <string name="music_carousel_best_new">تازه های برگزیده</string>
     <string name="music_vertical_last">تازه ترین موزیک ها</string>
-    <string name="music_vertical_related">موزیک های مرتبط</string>
+    <string name="music_carousel_related">موزیک های مرتبط</string>
     <string name="artist_carousel_best_new">خوانندگان برگزیده</string>
     <string name="video_carousel_last">تازه ترین ویدیو ها</string>
+    <string name="album_carousel_last">تازه ترین آلبوم ها</string>
+    <string name="your_playlist">پلی لیست شما</string>
 
 
 </resources>

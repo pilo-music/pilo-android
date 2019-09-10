@@ -5,8 +5,7 @@
     android:id="@+id/cl_messageList_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:layoutDirection="ltr">
+    android:background="@android:color/white">
 
     <include layout="@layout/page_header_with_more" />
 
@@ -67,6 +66,7 @@
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layoutDirection="ltr"
                     android:orientation="horizontal"
                     android:paddingStart="@dimen/activity_vertical_margin"
                     android:paddingEnd="@dimen/activity_vertical_margin">
@@ -136,6 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:gravity="center"
+                    android:layoutDirection="ltr"
                     android:orientation="horizontal"
                     android:paddingStart="@dimen/activity_vertical_margin"
                     android:paddingEnd="@dimen/activity_vertical_margin">
@@ -183,6 +184,8 @@
                 </LinearLayout>
 
                 <include layout="@layout/music_vertical_list" />
+
+                <include layout="@layout/music_carousel" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

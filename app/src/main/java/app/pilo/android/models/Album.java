@@ -1,4 +1,4 @@
 package app.pilo.android.models;
 
-public class Album {
+public class Album extends Music{
 }

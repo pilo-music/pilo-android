@@ -2,30 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/ll_album_item"
+    android:layout_width="140dp"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_vertical_margin"
+    android:layout_marginEnd="8dp"
+    android:layoutDirection="ltr"
+    android:layout_marginStart="8dp"
     android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/riv_album_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:riv_corner_radius="10dp"
             app:riv_mutate_background="true"
-            tools:src="@drawable/music_item" />
+            android:src="@drawable/music_item" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/img_album_item_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="bottom|right"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_circle_play_black" />
 
@@ -33,8 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:adjustViewBounds="true"
             app:cardBackgroundColor="@color/colorDark"
             app:cardCornerRadius="5dp">
@@ -45,16 +50,17 @@
                 android:fontFamily="@font/font"
                 android:gravity="center"
                 android:paddingStart="8dp"
-                android:paddingTop="5dp"
+                android:paddingTop="3dp"
                 android:paddingEnd="8dp"
-                android:paddingBottom="5dp"
+                android:paddingBottom="3dp"
                 android:text="ALBUM"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/small_font_size" />
+                android:textSize="10sp"/>
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 
     <TextView
+        android:id="@+id/tv_album_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -65,13 +71,14 @@
         tools:text="دختر ترک" />
 
     <TextView
+        android:id="@+id/tv_album_item_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/font"
         android:gravity="center"
-        android:text="علیرضا روزگار"
+        tools:text="علیرضا روزگار"
         android:textColor="@color/colorDark"
         android:textSize="@dimen/small_font_size" />
 </LinearLayout>
