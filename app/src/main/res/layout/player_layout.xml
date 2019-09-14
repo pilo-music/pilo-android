@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:paddingBottom="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <!--music info-->
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_single_music"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:src="@drawable/music_item"
+                app:riv_corner_radius="10dp" />
+
+
+            <TextView
+                android:id="@+id/tv_single_music_item_title"
+                tools:text="دختر ترک"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/font"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/large_font_size" />
+
+            <TextView
+                android:id="@+id/tv_single_music_item_artist"
+                tools:text="علیرضا روزگار"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/font"
+                android:gravity="center"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size" />
+
+            <!--music progress-->
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layoutDirection="ltr"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/activity_vertical_margin"
+                android:paddingEnd="@dimen/activity_vertical_margin">
+
+                <ImageView
+                    android:id="@+id/img_single_music_repeat"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_repeat" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <SeekBar
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:maxHeight="5.0dip"
+                        android:minHeight="5.0dip"
+                        android:progressDrawable="@drawable/seekbar_drawable"
+                        android:thumb="@drawable/thumb" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            tools:text="00:00"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:paddingStart="@dimen/activity_vertical_margin" />
+
+                        <TextView
+                            tools:text="05:00"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:paddingEnd="@dimen/activity_vertical_margin" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/img_single_music_download"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_download" />
+
+            </LinearLayout>
+
+            <!--music control-->
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:gravity="center"
+                android:layoutDirection="ltr"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/activity_vertical_margin"
+                android:paddingEnd="@dimen/activity_vertical_margin">
+
+                <ImageView
+                    android:id="@+id/img_single_music_shuffle"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_shuffle_circle" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_fast_forward_left" />
+
+                <ImageView
+                    android:id="@+id/img_single_music_play"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/main_play" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="8dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_fast_forward_right" />
+
+                <ImageView
+                    android:id="@+id/img_single_music_like"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_heart" />
+
+            </LinearLayout>
+
+            <include layout="@layout/music_vertical_list" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

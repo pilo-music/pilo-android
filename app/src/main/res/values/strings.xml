@@ -16,5 +16,7 @@
     <string name="album_carousel_last">تازه ترین آلبوم ها</string>
     <string name="your_playlist">پلی لیست شما</string>
 
-
+    <string name="single_artist_music_count">موزیک</string>
+    <string name="single_artist_video_count">موزیک ویدیو</string>
+    <string name="single_artist_album_count">آلبوم</string>
 </resources>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@android:color/white"
+    android:layoutDirection="ltr"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_page_header"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="80dp">
+        <include layout="@layout/page_header_with_more" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_music_player_collapsed"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:paddingBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_fast_forward_left" />
+
+            <ImageView
+                android:id="@+id/img_single_music_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/main_play" />
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_fast_forward_right" />
+
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:ellipsize="end"
+                android:fontFamily="@font/font"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/normal_font_size"
+                app:layout_constraintEnd_toStartOf="@+id/riv_music_vertical_list_item_image"
+                app:layout_constraintTop_toTopOf="@+id/riv_music_vertical_list_item_image"
+                tools:text="برای تو" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:ellipsize="end"
+                android:fontFamily="@font/font"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/small_font_size"
+                app:layout_constraintBottom_toBottomOf="@+id/riv_music_vertical_list_item_image"
+                app:layout_constraintEnd_toStartOf="@+id/riv_music_vertical_list_item_image"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                tools:text="برای تو" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_music_vertical_list_item_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/music_item"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</LinearLayout>

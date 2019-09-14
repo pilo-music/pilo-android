@@ -67,6 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layoutDirection="ltr"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal"
                     android:paddingStart="@dimen/activity_vertical_margin"
                     android:paddingEnd="@dimen/activity_vertical_margin">
@@ -82,7 +83,6 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
@@ -91,7 +91,6 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:layout_marginEnd="8dp"
                             android:maxHeight="5.0dip"
                             android:minHeight="5.0dip"
                             android:progressDrawable="@drawable/seekbar_drawable"
@@ -106,12 +105,16 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:paddingStart="@dimen/activity_vertical_margin"
+                                tools:text="00:00"
                                 android:gravity="left" />
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                tools:text="05:00"
+                                android:paddingEnd="@dimen/activity_vertical_margin"
                                 android:gravity="right" />
 
                         </LinearLayout>
@@ -150,8 +153,8 @@
                         android:src="@drawable/ic_shuffle_circle" />
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="@dimen/activity_vertical_margin"
                         android:adjustViewBounds="true"
@@ -165,10 +168,10 @@
                         android:src="@drawable/main_play" />
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="@dimen/activity_vertical_margin"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="8dp"
                         android:adjustViewBounds="true"
                         android:src="@drawable/ic_fast_forward_right" />
 

@@ -7,9 +7,18 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import app.pilo.android.R;
 import app.pilo.android.fragments.BrowserFragment;
@@ -25,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomBar;
+    @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout mLayout;
+    @BindView(R.id.ll_music_player_collapsed)
+    LinearLayout ll_music_player_collapsed;
+    @BindView(R.id.ll_page_header)
+    LinearLayout ll_page_header;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -35,8 +50,73 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         setupBottomNavigation();
+        ll_page_header.setVisibility(View.GONE);
+        ll_music_player_collapsed.setVisibility(View.VISIBLE);
+
+
+        mLayout.addPanelSlideListener(new PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i("main", "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                Log.i("main", "onPanelStateChanged " + newState);
+                if (newState == PanelState.EXPANDED) {
+                    faceOutMusicPlayer();
+                    faceInPageHeader();
+                } else {
+                    ll_page_header.setVisibility(View.GONE);
+                    ll_music_player_collapsed.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mLayout.setFadeOnClickListener(view -> mLayout.setPanelState(PanelState.COLLAPSED));
+
+
         LocalHelper.updateResources(this, "fa");
     }
+
+    private void faceOutMusicPlayer() {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(200);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEnd(Animation animation) {
+                ll_music_player_collapsed.setVisibility(View.GONE);
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationStart(Animation animation) {
+            }
+        });
+
+        ll_music_player_collapsed.startAnimation(fadeOut);
+    }
+
+    private void faceInPageHeader() {
+        Animation fadeOut = new AlphaAnimation(0, 1);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setDuration(200);
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEnd(Animation animation) {
+                ll_page_header.setVisibility(View.VISIBLE);
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            public void onAnimationStart(Animation animation) {
+            }
+        });
+
+        ll_page_header.startAnimation(fadeOut);
+    }
+
 
     private void loadFragment(Fragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
