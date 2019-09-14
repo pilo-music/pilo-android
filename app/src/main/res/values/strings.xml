@@ -19,4 +19,6 @@
     <string name="single_artist_music_count">موزیک</string>
     <string name="single_artist_video_count">موزیک ویدیو</string>
     <string name="single_artist_album_count">آلبوم</string>
+
+    <string name="error_playing_track">مشکلی در پخش موزیک رخ داده است</string>
 </resources>

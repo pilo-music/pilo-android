@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mLayout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                Log.i("main", "onPanelSlide, offset " + slideOffset);
+                ll_music_player_collapsed.setAlpha(1 - slideOffset);
             }
 
             @Override
