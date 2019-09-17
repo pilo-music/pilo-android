@@ -9,16 +9,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+import com.squareup.picasso.Picasso;
 
 import app.pilo.android.R;
 import app.pilo.android.fragments.BrowserFragment;
@@ -26,23 +27,56 @@ import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.helpers.LocalHelper;
+import app.pilo.android.helpers.RxBus;
+import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
 
+    // main activity
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomBar;
     @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout mLayout;
+    SlidingUpPanelLayout sliding_layout;
     @BindView(R.id.ll_music_player_collapsed)
     LinearLayout ll_music_player_collapsed;
+
+    // page header
     @BindView(R.id.ll_page_header)
     LinearLayout ll_page_header;
+    @BindView(R.id.tv_header_title)
+    TextView tv_header_title;
+    @BindView(R.id.img_header_back)
+    ImageView img_header_back;
+    @BindView(R.id.img_header_more)
+    ImageView img_header_more;
+
+    // collapse music player
+    @BindView(R.id.riv_music_player_collapsed_image)
+    RoundedImageView riv_music_player_collapsed_image;
+    @BindView(R.id.tv_music_player_collapsed_title)
+    TextView tv_music_player_collapsed_title;
+    @BindView(R.id.tv_music_player_collapsed_artist)
+    TextView tv_music_player_collapsed_artist;
+
+    // extended music player
+    @BindView(R.id.riv_extended_music_player_music)
+    RoundedImageView riv_extended_music_player_music;
+    @BindView(R.id.tv_extended_music_player_title)
+    TextView tv_extended_music_player_title;
+    @BindView(R.id.tv_extended_music_player_artist)
+    TextView tv_extended_music_player_artist;
+
+
+    @BindView(R.id.img_single_music_play)
+    ImageView img_single_music_play;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
+    private DisposableObserver disposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,73 +84,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         setupBottomNavigation();
-        ll_page_header.setVisibility(View.GONE);
-        ll_music_player_collapsed.setVisibility(View.VISIBLE);
-
-
-        mLayout.addPanelSlideListener(new PanelSlideListener() {
+        ll_page_header.setAlpha(0);
+        sliding_layout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 ll_music_player_collapsed.setAlpha(1 - slideOffset);
+                ll_page_header.setAlpha(0 + slideOffset);
             }
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                Log.i("main", "onPanelStateChanged " + newState);
-                if (newState == PanelState.EXPANDED) {
-                    faceOutMusicPlayer();
-                    faceInPageHeader();
-                } else {
-                    ll_page_header.setVisibility(View.GONE);
-                    ll_music_player_collapsed.setVisibility(View.VISIBLE);
-                }
             }
         });
-        mLayout.setFadeOnClickListener(view -> mLayout.setPanelState(PanelState.COLLAPSED));
-
+        sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
+        setupMusicController();
+        musicChangeListener();
 
         LocalHelper.updateResources(this, "fa");
     }
 
-    private void faceOutMusicPlayer() {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(200);
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-                ll_music_player_collapsed.setVisibility(View.GONE);
-            }
-
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            public void onAnimationStart(Animation animation) {
-            }
+    private void setupMusicController() {
+        img_single_music_play.setOnClickListener(v -> {
         });
-
-        ll_music_player_collapsed.startAnimation(fadeOut);
     }
-
-    private void faceInPageHeader() {
-        Animation fadeOut = new AlphaAnimation(0, 1);
-        fadeOut.setInterpolator(new AccelerateInterpolator());
-        fadeOut.setDuration(200);
-
-        fadeOut.setAnimationListener(new Animation.AnimationListener() {
-            public void onAnimationEnd(Animation animation) {
-                ll_page_header.setVisibility(View.VISIBLE);
-            }
-
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            public void onAnimationStart(Animation animation) {
-            }
-        });
-
-        ll_page_header.startAnimation(fadeOut);
-    }
-
 
     private void loadFragment(Fragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
@@ -162,6 +152,43 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    public void musicChangeListener() {
+        disposable = RxBus.getSubject().subscribeWith(new DisposableObserver<Object>() {
+                    @Override
+                    public void onNext(Object music) {
+                        if (music instanceof Music) {
+                            tv_header_title.setText(((Music) music).getTitle());
+                            tv_music_player_collapsed_title.setText(((Music) music).getTitle());
+                            tv_extended_music_player_title.setText(((Music) music).getTitle());
+                            tv_extended_music_player_artist.setText(((Music) music).getArtist_name());
+                            tv_music_player_collapsed_artist.setText(((Music) music).getArtist_name());
+                            Picasso.get()
+                                    .load(((Music) music).getImage())
+                                    .placeholder(R.drawable.ic_music_placeholder)
+                                    .error(R.drawable.ic_music_placeholder)
+                                    .into(riv_extended_music_player_music);
+                            Picasso.get()
+                                    .load(((Music) music).getImage())
+                                    .placeholder(R.drawable.ic_music_placeholder)
+                                    .error(R.drawable.ic_music_placeholder)
+                                    .into(riv_music_player_collapsed_image);
+                            if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
+                                sliding_layout.setPanelState(PanelState.EXPANDED);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+
     @Override
     public void onBackPressed() {
         try {
@@ -205,5 +232,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         unbinder.unbind();
         super.onDestroy();
+        disposable.dispose();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
 }

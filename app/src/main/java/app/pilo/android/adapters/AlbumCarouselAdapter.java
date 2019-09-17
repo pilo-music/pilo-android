@@ -10,8 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,11 +44,16 @@ public class AlbumCarouselAdapter extends RecyclerView.Adapter<AlbumCarouselAdap
     @Override
     public void onBindViewHolder(@NonNull AlbumCarouselAdapterViewHolder holder, final int position) {
         final Album album = albums.get(position);
+        holder.cv_label.setAlpha(.7f);
+        holder.img_album_play.setAlpha(.8f);
         holder.tv_album_title.setText(album.getTitle());
         holder.tv_album_artist.setText(album.getArtist_name());
-        holder.ll_album_item.setOnClickListener(v -> {
-            fragmentJump(album);
-        });
+        Picasso.get()
+                .load(album.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .into(holder.album_image);
+        holder.ll_album_item.setOnClickListener(v -> fragmentJump(album));
     }
 
     private void fragmentJump(Album album) {
@@ -56,7 +64,6 @@ public class AlbumCarouselAdapter extends RecyclerView.Adapter<AlbumCarouselAdap
         mBundle.putString("artist", album.getArtist_name());
         mBundle.putString("artist_slug", album.getArtist_slug());
         mBundle.putString("image", album.getImage());
-        mBundle.putString("url", album.getUrl());
         mFragment.setArguments(mBundle);
         switchContent(mFragment);
     }
@@ -87,6 +94,8 @@ public class AlbumCarouselAdapter extends RecyclerView.Adapter<AlbumCarouselAdap
         ImageView album_image;
         @BindView(R.id.ll_album_item)
         LinearLayout ll_album_item;
+        @BindView(R.id.cv_label)
+        CardView cv_label;
 
         AlbumCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

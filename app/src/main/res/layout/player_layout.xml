@@ -20,7 +20,7 @@
 
             <!--music info-->
             <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/riv_single_music"
+                android:id="@+id/riv_extended_music_player_music"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_gravity="center"
@@ -30,18 +30,19 @@
 
 
             <TextView
-                android:id="@+id/tv_single_music_item_title"
+                android:id="@+id/tv_extended_music_player_title"
                 tools:text="دختر ترک"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/font"
                 android:gravity="center"
+                android:ellipsize="end"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/large_font_size" />
 
             <TextView
-                android:id="@+id/tv_single_music_item_artist"
+                android:id="@+id/tv_extended_music_player_artist"
                 tools:text="علیرضا روزگار"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

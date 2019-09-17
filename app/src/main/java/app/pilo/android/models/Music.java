@@ -2,9 +2,13 @@ package app.pilo.android.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "musics")
 public class Music {
+    @PrimaryKey
+    private int uid;
+
     @ColumnInfo(name = "id")
     private int id;
     @ColumnInfo(name = "slug")
@@ -18,9 +22,9 @@ public class Music {
     @ColumnInfo(name = "is_best")
     private int isbest;
     @ColumnInfo(name = "has_like")
-    private int has_like;
+    private boolean has_like;
     @ColumnInfo(name = "has_bookmark")
-    private int has_bookmark;
+    private boolean has_bookmark;
     @ColumnInfo(name = "artist_id")
     private int artist_id;
     @ColumnInfo(name = "artist_name")
@@ -35,15 +39,15 @@ public class Music {
         this.image = "";
         this.url = "";
         this.isbest = 0;
-        this.has_like = 0;
-        this.has_bookmark = 0;
+        this.has_like = false;
+        this.has_bookmark = false;
         this.artist_id = 0;
         this.artist_name = "";
         this.artist_slug = "";
     }
 
 
-    public Music(int id, String slug, String title, String image, String url, int isbest, int has_like, int has_bookmark, int artist_id, String artist_name, String artist_slug) {
+    public Music(int id, String slug, String title, String image, String url, int isbest, boolean has_like, boolean has_bookmark, int artist_id, String artist_name, String artist_slug) {
         this.id = id;
         this.slug = slug;
         this.title = title;
@@ -106,19 +110,19 @@ public class Music {
         this.isbest = isbest;
     }
 
-    public int getHas_like() {
+    public boolean getHas_like() {
         return has_like;
     }
 
-    public void setHas_like(int has_like) {
+    public void setHas_like(boolean has_like) {
         this.has_like = has_like;
     }
 
-    public int getHas_bookmark() {
+    public boolean getHas_bookmark() {
         return has_bookmark;
     }
 
-    public void setHas_bookmark(int has_bookmark) {
+    public void setHas_bookmark(boolean has_bookmark) {
         this.has_bookmark = has_bookmark;
     }
 
@@ -144,5 +148,13 @@ public class Music {
 
     public void setArtist_slug(String artist_slug) {
         this.artist_slug = artist_slug;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 }

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import app.pilo.android.R;
@@ -38,6 +40,11 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         final Music music = musics.get(position);
         holder.tv_music_title.setText(music.getTitle());
         holder.tv_music_artist.setText(music.getArtist_name());
+        Picasso.get()
+                .load(music.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .into(holder.music_item_image);
     }
 
     @Override

@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import app.pilo.android.R;
@@ -41,9 +44,14 @@ public class ArtistCarouselAdapter extends RecyclerView.Adapter<ArtistCarouselAd
     public void onBindViewHolder(@NonNull ArtistCarouselAdapterViewHolder holder, final int position) {
         final Artist artist = artists.get(position);
         holder.tv_artist_name.setText(artist.getName());
-        holder.ll_artist_item.setOnClickListener(v -> {
-            fragmentJump(artist);
-        });
+        holder.ll_artist_item.setOnClickListener(v -> fragmentJump(artist));
+        if (!artist.getImage().equals("") && !artist.getImage().equals("null") && !artist.getImage().equals(" ")) {
+            Picasso.get()
+                    .load(artist.getImage())
+                    .placeholder(R.drawable.ic_artist_placeholder)
+                    .error(R.drawable.ic_artist_placeholder)
+                    .into(holder.artist_image);
+        }
     }
 
     private void fragmentJump(Artist artist) {
@@ -77,6 +85,8 @@ public class ArtistCarouselAdapter extends RecyclerView.Adapter<ArtistCarouselAd
         TextView tv_artist_name;
         @BindView(R.id.ll_artist_item)
         LinearLayout ll_artist_item;
+        @BindView(R.id.riv_artist_image)
+        RoundedImageView artist_image;
 
         ArtistCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

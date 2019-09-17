@@ -7,6 +7,22 @@ public class Artist {
     private int isbest;
     private String slug;
 
+    public Artist() {
+        this.id = 0;
+        this.name = "";
+        this.image = "";
+        this.isbest = 0;
+        this.slug = "";
+    }
+
+    public Artist(int id, String name, String image, int isbest, String slug) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.isbest = isbest;
+        this.slug = slug;
+    }
+
     public int getId() {
         return id;
     }

@@ -10,14 +10,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SingleMusicFragment;
+import app.pilo.android.helpers.RxBus;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,33 +45,20 @@ public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdap
     @Override
     public void onBindViewHolder(@NonNull MusicCarouselAdapterViewHolder holder, final int position) {
         final Music music = musics.get(position);
+        holder.cv_label.setAlpha(.7f);
+        holder.img_music_item_play.setAlpha(.8f);
         holder.tv_music_title.setText(music.getTitle());
         holder.tv_music_artist.setText(music.getArtist_name());
-        holder.ll_music_item.setOnClickListener(v -> {
-            fragmentJump(music);
-        });
+        Picasso.get()
+                .load(music.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .into(holder.music_item_image);
+        holder.ll_music_item.setOnClickListener(v -> fragmentJump(music));
     }
 
     private void fragmentJump(Music music) {
-        SingleMusicFragment mFragment = new SingleMusicFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putString("slug", music.getSlug());
-        mBundle.putString("title", music.getTitle());
-        mBundle.putString("artist", music.getArtist_name());
-        mBundle.putString("artist_slug", music.getArtist_slug());
-        mBundle.putString("image", music.getImage());
-        mBundle.putString("url", music.getUrl());
-        mFragment.setArguments(mBundle);
-        switchContent(mFragment);
-    }
-
-    private void switchContent(Fragment fragment) {
-        if (context == null)
-            return;
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
-            mainActivity.switchContent(R.id.framelayout, fragment);
-        }
+        RxBus.getSubject().onNext(music);
     }
 
 
@@ -87,6 +78,8 @@ public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdap
         ImageView music_item_image;
         @BindView(R.id.ll_music_item)
         LinearLayout ll_music_item;
+        @BindView(R.id.cv_label)
+        CardView cv_label;
 
         MusicCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

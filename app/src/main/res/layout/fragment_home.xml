@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@android:color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/cl_fragment_home"
+    android:background="@android:color/white">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <include layout="@layout/music_carousel" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <include layout="@layout/artist_carousel" />
+            <include layout="@layout/music_carousel" />
 
-        <include layout="@layout/video_carousel" />
+            <include layout="@layout/artist_carousel" />
 
-        <include layout="@layout/album_carousel" />
+            <include layout="@layout/video_carousel" />
 
-        <include layout="@layout/music_vertical_list" />
-    </LinearLayout>
-</ScrollView>
+            <include layout="@layout/album_carousel" />
+
+            <include layout="@layout/music_vertical_list" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

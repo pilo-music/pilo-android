@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/ll_video_item"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackgroundBorderless"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -13,6 +17,7 @@
         android:layout_marginEnd="@dimen/activity_vertical_margin">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
@@ -39,45 +44,31 @@
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/riv_video_item_image"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/video_sample"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            tools:src="@drawable/video_sample"
             app:riv_corner_radius="10dp"
             app:riv_mutate_background="true" />
     </FrameLayout>
 
     <LinearLayout
-        android:layoutDirection="rtl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/activity_vertical_margin2x">
 
         <TextView
             android:id="@+id/tv_video_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_vertical_margin2x"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:fontFamily="@font/font"
             android:gravity="center"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/normal_font_size"
             tools:text="دختر ترک" />
 
-        <TextView
-            android:id="@+id/tv_video_item_artist"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:fontFamily="@font/font"
-
-            android:text="علیرضا روزگار"
-            android:textColor="@color/colorDark"
-            android:textSize="@dimen/small_font_size" />
     </LinearLayout>
 </LinearLayout>

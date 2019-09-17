@@ -6,6 +6,9 @@
     android:layout_width="140dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackgroundBorderless"
     android:layoutDirection="ltr"
     android:layout_marginStart="8dp"
     android:orientation="vertical">
@@ -22,7 +25,7 @@
             android:scaleType="fitCenter"
             app:riv_corner_radius="10dp"
             app:riv_mutate_background="true"
-            android:src="@drawable/music_item" />
+            tools:src="@drawable/ic_music_placeholder" />
 
         <ImageView
             android:id="@+id/img_album_item_play"
@@ -35,6 +38,7 @@
             android:src="@drawable/ic_circle_play_black" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
@@ -63,7 +67,7 @@
         android:id="@+id/tv_album_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/font_bold"
         android:gravity="center"
         android:textColor="@color/colorPrimaryDark"
@@ -75,7 +79,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/font"
         android:gravity="center"
         tools:text="علیرضا روزگار"

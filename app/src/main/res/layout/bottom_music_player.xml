@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,8 +12,9 @@
     <LinearLayout
         android:id="@+id/ll_page_header"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="80dp">
+        android:layout_height="80dp"
+        android:orientation="vertical">
+
         <include layout="@layout/page_header_with_more" />
     </LinearLayout>
 
@@ -64,7 +65,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tv_music_player_collapsed_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -73,11 +74,12 @@
                 android:fontFamily="@font/font"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/normal_font_size"
-                app:layout_constraintEnd_toStartOf="@+id/riv_music_vertical_list_item_image"
-                app:layout_constraintTop_toTopOf="@+id/riv_music_vertical_list_item_image"
+                app:layout_constraintEnd_toStartOf="@+id/riv_music_player_collapsed_image"
+                app:layout_constraintTop_toTopOf="@+id/riv_music_player_collapsed_image"
                 tools:text="برای تو" />
 
             <TextView
+                android:id="@+id/tv_music_player_collapsed_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
@@ -85,13 +87,13 @@
                 android:fontFamily="@font/font"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/small_font_size"
-                app:layout_constraintBottom_toBottomOf="@+id/riv_music_vertical_list_item_image"
-                app:layout_constraintEnd_toStartOf="@+id/riv_music_vertical_list_item_image"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintBottom_toBottomOf="@+id/riv_music_player_collapsed_image"
+                app:layout_constraintEnd_toStartOf="@+id/riv_music_player_collapsed_image"
+                app:layout_constraintTop_toBottomOf="@+id/tv_music_player_collapsed_title"
                 tools:text="برای تو" />
 
             <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/riv_music_vertical_list_item_image"
+                android:id="@+id/riv_music_player_collapsed_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:adjustViewBounds="true"
@@ -104,4 +106,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

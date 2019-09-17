@@ -30,5 +30,5 @@ public abstract class AppDatabase extends RoomDatabase {
         AppDatabase.getDatabase(context).musicDao().nukeTable();
     }
 
-    abstract MusicDao musicDao();
+    public abstract MusicDao musicDao();
 }
