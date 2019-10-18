@@ -14,12 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-import com.squareup.picasso.Picasso;
 
 import app.pilo.android.R;
 import app.pilo.android.fragments.BrowserFragment;
@@ -163,15 +164,17 @@ public class MainActivity extends AppCompatActivity {
                             tv_extended_music_player_title.setText(((Music) music).getTitle());
                             tv_extended_music_player_artist.setText(((Music) music).getArtist_name());
                             tv_music_player_collapsed_artist.setText(((Music) music).getArtist_name());
-                            Picasso.get()
+                            Glide.with(MainActivity.this)
                                     .load(((Music) music).getImage())
                                     .placeholder(R.drawable.ic_music_placeholder)
                                     .error(R.drawable.ic_music_placeholder)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(riv_extended_music_player_music);
-                            Picasso.get()
+                            Glide.with(MainActivity.this)
                                     .load(((Music) music).getImage())
                                     .placeholder(R.drawable.ic_music_placeholder)
                                     .error(R.drawable.ic_music_placeholder)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(riv_music_player_collapsed_image);
                             if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
                                 sliding_layout.setPanelState(PanelState.EXPANDED);

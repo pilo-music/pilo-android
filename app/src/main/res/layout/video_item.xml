@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/ll_video_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackgroundBorderless"
-    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <FrameLayout
@@ -45,10 +45,12 @@
             android:id="@+id/riv_video_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="190dp"
             android:adjustViewBounds="true"
-            tools:src="@drawable/video_sample"
+            android:scaleType="centerCrop"
             app:riv_corner_radius="10dp"
-            app:riv_mutate_background="true" />
+            app:riv_mutate_background="true"
+            tools:src="@drawable/video_sample" />
     </FrameLayout>
 
     <LinearLayout

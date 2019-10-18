@@ -3,24 +3,45 @@
     <string name="exit_message">"برای خروج دوباره دکمه بازگشت را فشار دهید</string>
 
     <string name="server_connection_error">مشکلی در ارتباط با سرور رخ داده است</string>
+    <string name="server_connection_message">لطفا مجددا تلاش نمایید</string>
 
     <string name="bottom_nav_home">خانه</string>
     <string name="bottom_nav_browser">مروگر</string>
     <string name="bottom_nav_search">جستجو</string>
     <string name="bottom_nav_profile">پروفایل</string>
 
-    <string name="carousel_show_more">نمایش همه</string>
-    <string name="music_carousel_best_new">تازه های برگزیده</string>
-    <string name="music_vertical_last">تازه ترین موزیک ها</string>
-    <string name="music_carousel_related">موزیک های مرتبط</string>
-    <string name="artist_carousel_best_new">خوانندگان برگزیده</string>
-    <string name="video_carousel_last">تازه ترین ویدیو ها</string>
-    <string name="album_carousel_last">تازه ترین آلبوم ها</string>
+
+    <string name="results">نتایج</string>
+    <string name="music">موزیک</string>
+    <string name="album">آلبوم</string>
+    <string name="playlist">پلی لیست</string>
+    <string name="video">موزیک ویدیو</string>
+    <string name="artist">خواننده</string>
+
+
+    <string name="show_more">نمایش همه</string>
+    <string name="new_best">جدیدترین های برگزیده</string>
+    <string name="music_new">جدیدترین ترین موزیک ها</string>
+    <string name="music_best">برترین موزیک ها</string>
+    <string name="music_related">موزیک های مرتبط</string>
+    <string name="artist_best">خوانندگان برگزیده</string>
+    <string name="video_new">جدیدترین ترین ویدیو ها</string>
+    <string name="album_new">جدیدترین ترین آلبوم ها</string>
     <string name="your_playlist">پلی لیست شما</string>
 
     <string name="single_artist_music_count">موزیک</string>
     <string name="single_artist_video_count">موزیک ویدیو</string>
     <string name="single_artist_album_count">آلبوم</string>
+    <string name="single_artist_playlist_count">پلی لیست</string>
+
+    <string name="search_search_hint">موزیک  ، خواننده ، آلبوم , …</string>
+    <string name="speech_not_supported">جستجو صوتی پشتیبانی نمیشود</string>
+
+    <string name="profile_login">ورود</string>
+    <string name="profile_edit">ویرایش پروفایل</string>
+    <string name="profile_likes">لایک شده ها</string>
+    <string name="profile_bookmarks">بوک مارک ها</string>
+    <string name="profile_support">تماس با پشتیبانی</string>
 
     <string name="error_playing_track">مشکلی در پخش موزیک رخ داده است</string>
 </resources>

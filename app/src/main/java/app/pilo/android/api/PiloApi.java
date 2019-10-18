@@ -6,6 +6,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.util.Base64;
 import java.util.Map;
 
 import app.pilo.android.helpers.Singleton;
@@ -21,10 +22,12 @@ public class PiloApi {
     public static final String ME = BASE_URL + "me";
     public static final String MUSIC_GET = "https://api.twitter.com/1/";
     public static final String MUSICS_GET = "https://api.twitter.com/1/";
-    public static final String ALBUM_GET = "https://api.twitter.com/1/";
-    public static final String ALBUMS_GET = "https://api.twitter.com/1/";
+    public static final String ALBUM_GET = "album/";
+    public static final String ALBUMS_GET = "albums/";
     public static final String VIDEO_GET = "https://api.twitter.com/1/";
     public static final String VIDEOS_GET = "https://api.twitter.com/1/";
+    public static final String ARTIST_GET = BASE_URL + "artist/";
+    public static final String ARTISTS_GET = BASE_URL + "artists/";
 
 
     private static AsyncHttpClient client = Singleton.getAsyncHttpInstance();

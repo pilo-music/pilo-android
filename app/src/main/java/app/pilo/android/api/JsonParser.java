@@ -1,5 +1,7 @@
 package app.pilo.android.api;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +13,7 @@ import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.HeroSlider;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.Playlist;
 import app.pilo.android.models.Video;
 
 class JsonParser {
@@ -64,14 +67,39 @@ class JsonParser {
         }
     }
 
-    static Artist artistsJsonArray(JSONObject jsonObject) {
+    static Artist artistJsonArray(JSONObject jsonObject) {
         try {
+            int music_count = 0;
+            if (!jsonObject.isNull("music_count"))
+                music_count = jsonObject.getInt("music_count");
+
+            int album_count = 0;
+            if (!jsonObject.isNull("album_count"))
+                album_count = jsonObject.getInt("album_count");
+
+            int video_count = 0;
+            if (!jsonObject.isNull("video_count"))
+                video_count = jsonObject.getInt("video_count");
+
+            boolean is_follow = false;
+            if (!jsonObject.isNull("is_follow"))
+                is_follow = jsonObject.getBoolean("is_follow");
+
+            int is_best = 0;
+            if (!jsonObject.isNull("isbest"))
+                is_best = jsonObject.getInt("isbest");
+
+
             return new Artist(
                     jsonObject.getInt("id"),
                     jsonObject.getString("name"),
                     jsonObject.getString("image"),
-                    jsonObject.getInt("isbest"),
-                    jsonObject.getString("slug")
+                    is_best,
+                    jsonObject.getString("slug"),
+                    music_count,
+                    album_count,
+                    video_count,
+                    is_follow
             );
         } catch (JSONException e) {
             e.printStackTrace();
@@ -79,7 +107,7 @@ class JsonParser {
         }
     }
 
-    static Video videosJsonArray(JSONObject jsonObject) {
+    static Video videoJsonArray(JSONObject jsonObject) {
         try {
             JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
             return new Video(
@@ -103,6 +131,35 @@ class JsonParser {
             return null;
         }
     }
+
+    static Playlist playlistJsonParser(JSONObject jsonObject) {
+        try {
+            List<Music> musics = new ArrayList<>();
+            JSONArray musicsJsonArray = jsonObject.getJSONArray("musics");
+            for (int i = 0; i < musicsJsonArray.length(); i++) {
+                Music music = JsonParser.musicJsonParser(musicsJsonArray.getJSONObject(i));
+                if (music != null)
+                    musics.add(music);
+            }
+            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
+            return new Playlist(
+                    jsonObject.getInt("id"),
+                    jsonObject.getString("title"),
+                    jsonObject.getString("image"),
+                    jsonObject.getInt("isbest"),
+                    jsonObject.getString("slug"),
+                    jsonObject.getBoolean("has_like"),
+                    jsonObjectArtist.getInt("id"),
+                    jsonObjectArtist.getString("name"),
+                    jsonObjectArtist.getString("slug"),
+                    musics
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     static HeroSlider heroSliderJsonParser(JSONObject jsonObject) {
         HeroSlider heroSlider = new HeroSlider();

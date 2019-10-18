@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_vertical_margin"
             android:layout_weight="3"
-            android:fontFamily="@font/font_bold"
+            android:fontFamily="@font/font"
             android:gravity="start"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/normal_font_size"
@@ -31,7 +32,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/font"
             android:gravity="end"
-            android:text="@string/carousel_show_more"
+            android:text="@string/show_more"
             android:textColor="@color/colorDark"
             android:textSize="@dimen/small_font_size" />
     </LinearLayout>
@@ -41,6 +42,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:visibility="gone" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/sfl_album"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        shimmer:duration="800">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/album_shimmer" />
+
+            <include layout="@layout/album_shimmer" />
+
+            <include layout="@layout/album_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 </LinearLayout>

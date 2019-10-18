@@ -3,7 +3,7 @@ package app.pilo.android.models;
 import java.util.List;
 
 public class Home {
-    private List<Music> last_music;
+    private List<Music> last_musics;
     private List<Album> albums;
     private List<Music> best_musics;
     private List<Video> videos;
@@ -12,11 +12,11 @@ public class Home {
 
 
     public List<Music> getLast_music() {
-        return last_music;
+        return last_musics;
     }
 
     public void setLast_music(List<Music> last_music) {
-        this.last_music = last_music;
+        this.last_musics = last_music;
     }
 
     public List<Album> getAlbums() {

@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/font"
             android:gravity="end"
-            android:text="@string/carousel_show_more"
+            android:text="@string/show_more"
             android:textColor="@color/colorDark"
             android:textSize="@dimen/small_font_size" />
     </LinearLayout>

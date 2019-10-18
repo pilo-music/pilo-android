@@ -1,7 +1,6 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
-import app.pilo.android.fragments.SingleMusicFragment;
 import app.pilo.android.helpers.RxBus;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
@@ -49,10 +46,11 @@ public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdap
         holder.img_music_item_play.setAlpha(.8f);
         holder.tv_music_title.setText(music.getTitle());
         holder.tv_music_artist.setText(music.getArtist_name());
-        Picasso.get()
+        Glide.with(context)
                 .load(music.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)
                 .error(R.drawable.ic_music_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.music_item_image);
         holder.ll_music_item.setOnClickListener(v -> fragmentJump(music));
     }

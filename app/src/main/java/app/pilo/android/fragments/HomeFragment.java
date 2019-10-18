@@ -13,9 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
-import app.pilo.android.utils.CustomSnackBar;
+import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -47,6 +49,8 @@ public class HomeFragment extends Fragment {
     TextView tv_music_carousel_title;
     @BindView(R.id.tv_music_carousel_show_more)
     TextView tv_music_carousel_show_more;
+    @BindView(R.id.sfl_music)
+    ShimmerFrameLayout sfl_music;
 
     @BindView(R.id.rc_artist_carousel)
     RecyclerView rc_artist_carousel;
@@ -54,6 +58,8 @@ public class HomeFragment extends Fragment {
     TextView tv_artist_carousel_title;
     @BindView(R.id.tv_artist_carousel_show_more)
     TextView tv_artist_carousel_show_more;
+    @BindView(R.id.sfl_artist)
+    ShimmerFrameLayout sfl_artist;
 
     @BindView(R.id.tv_video_carousel_title)
     TextView tv_video_carousel_title;
@@ -61,6 +67,8 @@ public class HomeFragment extends Fragment {
     TextView tv_video_carousel_show_more;
     @BindView(R.id.imageSlider)
     SliderView sliderView;
+    @BindView(R.id.sfl_video)
+    ShimmerFrameLayout sfl_video;
 
     @BindView(R.id.rc_album_carousel)
     RecyclerView rc_album_carousel;
@@ -68,6 +76,8 @@ public class HomeFragment extends Fragment {
     TextView tv_album_carousel_title;
     @BindView(R.id.tv_album_carousel_show_more)
     TextView tv_album_carousel_show_more;
+    @BindView(R.id.sfl_album)
+    ShimmerFrameLayout sfl_album;
 
     @BindView(R.id.rc_music_vertical)
     RecyclerView rc_music_vertical;
@@ -89,11 +99,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupViews() {
-        tv_music_carousel_title.setText(R.string.music_carousel_best_new);
-        tv_artist_carousel_title.setText(R.string.artist_carousel_best_new);
-        tv_video_carousel_title.setText(R.string.video_carousel_last);
-        tv_album_carousel_title.setText(R.string.album_carousel_last);
-        tv_music_vertical_title.setText(R.string.music_vertical_last);
+        tv_music_carousel_title.setText(R.string.new_best);
+        tv_artist_carousel_title.setText(R.string.artist_best);
+        tv_video_carousel_title.setText(R.string.video_new);
+        tv_album_carousel_title.setText(R.string.album_new);
+        tv_music_vertical_title.setText(R.string.music_new);
     }
 
     private void getHomeApi() {
@@ -108,19 +118,34 @@ public class HomeFragment extends Fragment {
                     setupAlbumViewPager(data.getAlbums());
                     setupLastVerticalMusicList(data.getLast_music());
                 } else {
-                    CustomSnackBar.make(cl_view, getString(R.string.server_connection_error));
+                    Alerter.create(getActivity())
+                            .setTitle(R.string.server_connection_error)
+                            .setText(R.string.server_connection_message)
+                            .setBackgroundColorRes(R.color.colorError)
+                            .setTitleTypeface(TypeFace.font(getActivity()))
+                            .setTextTypeface(TypeFace.font(getActivity()))
+                            .setButtonTypeface(TypeFace.font(getActivity()))
+                            .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+                            .show();
                 }
             }
 
             @Override
             public void onGetError() {
-                CustomSnackBar.make(cl_view, getString(R.string.server_connection_error));
+                Alerter.create(getActivity())
+                        .setTitle(R.string.server_connection_error)
+                        .setText(R.string.server_connection_message)
+                        .setBackgroundColorInt(R.color.design_default_color_error)
+                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+                        .show();
             }
         });
     }
 
     private void setupBestMusicCarousel(List<Music> musics) {
         if (rc_music_carousel != null) {
+            sfl_music.setVisibility(View.GONE);
+            rc_music_carousel.setVisibility(View.VISIBLE);
             MusicCarouselAdapter musicCarouselAdapter = new MusicCarouselAdapter(getActivity(), musics);
             rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_music_carousel.setAdapter(musicCarouselAdapter);
@@ -129,14 +154,22 @@ public class HomeFragment extends Fragment {
 
     private void setupArtistCarousel(List<Artist> artists) {
         if (rc_artist_carousel != null) {
+            sfl_artist.setVisibility(View.GONE);
+            rc_artist_carousel.setVisibility(View.VISIBLE);
             ArtistCarouselAdapter artistCarouselAdapter = new ArtistCarouselAdapter(getActivity(), artists);
             rc_artist_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_artist_carousel.setAdapter(artistCarouselAdapter);
         }
+
+        tv_artist_carousel_show_more.setOnClickListener(v -> {
+
+        });
     }
 
     private void setupVideoViewPager(List<Video> videos) {
         if (sliderView != null) {
+            sfl_video.setVisibility(View.GONE);
+            sliderView.setVisibility(View.VISIBLE);
             sliderView.setSliderAdapter(new VideoCarouselAdapter(getActivity(), videos));
             sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
             sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
@@ -145,6 +178,8 @@ public class HomeFragment extends Fragment {
 
     private void setupAlbumViewPager(List<Album> albums) {
         if (rc_album_carousel != null) {
+            sfl_album.setVisibility(View.GONE);
+            rc_album_carousel.setVisibility(View.VISIBLE);
             AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(getActivity(), albums);
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);

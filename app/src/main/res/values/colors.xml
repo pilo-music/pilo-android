@@ -7,5 +7,7 @@
     <color name="colorDark">#5e5e5e</color>
     <color name="colorGray">#888</color>
     <color name="colorBlue">#5757ff</color>
+    <color name="colorShimmer">#E2E2E2</color>
     <color name="colorGreenDark">#29a661</color>
+    <color name="colorError">#B00020</color>
 </resources>

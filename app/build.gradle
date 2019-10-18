@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
@@ -26,32 +28,40 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation "com.google.android.material:material:1.1.0-alpha02"
-    testImplementation 'junit:junit:4.13-beta-2'
-    //test
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+    implementation "com.google.android.material:material:1.1.0-beta01"
+    implementation 'com.android.support:cardview-v7:21.0.+'
+
     //butterknife
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
     //room
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 
     //rx java
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    //kotlin
+    implementation "androidx.core:core-ktx:1.1.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.makeramen:roundedimageview:2.3.0'
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:3.0.3'
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.linsea:universalvideoview:1.1.0@aar'
-    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'com.github.smarteist:autoimageslider:1.3.2-appcompat'
     implementation 'com.loopj.android:android-async-http:1.4.10'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.tapadoo.android:alerter:4.1.0'
+
+}
+repositories {
+    mavenCentral()
 }

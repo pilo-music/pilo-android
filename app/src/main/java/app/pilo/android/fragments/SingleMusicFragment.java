@@ -75,6 +75,6 @@ public class SingleMusicFragment extends Fragment {
         tv_single_music_item_title.setText(title);
         tv_single_music_item_artist.setText(artist);
         tv_music_vertical_title.setText(getString(R.string.your_playlist));
-        tv_music_carousel_title.setText(getString(R.string.music_carousel_related));
+        tv_music_carousel_title.setText(getString(R.string.music_related));
     }
 }

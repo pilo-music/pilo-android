@@ -12,8 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.models.Artist;
+import app.pilo.android.utils.FragmentSwitcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,32 +48,22 @@ public class ArtistCarouselAdapter extends RecyclerView.Adapter<ArtistCarouselAd
         holder.tv_artist_name.setText(artist.getName());
         holder.ll_artist_item.setOnClickListener(v -> fragmentJump(artist));
         if (!artist.getImage().equals("") && !artist.getImage().equals("null") && !artist.getImage().equals(" ")) {
-            Picasso.get()
+            Glide.with(context)
                     .load(artist.getImage())
                     .placeholder(R.drawable.ic_artist_placeholder)
                     .error(R.drawable.ic_artist_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.artist_image);
         }
     }
 
     private void fragmentJump(Artist artist) {
-        SingleArtistFragment mFragment = new SingleArtistFragment();
         Bundle mBundle = new Bundle();
         mBundle.putString("slug", artist.getSlug());
         mBundle.putString("name", artist.getName());
         mBundle.putString("image", artist.getImage());
         mBundle.putInt("id", artist.getId());
-        mFragment.setArguments(mBundle);
-        switchContent(mFragment);
-    }
-
-    private void switchContent(Fragment fragment) {
-        if (context == null)
-            return;
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
-            mainActivity.switchContent(R.id.framelayout, fragment);
-        }
+        new FragmentSwitcher(context, new SingleArtistFragment(), mBundle);
     }
 
 

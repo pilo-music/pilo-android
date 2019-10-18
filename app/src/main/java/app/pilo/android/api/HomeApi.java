@@ -1,7 +1,5 @@
 package app.pilo.android.api;
 
-import android.util.Log;
-
 import org.json.*;
 
 import com.loopj.android.http.*;
@@ -10,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
-import app.pilo.android.models.HeroSlider;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
@@ -78,14 +75,14 @@ public class HomeApi {
 //        // parse artists
         JSONArray artistsJsonArray = data.getJSONArray("artists");
         for (int i = 0; i < albumJsonArray.length(); i++) {
-            Artist artist = JsonParser.artistsJsonArray(artistsJsonArray.getJSONObject(i));
+            Artist artist = JsonParser.artistJsonArray(artistsJsonArray.getJSONObject(i));
             if (artist != null)
                 artists.add(artist);
         }
 //        // parse videos
         JSONArray videosJsonArray = data.getJSONArray("videos");
         for (int i = 0; i < albumJsonArray.length(); i++) {
-            Video video = JsonParser.videosJsonArray(videosJsonArray.getJSONObject(i));
+            Video video = JsonParser.videoJsonArray(videosJsonArray.getJSONObject(i));
             if (video != null)
                 videos.add(video);
         }
