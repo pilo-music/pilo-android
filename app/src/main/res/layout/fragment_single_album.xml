@@ -16,7 +16,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/img_single_album"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -26,7 +26,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/linearLayout3"
+                android:id="@+id/ll_single_album_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="300dp"
@@ -43,6 +43,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tv_single_album_count"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -54,6 +55,7 @@
                         tools:text="1 قطعه" />
 
                     <TextView
+                        android:id="@+id/tv_single_album_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/activity_vertical_margin"
@@ -65,46 +67,46 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rc_music_vertical"
+                    android:id="@+id/rc_single_album_musics"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="8dp" />
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/img_single_album_play"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
                 android:adjustViewBounds="true"
                 android:src="@drawable/main_play"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                app:layout_constraintBottom_toTopOf="@+id/ll_single_album_bottom"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout3" />
+                app:layout_constraintTop_toTopOf="@+id/ll_single_album_bottom" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/img_single_album_shuffle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:adjustViewBounds="true"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_shuffle_circle"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout3" />
+                app:layout_constraintBottom_toTopOf="@+id/ll_single_album_bottom"
+                app:layout_constraintEnd_toStartOf="@+id/img_single_album_play"
+                app:layout_constraintTop_toTopOf="@+id/ll_single_album_bottom" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/img_single_album_like"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:adjustViewBounds="true"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_heart"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                app:layout_constraintEnd_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/linearLayout3" />
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_heart_off"
+                app:layout_constraintBottom_toTopOf="@+id/ll_single_album_bottom"
+                app:layout_constraintEnd_toStartOf="@+id/img_single_album_shuffle"
+                app:layout_constraintTop_toTopOf="@+id/ll_single_album_bottom" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

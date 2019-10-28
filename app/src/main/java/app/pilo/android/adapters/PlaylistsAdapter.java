@@ -1,4 +1,4 @@
-package app.pilo.android.adapters.search_adapters;
+package app.pilo.android.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,8 +22,6 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SinglePlaylistFragment;
-import app.pilo.android.helpers.RxBus;
-import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import butterknife.BindView;
 import butterknife.ButterKnife;

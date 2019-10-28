@@ -138,11 +138,10 @@ public class SingleArtistFragment extends Fragment {
             @Override
             public void onGetInfo(String status, SingleArtist data) {
                 if (view != null) {
-                    if (status.equals("success")) {
+                    if (status.equals("success") && data != null) {
                         tv_album_count.setText(String.valueOf(data.getArtist().getAlbum_count()));
                         tv_music_count.setText(String.valueOf(data.getArtist().getMusics_count()));
                         tv_video_count.setText(String.valueOf(data.getArtist().getVideo_count()));
-
                         setupBestMusicCarousel(data.getBest_musics());
                         setupVideoViewPager(data.getVideos());
                         setupAlbumViewPager(data.getAlbums());

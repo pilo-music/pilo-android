@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.search_adapters.ArtistsAdapter;
+import app.pilo.android.adapters.ArtistCarouselAdapter;
 import app.pilo.android.models.Artist;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +45,7 @@ public class SearchArtistsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_artists != null) {
-            ArtistsAdapter artistsAdapter = new ArtistsAdapter(getActivity(), artists);
+            ArtistCarouselAdapter artistsAdapter = new ArtistCarouselAdapter(getActivity(), artists);
             rc_artists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_artists.setAdapter(artistsAdapter);
         }

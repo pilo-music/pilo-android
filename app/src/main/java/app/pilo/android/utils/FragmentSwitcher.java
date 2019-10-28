@@ -17,7 +17,7 @@ public class FragmentSwitcher {
     private Fragment fragment;
     private Context context;
 
-   public FragmentSwitcher(Context context, Fragment fragment, Bundle bundle) {
+    public FragmentSwitcher(Context context, Fragment fragment, Bundle bundle) {
         this.bundle = bundle;
         this.context = context;
         this.fragment = fragment;
@@ -25,7 +25,8 @@ public class FragmentSwitcher {
     }
 
     private void fragmentJump() {
-        fragment.setArguments(bundle);
+        if (bundle != null)
+            fragment.setArguments(bundle);
 
         if (context == null)
             return;

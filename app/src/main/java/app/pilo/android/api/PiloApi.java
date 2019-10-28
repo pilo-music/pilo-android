@@ -1,12 +1,15 @@
 package app.pilo.android.api;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import java.util.Base64;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import app.pilo.android.helpers.Singleton;
@@ -22,8 +25,8 @@ public class PiloApi {
     public static final String ME = BASE_URL + "me";
     public static final String MUSIC_GET = "https://api.twitter.com/1/";
     public static final String MUSICS_GET = "https://api.twitter.com/1/";
-    public static final String ALBUM_GET = "album/";
-    public static final String ALBUMS_GET = "albums/";
+    public static final String ALBUM_GET = BASE_URL + "album/";
+    public static final String ALBUMS_GET = BASE_URL + "albums/";
     public static final String VIDEO_GET = "https://api.twitter.com/1/";
     public static final String VIDEOS_GET = "https://api.twitter.com/1/";
     public static final String ARTIST_GET = BASE_URL + "artist/";
@@ -41,8 +44,7 @@ public class PiloApi {
                 client.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        client.get(url, params, responseHandler);
-
+        client.get(Uri.encode(url), params, responseHandler);
     }
 
     public static void post(String url, RequestParams params, Map<String, String> headers, AsyncHttpResponseHandler responseHandler) {
@@ -53,7 +55,7 @@ public class PiloApi {
                 client.addHeader(entry.getKey(), entry.getValue());
             }
         }
-        client.post(url, params, responseHandler);
+        client.post(Uri.encode(url), params, responseHandler);
 
     }
 

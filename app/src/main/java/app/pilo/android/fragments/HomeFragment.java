@@ -34,6 +34,7 @@ import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
+import app.pilo.android.utils.FragmentSwitcher;
 import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -183,6 +184,7 @@ public class HomeFragment extends Fragment {
             AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(getActivity(), albums);
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);
+            tv_album_carousel_show_more.setOnClickListener(v -> new FragmentSwitcher(getActivity(), new AlbumsFragment(), null));
         }
     }
 

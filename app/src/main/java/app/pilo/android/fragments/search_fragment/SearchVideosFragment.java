@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.search_adapters.VideosAdapter;
+import app.pilo.android.adapters.VideosAdapter;
 import app.pilo.android.models.Video;
 import butterknife.BindView;
 import butterknife.ButterKnife;

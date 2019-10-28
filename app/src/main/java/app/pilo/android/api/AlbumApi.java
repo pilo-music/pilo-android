@@ -33,7 +33,7 @@ public class AlbumApi {
 
                     for (int i = 0; i < data.length(); i++) {
                         Album album = JsonParser.albumJsonParser(data.getJSONObject(i));
-                        if (artist != null)
+                        if (album != null)
                             albums.add(album);
                     }
 
@@ -84,7 +84,7 @@ public class AlbumApi {
 
         //parse album
         Album album = JsonParser.albumJsonParser(data.getJSONObject("album"));
-        boolean has_like = data.getBoolean("has_like");
+
 
         // parse playlist
         JSONArray playlistJsonArray = data.getJSONArray("playlist");
@@ -96,7 +96,6 @@ public class AlbumApi {
 
         singleAlbum.setAlbum(album);
         singleAlbum.setPlaylists(playlists);
-        singleAlbum.setHas_like(has_like);
 
         return singleAlbum;
     }

@@ -7,9 +7,9 @@
     android:orientation="vertical">
 
     <ScrollView
-        android:background="#F9F9F9"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#F9F9F9">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                             android:src="@drawable/ic_logout" />
 
                         <ImageView
-                            android:id="@+id/img_profile_alert"
+                            android:id="@+id/img_profile_messages"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_alignParentLeft="true"
@@ -65,25 +65,26 @@
                         android:src="@drawable/ic_user" />
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/cv_profile_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:background="@color/colorPrimary"
-                        android:clickable="true"
-                        android:focusable="true"
                         app:cardCornerRadius="18dp"
                         app:cardElevation="10dp">
 
                         <Button
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?selectableItemBackgroundBorderless"
+                            android:id="@+id/btn_profile_login"
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
                             android:background="@color/colorPrimary"
                             android:fontFamily="@font/font"
                             android:paddingStart="@dimen/activity_vertical_margin"
                             android:paddingEnd="@dimen/activity_vertical_margin"
-                            android:text="@string/profile_login"
+                            android:text="@string/login"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/normal_font_size" />
                     </androidx.cardview.widget.CardView>
@@ -107,85 +108,123 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:id="@+id/ll_profile_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/activity_vertical_margin"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackgroundBorderless">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/font"
+                            android:padding="5dp"
+                            android:text="@string/profile_edit"
+                            android:textColor="@color/colorDark"
+                            android:textSize="@dimen/normal_font_size" />
 
                         <ImageView
                             android:layout_width="@dimen/_18sdp"
                             android:layout_height="@dimen/_18sdp"
                             android:src="@drawable/ic_edit" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/font"
-                            android:padding="5dp"
-                            android:text="@string/profile_edit"
-                            android:textColor="@color/colorDark"
-                            android:textSize="@dimen/normal_font_size" />
+
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackgroundBorderless"
+                        android:id="@+id/ll_profile_likes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/activity_vertical_margin"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
-                            android:src="@drawable/ic_heart" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:fontFamily="@font/font"
                             android:padding="5dp"
                             android:text="@string/profile_likes"
                             android:textColor="@color/colorDark"
                             android:textSize="@dimen/normal_font_size" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_18sdp"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/ic_heart" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackgroundBorderless"
+                        android:id="@+id/ll_profile_bookmarks"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/activity_vertical_margin"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
                         android:orientation="horizontal">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/font"
+                            android:padding="5dp"
+                            android:text="@string/profile_bookmarks"
+                            android:textColor="@color/colorDark"
+                            android:textSize="@dimen/normal_font_size" />
 
                         <ImageView
                             android:layout_width="@dimen/_18sdp"
                             android:layout_height="@dimen/_18sdp"
                             android:src="@drawable/ic_bookmark" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/font"
-                            android:padding="5dp"
-                            android:text="@string/profile_bookmarks"
-                            android:textColor="@color/colorDark"
-                            android:textSize="@dimen/normal_font_size" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?selectableItemBackgroundBorderless"
+                        android:id="@+id/ll_profile_contact_us"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/activity_vertical_margin"
+                        android:layout_marginLeft="@dimen/activity_vertical_margin"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
-                            android:src="@drawable/ic_support" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:fontFamily="@font/font"
                             android:padding="5dp"
                             android:text="@string/profile_support"
                             android:textColor="@color/colorDark"
                             android:textSize="@dimen/normal_font_size" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_18sdp"
+                            android:layout_height="@dimen/_18sdp"
+                            android:src="@drawable/ic_support" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

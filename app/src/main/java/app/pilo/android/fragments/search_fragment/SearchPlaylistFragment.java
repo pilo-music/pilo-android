@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.search_adapters.PlaylistsAdapter;
+import app.pilo.android.adapters.PlaylistsAdapter;
 import app.pilo.android.models.Playlist;
 import butterknife.BindView;
 import butterknife.ButterKnife;

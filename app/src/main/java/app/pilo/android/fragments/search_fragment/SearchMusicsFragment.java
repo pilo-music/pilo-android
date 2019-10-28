@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.search_adapters.MusicsAdapter;
+import app.pilo.android.adapters.MusicCarouselAdapter;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +48,7 @@ public class SearchMusicsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_musics != null) {
-            MusicsAdapter musicsAdapter = new MusicsAdapter(getActivity(), musics);
+            MusicCarouselAdapter musicsAdapter = new MusicCarouselAdapter(getActivity(), musics);
             rc_musics.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_musics.setAdapter(musicsAdapter);
         }

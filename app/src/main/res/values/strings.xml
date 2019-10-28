@@ -17,6 +17,13 @@
     <string name="playlist">پلی لیست</string>
     <string name="video">موزیک ویدیو</string>
     <string name="artist">خواننده</string>
+    <string name="login">ورود</string>
+    <string name="email">ایمیل</string>
+    <string name="password">رمز عبور</string>
+    <string name="login_with_google">ورود با گوگل</string>
+    <string name="register">ثبت نام</string>
+    <string name="email_not_valid">ایمیل وارد شده صحیح نمی باشد</string>
+    <string name="password_small_length">پسور باید حداقل 5 حرف داشته باشد</string>
 
 
     <string name="show_more">نمایش همه</string>
@@ -37,7 +44,7 @@
     <string name="search_search_hint">موزیک  ، خواننده ، آلبوم , …</string>
     <string name="speech_not_supported">جستجو صوتی پشتیبانی نمیشود</string>
 
-    <string name="profile_login">ورود</string>
+
     <string name="profile_edit">ویرایش پروفایل</string>
     <string name="profile_likes">لایک شده ها</string>
     <string name="profile_bookmarks">بوک مارک ها</string>

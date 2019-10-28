@@ -15,7 +15,6 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.AlbumCarouselAdapter;
-import app.pilo.android.adapters.search_adapters.AlbumsAdapter;
 import app.pilo.android.models.Album;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +47,7 @@ public class SearchAlbumFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_albums != null) {
-            AlbumsAdapter albumsAdapter = new AlbumsAdapter(getActivity(), albums);
+            AlbumCarouselAdapter albumsAdapter = new AlbumCarouselAdapter(getActivity(), albums);
             rc_albums.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_albums.setAdapter(albumsAdapter);
         }

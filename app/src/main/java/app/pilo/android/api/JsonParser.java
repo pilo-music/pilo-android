@@ -62,7 +62,7 @@ class JsonParser {
                     musics
             );
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("Albums", "albumJsonParser: "+e.getMessage() );
             return null;
         }
     }
