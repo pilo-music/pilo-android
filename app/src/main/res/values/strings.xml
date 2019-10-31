@@ -24,6 +24,9 @@
     <string name="register">ثبت نام</string>
     <string name="email_not_valid">ایمیل وارد شده صحیح نمی باشد</string>
     <string name="password_small_length">پسور باید حداقل 5 حرف داشته باشد</string>
+    <string name="wrong_email_password">ایمیل یا رمز عبور وارد شده نادرست میباشد</string>
+    <string name="user_deactive">حساب کاربری شما مسدود میباشد. لطفا با پشتیبانی تماس بگیرید</string>
+    <string name="user_not_verify">حساب کاربری شما تایید نشده است. لینک فعال سازی به ایمیل شما ارسال شد</string>
 
 
     <string name="show_more">نمایش همه</string>

@@ -84,13 +84,13 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:layout_weight="1"
-                android:textAlignment="viewStart"
                 android:background="#f9f9f9"
                 android:fontFamily="@font/font"
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
+                android:textAlignment="viewStart"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
 
@@ -116,19 +116,31 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
         <LinearLayout
+            android:id="@+id/ll_login"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:orientation="vertical">
+            android:background="@color/colorGreenDark"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/colorGreenDark"
                 android:fontFamily="@font/font"
+                android:gravity="center"
                 android:text="@string/login"
+                android:layout_marginStart="8dp"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/large_font_size" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_login"
+                android:visibility="invisible"
+                android:paddingStart="8dp"
+                android:layout_marginTop="2dp"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -156,7 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/font"
                 android:text="@string/login_with_google"
                 android:textColor="@color/colorDark"
