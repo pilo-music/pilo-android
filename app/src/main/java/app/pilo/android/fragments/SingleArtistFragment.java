@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -133,7 +134,7 @@ public class SingleArtistFragment extends Fragment {
     }
 
     private void getDataFromServer() {
-        ArtistApi artistApi = new ArtistApi();
+        ArtistApi artistApi = new ArtistApi(getActivity());
         artistApi.single(slug, new RequestHandler.RequestHandlerWithModel<SingleArtist>() {
             @Override
             public void onGetInfo(String status, SingleArtist data) {
@@ -162,7 +163,7 @@ public class SingleArtistFragment extends Fragment {
             }
 
             @Override
-            public void onGetError() {
+            public void onGetError(VolleyError error) {
                 Alerter.create(getActivity())
                         .setTitle(R.string.server_connection_error)
                         .setTextTypeface(TypeFace.font(getActivity()))

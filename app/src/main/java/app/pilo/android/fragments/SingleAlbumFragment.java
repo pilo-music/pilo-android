@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tapadoo.alerter.Alerter;
@@ -91,7 +92,7 @@ public class SingleAlbumFragment extends Fragment {
     }
 
     private void getDataFromServer() {
-        AlbumApi albumApi = new AlbumApi();
+        AlbumApi albumApi = new AlbumApi(getActivity());
         albumApi.single(slug, new RequestHandler.RequestHandlerWithModel<SingleAlbum>() {
             @Override
             public void onGetInfo(String status, SingleAlbum data) {
@@ -118,7 +119,7 @@ public class SingleAlbumFragment extends Fragment {
             }
 
             @Override
-            public void onGetError() {
+            public void onGetError(VolleyError error) {
                 Alerter.create(getActivity())
                         .setTitle(R.string.server_connection_error)
                         .setTextTypeface(TypeFace.font(getActivity()))

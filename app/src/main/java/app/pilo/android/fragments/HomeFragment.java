@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.error.VolleyError;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -108,7 +109,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getHomeApi() {
-        HomeApi homeApi = new HomeApi();
+        HomeApi homeApi = new HomeApi(getActivity());
         homeApi.get(new RequestHandler.RequestHandlerWithModel<Home>() {
             @Override
             public void onGetInfo(String status, Home data) {
@@ -132,7 +133,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onGetError() {
+            public void onGetError(VolleyError error) {
                 Alerter.create(getActivity())
                         .setTitle(R.string.server_connection_error)
                         .setText(R.string.server_connection_message)

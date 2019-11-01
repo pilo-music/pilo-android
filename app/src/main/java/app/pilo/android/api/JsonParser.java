@@ -14,6 +14,7 @@ import app.pilo.android.models.Artist;
 import app.pilo.android.models.HeroSlider;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
+import app.pilo.android.models.User;
 import app.pilo.android.models.Video;
 
 class JsonParser {
@@ -62,7 +63,7 @@ class JsonParser {
                     musics
             );
         } catch (JSONException e) {
-            Log.e("Albums", "albumJsonParser: "+e.getMessage() );
+            Log.e("Albums", "albumJsonParser: " + e.getMessage());
             return null;
         }
     }
@@ -165,5 +166,32 @@ class JsonParser {
         HeroSlider heroSlider = new HeroSlider();
 
         return heroSlider;
+    }
+
+    static User userJsonParser(JSONObject jsonObject) {
+        User user = new User();
+        try {
+            if (!jsonObject.isNull("access_token")) {
+                user.setAccess_token(jsonObject.getString("access_token"));
+            }
+            if (!jsonObject.isNull("user")) {
+                JSONObject userJsonObject = jsonObject.getJSONObject("user");
+                if (!userJsonObject.isNull("name"))
+                    user.setName(userJsonObject.getString("name"));
+                if (!userJsonObject.isNull("email"))
+                    user.setEmail(userJsonObject.getString("email"));
+                if (!userJsonObject.isNull("phone"))
+                    user.setPhone(userJsonObject.getString("phone"));
+                if (!userJsonObject.isNull("birth"))
+                    user.setPhone(userJsonObject.getString("phone"));
+                if (!userJsonObject.isNull("gender"))
+                    user.setGender(userJsonObject.getString("gender"));
+                if (!userJsonObject.isNull("pic"))
+                    user.setPic(userJsonObject.getString("pic"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }

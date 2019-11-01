@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.volley.error.VolleyError;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.tapadoo.alerter.Alerter;
@@ -170,7 +171,7 @@ public class SearchFragment extends Fragment {
 
     private void search(String text) {
         progressBar.setVisibility(View.VISIBLE);
-        SearchApi searchApi = new SearchApi();
+        SearchApi searchApi = new SearchApi(getActivity());
         searchApi.get(text, new RequestHandler.RequestHandlerWithModel<Search>() {
             @Override
             public void onGetInfo(String status, Search data) {
@@ -193,7 +194,7 @@ public class SearchFragment extends Fragment {
             }
 
             @Override
-            public void onGetError() {
+            public void onGetError(VolleyError error) {
                 progressBar.setVisibility(View.INVISIBLE);
                 Alerter.create(getActivity())
                         .setTitle(R.string.server_connection_error)

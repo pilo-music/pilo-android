@@ -1,43 +1,52 @@
 package app.pilo.android.api;
 
+import android.content.Context;
+
 import org.json.*;
 
-import com.loopj.android.http.*;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
-import cz.msebera.android.httpclient.Header;
 
 public class HomeApi {
+    private Context context;
+
+    public HomeApi(Context context) {
+        this.context = context;
+    }
 
     public void get(final RequestHandler.RequestHandlerWithModel<Home> requestHandler) {
-        PiloApi.get(PiloApi.HOME_GET, null, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    String status = response.getString("status");
-                    Home home = parsHomeApiData(data);
-                    if (home != null)
-                        requestHandler.onGetInfo(status, home);
-                    else
-                        requestHandler.onGetError();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    requestHandler.onGetError();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                requestHandler.onGetError();
-            }
-        });
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.HOME_GET, null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        String status = response.getString("status");
+                        if (status.equals("success")) {
+                            Home home = parsHomeApiData(data);
+                            if (home != null)
+                                requestHandler.onGetInfo(status, home);
+                            else
+                                requestHandler.onGetError(null);
+                        } else {
+                            requestHandler.onGetInfo(status, null);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 
     private Home parsHomeApiData(JSONObject data) throws JSONException {

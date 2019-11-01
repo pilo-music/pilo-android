@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class AlbumsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_albums, container, false);
         ButterKnife.bind(this, view);
-        albumApi = new AlbumApi();
+        albumApi = new AlbumApi(getActivity());
         initAdapter();
         return view;
     }
@@ -108,7 +109,7 @@ public class AlbumsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
 
             @Override
-            public void onGetError() {
+            public void onGetError(VolleyError error) {
                 if (view != null) {
                     srl_albums.setRefreshing(false);
                     Alerter.create(getActivity())

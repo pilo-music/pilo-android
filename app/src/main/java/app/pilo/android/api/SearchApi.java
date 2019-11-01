@@ -1,8 +1,11 @@
 package app.pilo.android.api;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,32 +19,33 @@ import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.Search;
 import app.pilo.android.models.Video;
-import cz.msebera.android.httpclient.Header;
 
 public class SearchApi {
-    public void get(String text, final RequestHandler.RequestHandlerWithModel<Search> requestHandler) {
-        PiloApi.get(PiloApi.SEARCH + text, null, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    String status = response.getString("status");
-                    Search search = parsSearchApiData(data);
-                    if (search != null)
-                        requestHandler.onGetInfo(status, search);
-                    else
-                        requestHandler.onGetError();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    requestHandler.onGetError();
-                }
-            }
+    private Context context;
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                requestHandler.onGetError();
-            }
-        });
+    public SearchApi(Context context) {
+        this.context = context;
+    }
+
+
+    public void get(String text, final RequestHandler.RequestHandlerWithModel<Search> requestHandler) {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.SEARCH + text, null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        String status = response.getString("status");
+                        Search search = parsSearchApiData(data);
+                        if (search != null)
+                            requestHandler.onGetInfo(status, search);
+                        else
+                            requestHandler.onGetError(null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 
     private Search parsSearchApiData(JSONObject data) throws JSONException {

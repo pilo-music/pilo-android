@@ -1,6 +1,11 @@
 package app.pilo.android.api;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import android.content.Context;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.request.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,9 +17,13 @@ import java.util.List;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SingleAlbum;
-import cz.msebera.android.httpclient.Header;
 
 public class AlbumApi {
+    private Context context;
+
+    public AlbumApi(Context context) {
+        this.context = context;
+    }
 
     public void get(String artist, int page, final RequestHandler.RequestHandlerWithList<Album> requestHandler) {
         String url;
@@ -23,58 +32,50 @@ public class AlbumApi {
         } else
             url = PiloApi.ALBUMS_GET;
 
-        PiloApi.get(url + page, null, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONArray data = response.getJSONArray("data");
-                    String status = response.getString("status");
-                    List<Album> albums = new ArrayList<>();
-
-                    for (int i = 0; i < data.length(); i++) {
-                        Album album = JsonParser.albumJsonParser(data.getJSONObject(i));
-                        if (album != null)
-                            albums.add(album);
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + page, null,
+                response -> {
+                    try {
+                        JSONArray data = response.getJSONArray("data");
+                        String status = response.getString("status");
+                        if (status.equals("success")) {
+                            List<Album> albums = new ArrayList<>();
+                            for (int i = 0; i < data.length(); i++) {
+                                Album album = JsonParser.albumJsonParser(data.getJSONObject(i));
+                                if (album != null)
+                                    albums.add(album);
+                            }
+                            requestHandler.onGetInfo(status, albums);
+                        } else
+                            requestHandler.onGetInfo(status, null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
                     }
+                }, requestHandler::onGetError);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
 
-                    requestHandler.onGetInfo(status, albums);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    requestHandler.onGetError();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                requestHandler.onGetError();
-            }
-        });
     }
 
 
     public void single(String slug, final RequestHandler.RequestHandlerWithModel<SingleAlbum> requestHandler) {
-        PiloApi.get(PiloApi.ALBUM_GET + slug, null, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    JSONObject data = response.getJSONObject("data");
-                    String status = response.getString("status");
-                    SingleAlbum singleAlbum = parsAlbumApiData(data);
-                    if (singleAlbum != null)
-                        requestHandler.onGetInfo(status, singleAlbum);
-                    else
-                        requestHandler.onGetError();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    requestHandler.onGetError();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                requestHandler.onGetError();
-            }
-        });
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET + slug, null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        String status = response.getString("status");
+                        SingleAlbum singleAlbum = parsAlbumApiData(data);
+                        if (singleAlbum != null)
+                            requestHandler.onGetInfo(status, singleAlbum);
+                        else
+                            requestHandler.onGetError(null);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 
     private SingleAlbum parsAlbumApiData(JSONObject data) throws JSONException {
