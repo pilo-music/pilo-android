@@ -73,4 +73,25 @@ public class UserApi {
         }
     }
 
+    public void forgotPassword(String email, final RequestHandler.RequestHandlerWithData requestHandler) {
+        JSONObject requestJsonObject = new JSONObject();
+        try {
+            requestJsonObject.put("email", email);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.FORGOT_PASSWORD, requestJsonObject,
+                    response -> {
+                        try {
+                            String status = response.getString("status");
+                            String data = response.getString("data");
+                            requestHandler.onGetInfo(status, data);
+                        } catch (JSONException e) {
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            requestHandler.onGetError(null);
+        }
+    }
+
 }

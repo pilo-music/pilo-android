@@ -16,5 +16,6 @@ class PiloApi {
     static final String VIDEOS_GET = "https://api.twitter.com/1/";
     static final String ARTIST_GET = BASE_URL + "artist/";
     static final String ARTISTS_GET = BASE_URL + "artists/";
+    static final String FORGOT_PASSWORD = BASE_URL + "password/create";
 
 }
