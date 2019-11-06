@@ -36,7 +36,9 @@
     <string name="forgot_password">رمزعبور خود را فراموش کرده اید ؟</string>
     <string name="forgot_password_send">لینک بازیابی رمز عبور برای شما ارسال شد</string>
     <string name="user_exist">ایمیل مورد نظر ثبت شده است</string>
-    <string name="register_success">ثبت نام با موفقیت انجام شد. لینک فعال سازی حساب کاربری به ایمیل شما ارسال شد</string>
+    <string name="user_exist_description">لطفا یک ایمیل دیگر را انتخاب نمایید</string>
+    <string name="register_success">ثبت نام با موفقیت انجام شد</string>
+    <string name="register_success_description">ثبت نام با موفقیت انجام شد. لینک فعال سازی حساب کاربری به ایمیل شما ارسال شد</string>
 
 
     <string name="show_more">نمایش همه</string>

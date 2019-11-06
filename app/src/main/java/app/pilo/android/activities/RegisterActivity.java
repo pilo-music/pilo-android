@@ -62,21 +62,21 @@ public class RegisterActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
                 if (status.equals("exists")){
                     Alerter.create(RegisterActivity.this)
-                            .setTitle(R.string.server_connection_error)
+                            .setTitle(R.string.user_exist)
                             .setTextTypeface(TypeFace.font(RegisterActivity.this))
                             .setTitleTypeface(TypeFace.font(RegisterActivity.this))
                             .setButtonTypeface(TypeFace.font(RegisterActivity.this))
-                            .setText(R.string.user_exist)
+                            .setText(R.string.user_exist_description)
                             .setBackgroundColorRes(R.color.colorWarning)
                             .show();
                 }else if (status.equals("success")){
                     Alerter.create(RegisterActivity.this)
-                            .setTitle(R.string.server_connection_error)
+                            .setTitle(R.string.register_success)
                             .setTextTypeface(TypeFace.font(RegisterActivity.this))
                             .setTitleTypeface(TypeFace.font(RegisterActivity.this))
                             .setButtonTypeface(TypeFace.font(RegisterActivity.this))
-                            .setText(R.string.register_success)
-                            .setBackgroundColorRes(R.color.colorError)
+                            .setText(R.string.register_success_description)
+                            .setBackgroundColorRes(R.color.colorGreen)
                             .show();
                 }else{
                     Alerter.create(RegisterActivity.this)

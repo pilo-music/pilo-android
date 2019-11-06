@@ -86,6 +86,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+
+    @OnClick(R.id.tv_login)
+    void goToLogin(){
+        finish();
+    }
+
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }

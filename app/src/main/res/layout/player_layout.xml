@@ -21,7 +21,7 @@
             <!--music info-->
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/riv_extended_music_player_music"
-                android:layout_width="250dp"
+                android:layout_width="@dimen/_250sdp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
