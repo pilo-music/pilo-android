@@ -2,6 +2,7 @@ package app.pilo.android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import app.pilo.android.R;
+import app.pilo.android.helpers.LocalHelper;
 import app.pilo.android.helpers.UserSharedPrefManager;
 
 import android.content.Intent;
@@ -13,6 +14,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        LocalHelper.updateResources(this, "fa");
+
         UserSharedPrefManager userSharedPrefManager = new UserSharedPrefManager(this);
         if (userSharedPrefManager.getToken() != null && !userSharedPrefManager.getToken().equals(""))
             startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));

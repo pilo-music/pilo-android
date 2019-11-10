@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
@@ -38,8 +39,8 @@ import io.reactivex.observers.DisposableObserver;
 public class MainActivity extends AppCompatActivity {
 
     // main activity
-    @BindView(R.id.bottom_navigation)
-    BottomNavigationView bottomBar;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout sliding_layout;
     @BindView(R.id.ll_music_player_collapsed)
@@ -100,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
         setupMusicController();
         musicChangeListener();
-
-        LocalHelper.updateResources(this, "fa");
     }
 
     private void setupMusicController() {
@@ -132,25 +131,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
-        bottomBar.setSelectedItemId(0);
+//        bottomBar.setSelectedItemId(0);
         loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
-        bottomBar.setOnNavigationItemSelectedListener(navigationItem -> {
-            switch (navigationItem.getItemId()) {
-                case R.id.homeFragment:
-                    loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
-                    break;
-                case R.id.browserFragment:
-                    loadFragment(new BrowserFragment(), "MAIN_BROWSER_FRAGMENT");
-                    break;
-                case R.id.searchFragment:
-                    loadFragment(new SearchFragment(), "MAIN_SEARCH_FRAGMENT");
-                    break;
-                case R.id.profileFragment:
-                    loadFragment(new ProfileFragment(), "MAIN_PROFILE_FRAGMENT");
-                    break;
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
+                        break;
+                    case 1:
+                        loadFragment(new BrowserFragment(), "MAIN_BROWSER_FRAGMENT");
+                        break;
+                    case 2:
+                        loadFragment(new SearchFragment(), "MAIN_SEARCH_FRAGMENT");
+                        break;
+                    case 3:
+                        loadFragment(new ProfileFragment(), "MAIN_PROFILE_FRAGMENT");
+                        break;
+                }
             }
-            return true;
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
         });
+
+
+//        bottomBar.setOn(navigationItem -> {
+//
+//        });
     }
 
 
