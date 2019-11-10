@@ -16,7 +16,7 @@
         sothree:umanoDragView="@id/dragView"
         sothree:umanoInitialState="collapsed"
         sothree:umanoOverlay="true"
-        sothree:umanoPanelHeight="80dp"
+        sothree:umanoPanelHeight="70dp"
         sothree:umanoParallaxOffset="300dp"
         sothree:umanoScrollableView="@id/list"
         sothree:umanoShadowHeight="0dp">
@@ -25,7 +25,7 @@
             android:id="@+id/framelayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="80dp" />
+            android:paddingBottom="70dp" />
 
         <LinearLayout
             android:id="@+id/dragView"

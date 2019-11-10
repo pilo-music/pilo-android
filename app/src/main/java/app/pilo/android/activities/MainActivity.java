@@ -49,12 +49,7 @@ public class MainActivity extends AppCompatActivity {
     // page header
     @BindView(R.id.ll_page_header)
     LinearLayout ll_page_header;
-    @BindView(R.id.tv_header_title)
-    TextView tv_header_title;
-    @BindView(R.id.img_header_back)
-    ImageView img_header_back;
-    @BindView(R.id.img_header_more)
-    ImageView img_header_more;
+
 
     // collapse music player
     @BindView(R.id.riv_music_player_collapsed_image)
@@ -175,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(Object music) {
                         if (music instanceof Music) {
-                            tv_header_title.setText(((Music) music).getTitle());
                             tv_music_player_collapsed_title.setText(((Music) music).getTitle());
                             tv_extended_music_player_title.setText(((Music) music).getTitle());
                             tv_extended_music_player_artist.setText(((Music) music).getArtist_name());
