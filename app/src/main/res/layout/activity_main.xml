@@ -35,13 +35,15 @@
 
             <include layout="@layout/bottom_music_player" />
 
-            <ListView
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="1">
 
-            <include layout="@layout/player_layout" />
+                <include layout="@layout/player_layout" />
+
+            </androidx.core.widget.NestedScrollView>
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
@@ -50,9 +52,10 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:tabIndicatorGravity="top"
         android:layoutDirection="ltr"
-        android:textDirection="ltr">
+        android:textDirection="ltr"
+        app:tabIndicatorHeight="0dp"
+        app:tabRippleColor="@null">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_home"
