@@ -11,6 +11,13 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,16 +26,18 @@ import app.pilo.android.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SingleVideoFragment extends Fragment {
+public class SingleVideoFragment extends Fragment  {
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
     @BindView(R.id.img_header_more)
     ImageView img_header_more;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
+    @BindView(R.id.ep_video_view)
+    PlayerView videoView;
 
     private String slug, title, artist, artist_slug, image, url;
-
+    private ExoPlayer exoPlayer;
 
     @Nullable
     @Override
@@ -49,7 +58,10 @@ public class SingleVideoFragment extends Fragment {
     }
 
     private void setupVideoPlayer() {
-
+        DefaultTrackSelector trackSelector = new DefaultTrackSelector();
+        DefaultLoadControl loadControl = new DefaultLoadControl();
+        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(getActivity());
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
     }
 
     private void setupViews() {

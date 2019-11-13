@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    app:elevation="0dp"
+    app:layout_scrollFlags="scroll|enterAlways"
     android:layoutDirection="ltr"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/white"
-        app:layout_scrollFlags="scroll|enterAlways">
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/img_header_back"

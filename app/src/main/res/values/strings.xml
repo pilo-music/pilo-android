@@ -39,6 +39,11 @@
     <string name="user_exist_description">لطفا یک ایمیل دیگر را انتخاب نمایید</string>
     <string name="register_success">ثبت نام با موفقیت انجام شد</string>
     <string name="register_success_description">ثبت نام با موفقیت انجام شد. لینک فعال سازی حساب کاربری به ایمیل شما ارسال شد</string>
+    <string name="artist_page">صفحه خواننده</string>
+    <string name="bookmark">بوک مارک</string>
+    <string name="music_lyric">متن موزیک</string>
+    <string name="report_bug">گزارش خطا</string>
+
 
 
     <string name="show_more">نمایش همه</string>

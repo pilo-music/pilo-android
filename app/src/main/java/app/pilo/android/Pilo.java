@@ -9,7 +9,7 @@ public class Pilo extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // Required initialization logic here!
+        // Required initialization logic here!`
     }
 
     // Called by the system when the device configuration changes while your component is running.

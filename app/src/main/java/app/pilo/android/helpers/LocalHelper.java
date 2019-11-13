@@ -19,6 +19,9 @@ public class LocalHelper {
         Configuration configuration = context.getResources().getConfiguration();
         configuration.setLocale(locale);
 
+        UserSharedPrefManager userSharedPrefManager = new UserSharedPrefManager(context);
+        userSharedPrefManager.setLocal(language);
+
         return context.createConfigurationContext(configuration);
     }
 

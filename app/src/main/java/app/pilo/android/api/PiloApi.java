@@ -1,6 +1,16 @@
 package app.pilo.android.api;
 
-class PiloApi {
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import com.google.android.exoplayer2.SimpleExoPlayer;
+
+import java.util.ArrayList;
+
+import app.pilo.android.models.Music;
+
+public class PiloApi {
 
     private static final String BASE_URL = "https://api.pilo.app/api/v1/panel/";
     static final String HOME_GET = BASE_URL + "home/get";
@@ -17,5 +27,40 @@ class PiloApi {
     static final String ARTIST_GET = BASE_URL + "artist/";
     static final String ARTISTS_GET = BASE_URL + "artists/";
     static final String FORGOT_PASSWORD = BASE_URL + "password/create";
+
+
+    public static SimpleExoPlayer exoPlayer;
+    public static Context context;
+    public static int columnWidth = 0;
+    public static int playPos = 0;
+    public static ArrayList<Music> arrayList_play = new ArrayList<>();
+    public static Boolean isRepeat = false;
+    public static boolean isSuffle = false;
+    public static boolean isPlaying = false;
+    public static boolean isFav = false;
+    public static boolean isAppFirst = true;
+    public static boolean isPlayed = false;
+    public static boolean isFromNoti = false;
+    public static boolean isFromPush = false;
+    public static boolean isAppOpen = false;
+    public static boolean isOnline = true;
+    public static boolean isBannerAd = true;
+    public static boolean isInterAd = true;
+    public static boolean isSongDownload = false;
+    public static boolean isBannerAdCalled = false;
+    public static int volume = 25;
+    public static String frag = "", pushSID = "0", pushCID = "0", pushCName = "", pushAID = "0", pushANAME = "", search_item = "";
+
+    public static String loadedSongPage = "";
+    public static int rotateSpeed = 25000; //in milli seconds
+
+
+    public static boolean isNetworkAvailable(Context activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 
 }

@@ -30,7 +30,7 @@ public class UserSharedPrefManager {
         return sharedPreferences.getString(TOKEN, "");
     }
 
-    public boolean getLocal() {
-        return sharedPreferences.getBoolean(LOCAL, false);
+    public String getLocal() {
+        return sharedPreferences.getString(LOCAL,"fa");
     }
 }
