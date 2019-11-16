@@ -5,23 +5,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -29,17 +22,14 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import app.pilo.android.R;
-import app.pilo.android.api.PiloApi;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
-import app.pilo.android.helpers.LocalHelper;
 import app.pilo.android.helpers.RxBus;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.observers.DisposableObserver;
 
@@ -77,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.img_single_music_play)
     ImageView img_single_music_play;
-    @BindView(R.id.img_player_context_menu)
-    ImageView img_playerContextMenu;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -105,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
         setupMusicController();
         musicChangeListener();
-        setupMusicContextMenu();
     }
 
     private void setupMusicController() {
@@ -114,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment, String tag) {
-        if (sliding_layout.getPanelState() == PanelState.EXPANDED){
+        if (sliding_layout.getPanelState() == PanelState.EXPANDED) {
             sliding_layout.setPanelState(PanelState.COLLAPSED);
         }
 
@@ -174,18 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-   private void setupMusicContextMenu(){
-        img_playerContextMenu.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(MainActivity.this, v);
-            popup.setOnMenuItemClickListener(item -> false);
-            popup.inflate(R.menu.music_more);
-            popup.show();
-        });
-
-    }
-
-
+    
     public void musicChangeListener() {
         disposable = RxBus.getSubject().subscribeWith(new DisposableObserver<Object>() {
             @Override
@@ -250,10 +226,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public void switchContent(int id, Fragment fragment) {
-        this.loadFragment(fragment,fragment.getClass().toString());
+        this.loadFragment(fragment, fragment.getClass().toString());
 
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(id, fragment, fragment.toString());
@@ -272,16 +246,6 @@ public class MainActivity extends AppCompatActivity {
         unbinder.unbind();
         super.onDestroy();
         disposable.dispose();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
 }

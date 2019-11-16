@@ -7,6 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="toolbarStyle">@style/widget.Toolbar</item>
+        <item name="popupMenuStyle">@style/widget.popupMenu</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="AppTheme">
@@ -15,4 +17,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    
+    <style name="widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+    </style>
+
+    <style name="widget.popupMenu" parent="Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@drawable/popup_menu_style</item>
+    </style>
+
+    <style name="widget.popupMenu.rtl">
+        <item name="android:layoutDirection">rtl</item>
+    </style>
+
+
 </resources>

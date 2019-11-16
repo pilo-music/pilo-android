@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:title="@string/artist_page"
-        android:icon="@drawable/ic__ionicons_svg_md_person" />
-    <item
-        android:title="@string/bookmark"
-        android:icon="@drawable/ic_bookmark" />
-    <item
-        android:title="@string/music_lyric"
-        android:icon="@drawable/ic_list" />
-    <item
-        android:title="@string/report_bug"
-        android:icon="@drawable/ic_bug" />
+    <group android:id="@+id/group_1">
+        <item
+            android:icon="@drawable/ic__ionicons_svg_md_person"
+            android:title="@string/artist_page" />
+    </group>
+    <group android:id="@+id/group_2">
+        <item
+            android:icon="@drawable/ic_bookmark"
+            android:title="@string/bookmark" />
+    </group>
+    <group android:id="@+id/group_3">
+        <item
+            android:icon="@drawable/ic_list"
+            android:title="@string/music_lyric" />
+    </group>
+    <group android:id="@+id/group_4">
+        <item
+            android:icon="@drawable/ic_bug"
+            android:title="@string/report_bug" />
+    </group>
 
 </menu>
