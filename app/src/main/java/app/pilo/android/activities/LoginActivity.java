@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.error.VolleyError;
@@ -19,7 +17,7 @@ import com.tapadoo.alerter.Alerter;
 import app.pilo.android.R;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
-import app.pilo.android.helpers.UserSharedPrefManager;
+import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.User;
 import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
@@ -150,8 +148,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doLogin(User data) {
         if (data.getAccess_token() != null) {
-            UserSharedPrefManager userSharedPrefManager = new UserSharedPrefManager(this);
-            userSharedPrefManager.seToken(data.getAccess_token());
+            User user = new User(data.getAccess_token(), data.getName(), data.getEmail(), data.getPhone(), data.getBirth(), data.getGender(), data.getPic());
+            AppDatabase.getInstance(this).userDao().insert(user);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finishAffinity();
         }

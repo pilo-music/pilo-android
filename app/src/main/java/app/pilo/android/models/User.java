@@ -1,6 +1,13 @@
 package app.pilo.android.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "user")
 public class User {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     private String access_token;
     private String name;
     private String email;
@@ -82,5 +89,13 @@ public class User {
 
     public void setPic(String pic) {
         this.pic = pic;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

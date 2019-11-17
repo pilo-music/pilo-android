@@ -1,7 +1,6 @@
 package app.pilo.android.api;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -11,6 +10,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.User;
 
 public class UserApi {
@@ -39,9 +39,7 @@ public class UserApi {
                         } catch (JSONException e) {
                             requestHandler.onGetError(null);
                         }
-                    }, error -> {
-                requestHandler.onGetError(error);
-            });
+                    }, requestHandler::onGetError);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (
@@ -92,6 +90,28 @@ public class UserApi {
         } catch (JSONException e) {
             requestHandler.onGetError(null);
         }
+    }
+
+
+    public void me(final RequestHandler.RequestHandlerWithModel<User> requestHandler) {
+        JSONObject requestJsonObject = new JSONObject();
+        String token = AppDatabase.getInstance(context).userDao().get().getAccess_token();
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.ME + "?token=" + token, requestJsonObject,
+                response -> {
+                    try {
+                        String status;
+                        User user = null;
+                        status = response.getString("status");
+                        if (status.equals("success"))
+                            user = JsonParser.userJsonParser(response.getJSONObject("data"));
+
+                        requestHandler.onGetInfo(status, user);
+                    } catch (JSONException e) {
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 
 }

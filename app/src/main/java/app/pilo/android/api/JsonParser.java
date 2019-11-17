@@ -176,18 +176,12 @@ class JsonParser {
             }
             if (!jsonObject.isNull("user")) {
                 JSONObject userJsonObject = jsonObject.getJSONObject("user");
-                if (!userJsonObject.isNull("name"))
-                    user.setName(userJsonObject.getString("name"));
-                if (!userJsonObject.isNull("email"))
-                    user.setEmail(userJsonObject.getString("email"));
-                if (!userJsonObject.isNull("phone"))
-                    user.setPhone(userJsonObject.getString("phone"));
-                if (!userJsonObject.isNull("birth"))
-                    user.setPhone(userJsonObject.getString("phone"));
-                if (!userJsonObject.isNull("gender"))
-                    user.setGender(userJsonObject.getString("gender"));
-                if (!userJsonObject.isNull("pic"))
-                    user.setPic(userJsonObject.getString("pic"));
+                user.setName(userJsonObject.getString("name"));
+                user.setEmail(userJsonObject.getString("email"));
+                user.setPhone(userJsonObject.getString("phone"));
+                user.setPhone(userJsonObject.getString("phone"));
+                user.setGender(userJsonObject.getString("gender"));
+                user.setPic(userJsonObject.getString("pic"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
