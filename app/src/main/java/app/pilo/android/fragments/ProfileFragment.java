@@ -67,12 +67,12 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-//    @OnClick(R.id.img_profile_messages)
-//    void messages() {
-//        startActivity(new Intent(getActivity(), MessagesActivity.class));
-//    }
+    @OnClick(R.id.img_profile_messages)
+    void messages() {
+        startActivity(new Intent(getActivity(), MessagesActivity.class));
+    }
 
-    @OnClick(R.id.ll_profile_edit)
+    @OnClick(R.id.btn_profile_edit)
     void edit() {
         startActivity(new Intent(getActivity(), EditProfileActivity.class));
     }

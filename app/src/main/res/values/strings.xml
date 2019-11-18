@@ -46,6 +46,11 @@
     <string name="report_bug">گزارش خطا</string>
     <string name="follower">دنبال کننده</string>
     <string name="following">دنبال شونده</string>
+    <string name="save_edits">ذخیره تغییرات</string>
+    <string name="chose_photo">انتخاب عکس</string>
+    <string name="name">نام</string>
+    <string name="subject">موضوع</string>
+    <string name="message">پیام</string>
 
 
     <string name="show_more">نمایش همه</string>
