@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         userApi.register(et_email.getText().toString(), et_password.getText().toString(), new RequestHandler.RequestHandlerWithStatus() {
             @Override
             public void onGetInfo(String status) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 if (status.equals("exists")){
                     Alerter.create(RegisterActivity.this)
                             .setTitle(R.string.user_exist)
@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 Alerter.create(RegisterActivity.this)
                         .setTitle(R.string.server_connection_error)
                         .setTextTypeface(TypeFace.font(RegisterActivity.this))

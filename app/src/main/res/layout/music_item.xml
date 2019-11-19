@@ -5,12 +5,12 @@
     android:id="@+id/ll_music_item"
     android:layout_width="@dimen/_100sdp"
     android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:layoutDirection="ltr"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackgroundBorderless"
-    android:layout_marginStart="8dp"
+    android:layoutDirection="ltr"
     android:orientation="vertical">
 
     <FrameLayout
@@ -37,30 +37,24 @@
             android:adjustViewBounds="true"
             android:src="@drawable/ic_circle_play_black" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_label"
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            app:cardBackgroundColor="#D05E5E5E"
-            app:cardCornerRadius="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/font"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
-                android:text="MP3"
-                android:textColor="@android:color/white"
-                android:textSize="10sp" />
-        </androidx.cardview.widget.CardView>
+            android:alpha="0.8"
+            android:background="@drawable/dark_round_box_background"
+            android:fontFamily="@font/font"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="3dp"
+            android:text="MP3"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/small_font_size" />
     </FrameLayout>
 
     <TextView
@@ -68,8 +62,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:ellipsize="end"
         android:fontFamily="@font/font"
         android:gravity="center"
+        android:maxLines="1"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/normal_font_size"
         tools:text="دختر ترک" />
@@ -79,8 +75,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:ellipsize="end"
         android:fontFamily="@font/font"
         android:gravity="center"
+        android:maxLines="1"
         android:textColor="@color/colorDark"
         android:textSize="@dimen/small_font_size"
         tools:text="علیرضا روزگار" />

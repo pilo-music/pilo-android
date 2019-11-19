@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/activity_vertical_margin"
+    android:paddingTop="8dp"
+    android:paddingEnd="@dimen/activity_vertical_margin"
+    android:paddingBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_message_subject"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/font"
+            android:gravity="start"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/normal_font_size"
+            tools:text="موضوع پیام" />
+
+        <TextView
+            android:id="@+id/tv_message_created_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:layout_gravity="center"
+            android:fontFamily="@font/font"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/small_font_size"
+            tools:text="سه ماه قبل" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_message_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/font"
+        android:gravity="start"
+        android:textColor="@color/colorDark"
+        android:textSize="@dimen/small_font_size"
+        tools:text="متن پیام" />
+
+    <TextView
+        android:id="@+id/tv_message_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font"
+        tools:background="@drawable/primary_light_round_box_background"
+        android:gravity="center"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:paddingTop="5dp"
+        android:layout_marginTop="8dp"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:paddingBottom="5dp"
+        android:layout_gravity="end"
+        android:textColor="@color/colorDark"
+        android:textSize="@dimen/small_font_size"
+        tools:text="ادمین" />
+</LinearLayout>

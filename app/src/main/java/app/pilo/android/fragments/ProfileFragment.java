@@ -2,6 +2,7 @@ package app.pilo.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +43,11 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this, view);
         user = AppDatabase.getInstance(getActivity()).userDao().get();
         checkUserLogin();
-
         return view;
     }
 
     private void checkUserLogin() {
+        //todo : handle errors
         if (user != null)
             cv_login.setVisibility(View.GONE);
         else {
@@ -59,7 +60,7 @@ public class ProfileFragment extends Fragment {
 
                 @Override
                 public void onGetError(@Nullable VolleyError error) {
-
+                    Log.e("sadas", "onGetError: " + error.getMessage());
                 }
             });
 

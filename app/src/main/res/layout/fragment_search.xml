@@ -8,18 +8,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_height="@dimen/box_height"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:background="@drawable/search_box_bk"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingEnd="@dimen/activity_vertical_margin">
 
         <ImageView
             android:id="@+id/img_search_close"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
             android:src="@drawable/ic_close"
             android:visibility="gone" />
 
@@ -27,22 +29,15 @@
             android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
             android:layout_weight="1"
             android:background="@null"
             android:fontFamily="@font/font"
             android:hint="@string/search_search_hint"
             android:inputType="text"
             android:maxLines="1"
-            android:outlineAmbientShadowColor="@color/colorDark"
-            android:paddingLeft="8dp"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
             android:textSize="@dimen/normal_font_size" />
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/img_search_voice"
@@ -50,9 +45,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_recording" />
-
-
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:indeterminateOnly="true" />
 
 
     <LinearLayout

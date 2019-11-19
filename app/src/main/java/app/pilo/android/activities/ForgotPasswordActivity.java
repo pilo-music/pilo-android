@@ -48,7 +48,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         userApi.forgotPassword(et_email.getText().toString(), new RequestHandler.RequestHandlerWithData() {
             @Override
             public void onGetInfo(String status, String data) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 if (status.equals("success")) {
                     Alerter.create(ForgotPasswordActivity.this)
                             .setTitle(R.string.server_connection_error)
@@ -72,7 +72,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 Alerter.create(ForgotPasswordActivity.this)
                         .setTitle(R.string.server_connection_error)
                         .setTextTypeface(TypeFace.font(ForgotPasswordActivity.this))

@@ -16,61 +16,59 @@
         android:layout_marginStart="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_vertical_margin">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_label"
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_160sdp"
+            tools:src="@drawable/video_sample"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="10dp" />
+
+
+        <ImageView
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_circle_play_black" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
             android:layout_marginLeft="8dp"
+            android:alpha="0.8"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            app:cardBackgroundColor="#D05E5E5E"
-            app:cardCornerRadius="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/font"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
-                android:text="MP4"
-                android:textColor="@android:color/white"
-                android:textSize="10sp" />
-        </androidx.cardview.widget.CardView>
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/riv_video_item_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="190dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:riv_corner_radius="10dp"
-            app:riv_mutate_background="true"
-            tools:src="@drawable/video_sample" />
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layoutDirection="rtl"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingTop="8dp"
-        android:paddingEnd="@dimen/activity_vertical_margin2x">
-
-        <TextView
-            android:id="@+id/tv_video_item_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:fontFamily="@font/font"
             android:gravity="center"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/normal_font_size"
-            tools:text="دختر ترک" />
+            android:paddingStart="8dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="8dp"
+            android:background="@drawable/dark_round_box_background"
+            android:paddingBottom="3dp"
+            android:text="MP4"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/small_font_size" />
+</FrameLayout>
 
-    </LinearLayout>
-</LinearLayout>
+<LinearLayout
+android:layoutDirection="rtl"
+android:layout_height="wrap_content"
+android:layout_width="match_parent"
+android:orientation="horizontal"
+android:paddingEnd="@dimen/activity_vertical_margin2x"
+android:paddingStart="@dimen/activity_vertical_margin"
+android:paddingTop="8dp">
+
+<TextView
+    android:ellipsize="end"
+    android:fontFamily="@font/font"
+    android:gravity="start"
+    android:id="@+id/tv_video_item_title"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:maxLines="1"
+    android:textColor="@color/colorPrimaryDark"
+    android:textSize="@dimen/normal_font_size"
+    tools:text="دختر ترک" />
+
+</LinearLayout></LinearLayout>

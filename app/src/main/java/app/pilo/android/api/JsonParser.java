@@ -11,7 +11,10 @@ import java.util.List;
 
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
+import app.pilo.android.models.Bookmark;
 import app.pilo.android.models.HeroSlider;
+import app.pilo.android.models.Like;
+import app.pilo.android.models.Message;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.User;
@@ -187,5 +190,63 @@ class JsonParser {
             e.printStackTrace();
         }
         return user;
+    }
+
+
+    static Bookmark bookmarkJsonParser(JSONObject jsonObject) {
+        try {
+            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
+            return new Bookmark(
+                    jsonObject.getInt("id"),
+                    jsonObject.getString("type"),
+                    jsonObject.getString("slug"),
+                    jsonObject.getString("title"),
+                    jsonObject.getString("image"),
+                    jsonObject.getString("created_at"),
+                    jsonObjectArtist.getInt("id"),
+                    jsonObjectArtist.getString("name"),
+                    jsonObjectArtist.getString("slug")
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    static Like likeJsonParser(JSONObject jsonObject) {
+        try {
+            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
+            return new Like(
+                    jsonObject.getInt("id"),
+                    jsonObject.getString("type"),
+                    jsonObject.getString("slug"),
+                    jsonObject.getString("title"),
+                    jsonObject.getString("image"),
+                    jsonObject.getString("created_at"),
+                    jsonObjectArtist.getInt("id"),
+                    jsonObjectArtist.getString("name"),
+                    jsonObjectArtist.getString("slug")
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static Message messageJsonParser(JSONObject jsonObject) {
+        try {
+            return new Message(
+                    jsonObject.getInt("id"),
+                    jsonObject.getInt("sender"),
+                    jsonObject.getString("subject"),
+                    jsonObject.getString("text"),
+                    jsonObject.getString("type"),
+                    jsonObject.getString("created_at")
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

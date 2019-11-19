@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.error.VolleyError;
@@ -19,6 +20,7 @@ import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.User;
+import app.pilo.android.repositories.UserRepo;
 import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,20 +34,21 @@ public class LoginActivity extends AppCompatActivity {
     EditText et_password;
     @BindView(R.id.progress_bar_login)
     ProgressBar progressBar;
+    @BindView(R.id.ll_login)
+    LinearLayout ll_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        ll_login.setOnClickListener(v -> login());
     }
 
 
-    @OnClick(R.id.ll_login)
-    void login() {
+    private void login() {
         String email = et_email.getText().toString().trim();
         String password = et_password.getText().toString().trim();
-
         if (!isValidEmail(email)) {
             et_email.setError(getString(R.string.email_not_valid));
             return;
@@ -56,11 +59,13 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
+        ll_login.setEnabled(false);
         UserApi userApi = new UserApi(this);
         userApi.login(email, password, new RequestHandler.RequestHandlerWithModel<User>() {
             @Override
             public void onGetInfo(String status, User data) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
+                ll_login.setEnabled(true);
                 switch (status) {
                     case "success":
                         doLogin(data);
@@ -114,7 +119,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onGetError(VolleyError error) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
+                ll_login.setEnabled(true);
                 Alerter.create(LoginActivity.this)
                         .setTitle(R.string.server_connection_error)
                         .setTextTypeface(TypeFace.font(LoginActivity.this))
@@ -149,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
     private void doLogin(User data) {
         if (data.getAccess_token() != null) {
             User user = new User(data.getAccess_token(), data.getName(), data.getEmail(), data.getPhone(), data.getBirth(), data.getGender(), data.getPic());
-            AppDatabase.getInstance(this).userDao().insert(user);
+            UserRepo.getInstance(this).insert(user);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finishAffinity();
         }

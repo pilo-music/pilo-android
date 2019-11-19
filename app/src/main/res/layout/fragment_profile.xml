@@ -140,7 +140,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/pink_round_box_background"
+                android:background="@drawable/primary_round_box_background"
                 android:fontFamily="@font/font"
                 android:text="@string/profile_edit"
                 android:textColor="@android:color/white"

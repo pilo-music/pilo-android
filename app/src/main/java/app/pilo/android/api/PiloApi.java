@@ -19,6 +19,7 @@ public class PiloApi {
     static final String LOGIN = BASE_URL + "login";
     static final String REGISTER = BASE_URL + "register";
     static final String ME = BASE_URL + "me";
+    static final String UPDATE_PROFILE = BASE_URL + "me";
     static final String MUSIC_GET = "https://api.twitter.com/1/";
     static final String MUSICS_GET = "https://api.twitter.com/1/";
     static final String ALBUM_GET = BASE_URL + "album/";
@@ -27,7 +28,11 @@ public class PiloApi {
     static final String VIDEOS_GET = "https://api.twitter.com/1/";
     static final String ARTIST_GET = BASE_URL + "artist/";
     static final String ARTISTS_GET = BASE_URL + "artists/";
+    static final String LIKES_GET= BASE_URL + "likes";
+    static final String BOOKMARKS_GET= BASE_URL + "bookmarks";
+    static final String MESSAGES_GET = BASE_URL + "messages";
     static final String FORGOT_PASSWORD = BASE_URL + "password/create";
+    static final String CONTACTUS = BASE_URL + "message/add";
 
 
     public static boolean isNetworkAvailable(Context activity) {

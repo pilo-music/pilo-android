@@ -17,13 +17,13 @@ public class User {
     private String pic;
 
     public User() {
-        this.access_token = null;
-        this.name = null;
-        this.email = null;
-        this.phone = null;
-        this.birth = null;
-        this.gender = null;
-        this.pic = null;
+        this.access_token = "";
+        this.name = "";
+        this.email = "";
+        this.phone = "";
+        this.birth = "";
+        this.gender = "";
+        this.pic = "";
     }
 
     public User(String access_token, String name, String email, String phone, String birth, String gender, String pic) {
@@ -40,7 +40,7 @@ public class User {
     }
 
     public void setAccess_token(String access_token) {
-        this.access_token = access_token;
+        this.access_token = access_token == null ? "" : access_token;
     }
 
     public String getName() {
@@ -48,7 +48,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? "" : name;
     }
 
     public String getEmail() {
@@ -56,7 +56,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email == null ? "" : email;
     }
 
     public String getPhone() {
@@ -64,7 +64,7 @@ public class User {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phone = phone == null ? "" : phone;
     }
 
     public String getBirth() {
@@ -72,7 +72,7 @@ public class User {
     }
 
     public void setBirth(String birth) {
-        this.birth = birth;
+        this.birth = birth == null ? "" : birth;
     }
 
     public String getGender() {
@@ -80,7 +80,7 @@ public class User {
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        this.gender = gender == null ? "" : gender;
     }
 
     public String getPic() {
@@ -88,7 +88,7 @@ public class User {
     }
 
     public void setPic(String pic) {
-        this.pic = pic;
+        this.pic = pic == null ? "" : pic;
     }
 
     public int getId() {

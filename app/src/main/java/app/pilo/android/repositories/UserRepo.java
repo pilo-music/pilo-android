@@ -51,7 +51,11 @@ public class UserRepo {
     private class GetUserAsyncTask extends AsyncTask<Void, Void, User> {
         @Override
         protected User doInBackground(Void... voids) {
-            return userDao.get();
+            User user = userDao.get();
+            if (user == null) {
+                return new User();
+            } else
+                return user;
         }
     }
 }

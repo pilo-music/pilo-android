@@ -24,7 +24,7 @@
     <string name="forgot_password_btn">بازیابی رمز عبور</string>
     <string name="password">رمز عبور</string>
     <string name="confirm">تکرار رمز عبور</string>
-    <string name="have_account">قبلا ثبت نام کرده اید ? ورود</string>
+    <string name="have_account">قبلا ثبت نام کرده اید ؟ ورود</string>
     <string name="or">یا</string>
     <string name="login_with_google">ورود با گوگل</string>
     <string name="register">ثبت نام</string>
@@ -39,6 +39,7 @@
     <string name="user_exist">ایمیل مورد نظر ثبت شده است</string>
     <string name="user_exist_description">لطفا یک ایمیل دیگر را انتخاب نمایید</string>
     <string name="register_success">ثبت نام با موفقیت انجام شد</string>
+    <string name="operation_done">عملیات با موفقیت انجام شد</string>
     <string name="register_success_description">ثبت نام با موفقیت انجام شد. لینک فعال سازی حساب کاربری به ایمیل شما ارسال شد</string>
     <string name="artist_page">صفحه خواننده</string>
     <string name="bookmark">بوک مارک</string>
@@ -51,7 +52,11 @@
     <string name="name">نام</string>
     <string name="subject">موضوع</string>
     <string name="message">پیام</string>
-
+    <string name="messages">پیام ها</string>
+    <string name="admin">پیام ها</string>
+    <string name="you">شما</string>
+    <string name="send">ارسال</string>
+    <string name="filed_required">وارد کردن این فیلد الزامی است</string>
 
     <string name="show_more">نمایش همه</string>
     <string name="new_best">جدیدترین های برگزیده</string>
