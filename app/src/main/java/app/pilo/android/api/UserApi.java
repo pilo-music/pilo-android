@@ -41,8 +41,7 @@ public class UserApi {
                     }, requestHandler::onGetError);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
-        } catch (
-                JSONException e) {
+        } catch (JSONException e) {
             requestHandler.onGetError(null);
         }
 

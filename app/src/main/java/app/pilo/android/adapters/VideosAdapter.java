@@ -56,8 +56,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
         viewHolder.ll_video_item.setLayoutParams(params);
 
 
-
-
         Video video = videos.get(position);
         viewHolder.cv_label.setAlpha(.7f);
         viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist_name());

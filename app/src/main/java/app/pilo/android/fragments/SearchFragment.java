@@ -8,6 +8,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,6 +28,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.api.RequestHandler;
@@ -35,7 +38,10 @@ import app.pilo.android.fragments.search_fragment.SearchArtistsFragment;
 import app.pilo.android.fragments.search_fragment.SearchMusicsFragment;
 import app.pilo.android.fragments.search_fragment.SearchPlaylistFragment;
 import app.pilo.android.fragments.search_fragment.SearchVideosFragment;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Search;
+import app.pilo.android.models.SearchHistory;
+import app.pilo.android.repositories.SearchHistoryRepo;
 import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +54,8 @@ public class SearchFragment extends Fragment {
     ViewPager2 viewPager;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
-    @BindView(R.id.et_search)
-    EditText et_search;
+    @BindView(R.id.auto_complete_search)
+    AutoCompleteTextView et_search;
     @BindView(R.id.img_search_voice)
     ImageView img_search_voice;
     @BindView(R.id.img_search_close)
@@ -58,14 +64,16 @@ public class SearchFragment extends Fragment {
     ProgressBar progressBar;
 
     private View view;
+    private UserSharedPrefManager userSharedPrefManager;
     private final int REQ_CODE_SPEECH_INPUT = 100;
-
+    private ArrayAdapter<SearchHistory> at_search_adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
+        userSharedPrefManager = new UserSharedPrefManager(getActivity());
         initSearchView();
 
         img_search_close.setOnClickListener(v -> {
@@ -78,14 +86,15 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-
     private void promptSpeechInput() {
-        //Todo: check local and add extra lang
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fa");
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en");
+
+        if (userSharedPrefManager.getLocal().equals("fa"))
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fa");
+        else
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en");
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, R.string.search_search_hint);
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
@@ -95,6 +104,16 @@ public class SearchFragment extends Fragment {
     }
 
     private void initSearchView() {
+        List<SearchHistory> searches = SearchHistoryRepo.getInstance(getActivity()).get();
+        at_search_adapter = new ArrayAdapter<>(getActivity(), R.layout.search_history_item, R.id.autoCompleteItem, searches);
+        et_search.setThreshold(5);
+        et_search.setAdapter(at_search_adapter);
+        et_search.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus)
+                et_search.showDropDown();
+        });
+
+
         et_search.setOnKeyListener((v, keyCode, event) -> {
             try {
                 if (et_search.getText().toString().length() > 0) {
@@ -185,6 +204,8 @@ public class SearchFragment extends Fragment {
                             .setButtonTypeface(TypeFace.font(getActivity()))
                             .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
                             .show();
+
+                    et_search.setText("");
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
                     tabLayout.setVisibility(View.VISIBLE);
@@ -207,6 +228,12 @@ public class SearchFragment extends Fragment {
                         .show();
             }
         });
+
+        SearchHistory searchHistory = new SearchHistory(text);
+        SearchHistoryRepo.getInstance(getActivity()).insert(searchHistory);
+        at_search_adapter.notifyDataSetChanged();
+        et_search.setText("");
+
     }
 
 
