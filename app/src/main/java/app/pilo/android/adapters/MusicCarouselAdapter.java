@@ -42,8 +42,6 @@ public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdap
     @Override
     public void onBindViewHolder(@NonNull MusicCarouselAdapterViewHolder holder, final int position) {
         final Music music = musics.get(position);
-        holder.cv_label.setAlpha(.7f);
-        holder.img_music_item_play.setAlpha(.8f);
         holder.tv_music_title.setText(music.getTitle());
         holder.tv_music_artist.setText(music.getArtist_name());
         Glide.with(context)
@@ -76,8 +74,6 @@ public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdap
         ImageView music_item_image;
         @BindView(R.id.ll_music_item)
         LinearLayout ll_music_item;
-        @BindView(R.id.cv_label)
-        CardView cv_label;
 
         MusicCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

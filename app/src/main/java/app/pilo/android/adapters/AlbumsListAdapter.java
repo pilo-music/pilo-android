@@ -112,8 +112,6 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         ImageView album_image;
         @BindView(R.id.ll_album_item)
         LinearLayout ll_album_item;
-        @BindView(R.id.cv_label)
-        CardView cv_label;
 
 
         ViewHolder(View itemView) {
@@ -129,8 +127,6 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             super.onBind(position);
             Album album = albums.get(position);
 
-            cv_label.setAlpha(.7f);
-            img_album_play.setAlpha(.8f);
             tv_album_title.setText(album.getTitle());
             tv_album_artist.setText(album.getArtist_name());
             Glide.with(context)

@@ -52,8 +52,6 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
         holder.ll_playlist_item.setLayoutParams(params);
 
         final Playlist playlist = playlists.get(position);
-        holder.cv_label.setAlpha(.7f);
-        holder.img_playlist_play.setAlpha(.8f);
         holder.tv_playlist_title.setText(playlist.getTitle());
         holder.tv_playlist_artist.setText(playlist.getArtist_name());
         Glide.with(context)
@@ -103,8 +101,6 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
         ImageView playlist_image;
         @BindView(R.id.ll_playlist_item)
         LinearLayout ll_playlist_item;
-        @BindView(R.id.cv_label)
-        CardView cv_label;
 
         PlaylistAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

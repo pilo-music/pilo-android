@@ -46,8 +46,6 @@ public class AlbumCarouselAdapter extends RecyclerView.Adapter<AlbumCarouselAdap
     @Override
     public void onBindViewHolder(@NonNull AlbumCarouselAdapterViewHolder holder, final int position) {
         final Album album = albums.get(position);
-        holder.cv_label.setAlpha(.7f);
-        holder.img_album_play.setAlpha(.8f);
         holder.tv_album_title.setText(album.getTitle());
         holder.tv_album_artist.setText(album.getArtist_name());
         Glide.with(context)
@@ -86,8 +84,6 @@ public class AlbumCarouselAdapter extends RecyclerView.Adapter<AlbumCarouselAdap
         ImageView album_image;
         @BindView(R.id.ll_album_item)
         LinearLayout ll_album_item;
-        @BindView(R.id.cv_label)
-        CardView cv_label;
 
         AlbumCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

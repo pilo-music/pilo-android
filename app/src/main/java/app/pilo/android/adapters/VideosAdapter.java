@@ -57,7 +57,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
 
 
         Video video = videos.get(position);
-        viewHolder.cv_label.setAlpha(.7f);
+
         viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist_name());
         Glide.with(context)
                 .load(video.getImage())
@@ -105,8 +105,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
         TextView tv_video_item_title;
         @BindView(R.id.ll_video_item)
         LinearLayout ll_video_item;
-        @BindView(R.id.cv_label)
-        CardView cv_label;
 
         VideoAdapterViewHolder(View itemView) {
             super(itemView);

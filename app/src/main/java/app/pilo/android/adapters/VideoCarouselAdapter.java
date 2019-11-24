@@ -44,7 +44,6 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
         Video video = videos.get(position);
-        viewHolder.cv_label.setAlpha(.7f);
         viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist_name());
         Glide.with(context)
                 .load(video.getImage())
@@ -74,8 +73,6 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
     }
 
     class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
-
-        private View itemView;
         private RoundedImageView riv_video_item_image;
         private TextView tv_video_item_title;
         private LinearLayout ll_video_item;
@@ -87,7 +84,6 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
             tv_video_item_title = itemView.findViewById(R.id.tv_video_item_title);
             ll_video_item = itemView.findViewById(R.id.ll_video_item);
             cv_label = itemView.findViewById(R.id.cv_label);
-            this.itemView = itemView;
         }
     }
 }
