@@ -16,7 +16,7 @@ import com.tapadoo.alerter.Alerter;
 import app.pilo.android.R;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -52,18 +52,18 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 if (status.equals("success")) {
                     Alerter.create(ForgotPasswordActivity.this)
                             .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(TypeFace.font(ForgotPasswordActivity.this))
-                            .setTitleTypeface(TypeFace.font(ForgotPasswordActivity.this))
-                            .setButtonTypeface(TypeFace.font(ForgotPasswordActivity.this))
+                            .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
+                            .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
+                            .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
                             .setText(R.string.forgot_password_send)
                             .setBackgroundColorRes(R.color.colorGreen)
                             .show();
                 } else {
                     Alerter.create(ForgotPasswordActivity.this)
                             .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(TypeFace.font(ForgotPasswordActivity.this))
-                            .setTitleTypeface(TypeFace.font(ForgotPasswordActivity.this))
-                            .setButtonTypeface(TypeFace.font(ForgotPasswordActivity.this))
+                            .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
+                            .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
+                            .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
                             .setText(data)
                             .setBackgroundColorRes(R.color.colorWarning)
                             .show();
@@ -75,9 +75,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 Alerter.create(ForgotPasswordActivity.this)
                         .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(TypeFace.font(ForgotPasswordActivity.this))
-                        .setTitleTypeface(TypeFace.font(ForgotPasswordActivity.this))
-                        .setButtonTypeface(TypeFace.font(ForgotPasswordActivity.this))
+                        .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
+                        .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
+                        .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
                         .setText(R.string.server_connection_message)
                         .setBackgroundColorRes(R.color.colorError)
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)

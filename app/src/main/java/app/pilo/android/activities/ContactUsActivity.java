@@ -18,7 +18,7 @@ import com.tapadoo.alerter.Alerter;
 import app.pilo.android.R;
 import app.pilo.android.api.MessageApi;
 import app.pilo.android.api.RequestHandler;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -68,9 +68,9 @@ public class ContactUsActivity extends AppCompatActivity {
                     if (status.equals("success")){
                         Alerter.create(ContactUsActivity.this)
                                 .setTitle(R.string.operation_done)
-                                .setTextTypeface(TypeFace.font(ContactUsActivity.this))
-                                .setTitleTypeface(TypeFace.font(ContactUsActivity.this))
-                                .setButtonTypeface(TypeFace.font(ContactUsActivity.this))
+                                .setTextTypeface(Utils.font(ContactUsActivity.this))
+                                .setTitleTypeface(Utils.font(ContactUsActivity.this))
+                                .setButtonTypeface(Utils.font(ContactUsActivity.this))
                                 .setBackgroundColorRes(R.color.colorGreen)
                                 .show();
                     }

@@ -20,10 +20,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.models.Artist;
-import app.pilo.android.utils.FragmentSwitcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -64,7 +62,7 @@ public class ArtistCarouselAdapter extends RecyclerView.Adapter<ArtistCarouselAd
         mBundle.putString("name", artist.getName());
         mBundle.putString("image", artist.getImage());
         mBundle.putInt("id", artist.getId());
-        new FragmentSwitcher(context, new SingleArtistFragment(), mBundle);
+//        new FragmentSwitcher(context, new SingleArtistFragment(), mBundle);
     }
 
 

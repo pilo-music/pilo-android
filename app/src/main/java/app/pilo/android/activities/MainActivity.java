@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,19 +22,26 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
+import org.jetbrains.annotations.NotNull;
+
 import app.pilo.android.R;
+import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.helpers.RxBus;
 import app.pilo.android.models.Music;
+import app.pilo.android.utils.FragmentHistory;
+import app.pilo.android.utils.Utils;
+import app.pilo.android.views.FragNavController;
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.observers.DisposableObserver;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
     // main activity
     @BindView(R.id.tabs)
@@ -71,13 +79,33 @@ public class MainActivity extends AppCompatActivity {
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
     private DisposableObserver disposable;
+    private FragNavController mNavController;
+    private FragmentHistory fragmentHistory;
+    private int[] mTabIconsSelected = {
+            R.drawable.bottom_tab_home,
+            R.drawable.bottom_tab_browser,
+            R.drawable.bottom_tab_search,
+            R.drawable.bottom_tab_profile};
+    @BindArray(R.array.tab_name)
+    String[] TABS;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
+
+        initTab();
+        fragmentHistory = new FragmentHistory();
+        mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
+                .transactionListener(this)
+                .rootFragmentListener(this, TABS.length)
+                .build();
+        switchTab(0);
         setupBottomNavigation();
+
+
         ll_page_header.setAlpha(0);
         sliding_layout.addPanelSlideListener(new PanelSlideListener() {
             @Override
@@ -91,61 +119,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
-        setupMusicController();
         musicChangeListener();
     }
 
-    private void setupMusicController() {
-        img_single_music_play.setOnClickListener(v -> {
-        });
-    }
-
-    private void loadFragment(Fragment fragment, String tag) {
-        if (sliding_layout.getPanelState() == PanelState.EXPANDED) {
-            sliding_layout.setPanelState(PanelState.COLLAPSED);
-        }
-
-        FragmentManager fm = getSupportFragmentManager();
-        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-            fm.popBackStack();
-        }
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment curFrag = getSupportFragmentManager().getPrimaryNavigationFragment();
-        if (curFrag != null) {
-            transaction.detach(curFrag);
-        }
-        Fragment fragment1 = getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment1 == null) {
-            fragment1 = fragment;
-            transaction.add(R.id.framelayout, fragment1, tag);
-        } else {
-            transaction.attach(fragment1);
-        }
-        transaction.setPrimaryNavigationFragment(fragment1);
-        transaction.setReorderingAllowed(true);
-        transaction.commitNowAllowingStateLoss();
-    }
 
     private void setupBottomNavigation() {
-//        bottomBar.setSelectedItemId(0);
-        loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        loadFragment(new HomeFragment(), "MAIN_HOME_FRAGMENT");
-                        break;
-                    case 1:
-                        loadFragment(new BrowserFragment(), "MAIN_BROWSER_FRAGMENT");
-                        break;
-                    case 2:
-                        loadFragment(new SearchFragment(), "MAIN_SEARCH_FRAGMENT");
-                        break;
-                    case 3:
-                        loadFragment(new ProfileFragment(), "MAIN_PROFILE_FRAGMENT");
-                        break;
-                }
+                fragmentHistory.push(tab.getPosition());
+                switchTab(tab.getPosition());
             }
 
             @Override
@@ -155,13 +138,39 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                mNavController.clearStack();
+                switchTab(tab.getPosition());
             }
         });
 
     }
 
-    
+
+    private void initTab() {
+        if (tabLayout != null) {
+            for (int i = 0; i < TABS.length; i++) {
+                tabLayout.addTab(tabLayout.newTab());
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null)
+                    tab.setCustomView(getTabView(i));
+            }
+        }
+    }
+
+
+    private View getTabView(int position) {
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_item_bottom, null);
+        ImageView icon = view.findViewById(R.id.tab_icon);
+        icon.setImageResource(mTabIconsSelected[position]);
+        return view;
+    }
+
+
+    private void switchTab(int position) {
+        mNavController.switchTab(position);
+    }
+
+
     public void musicChangeListener() {
         disposable = RxBus.getSubject().subscribeWith(new DisposableObserver<Object>() {
             @Override
@@ -202,13 +211,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        try {
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                    fm.popBackStack();
-                }
-            } else {
+        if (!mNavController.isRootFragment()) {
+            mNavController.popFragment();
+        } else {
+            if (fragmentHistory.isEmpty()) {
                 if (doubleBackToExitPressedOnce) {
                     super.onBackPressed();
                     finish();
@@ -217,23 +223,67 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
                 }
+            } else {
+                if (fragmentHistory.getStackSize() > 1) {
+                    int position = fragmentHistory.popPrevious();
+                    switchTab(position);
+                    updateTabSelection(position);
+                } else {
+                    switchTab(0);
+                    updateTabSelection(0);
+                    fragmentHistory.emptyStack();
+                }
             }
-        } catch (
-                Exception e) {
-            e.printStackTrace();
         }
-
     }
 
 
-    public void switchContent(int id, Fragment fragment) {
-        this.loadFragment(fragment, fragment.getClass().toString());
+    private void updateTabSelection(int currentTab) {
 
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.replace(id, fragment, fragment.toString());
-//        ft.addToBackStack(null);
-//        ft.commit();
+        for (int i = 0; i < TABS.length; i++) {
+            TabLayout.Tab selectedTab = tabLayout.getTabAt(i);
+            if (currentTab != i) {
+                if (selectedTab != null && selectedTab.getCustomView() != null)
+                    selectedTab.getCustomView().setSelected(false);
+            } else {
+                if (selectedTab != null && selectedTab.getCustomView() != null)
+                    selectedTab.getCustomView().setSelected(true);
+            }
+        }
     }
+
+    @Override
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mNavController != null) {
+            mNavController.onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
+    public void pushFragment(Fragment fragment) {
+        if (mNavController != null) {
+            mNavController.pushFragment(fragment);
+        }
+    }
+
+
+    @Override
+    public Fragment getRootFragment(int index) {
+        switch (index) {
+
+            case FragNavController.TAB1:
+                return new HomeFragment();
+            case FragNavController.TAB2:
+                return new BrowserFragment();
+            case FragNavController.TAB3:
+                return new SearchFragment();
+            case FragNavController.TAB4:
+                return new ProfileFragment();
+        }
+        throw new IllegalStateException("Need to send an index that we know");
+    }
+
 
     @Override
     protected void onResume() {
@@ -248,4 +298,14 @@ public class MainActivity extends AppCompatActivity {
         disposable.dispose();
     }
 
+
+    @Override
+    public void onTabTransaction(Fragment fragment, int index) {
+
+    }
+
+    @Override
+    public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
+
+    }
 }

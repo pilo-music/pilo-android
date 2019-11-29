@@ -35,7 +35,7 @@ import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -135,9 +135,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (status.equals("success")) {
                     Alerter.create(EditProfileActivity.this)
                             .setTitle(R.string.operation_done)
-                            .setTextTypeface(TypeFace.font(EditProfileActivity.this))
-                            .setTitleTypeface(TypeFace.font(EditProfileActivity.this))
-                            .setButtonTypeface(TypeFace.font(EditProfileActivity.this))
+                            .setTextTypeface(Utils.font(EditProfileActivity.this))
+                            .setTitleTypeface(Utils.font(EditProfileActivity.this))
+                            .setButtonTypeface(Utils.font(EditProfileActivity.this))
                             .setBackgroundColorRes(R.color.colorGreen)
                             .show();
                 }

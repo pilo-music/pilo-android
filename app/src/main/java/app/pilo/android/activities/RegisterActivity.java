@@ -17,7 +17,7 @@ import com.tapadoo.alerter.Alerter;
 import app.pilo.android.R;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,27 +63,27 @@ public class RegisterActivity extends AppCompatActivity {
                 if (status.equals("exists")){
                     Alerter.create(RegisterActivity.this)
                             .setTitle(R.string.user_exist)
-                            .setTextTypeface(TypeFace.font(RegisterActivity.this))
-                            .setTitleTypeface(TypeFace.font(RegisterActivity.this))
-                            .setButtonTypeface(TypeFace.font(RegisterActivity.this))
+                            .setTextTypeface(Utils.font(RegisterActivity.this))
+                            .setTitleTypeface(Utils.font(RegisterActivity.this))
+                            .setButtonTypeface(Utils.font(RegisterActivity.this))
                             .setText(R.string.user_exist_description)
                             .setBackgroundColorRes(R.color.colorWarning)
                             .show();
                 }else if (status.equals("success")){
                     Alerter.create(RegisterActivity.this)
                             .setTitle(R.string.register_success)
-                            .setTextTypeface(TypeFace.font(RegisterActivity.this))
-                            .setTitleTypeface(TypeFace.font(RegisterActivity.this))
-                            .setButtonTypeface(TypeFace.font(RegisterActivity.this))
+                            .setTextTypeface(Utils.font(RegisterActivity.this))
+                            .setTitleTypeface(Utils.font(RegisterActivity.this))
+                            .setButtonTypeface(Utils.font(RegisterActivity.this))
                             .setText(R.string.register_success_description)
                             .setBackgroundColorRes(R.color.colorGreen)
                             .show();
                 }else{
                     Alerter.create(RegisterActivity.this)
                             .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(TypeFace.font(RegisterActivity.this))
-                            .setTitleTypeface(TypeFace.font(RegisterActivity.this))
-                            .setButtonTypeface(TypeFace.font(RegisterActivity.this))
+                            .setTextTypeface(Utils.font(RegisterActivity.this))
+                            .setTitleTypeface(Utils.font(RegisterActivity.this))
+                            .setButtonTypeface(Utils.font(RegisterActivity.this))
                             .setText(R.string.server_connection_message)
                             .setBackgroundColorRes(R.color.colorError)
                             .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -97,9 +97,9 @@ public class RegisterActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 Alerter.create(RegisterActivity.this)
                         .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(TypeFace.font(RegisterActivity.this))
-                        .setTitleTypeface(TypeFace.font(RegisterActivity.this))
-                        .setButtonTypeface(TypeFace.font(RegisterActivity.this))
+                        .setTextTypeface(Utils.font(RegisterActivity.this))
+                        .setTitleTypeface(Utils.font(RegisterActivity.this))
+                        .setButtonTypeface(Utils.font(RegisterActivity.this))
                         .setText(R.string.server_connection_message)
                         .setBackgroundColorRes(R.color.colorError)
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)

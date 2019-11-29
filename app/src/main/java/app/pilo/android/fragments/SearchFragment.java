@@ -42,7 +42,7 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Search;
 import app.pilo.android.models.SearchHistory;
 import app.pilo.android.repositories.SearchHistoryRepo;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -199,9 +199,9 @@ public class SearchFragment extends BaseFragment {
                             .setTitle(R.string.server_connection_error)
                             .setText(R.string.server_connection_message)
                             .setBackgroundColorRes(R.color.colorError)
-                            .setTitleTypeface(TypeFace.font(getActivity()))
-                            .setTextTypeface(TypeFace.font(getActivity()))
-                            .setButtonTypeface(TypeFace.font(getActivity()))
+                            .setTitleTypeface(Utils.font(getActivity()))
+                            .setTextTypeface(Utils.font(getActivity()))
+                            .setButtonTypeface(Utils.font(getActivity()))
                             .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
                             .show();
 
@@ -221,9 +221,9 @@ public class SearchFragment extends BaseFragment {
                         .setTitle(R.string.server_connection_error)
                         .setText(R.string.server_connection_message)
                         .setBackgroundColorRes(R.color.colorError)
-                        .setTitleTypeface(TypeFace.font(getActivity()))
-                        .setTextTypeface(TypeFace.font(getActivity()))
-                        .setButtonTypeface(TypeFace.font(getActivity()))
+                        .setTitleTypeface(Utils.font(getActivity()))
+                        .setTextTypeface(Utils.font(getActivity()))
+                        .setButtonTypeface(Utils.font(getActivity()))
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
                         .show();
             }

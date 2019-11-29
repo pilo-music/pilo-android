@@ -29,7 +29,7 @@ import app.pilo.android.api.RequestHandler;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleAlbum;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -115,9 +115,9 @@ public class SingleAlbumFragment extends BaseFragment {
                 } else {
                     Alerter.create(getActivity())
                             .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(TypeFace.font(getActivity()))
-                            .setTitleTypeface(TypeFace.font(getActivity()))
-                            .setButtonTypeface(TypeFace.font(getActivity()))
+                            .setTextTypeface(Utils.font(getActivity()))
+                            .setTitleTypeface(Utils.font(getActivity()))
+                            .setButtonTypeface(Utils.font(getActivity()))
                             .setText(R.string.server_connection_message)
                             .setBackgroundColorRes(R.color.colorError)
                             .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -129,9 +129,9 @@ public class SingleAlbumFragment extends BaseFragment {
             public void onGetError(VolleyError error) {
                 Alerter.create(getActivity())
                         .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(TypeFace.font(getActivity()))
-                        .setTitleTypeface(TypeFace.font(getActivity()))
-                        .setButtonTypeface(TypeFace.font(getActivity()))
+                        .setTextTypeface(Utils.font(getActivity()))
+                        .setTitleTypeface(Utils.font(getActivity()))
+                        .setButtonTypeface(Utils.font(getActivity()))
                         .setText(R.string.server_connection_message)
                         .setBackgroundColorRes(R.color.colorError)
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)

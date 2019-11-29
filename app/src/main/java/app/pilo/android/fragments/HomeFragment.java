@@ -36,8 +36,7 @@ import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
-import app.pilo.android.utils.FragmentSwitcher;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -125,9 +124,9 @@ public class HomeFragment extends BaseFragment {
                             .setTitle(R.string.server_connection_error)
                             .setText(R.string.server_connection_message)
                             .setBackgroundColorRes(R.color.colorError)
-                            .setTitleTypeface(TypeFace.font(getActivity()))
-                            .setTextTypeface(TypeFace.font(getActivity()))
-                            .setButtonTypeface(TypeFace.font(getActivity()))
+                            .setTitleTypeface(Utils.font(getActivity()))
+                            .setTextTypeface(Utils.font(getActivity()))
+                            .setButtonTypeface(Utils.font(getActivity()))
                             .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
                             .show();
                 }
@@ -186,7 +185,7 @@ public class HomeFragment extends BaseFragment {
             AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(new WeakReference<>(getActivity()), albums);
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);
-            tv_album_carousel_show_more.setOnClickListener(v -> new FragmentSwitcher(getActivity(), new AlbumsFragment(), null));
+//            tv_album_carousel_show_more.setOnClickListener(v -> new FragmentSwitcher(getActivity(), new AlbumsFragment(), null));
         }
     }
 

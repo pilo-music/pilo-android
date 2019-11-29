@@ -25,7 +25,7 @@ import app.pilo.android.adapters.PaginationListener;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Album;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -98,9 +98,9 @@ public class AlbumsFragment extends BaseFragment implements SwipeRefreshLayout.O
                         isLastPage = true;
                         Alerter.create(getActivity())
                                 .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(TypeFace.font(getActivity()))
-                                .setTitleTypeface(TypeFace.font(getActivity()))
-                                .setButtonTypeface(TypeFace.font(getActivity()))
+                                .setTextTypeface(Utils.font(getActivity()))
+                                .setTitleTypeface(Utils.font(getActivity()))
+                                .setButtonTypeface(Utils.font(getActivity()))
                                 .setText(R.string.server_connection_message)
                                 .setBackgroundColorRes(R.color.colorError)
                                 .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -115,9 +115,9 @@ public class AlbumsFragment extends BaseFragment implements SwipeRefreshLayout.O
                     srl_albums.setRefreshing(false);
                     Alerter.create(getActivity())
                             .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(TypeFace.font(getActivity()))
-                            .setTitleTypeface(TypeFace.font(getActivity()))
-                            .setButtonTypeface(TypeFace.font(getActivity()))
+                            .setTextTypeface(Utils.font(getActivity()))
+                            .setTitleTypeface(Utils.font(getActivity()))
+                            .setButtonTypeface(Utils.font(getActivity()))
                             .setText(R.string.server_connection_message)
                             .setBackgroundColorRes(R.color.colorError)
                             .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)

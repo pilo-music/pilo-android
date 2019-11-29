@@ -21,10 +21,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SingleAlbumFragment;
 import app.pilo.android.models.Album;
-import app.pilo.android.utils.FragmentSwitcher;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -65,7 +63,7 @@ public class AlbumCarouselAdapter extends RecyclerView.Adapter<AlbumCarouselAdap
         mBundle.putString("artist", album.getArtist_name());
         mBundle.putString("artist_slug", album.getArtist_slug());
         mBundle.putString("image", album.getImage());
-        new FragmentSwitcher(context, new SingleAlbumFragment(), mBundle);
+//        new FragmentSwitcher(context, new SingleAlbumFragment(), mBundle);
     }
 
 

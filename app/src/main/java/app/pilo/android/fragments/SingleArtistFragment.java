@@ -34,11 +34,10 @@ import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.ArtistApi;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Album;
-import app.pilo.android.models.Artist;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleArtist;
 import app.pilo.android.models.Video;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -152,9 +151,9 @@ public class SingleArtistFragment extends BaseFragment {
                     } else {
                         Alerter.create(getActivity())
                                 .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(TypeFace.font(getActivity()))
-                                .setTitleTypeface(TypeFace.font(getActivity()))
-                                .setButtonTypeface(TypeFace.font(getActivity()))
+                                .setTextTypeface(Utils.font(getActivity()))
+                                .setTitleTypeface(Utils.font(getActivity()))
+                                .setButtonTypeface(Utils.font(getActivity()))
                                 .setText(R.string.server_connection_message)
                                 .setBackgroundColorRes(R.color.colorError)
                                 .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -167,9 +166,9 @@ public class SingleArtistFragment extends BaseFragment {
             public void onGetError(VolleyError error) {
                 Alerter.create(getActivity())
                         .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(TypeFace.font(getActivity()))
-                        .setTitleTypeface(TypeFace.font(getActivity()))
-                        .setButtonTypeface(TypeFace.font(getActivity()))
+                        .setTextTypeface(Utils.font(getActivity()))
+                        .setTitleTypeface(Utils.font(getActivity()))
+                        .setButtonTypeface(Utils.font(getActivity()))
                         .setText(R.string.server_connection_message)
                         .setBackgroundColorRes(R.color.colorError)
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)

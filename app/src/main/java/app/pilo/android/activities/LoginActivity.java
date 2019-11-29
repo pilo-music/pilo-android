@@ -18,10 +18,9 @@ import com.tapadoo.alerter.Alerter;
 import app.pilo.android.R;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
-import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-import app.pilo.android.utils.TypeFace;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -73,9 +72,9 @@ public class LoginActivity extends AppCompatActivity {
                     case "Unauthorized":
                         Alerter.create(LoginActivity.this)
                                 .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(TypeFace.font(LoginActivity.this))
-                                .setTitleTypeface(TypeFace.font(LoginActivity.this))
-                                .setButtonTypeface(TypeFace.font(LoginActivity.this))
+                                .setTextTypeface(Utils.font(LoginActivity.this))
+                                .setTitleTypeface(Utils.font(LoginActivity.this))
+                                .setButtonTypeface(Utils.font(LoginActivity.this))
                                 .setText(R.string.wrong_email_password)
                                 .setBackgroundColorRes(R.color.colorWarning)
                                 .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -84,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
                     case "not_verify":
                         Alerter.create(LoginActivity.this)
                                 .setTitle(R.string.user_not_verify)
-                                .setTextTypeface(TypeFace.font(LoginActivity.this))
-                                .setTitleTypeface(TypeFace.font(LoginActivity.this))
-                                .setButtonTypeface(TypeFace.font(LoginActivity.this))
+                                .setTextTypeface(Utils.font(LoginActivity.this))
+                                .setTitleTypeface(Utils.font(LoginActivity.this))
+                                .setButtonTypeface(Utils.font(LoginActivity.this))
                                 .setText(R.string.server_connection_message)
                                 .setBackgroundColorRes(R.color.colorWarning)
                                 .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -95,9 +94,9 @@ public class LoginActivity extends AppCompatActivity {
                     case "deactive":
                         Alerter.create(LoginActivity.this)
                                 .setTitle(R.string.user_deactivate)
-                                .setTextTypeface(TypeFace.font(LoginActivity.this))
-                                .setTitleTypeface(TypeFace.font(LoginActivity.this))
-                                .setButtonTypeface(TypeFace.font(LoginActivity.this))
+                                .setTextTypeface(Utils.font(LoginActivity.this))
+                                .setTitleTypeface(Utils.font(LoginActivity.this))
+                                .setButtonTypeface(Utils.font(LoginActivity.this))
                                 .setText(R.string.server_connection_message)
                                 .setBackgroundColorRes(R.color.colorError)
                                 .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -106,9 +105,9 @@ public class LoginActivity extends AppCompatActivity {
                     default:
                         Alerter.create(LoginActivity.this)
                                 .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(TypeFace.font(LoginActivity.this))
-                                .setTitleTypeface(TypeFace.font(LoginActivity.this))
-                                .setButtonTypeface(TypeFace.font(LoginActivity.this))
+                                .setTextTypeface(Utils.font(LoginActivity.this))
+                                .setTitleTypeface(Utils.font(LoginActivity.this))
+                                .setButtonTypeface(Utils.font(LoginActivity.this))
                                 .setText(R.string.server_connection_message)
                                 .setBackgroundColorRes(R.color.colorError)
                                 .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
@@ -123,9 +122,9 @@ public class LoginActivity extends AppCompatActivity {
                 ll_login.setEnabled(true);
                 Alerter.create(LoginActivity.this)
                         .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(TypeFace.font(LoginActivity.this))
-                        .setTitleTypeface(TypeFace.font(LoginActivity.this))
-                        .setButtonTypeface(TypeFace.font(LoginActivity.this))
+                        .setTextTypeface(Utils.font(LoginActivity.this))
+                        .setTitleTypeface(Utils.font(LoginActivity.this))
+                        .setButtonTypeface(Utils.font(LoginActivity.this))
                         .setText(R.string.server_connection_message)
                         .setBackgroundColorRes(R.color.colorError)
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)

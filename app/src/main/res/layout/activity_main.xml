@@ -47,6 +47,10 @@
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#C7C7C7" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
@@ -55,34 +59,5 @@
         android:layoutDirection="ltr"
         android:textDirection="ltr"
         app:tabIndicatorHeight="0dp"
-        app:tabRippleColor="@null">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_home"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:icon="@drawable/bottom_tab_home"
-            android:padding="@dimen/_4sdp" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_browser"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:icon="@drawable/bottom_tab_browser"
-            android:padding="@dimen/_4sdp" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_search"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:icon="@drawable/bottom_tab_search"
-            android:padding="@dimen/_4sdp" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_profile"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:icon="@drawable/bottom_tab_profile"
-            android:padding="@dimen/_4sdp" />
-    </com.google.android.material.tabs.TabLayout>
+        app:tabRippleColor="@null" />
 </LinearLayout>

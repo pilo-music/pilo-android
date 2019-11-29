@@ -88,7 +88,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
             return;
         if (context instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) context;
-            mainActivity.switchContent(R.id.framelayout, fragment);
+//            mainActivity.switchContent(R.id.framelayout, fragment);
         }
     }
 

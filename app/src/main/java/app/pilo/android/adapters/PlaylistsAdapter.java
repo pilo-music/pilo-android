@@ -81,7 +81,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
             return;
         if (context instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) context;
-            mainActivity.switchContent(R.id.framelayout, fragment);
+//            mainActivity.switchContent(R.id.framelayout, fragment);
         }
     }
 
