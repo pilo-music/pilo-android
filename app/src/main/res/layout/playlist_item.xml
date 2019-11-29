@@ -6,9 +6,6 @@
     android:layout_width="140dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="8dp"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?selectableItemBackgroundBorderless"
     android:layoutDirection="ltr"
     android:layout_marginStart="8dp"
     android:orientation="vertical">

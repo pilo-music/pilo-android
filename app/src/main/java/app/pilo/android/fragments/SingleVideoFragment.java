@@ -11,18 +11,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.VideoPlayerActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SingleVideoFragment extends Fragment {
+public class SingleVideoFragment extends BaseFragment {
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
     @BindView(R.id.img_header_more)

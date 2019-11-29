@@ -81,6 +81,7 @@
     <string name="profile_likes">لایک شده ها</string>
     <string name="profile_bookmarks">بوک مارک ها</string>
     <string name="profile_support">تماس با پشتیبانی</string>
+    <string name="profile_settings">تنظیمات</string>
 
     <string name="error_playing_track">مشکلی در پخش موزیک رخ داده است</string>
 </resources>

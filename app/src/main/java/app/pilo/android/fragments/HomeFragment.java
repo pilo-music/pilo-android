@@ -20,6 +20,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.tapadoo.alerter.Alerter;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -41,7 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
     @BindView(R.id.cl_fragment_home)
     CoordinatorLayout cl_view;
 
@@ -148,7 +149,7 @@ public class HomeFragment extends Fragment {
         if (rc_music_carousel != null) {
             sfl_music.setVisibility(View.GONE);
             rc_music_carousel.setVisibility(View.VISIBLE);
-            MusicCarouselAdapter musicCarouselAdapter = new MusicCarouselAdapter(getActivity(), musics);
+            MusicCarouselAdapter musicCarouselAdapter = new MusicCarouselAdapter(new WeakReference<>(getActivity()), musics);
             rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_music_carousel.setAdapter(musicCarouselAdapter);
         }
@@ -158,7 +159,7 @@ public class HomeFragment extends Fragment {
         if (rc_artist_carousel != null) {
             sfl_artist.setVisibility(View.GONE);
             rc_artist_carousel.setVisibility(View.VISIBLE);
-            ArtistCarouselAdapter artistCarouselAdapter = new ArtistCarouselAdapter(getActivity(), artists);
+            ArtistCarouselAdapter artistCarouselAdapter = new ArtistCarouselAdapter(new WeakReference<>(getActivity()), artists);
             rc_artist_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_artist_carousel.setAdapter(artistCarouselAdapter);
         }
@@ -172,7 +173,7 @@ public class HomeFragment extends Fragment {
         if (sliderView != null) {
             sfl_video.setVisibility(View.GONE);
             sliderView.setVisibility(View.VISIBLE);
-            sliderView.setSliderAdapter(new VideoCarouselAdapter(getActivity(), videos));
+            sliderView.setSliderAdapter(new VideoCarouselAdapter(new WeakReference<>(getActivity()), videos));
             sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
             sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         }
@@ -182,7 +183,7 @@ public class HomeFragment extends Fragment {
         if (rc_album_carousel != null) {
             sfl_album.setVisibility(View.GONE);
             rc_album_carousel.setVisibility(View.VISIBLE);
-            AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(getActivity(), albums);
+            AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(new WeakReference<>(getActivity()), albums);
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);
             tv_album_carousel_show_more.setOnClickListener(v -> new FragmentSwitcher(getActivity(), new AlbumsFragment(), null));
@@ -191,7 +192,7 @@ public class HomeFragment extends Fragment {
 
     private void setupLastVerticalMusicList(List<Music> musics) {
         if (rc_music_vertical != null) {
-            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(getActivity(), musics);
+            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
             rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
         }

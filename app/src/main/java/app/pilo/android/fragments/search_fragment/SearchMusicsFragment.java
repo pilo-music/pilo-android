@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -29,17 +30,15 @@ public class SearchMusicsFragment extends Fragment {
         return new SearchMusicsFragment(musics);
     }
 
-    public SearchMusicsFragment(List<Music> musics) {
+    private SearchMusicsFragment(List<Music> musics) {
         this.musics = musics;
     }
 
 
-    private View view;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search_musics, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_musics, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
         return view;
@@ -48,7 +47,7 @@ public class SearchMusicsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_musics != null) {
-            MusicCarouselAdapter musicsAdapter = new MusicCarouselAdapter(getActivity(), musics);
+            MusicCarouselAdapter musicsAdapter = new MusicCarouselAdapter(new WeakReference<>(getActivity()), musics);
             rc_musics.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_musics.setAdapter(musicsAdapter);
         }

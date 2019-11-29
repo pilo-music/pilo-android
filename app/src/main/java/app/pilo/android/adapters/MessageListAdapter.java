@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -21,8 +22,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     private Context context;
     private List<Message> messages;
 
-    public MessageListAdapter(Context context, List<Message> messages) {
-        this.context = context;
+    public MessageListAdapter(WeakReference<Context> context, List<Message> messages) {
+        this.context = context.get();
         this.messages = messages;
     }
 

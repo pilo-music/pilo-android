@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -58,7 +59,7 @@ public class BookmarksActivity extends AppCompatActivity {
             public void onGetInfo(String status, List<Bookmark> data) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status.equals("success")) {
-                    BookmarkListAdapter bookmarkListAdapter = new BookmarkListAdapter(BookmarksActivity.this, data);
+                    BookmarkListAdapter bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(BookmarksActivity.this), data);
                     recyclerView.setLayoutManager(new LinearLayoutManager(BookmarksActivity.this, RecyclerView.VERTICAL, false));
                     recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(BookmarksActivity.this, android.R.anim.fade_in)));
                     recyclerView.setAdapter(bookmarkListAdapter);

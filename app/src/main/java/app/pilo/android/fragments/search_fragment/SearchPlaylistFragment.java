@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -22,7 +23,6 @@ import butterknife.ButterKnife;
 public class SearchPlaylistFragment extends Fragment {
 
     private List<Playlist> playlists;
-    private View view;
     @BindView(R.id.rc_search_playlists)
     RecyclerView rc_playlists;
 
@@ -31,7 +31,7 @@ public class SearchPlaylistFragment extends Fragment {
         return new SearchPlaylistFragment(playlists);
     }
 
-    public SearchPlaylistFragment(List<Playlist> playlists){
+    private SearchPlaylistFragment(List<Playlist> playlists){
         this.playlists = playlists;
     }
 
@@ -39,7 +39,7 @@ public class SearchPlaylistFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search_playlists, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_playlists, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
         return view;
@@ -47,7 +47,7 @@ public class SearchPlaylistFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_playlists != null) {
-            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(getActivity(), playlists);
+            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), playlists);
             rc_playlists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_playlists.setAdapter(playlistsAdapter);
         }

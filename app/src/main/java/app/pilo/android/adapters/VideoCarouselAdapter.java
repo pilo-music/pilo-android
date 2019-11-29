@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -30,8 +31,8 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
     private List<Video> videos;
 
 
-    public VideoCarouselAdapter(Context context, List<Video> videoList) {
-        this.context = context;
+    public VideoCarouselAdapter(WeakReference<Context> context, List<Video> videoList) {
+        this.context = context.get();
         this.videos = videoList;
     }
 

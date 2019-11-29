@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -27,8 +28,8 @@ public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdap
     private Context context;
     private List<Music> musics;
 
-    public MusicCarouselAdapter(Context context, List<Music> musics) {
-        this.context = context;
+    public MusicCarouselAdapter(WeakReference<Context> context, List<Music> musics) {
+        this.context = context.get();
         this.musics = musics;
     }
 

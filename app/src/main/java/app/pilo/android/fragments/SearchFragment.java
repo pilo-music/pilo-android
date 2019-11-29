@@ -48,7 +48,7 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends BaseFragment {
 
     @BindView(R.id.viewpager)
     ViewPager2 viewPager;
@@ -118,10 +118,10 @@ public class SearchFragment extends Fragment {
             try {
                 if (et_search.getText().toString().length() > 0) {
                     img_search_close.setVisibility(View.VISIBLE);
+                    search(et_search.getText().toString());
                 } else {
                     img_search_close.setVisibility(View.GONE);
                 }
-                search(et_search.getText().toString());
                 if (keyCode == KeyEvent.KEYCODE_SEARCH
                         || keyCode == KeyEvent.KEYCODE_ENTER) {
                     //execute our method for searching

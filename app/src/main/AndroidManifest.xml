@@ -2,13 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.pilo.android">
 
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="app.somya.com.somya.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".Pilo"
@@ -18,8 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".fragments.VideoPlayerActivity"></activity>
-        <activity android:name=".activities.VideoPlyerActivity" />
+        <activity android:name=".activities.VideoPlayerActivity"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -39,6 +42,7 @@
         <activity android:name=".activities.ContactUsActivity" />
         <activity android:name=".activities.EditProfileActivity" />
         <activity android:name=".activities.RegisterActivity" />
+
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />

@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -24,8 +25,8 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.LikeLi
     private Context context;
     private List<Like> likes;
 
-    public LikeListAdapter(Context context, List<Like> likes) {
-        this.context = context;
+    public LikeListAdapter(WeakReference<Context> context, List<Like> likes) {
+        this.context = context.get();
         this.likes = likes;
     }
 

@@ -1,4 +1,4 @@
-package app.pilo.android.fragments
+package app.pilo.android.activities
 
 import android.app.Activity
 import android.graphics.Color

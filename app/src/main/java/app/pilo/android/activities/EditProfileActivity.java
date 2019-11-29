@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.error.VolleyError;
@@ -27,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import androidx.core.app.ActivityCompat;
 import app.pilo.android.R;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
@@ -47,14 +50,14 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText et_password;
     @BindView(R.id.et_profile_edit_confirm)
     EditText et_confirm;
-    @BindView(R.id.btn_profile_pick_photo)
-    Button btn_pick_photo;
     @BindView(R.id.ll_save)
     LinearLayout ll_save;
     @BindView(R.id.civ_profile_user)
     CircleImageView civ_user;
     @BindView(R.id.progress_bar_profile_edit)
     ProgressBar progressBar;
+    @BindView(R.id.tv_header_title)
+    TextView tv_header_title;
 
     private User user;
     private UserApi userApi;
@@ -66,6 +69,7 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.bind(this);
+        tv_header_title.setText(getString(R.string.profile_edit));
         user = UserRepo.getInstance(this).get();
         userApi = new UserApi(this);
         initViews();
@@ -128,7 +132,7 @@ public class EditProfileActivity extends AppCompatActivity {
         userApi.update(et_name.getText().toString(), et_password.getText().toString(), imageToString(bitmap), new RequestHandler.RequestHandlerWithStatus() {
             @Override
             public void onGetInfo(String status) {
-                if (status.equals("success")){
+                if (status.equals("success")) {
                     Alerter.create(EditProfileActivity.this)
                             .setTitle(R.string.operation_done)
                             .setTextTypeface(TypeFace.font(EditProfileActivity.this))
@@ -145,6 +149,15 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @OnClick({R.id.btn_profile_pick_photo,R.id.civ_profile_user})
+    void pickImage() {
+        ActivityCompat.requestPermissions(
+                EditProfileActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                CODE_GALLERY_REQUEST
+        );
     }
 
 
@@ -194,7 +207,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.img_header_back)
-    void back(){
+    void back() {
         finish();
     }
 

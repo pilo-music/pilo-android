@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -22,7 +23,6 @@ import butterknife.ButterKnife;
 public class SearchAlbumFragment extends Fragment {
 
     private List<Album> albums;
-    private View view;
     @BindView(R.id.rc_search_albums)
     RecyclerView rc_albums;
 
@@ -39,7 +39,7 @@ public class SearchAlbumFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search_albums, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_albums, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
         return view;
@@ -47,7 +47,7 @@ public class SearchAlbumFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_albums != null) {
-            AlbumCarouselAdapter albumsAdapter = new AlbumCarouselAdapter(getActivity(), albums);
+            AlbumCarouselAdapter albumsAdapter = new AlbumCarouselAdapter(new WeakReference<>(getActivity()), albums);
             rc_albums.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_albums.setAdapter(albumsAdapter);
         }

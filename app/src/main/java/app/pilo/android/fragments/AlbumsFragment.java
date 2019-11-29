@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AlbumsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AlbumsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     private View view;
     @BindView(R.id.rc_albums)
     RecyclerView rc_albums;
@@ -53,7 +54,7 @@ public class AlbumsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void initAdapter() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        albumsListAdapter = new AlbumsListAdapter(getActivity(), new ArrayList<>());
+        albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), new ArrayList<>());
         rc_albums.setAdapter(albumsListAdapter);
         rc_albums.addOnScrollListener(new PaginationListener(layoutManager) {
             @Override

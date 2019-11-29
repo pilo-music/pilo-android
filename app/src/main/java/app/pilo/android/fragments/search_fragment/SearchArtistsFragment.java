@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -30,7 +31,7 @@ public class SearchArtistsFragment extends Fragment {
         return new SearchArtistsFragment(artists);
     }
 
-    public SearchArtistsFragment(List<Artist> artists) {
+    private SearchArtistsFragment(List<Artist> artists) {
         this.artists = artists;
     }
 
@@ -45,7 +46,7 @@ public class SearchArtistsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_artists != null) {
-            ArtistCarouselAdapter artistsAdapter = new ArtistCarouselAdapter(getActivity(), artists);
+            ArtistCarouselAdapter artistsAdapter = new ArtistCarouselAdapter(new WeakReference<>(getActivity()), artists);
             rc_artists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_artists.setAdapter(artistsAdapter);
         }

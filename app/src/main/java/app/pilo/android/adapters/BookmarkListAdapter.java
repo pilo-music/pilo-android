@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -28,8 +29,8 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
     private Context context;
     private List<Bookmark> bookmarks;
 
-    public BookmarkListAdapter(Context context, List<Bookmark> bookmarks) {
-        this.context = context;
+    public BookmarkListAdapter(WeakReference<Context> context, List<Bookmark> bookmarks) {
+        this.context = context.get();
         this.bookmarks = bookmarks;
     }
 

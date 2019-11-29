@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -30,8 +31,8 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
     private Context context;
     private List<Playlist> playlists;
 
-    public PlaylistsAdapter(Context context, List<Playlist> playlists) {
-        this.context = context;
+    public PlaylistsAdapter(WeakReference<Context> context, List<Playlist> playlists) {
+        this.context = context.get();
         this.playlists = playlists;
     }
 

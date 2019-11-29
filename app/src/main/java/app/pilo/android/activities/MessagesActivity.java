@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.error.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -63,7 +64,7 @@ public class MessagesActivity extends AppCompatActivity {
             public void onGetInfo(String status, List<Message> data) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status.equals("success")) {
-                    MessageListAdapter messageListAdapter = new MessageListAdapter(MessagesActivity.this, data);
+                    MessageListAdapter messageListAdapter = new MessageListAdapter(new WeakReference<>(MessagesActivity.this), data);
                     recyclerView.setLayoutManager(new LinearLayoutManager(MessagesActivity.this, RecyclerView.VERTICAL, false));
                     recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(MessagesActivity.this, android.R.anim.fade_in)));
                     recyclerView.setAdapter(messageListAdapter);

@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tapadoo.alerter.Alerter;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -32,7 +33,7 @@ import app.pilo.android.utils.TypeFace;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SingleAlbumFragment extends Fragment {
+public class SingleAlbumFragment extends BaseFragment {
     private View view;
     private String slug, title, image, artist, artist_slug;
     private UserSharedPrefManager sharedPrefManager;
@@ -141,7 +142,7 @@ public class SingleAlbumFragment extends Fragment {
 
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
-            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(getActivity(), musics);
+            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
             rc_album_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_album_musics.setAdapter(musicVerticalListAdapter);
         }

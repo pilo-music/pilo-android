@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -24,8 +25,8 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
     private Context context;
     private List<Music> musics;
 
-    public MusicVerticalListAdapter(Context context, List<Music> musics) {
-        this.context = context;
+    public MusicVerticalListAdapter(WeakReference<Context> context, List<Music> musics) {
+        this.context = context.get();
         this.musics = musics;
     }
 

@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -30,8 +31,8 @@ public class ArtistCarouselAdapter extends RecyclerView.Adapter<ArtistCarouselAd
     private Context context;
     private List<Artist> artists;
 
-    public ArtistCarouselAdapter(Context context, List<Artist> artists) {
-        this.context = context;
+    public ArtistCarouselAdapter(WeakReference<Context> context, List<Artist> artists) {
+        this.context = context.get();
         this.artists = artists;
     }
 

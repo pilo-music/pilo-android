@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -32,8 +33,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
     private List<Video> videos;
 
 
-    public VideosAdapter(Context context, List<Video> videoList) {
-        this.context = context;
+    public VideosAdapter(WeakReference<Context> context, List<Video> videoList) {
+        this.context = context.get();
         this.videos = videoList;
     }
 

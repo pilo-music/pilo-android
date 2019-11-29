@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends BaseFragment {
     private User user;
 
     @BindView(R.id.cv_login)

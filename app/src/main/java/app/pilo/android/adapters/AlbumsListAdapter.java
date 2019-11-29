@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -31,9 +32,9 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<Album> albums;
     private Context context;
 
-    public AlbumsListAdapter(Context context, List<Album> albums) {
+    public AlbumsListAdapter(WeakReference<Context> context, List<Album> albums) {
         this.albums = albums;
-        this.context = context;
+        this.context = context.get();
     }
 
     @NonNull
