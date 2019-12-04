@@ -59,6 +59,8 @@ public class SingleVideoFragment extends BaseFragment {
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(videoImage);
+        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
+
     }
 
     @Override

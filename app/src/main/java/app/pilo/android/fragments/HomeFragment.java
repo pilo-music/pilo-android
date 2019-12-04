@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumCarouselAdapter;
 import app.pilo.android.adapters.ArtistCarouselAdapter;
 import app.pilo.android.adapters.MusicCarouselAdapter;
@@ -185,7 +185,8 @@ public class HomeFragment extends BaseFragment {
             AlbumCarouselAdapter albumCarouselAdapter = new AlbumCarouselAdapter(new WeakReference<>(getActivity()), albums);
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);
-//            tv_album_carousel_show_more.setOnClickListener(v -> new FragmentSwitcher(getActivity(), new AlbumsFragment(), null));
+            tv_album_carousel_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new AlbumsFragment()));
+
         }
     }
 

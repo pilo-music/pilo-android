@@ -17,7 +17,7 @@
         sothree:umanoInitialState="collapsed"
         sothree:umanoOverlay="true"
         sothree:umanoPanelHeight="70dp"
-        sothree:umanoParallaxOffset="300dp"
+        sothree:umanoParallaxOffset="100dp"
         sothree:umanoScrollableView="@id/list"
         sothree:umanoShadowHeight="0dp">
 
@@ -32,7 +32,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E4E4E4" />
             <include layout="@layout/bottom_music_player" />
 
             <androidx.core.widget.NestedScrollView
@@ -50,7 +53,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#C7C7C7" />
+        android:background="#E4E4E4" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"

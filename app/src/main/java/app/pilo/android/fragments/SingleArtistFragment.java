@@ -26,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumCarouselAdapter;
 import app.pilo.android.adapters.ArtistCarouselAdapter;
 import app.pilo.android.adapters.MusicCarouselAdapter;
@@ -130,7 +131,7 @@ public class SingleArtistFragment extends BaseFragment {
         tv_album_carousel_title.setText(R.string.album_new);
         tv_artist_name.setText(name);
         tv_header_title.setText(name);
-        img_header_back.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().remove(SingleArtistFragment.this).commit());
+        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
     }
 
     private void getDataFromServer() {

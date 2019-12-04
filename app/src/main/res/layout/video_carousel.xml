@@ -42,7 +42,7 @@
     <com.smarteist.autoimageslider.SliderView
         android:id="@+id/imageSlider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_185sdp"
+        android:layout_height="@dimen/_200sdp"
         android:visibility="gone"
         android:overScrollMode="never"
         android:layout_marginTop="@dimen/activity_vertical_margin"

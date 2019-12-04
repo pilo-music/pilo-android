@@ -33,13 +33,4 @@ public class BaseFragment extends Fragment {
     public interface FragmentNavigation {
         void pushFragment(Fragment fragment);
     }
-
-
-
-    public static void pushFragment(Fragment fragment){
-        if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(fragment);
-        }
-    }
-
 }

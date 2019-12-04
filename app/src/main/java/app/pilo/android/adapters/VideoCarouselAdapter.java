@@ -20,6 +20,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.fragments.SingleVideoFragment;
 import app.pilo.android.models.Video;
 
 public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter.SliderAdapterVH> {
@@ -61,7 +63,9 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
         mBundle.putString("artist_slug", video.getArtist_slug());
         mBundle.putString("image", video.getImage());
         mBundle.putString("url", video.getUrl());
-//        new FragmentSwitcher(context, new SingleVideoFragment(), mBundle);
+        SingleVideoFragment fragment = new SingleVideoFragment();
+        fragment.setArguments(mBundle);
+        ((MainActivity) context).pushFragment(fragment);
     }
 
 

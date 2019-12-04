@@ -80,18 +80,10 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
         mBundle.putString("image", video.getImage());
         mBundle.putString("url", video.getUrl());
         mFragment.setArguments(mBundle);
-        switchContent(mFragment);
+        SingleVideoFragment fragment = new SingleVideoFragment();
+        fragment.setArguments(mBundle);
+        ((MainActivity) context).pushFragment(fragment);
     }
-
-    private void switchContent(Fragment fragment) {
-        if (context == null)
-            return;
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
-//            mainActivity.switchContent(R.id.framelayout, fragment);
-        }
-    }
-
 
     @Override
     public int getItemCount() {

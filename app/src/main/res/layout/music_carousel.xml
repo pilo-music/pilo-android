@@ -41,9 +41,10 @@
         android:id="@+id/rc_music_carousel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:paddingStart="8dp"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="8dp"
+        android:paddingEnd="8dp"
+        android:clipToPadding="false"
         android:overScrollMode="never"
         android:layoutAnimation="@anim/layout_animation"
         android:visibility="gone" />

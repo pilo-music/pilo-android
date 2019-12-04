@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -87,7 +85,7 @@ public class SingleAlbumFragment extends BaseFragment {
         }
         tv_album_name.setText(title);
         tv_header_title.setText(title);
-        img_header_back.setOnClickListener(v -> getActivity().getSupportFragmentManager().beginTransaction().remove(SingleAlbumFragment.this).commit());
+        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
     }
 

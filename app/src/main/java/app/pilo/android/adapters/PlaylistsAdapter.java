@@ -73,16 +73,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
         mBundle.putString("artist_slug", playlist.getArtist_slug());
         mBundle.putString("image", playlist.getImage());
         mFragment.setArguments(mBundle);
-        switchContent(mFragment);
-    }
-
-    private void switchContent(Fragment fragment) {
-        if (context == null)
-            return;
-        if (context instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) context;
-//            mainActivity.switchContent(R.id.framelayout, fragment);
-        }
+        ((MainActivity) context).pushFragment(mFragment);
     }
 
 
