@@ -29,8 +29,8 @@ public class ArtistApi {
     }
 
 
-    public void get(String type, int page, final RequestHandler.RequestHandlerWithList<Artist> requestHandler) {
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTISTS_GET + page + "/" + type, null,
+    public void get(int page, final RequestHandler.RequestHandlerWithList<Artist> requestHandler) {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTISTS_GET + page , null,
                 response -> {
                     try {
                         String status = response.getString("status");

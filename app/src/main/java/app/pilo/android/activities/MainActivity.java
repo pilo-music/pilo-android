@@ -1,6 +1,7 @@
 package app.pilo.android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,6 +25,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
+
 import app.pilo.android.R;
 import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
@@ -35,6 +38,7 @@ import app.pilo.android.models.Music;
 import app.pilo.android.utils.FragmentHistory;
 import app.pilo.android.utils.Utils;
 import app.pilo.android.views.FragNavController;
+import app.pilo.android.views.NestedScrollableViewHelper;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     SlidingUpPanelLayout sliding_layout;
     @BindView(R.id.ll_music_player_collapsed)
     LinearLayout ll_music_player_collapsed;
+    @BindView(R.id.list)
+    NestedScrollView nestedScrollView;
 
     // page header
     @BindView(R.id.ll_page_header)
@@ -105,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         switchTab(0);
         setupBottomNavigation();
 
-
+        sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
         sliding_layout.addPanelSlideListener(new PanelSlideListener() {
             @Override
@@ -309,3 +315,5 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
     }
 }
+
+

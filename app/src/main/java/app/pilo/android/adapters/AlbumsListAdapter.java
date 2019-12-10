@@ -1,16 +1,16 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,89 +20,73 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.fragments.SingleAlbumFragment;
 import app.pilo.android.models.Album;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AlbumsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-    private static final int VIEW_TYPE_LOADING = 0;
-    private static final int VIEW_TYPE_NORMAL = 1;
-    private boolean isLoaderVisible = false;
 
-    private List<Album> albums;
+public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.AlbumListAdapterViewHolder> {
     private Context context;
+    private List<Album> albums;
+    private int viewId = R.layout.album_item;
 
     public AlbumsListAdapter(WeakReference<Context> context, List<Album> albums) {
-        this.albums = albums;
         this.context = context.get();
+        this.albums = albums;
     }
+
+    public AlbumsListAdapter(WeakReference<Context> context, List<Album> albums, int viewId) {
+        this.context = context.get();
+        this.albums = albums;
+        this.viewId = viewId;
+    }
+
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        switch (viewType) {
-            case VIEW_TYPE_NORMAL:
-                return new ViewHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false));
-            case VIEW_TYPE_LOADING:
-                return new ProgressHolder(
-                        LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false));
-            default:
-                return null;
-        }
+    public AlbumListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(context).inflate(viewId, viewGroup, false);
+        return new AlbumListAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        holder.onBind(position);
+    public void onBindViewHolder(@NonNull AlbumListAdapterViewHolder holder, final int position) {
+        final Album album = albums.get(position);
+
+        holder.tv_album_title.setText(album.getTitle());
+        holder.tv_album_artist.setText(album.getArtist_name());
+        Glide.with(context)
+                .load(album.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.album_image);
+        holder.ll_album_item.setOnClickListener(v -> fragmentJump(album));
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (isLoaderVisible) {
-            return position == albums.size() - 1 ? VIEW_TYPE_LOADING : VIEW_TYPE_NORMAL;
-        } else {
-            return VIEW_TYPE_NORMAL;
-        }
+    private void fragmentJump(Album album) {
+        Bundle mBundle = new Bundle();
+        mBundle.putString("slug", album.getSlug());
+        mBundle.putString("title", album.getTitle());
+        mBundle.putString("artist", album.getArtist_name());
+        mBundle.putString("artist_slug", album.getArtist_slug());
+        mBundle.putString("image", album.getImage());
+
+        SingleAlbumFragment fragment = new SingleAlbumFragment();
+        fragment.setArguments(mBundle);
+
+        ((MainActivity) context).pushFragment(fragment);
     }
+
 
     @Override
     public int getItemCount() {
-        return albums == null ? 0 : albums.size();
+        return albums.size();
     }
 
-    public void addItems(List<Album> albums) {
-        this.albums.addAll(albums);
-        notifyDataSetChanged();
-    }
-
-    public void addLoading() {
-        isLoaderVisible = true;
-        this.albums.add(new Album());
-        notifyItemInserted(albums.size() - 1);
-    }
-
-    public void removeLoading() {
-        isLoaderVisible = false;
-        int position = albums.size() - 1;
-        Album item = getItem(position);
-        if (item != null) {
-            albums.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
-    public void clear() {
-        albums.clear();
-        notifyDataSetChanged();
-    }
-
-    Album getItem(int position) {
-        return albums.get(position);
-    }
-
-    public class ViewHolder extends BaseViewHolder {
+    class AlbumListAdapterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_album_item_title)
         TextView tv_album_title;
         @BindView(R.id.tv_album_item_artist)
@@ -114,39 +98,9 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @BindView(R.id.ll_album_item)
         LinearLayout ll_album_item;
 
-
-        ViewHolder(View itemView) {
+        AlbumListAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-
-        protected void clear() {
-
-        }
-
-        public void onBind(int position) {
-            super.onBind(position);
-            Album album = albums.get(position);
-
-            tv_album_title.setText(album.getTitle());
-            tv_album_artist.setText(album.getArtist_name());
-            Glide.with(context)
-                    .load(album.getImage())
-                    .placeholder(R.drawable.ic_music_placeholder)
-                    .error(R.drawable.ic_music_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(album_image);
-        }
-    }
-
-    public class ProgressHolder extends BaseViewHolder {
-        ProgressHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        @Override
-        protected void clear() {
         }
     }
 }

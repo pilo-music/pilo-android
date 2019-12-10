@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.ArtistCarouselAdapter;
+import app.pilo.android.adapters.ArtistsListAdapter;
 import app.pilo.android.models.Artist;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +46,7 @@ public class SearchArtistsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_artists != null) {
-            ArtistCarouselAdapter artistsAdapter = new ArtistCarouselAdapter(new WeakReference<>(getActivity()), artists);
+            ArtistsListAdapter artistsAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists);
             rc_artists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_artists.setAdapter(artistsAdapter);
         }
