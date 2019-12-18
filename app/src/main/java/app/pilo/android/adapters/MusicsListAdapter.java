@@ -1,6 +1,7 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,35 +9,45 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.fragments.SingleAlbumFragment;
 import app.pilo.android.helpers.RxBus;
+import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MusicCarouselAdapter extends RecyclerView.Adapter<MusicCarouselAdapter.MusicCarouselAdapterViewHolder> {
+
+public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.MusicCarouselAdapterViewHolder> {
     private Context context;
     private List<Music> musics;
+    private int viewId = R.layout.music_item;
 
-    public MusicCarouselAdapter(WeakReference<Context> context, List<Music> musics) {
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics) {
         this.context = context.get();
         this.musics = musics;
     }
 
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId) {
+        this.context = context.get();
+        this.musics = musics;
+        this.viewId = viewId;
+    }
+
+
     @NonNull
     @Override
     public MusicCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.music_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(viewId, viewGroup, false);
         return new MusicCarouselAdapterViewHolder(view);
     }
 

@@ -17,11 +17,13 @@ import app.pilo.android.models.Like;
 import app.pilo.android.models.Message;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
+import app.pilo.android.models.SingleAlbum;
+import app.pilo.android.models.SingleArtist;
 import app.pilo.android.models.User;
 import app.pilo.android.models.Video;
 
 class JsonParser {
-    static Music musicJsonParser(JSONObject jsonObject) {
+    static Music singleMusicParser(JSONObject jsonObject) {
         try {
             JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
             return new Music(
@@ -43,12 +45,12 @@ class JsonParser {
         }
     }
 
-    static Album albumJsonParser(JSONObject jsonObject) {
+    static Album albumParser(JSONObject jsonObject) {
         try {
             List<Music> musics = new ArrayList<>();
             JSONArray musicsJsonArray = jsonObject.getJSONArray("musics");
             for (int i = 0; i < musicsJsonArray.length(); i++) {
-                Music music = JsonParser.musicJsonParser(musicsJsonArray.getJSONObject(i));
+                Music music = JsonParser.singleMusicParser(musicsJsonArray.getJSONObject(i));
                 if (music != null)
                     musics.add(music);
             }
@@ -66,12 +68,35 @@ class JsonParser {
                     musics
             );
         } catch (JSONException e) {
-            Log.e("Albums", "albumJsonParser: " + e.getMessage());
+            Log.e("Albums", "albumParser: " + e.getMessage());
             return null;
         }
     }
 
-    static Artist artistJsonArray(JSONObject jsonObject) {
+    static SingleAlbum singleAlbumParser(JSONObject data) throws JSONException {
+
+        SingleAlbum singleAlbum = new SingleAlbum();
+        List<Playlist> playlists = new ArrayList<>();
+
+        //parse album
+        Album album = JsonParser.albumParser(data.getJSONObject("album"));
+
+
+        // parse playlist
+        JSONArray playlistJsonArray = data.getJSONArray("playlist");
+        for (int i = 0; i < playlistJsonArray.length(); i++) {
+            Playlist playlist = JsonParser.playlistParser(playlistJsonArray.getJSONObject(i));
+            if (playlist != null)
+                playlists.add(playlist);
+        }
+
+        singleAlbum.setAlbum(album);
+        singleAlbum.setPlaylists(playlists);
+
+        return singleAlbum;
+    }
+
+    static Artist artistParser(JSONObject jsonObject) {
         try {
             int music_count = 0;
             if (!jsonObject.isNull("music_count"))
@@ -111,6 +136,56 @@ class JsonParser {
         }
     }
 
+    static SingleArtist singleArtistParser(JSONObject data) throws JSONException {
+
+        SingleArtist singleArtist = new SingleArtist();
+        List<Music> bestMusics = new ArrayList<>();
+        List<Album> albums = new ArrayList<>();
+        List<Video> videos = new ArrayList<>();
+        List<Music> lastMusics = new ArrayList<>();
+
+        //parse artist
+        Artist artist = JsonParser.artistParser(data.getJSONObject("artist"));
+
+        // parse best musics
+        JSONArray bestMusicJsonArray = data.getJSONArray("best_musics");
+        for (int i = 0; i < bestMusicJsonArray.length(); i++) {
+            Music music = JsonParser.singleMusicParser(bestMusicJsonArray.getJSONObject(i));
+            if (music != null)
+                bestMusics.add(music);
+        }
+//        // parse albums
+        JSONArray albumJsonArray = data.getJSONArray("albums");
+        for (int i = 0; i < albumJsonArray.length(); i++) {
+            Album album = JsonParser.albumParser(albumJsonArray.getJSONObject(i));
+            if (album != null)
+                albums.add(album);
+        }
+
+//        // parse videos
+        JSONArray videosJsonArray = data.getJSONArray("videos");
+        for (int i = 0; i < albumJsonArray.length(); i++) {
+            Video video = JsonParser.videoJsonArray(videosJsonArray.getJSONObject(i));
+            if (video != null)
+                videos.add(video);
+        }
+//        // parse last musics
+        JSONArray lastMusicJsonArray = data.getJSONArray("last_musics");
+        for (int i = 0; i < lastMusicJsonArray.length(); i++) {
+            Music music = JsonParser.singleMusicParser(lastMusicJsonArray.getJSONObject(i));
+            if (music != null)
+                lastMusics.add(music);
+        }
+
+        singleArtist.setAlbums(albums);
+        singleArtist.setBest_musics(bestMusics);
+        singleArtist.setLast_musics(lastMusics);
+        singleArtist.setVideos(videos);
+        singleArtist.setArtist(artist);
+
+        return singleArtist;
+    }
+
     static Video videoJsonArray(JSONObject jsonObject) {
         try {
             JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
@@ -136,12 +211,12 @@ class JsonParser {
         }
     }
 
-    static Playlist playlistJsonParser(JSONObject jsonObject) {
+    static Playlist playlistParser(JSONObject jsonObject) {
         try {
             List<Music> musics = new ArrayList<>();
             JSONArray musicsJsonArray = jsonObject.getJSONArray("musics");
             for (int i = 0; i < musicsJsonArray.length(); i++) {
-                Music music = JsonParser.musicJsonParser(musicsJsonArray.getJSONObject(i));
+                Music music = JsonParser.singleMusicParser(musicsJsonArray.getJSONObject(i));
                 if (music != null)
                     musics.add(music);
             }
@@ -165,13 +240,13 @@ class JsonParser {
     }
 
 
-    static HeroSlider heroSliderJsonParser(JSONObject jsonObject) {
+    static HeroSlider heroSliderParser(JSONObject jsonObject) {
         HeroSlider heroSlider = new HeroSlider();
 
         return heroSlider;
     }
 
-    static User userJsonParser(JSONObject jsonObject) {
+    static User userParser(JSONObject jsonObject) {
         User user = new User();
         try {
             if (!jsonObject.isNull("access_token")) {
@@ -193,7 +268,7 @@ class JsonParser {
     }
 
 
-    static Bookmark bookmarkJsonParser(JSONObject jsonObject) {
+    static Bookmark bookmarkParser(JSONObject jsonObject) {
         try {
             JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
             return new Bookmark(
@@ -214,7 +289,7 @@ class JsonParser {
     }
 
 
-    static Like likeJsonParser(JSONObject jsonObject) {
+    static Like likeParser(JSONObject jsonObject) {
         try {
             JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
             return new Like(
@@ -234,7 +309,7 @@ class JsonParser {
         }
     }
 
-    static Message messageJsonParser(JSONObject jsonObject) {
+    static Message messageParser(JSONObject jsonObject) {
         try {
             return new Message(
                     jsonObject.getInt("id"),

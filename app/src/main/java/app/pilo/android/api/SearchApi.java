@@ -60,7 +60,7 @@ public class SearchApi {
         if (data.has("musics")) {
             JSONArray musicsJsonArray = data.getJSONArray("musics");
             for (int i = 0; i < musicsJsonArray.length(); i++) {
-                Music music = JsonParser.musicJsonParser(musicsJsonArray.getJSONObject(i));
+                Music music = JsonParser.singleMusicParser(musicsJsonArray.getJSONObject(i));
                 if (music != null)
                     musics.add(music);
             }
@@ -69,7 +69,7 @@ public class SearchApi {
         if (data.has("albums")) {
             JSONArray albumJsonArray = data.getJSONArray("albums");
             for (int i = 0; i < albumJsonArray.length(); i++) {
-                Album album = JsonParser.albumJsonParser(albumJsonArray.getJSONObject(i));
+                Album album = JsonParser.albumParser(albumJsonArray.getJSONObject(i));
                 if (album != null)
                     albums.add(album);
             }
@@ -78,7 +78,7 @@ public class SearchApi {
         if (data.has("artists")) {
             JSONArray artistsJsonArray = data.getJSONArray("artists");
             for (int i = 0; i < artistsJsonArray.length(); i++) {
-                Artist artist = JsonParser.artistJsonArray(artistsJsonArray.getJSONObject(i));
+                Artist artist = JsonParser.artistParser(artistsJsonArray.getJSONObject(i));
                 if (artist != null)
                     artists.add(artist);
             }
@@ -96,7 +96,7 @@ public class SearchApi {
         if (data.has("playlists")) {
             JSONArray playlistsJsonArray = data.getJSONArray("playlists");
             for (int i = 0; i < playlistsJsonArray.length(); i++) {
-                Playlist playlist = JsonParser.playlistJsonParser(playlistsJsonArray.getJSONObject(i));
+                Playlist playlist = JsonParser.playlistParser(playlistsJsonArray.getJSONObject(i));
                 if (playlist != null)
                     playlists.add(playlist);
             }

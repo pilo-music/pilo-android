@@ -26,8 +26,8 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistsListAdapter;
-import app.pilo.android.adapters.MusicCarouselAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
+import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.HomeApi;
 import app.pilo.android.api.RequestHandler;
@@ -148,9 +148,14 @@ public class HomeFragment extends BaseFragment {
         if (rc_music_carousel != null) {
             sfl_music.setVisibility(View.GONE);
             rc_music_carousel.setVisibility(View.VISIBLE);
-            MusicCarouselAdapter musicCarouselAdapter = new MusicCarouselAdapter(new WeakReference<>(getActivity()), musics);
+            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
             rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_music_carousel.setAdapter(musicCarouselAdapter);
+            MusicsFragment musicsFragment = new MusicsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("title",getString(R.string.music_best));
+            musicsFragment.setArguments(bundle);
+            tv_music_carousel_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new MusicsFragment()));
         }
     }
 
@@ -183,7 +188,6 @@ public class HomeFragment extends BaseFragment {
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);
             tv_album_carousel_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new AlbumsFragment()));
-
         }
     }
 
@@ -192,6 +196,11 @@ public class HomeFragment extends BaseFragment {
             MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
             rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
+            MusicsFragment musicsFragment = new MusicsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("title",getString(R.string.music_new));
+            musicsFragment.setArguments(bundle);
+            tv_music_vertical_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new MusicsFragment()));
         }
     }
 

@@ -9,44 +9,48 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import app.pilo.android.models.Bookmark;
-import app.pilo.android.repositories.UserRepo;
 
-public class BookmarkApi {
+import app.pilo.android.models.Music;
+
+public class MusicApi {
     private Context context;
 
-    public BookmarkApi(Context context) {
+    public MusicApi(Context context) {
         this.context = context;
     }
 
-    public void get(final RequestHandler.RequestHandlerWithList<Bookmark> requestHandler) {
-        JSONObject requestJsonObject = new JSONObject();
-        String token = UserRepo.getInstance(context).get().getAccess_token();
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.BOOKMARKS_GET + "?token=" + token, requestJsonObject,
+    public void get(String artist, int page, final RequestHandler.RequestHandlerWithList<Music> requestHandler) {
+        String url;
+        if (artist != null && !artist.equals("")) {
+            url = PiloApi.MUSICS_GET + "artist/" + artist + "/";
+        } else
+            url = PiloApi.MUSICS_GET;
+
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + page, null,
                 response -> {
                     try {
                         JSONArray data = response.getJSONArray("data");
                         String status = response.getString("status");
                         if (status.equals("success")) {
-                            List<Bookmark> bookmarks = new ArrayList<>();
+                            List<Music> musics = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
-                                Bookmark bookmark = JsonParser.bookmarkParser(data.getJSONObject(i));
-                                if (bookmark != null)
-                                    bookmarks.add(bookmark);
+                                Music music = JsonParser.singleMusicParser(data.getJSONObject(i));
+                                if (music != null)
+                                    musics.add(music);
                             }
-                            requestHandler.onGetInfo(status, bookmarks);
+                            requestHandler.onGetInfo(status, musics);
                         } else
                             requestHandler.onGetInfo(status, null);
                     } catch (JSONException e) {
+                        e.printStackTrace();
                         requestHandler.onGetError(null);
                     }
                 }, requestHandler::onGetError);
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
-    }
 
+    }
 }

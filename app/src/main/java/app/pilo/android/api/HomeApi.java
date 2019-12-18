@@ -60,9 +60,9 @@ public class HomeApi {
 
         //parse hero slider
 
-//        JSONArray heroSliderJsonArray = data.getJSONArray("hero_slider");
-//        for (int i = 0; i < heroSliderJsonArray.length(); i++) {
-//            HeroSlider heroSlider = JsonParser.heroSliderJsonParser(heroSliderJsonArray.getJSONObject(i));
+//        JSONArray heroSliderParser = data.getJSONArray("hero_slider");
+//        for (int i = 0; i < heroSliderParser.length(); i++) {
+//            HeroSlider heroSlider = JsonParser.heroSliderParser(heroSliderParser.getJSONObject(i));
 //            if (heroSlider != null)
 //                heroSliders.add(heroSlider);
 //        }
@@ -70,21 +70,21 @@ public class HomeApi {
         // parse best musics
         JSONArray bestMusicJsonArray = data.getJSONArray("best_musics");
         for (int i = 0; i < bestMusicJsonArray.length(); i++) {
-            Music music = JsonParser.musicJsonParser(bestMusicJsonArray.getJSONObject(i));
+            Music music = JsonParser.singleMusicParser(bestMusicJsonArray.getJSONObject(i));
             if (music != null)
                 bestMusics.add(music);
         }
 //        // parse albums
         JSONArray albumJsonArray = data.getJSONArray("albums");
         for (int i = 0; i < albumJsonArray.length(); i++) {
-            Album album = JsonParser.albumJsonParser(albumJsonArray.getJSONObject(i));
+            Album album = JsonParser.albumParser(albumJsonArray.getJSONObject(i));
             if (album != null)
                 albums.add(album);
         }
 //        // parse artists
         JSONArray artistsJsonArray = data.getJSONArray("artists");
         for (int i = 0; i < albumJsonArray.length(); i++) {
-            Artist artist = JsonParser.artistJsonArray(artistsJsonArray.getJSONObject(i));
+            Artist artist = JsonParser.artistParser(artistsJsonArray.getJSONObject(i));
             if (artist != null)
                 artists.add(artist);
         }
@@ -98,7 +98,7 @@ public class HomeApi {
 //        // parse last musics
         JSONArray lastMusicJsonArray = data.getJSONArray("last_musics");
         for (int i = 0; i < lastMusicJsonArray.length(); i++) {
-            Music music = JsonParser.musicJsonParser(lastMusicJsonArray.getJSONObject(i));
+            Music music = JsonParser.singleMusicParser(lastMusicJsonArray.getJSONObject(i));
             if (music != null)
                 lastMusics.add(music);
         }

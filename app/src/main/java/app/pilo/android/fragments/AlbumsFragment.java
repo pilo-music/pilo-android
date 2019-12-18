@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +37,10 @@ public class AlbumsFragment extends BaseFragment {
     RecyclerView rc_albums;
     @BindView(R.id.progressbar)
     ProgressBar progressBar;
+    @BindView(R.id.tv_header_title)
+    TextView tv_header_title;
+    @BindView(R.id.img_header_back)
+    ImageView img_header_back;
 
     private AlbumsListAdapter albumsListAdapter;
     private AlbumApi albumApi;
@@ -53,6 +59,8 @@ public class AlbumsFragment extends BaseFragment {
         albumApi = new AlbumApi(getActivity());
         albums = new ArrayList<>();
         manager = new LinearLayoutManager(getActivity());
+        tv_header_title.setText(getString(R.string.album_new));
+        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
         getDataFromServer();
         albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.album_item_full_width);
         rc_albums.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -89,13 +97,12 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onGetInfo(String status, List<Album> list) {
                 if (view != null) {
+                    progressBar.setVisibility(View.GONE);
                     if (status.equals("success")) {
                         albums.addAll(list);
                         page++;
                         albumsListAdapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
                     } else {
-                        progressBar.setVisibility(View.GONE);
                         Alerter.create(getActivity())
                                 .setTitle(R.string.server_connection_error)
                                 .setTextTypeface(Utils.font(getActivity()))
@@ -112,6 +119,7 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onGetError(VolleyError error) {
                 if (view != null) {
+                    progressBar.setVisibility(View.GONE);
                     Alerter.create(getActivity())
                             .setTitle(R.string.server_connection_error)
                             .setTextTypeface(Utils.font(getActivity()))

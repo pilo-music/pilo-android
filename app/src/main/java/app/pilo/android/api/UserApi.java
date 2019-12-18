@@ -32,7 +32,7 @@ public class UserApi {
                             User user = null;
                             status = response.getString("status");
                             if (status.equals("success"))
-                                user = JsonParser.userJsonParser(response.getJSONObject("data"));
+                                user = JsonParser.userParser(response.getJSONObject("data"));
 
                             requestHandler.onGetInfo(status, user);
                         } catch (JSONException e) {
@@ -127,7 +127,7 @@ public class UserApi {
                         User user = null;
                         status = response.getString("status");
                         if (status.equals("success"))
-                            user = JsonParser.userJsonParser(response.getJSONObject("data"));
+                            user = JsonParser.userParser(response.getJSONObject("data"));
 
                         requestHandler.onGetInfo(status, user);
                     } catch (JSONException e) {

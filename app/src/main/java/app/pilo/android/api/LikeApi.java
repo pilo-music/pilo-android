@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.models.Like;
-import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
 
 public class LikeApi {
@@ -36,7 +35,7 @@ public class LikeApi {
                         if (status.equals("success")) {
                             List<Like> lists = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
-                                Like like = JsonParser.likeJsonParser(data.getJSONObject(i));
+                                Like like = JsonParser.likeParser(data.getJSONObject(i));
                                 if (like != null)
                                     lists.add(like);
                             }

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.models.Album;
-import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SingleAlbum;
 
 public class AlbumApi {
@@ -40,7 +39,7 @@ public class AlbumApi {
                         if (status.equals("success")) {
                             List<Album> albums = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
-                                Album album = JsonParser.albumJsonParser(data.getJSONObject(i));
+                                Album album = JsonParser.albumParser(data.getJSONObject(i));
                                 if (album != null)
                                     albums.add(album);
                             }
@@ -64,7 +63,7 @@ public class AlbumApi {
                     try {
                         JSONObject data = response.getJSONObject("data");
                         String status = response.getString("status");
-                        SingleAlbum singleAlbum = parsAlbumApiData(data);
+                        SingleAlbum singleAlbum = JsonParser.singleAlbumParser(data);
                         if (singleAlbum != null)
                             requestHandler.onGetInfo(status, singleAlbum);
                         else
@@ -76,29 +75,6 @@ public class AlbumApi {
                 }, requestHandler::onGetError);
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
-    }
-
-    private SingleAlbum parsAlbumApiData(JSONObject data) throws JSONException {
-
-        SingleAlbum singleAlbum = new SingleAlbum();
-        List<Playlist> playlists = new ArrayList<>();
-
-        //parse album
-        Album album = JsonParser.albumJsonParser(data.getJSONObject("album"));
-
-
-        // parse playlist
-        JSONArray playlistJsonArray = data.getJSONArray("playlist");
-        for (int i = 0; i < playlistJsonArray.length(); i++) {
-            Playlist playlist = JsonParser.playlistJsonParser(playlistJsonArray.getJSONObject(i));
-            if (playlist != null)
-                playlists.add(playlist);
-        }
-
-        singleAlbum.setAlbum(album);
-        singleAlbum.setPlaylists(playlists);
-
-        return singleAlbum;
     }
 
 

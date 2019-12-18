@@ -26,8 +26,8 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.AlbumsListAdapter;
-import app.pilo.android.adapters.MusicCarouselAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
+import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.ArtistApi;
 import app.pilo.android.api.RequestHandler;
@@ -182,7 +182,7 @@ public class SingleArtistFragment extends BaseFragment {
             sfl_music.setVisibility(View.GONE);
             if (musics.size() > 0) {
                 rc_music_carousel.setVisibility(View.VISIBLE);
-                MusicCarouselAdapter musicCarouselAdapter = new MusicCarouselAdapter(new WeakReference<>(getActivity()), musics);
+                MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
                 rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_music_carousel.setAdapter(musicCarouselAdapter);
             }else{

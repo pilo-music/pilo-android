@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.pilo.android.models.Like;
 import app.pilo.android.models.Message;
 import app.pilo.android.repositories.UserRepo;
 
@@ -36,7 +35,7 @@ public class MessageApi {
                         if (status.equals("success")) {
                             List<Message> messages = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
-                                Message message = JsonParser.messageJsonParser(data.getJSONObject(i));
+                                Message message = JsonParser.messageParser(data.getJSONObject(i));
                                 if (message != null)
                                     messages.add(message);
                             }
