@@ -10,13 +10,14 @@
     android:padding="8dp">
 
     <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:id="@+id/img_delete"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_history" />
+        android:src="@drawable/ic_close" />
 
     <TextView
-        android:id="@+id/autoCompleteItem"
+        android:id="@+id/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -28,4 +29,10 @@
         android:textSize="@dimen/normal_font_size"
         tools:text="بی تو میمیرم" />
 
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_history" />
 </LinearLayout>

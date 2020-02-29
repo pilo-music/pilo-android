@@ -46,7 +46,7 @@ public class SearchArtistsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_artists != null) {
-            ArtistsListAdapter artistsAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists);
+            ArtistsListAdapter artistsAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists,R.layout.artist_item_full_width);
             rc_artists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_artists.setAdapter(artistsAdapter);
         }

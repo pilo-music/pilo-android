@@ -47,7 +47,7 @@ public class SearchAlbumFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_albums != null) {
-            AlbumsListAdapter albumsAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums);
+            AlbumsListAdapter albumsAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums,R.layout.album_item_full_width);
             rc_albums.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_albums.setAdapter(albumsAdapter);
         }

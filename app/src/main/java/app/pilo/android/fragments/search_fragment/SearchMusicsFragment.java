@@ -47,7 +47,7 @@ public class SearchMusicsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_musics != null) {
-            MusicsListAdapter musicsAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
+            MusicsListAdapter musicsAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics,R.layout.music_item_full_width);
             rc_musics.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_musics.setAdapter(musicsAdapter);
         }

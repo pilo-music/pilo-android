@@ -47,7 +47,7 @@ public class SearchPlaylistFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_playlists != null) {
-            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), playlists);
+            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), playlists,R.layout.playlist_item_full_width);
             rc_playlists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_playlists.setAdapter(playlistsAdapter);
         }
