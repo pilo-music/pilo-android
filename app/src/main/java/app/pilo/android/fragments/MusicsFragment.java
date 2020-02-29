@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
+import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.api.RequestHandler;
@@ -65,42 +66,31 @@ public class MusicsFragment extends BaseFragment {
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
         getDataFromServer();
-        musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width);
-        rc_musics.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics,R.layout.music_item_full_width);
+        LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_musics.setAdapter(musicsListAdapter);
-        rc_musics.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    isScrolling = true;
-                }
-            }
+        rc_musics.setLayoutManager(layoutManager);
 
+        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems = manager.getChildCount();
-                totalItems = manager.getItemCount();
-                scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
-                    isScrolling = false;
-                    getDataFromServer();
-                }
+            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
+                getDataFromServer();
             }
-        });
+        };
+
+        rc_musics.addOnScrollListener(endlessScrollEventListener);
+
 
         return view;
     }
 
     private void getDataFromServer() {
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         musicApi.get(null, page, new RequestHandler.RequestHandlerWithList<Music>() {
             @Override
             public void onGetInfo(String status, List<Music> list) {
                 if (view != null) {
-                    progressBar.setVisibility(View.GONE);
+//                    progressBar.setVisibility(View.GONE);
                     if (status.equals("success")) {
                         musics.addAll(list);
                         page++;

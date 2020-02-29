@@ -27,7 +27,7 @@ public class MusicApi {
         if (artist != null && !artist.equals("")) {
             url = PiloApi.MUSICS_GET + "artist/" + artist + "/";
         } else
-            url = PiloApi.MUSICS_GET;
+            url = PiloApi.MUSICS_GET + "latest/";
 
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url + page, null,
                 response -> {
