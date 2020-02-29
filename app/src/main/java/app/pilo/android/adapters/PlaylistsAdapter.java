@@ -30,16 +30,23 @@ import butterknife.ButterKnife;
 public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.PlaylistAdapterViewHolder> {
     private Context context;
     private List<Playlist> playlists;
+    private int viewId = R.layout.playlist_item;
 
     public PlaylistsAdapter(WeakReference<Context> context, List<Playlist> playlists) {
         this.context = context.get();
         this.playlists = playlists;
     }
 
+    public PlaylistsAdapter(WeakReference<Context> context, List<Playlist> playlists, int viewId) {
+        this.context = context.get();
+        this.playlists = playlists;
+        this.viewId = viewId;
+    }
+
     @NonNull
     @Override
     public PlaylistAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.playlist_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(viewId, viewGroup, false);
         return new PlaylistsAdapter.PlaylistAdapterViewHolder(view);
     }
 

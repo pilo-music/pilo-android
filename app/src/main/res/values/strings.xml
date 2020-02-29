@@ -7,8 +7,6 @@
     </array>
 
 
-
-
     <string name="app_name">Pilo</string>
     <string name="exit_message">"برای خروج دوباره دکمه بازگشت را فشار دهید</string>
 
@@ -83,7 +81,7 @@
     <string name="single_artist_album_count">آلبوم</string>
     <string name="single_artist_playlist_count">پلی لیست</string>
 
-    <string name="search_search_hint">موزیک  ، خواننده ، آلبوم , …</string>
+    <string name="search_search_hint">جستجو در موزیک  ، خواننده ، آلبوم , …</string>
     <string name="speech_not_supported">جستجو صوتی پشتیبانی نمیشود</string>
 
 

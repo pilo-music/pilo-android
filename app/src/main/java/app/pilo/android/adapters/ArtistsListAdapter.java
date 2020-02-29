@@ -2,6 +2,7 @@ package app.pilo.android.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class ArtistsListAdapter extends RecyclerView.Adapter<ArtistsListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ArtistCarouselAdapterViewHolder holder, final int position) {
         final Artist artist = artists.get(position);
-        if (viewId == R.layout.artist_item_full_width){
+        if (viewId == R.layout.artist_item_full_width) {
             int width = holder.ll_artist_item.getWidth();
             width = width / 2;
             holder.artist_image.setCornerRadius(0, width, width, width);

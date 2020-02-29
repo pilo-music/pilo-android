@@ -3,6 +3,7 @@ package app.pilo.android.repositories;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,10 @@ public class SearchHistoryRepo {
     }
 
     public void insert(SearchHistory searchHistory) {
+        SearchHistory result = searchHistoryDao.search(searchHistory.getText());
+        if (result != null) {
+            searchHistoryDao.delete(searchHistory);
+        }
         AsyncTask.execute(() -> searchHistoryDao.insert(searchHistory));
     }
 
@@ -46,7 +51,7 @@ public class SearchHistoryRepo {
     }
 
     public void delete(SearchHistory searchHistory) {
-        AsyncTask.execute(() -> searchHistoryDao.insert(searchHistory));
+        AsyncTask.execute(() -> searchHistoryDao.delete(searchHistory));
     }
 
 
