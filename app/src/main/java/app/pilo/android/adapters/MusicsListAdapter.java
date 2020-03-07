@@ -1,7 +1,6 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
-import app.pilo.android.fragments.SingleAlbumFragment;
-import app.pilo.android.helpers.RxBus;
-import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,17 +25,23 @@ import butterknife.ButterKnife;
 public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.MusicCarouselAdapterViewHolder> {
     private Context context;
     private List<Music> musics;
+    private List<Music> filteredArrayList;
     private int viewId = R.layout.music_item;
+    private ClickListenerPlayList recyclerClickListener;
 
-    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics) {
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, ClickListenerPlayList recyclerClickListener) {
         this.context = context.get();
         this.musics = musics;
+        this.filteredArrayList = musics;
+        this.recyclerClickListener = recyclerClickListener;
     }
 
-    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId) {
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId, ClickListenerPlayList recyclerClickListener) {
         this.context = context.get();
         this.musics = musics;
         this.viewId = viewId;
+        this.filteredArrayList = musics;
+        this.recyclerClickListener = recyclerClickListener;
     }
 
 
@@ -62,11 +63,25 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.music_item_image);
-        holder.ll_music_item.setOnClickListener(v -> fragmentJump(music));
+
+
+        holder.ll_music_item.setOnClickListener(v ->{
+            if (musics.size() > holder.getAdapterPosition()) {
+                recyclerClickListener.onClick(getPosition(musics.get(holder.getAdapterPosition()).getId()));
+            }
+        });
     }
 
-    private void fragmentJump(Music music) {
-        RxBus.getSubject().onNext(music);
+
+    private int getPosition(int id) {
+        int count = 0;
+        for (int i = 0; i < filteredArrayList.size(); i++) {
+            if (id == (filteredArrayList.get(i).getId())) {
+                count = i;
+                break;
+            }
+        }
+        return count;
     }
 
 

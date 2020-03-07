@@ -3,11 +3,10 @@ package app.pilo.android.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,27 +22,33 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import app.pilo.android.R;
+import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
-import app.pilo.android.helpers.RxBus;
 import app.pilo.android.models.Music;
 import app.pilo.android.utils.FragmentHistory;
-import app.pilo.android.utils.Utils;
+import app.pilo.android.utils.MusicEvent;
 import app.pilo.android.views.FragNavController;
 import app.pilo.android.views.NestedScrollableViewHelper;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
@@ -81,10 +86,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
     @BindView(R.id.img_single_music_play)
     ImageView img_single_music_play;
+    @BindView(R.id.rc_music_vertical)
+    RecyclerView rc_music_vertical;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
-    private DisposableObserver disposable;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
     private int[] mTabIconsSelected = {
@@ -94,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             R.drawable.bottom_tab_profile};
     @BindArray(R.array.tab_name)
     String[] TABS;
-
+    MusicVerticalListAdapter musicVerticalListAdapter;
+    private List<Music> musics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +118,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         switchTab(0);
         setupBottomNavigation();
 
+        rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        rc_music_vertical.setAdapter(musicVerticalListAdapter);
+
+
         sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
         sliding_layout.addPanelSlideListener(new PanelSlideListener() {
@@ -125,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             }
         });
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
-        musicChangeListener();
     }
 
 
@@ -176,42 +186,36 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         mNavController.switchTab(position);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        tv_music_player_collapsed_title.setText(event.music.getTitle());
+        tv_extended_music_player_title.setText(event.music.getTitle());
+        tv_extended_music_player_artist.setText(event.music.getArtist_name());
+        tv_music_player_collapsed_artist.setText(event.music.getArtist_name());
+        Glide.with(MainActivity.this)
+                .load(event.music.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(riv_extended_music_player_music);
+        Glide.with(MainActivity.this)
+                .load(event.music.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(riv_music_player_collapsed_image);
+        if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
+            sliding_layout.setPanelState(PanelState.EXPANDED);
 
-    public void musicChangeListener() {
-        disposable = RxBus.getSubject().subscribeWith(new DisposableObserver<Object>() {
-            @Override
-            public void onNext(Object music) {
-                if (music instanceof Music) {
-                    tv_music_player_collapsed_title.setText(((Music) music).getTitle());
-                    tv_extended_music_player_title.setText(((Music) music).getTitle());
-                    tv_extended_music_player_artist.setText(((Music) music).getArtist_name());
-                    tv_music_player_collapsed_artist.setText(((Music) music).getArtist_name());
-                    Glide.with(MainActivity.this)
-                            .load(((Music) music).getImage())
-                            .placeholder(R.drawable.ic_music_placeholder)
-                            .error(R.drawable.ic_music_placeholder)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(riv_extended_music_player_music);
-                    Glide.with(MainActivity.this)
-                            .load(((Music) music).getImage())
-                            .placeholder(R.drawable.ic_music_placeholder)
-                            .error(R.drawable.ic_music_placeholder)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(riv_music_player_collapsed_image);
-                    if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
-                        sliding_layout.setPanelState(PanelState.EXPANDED);
+        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), event.musics);
+        rc_music_vertical.setAdapter(musicVerticalListAdapter);
 
-                }
-            }
 
-            @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+//        MusicsFragment musicsFragment = new MusicsFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("title",getString(R.string.music_new));
+//        musicsFragment.setArguments(bundle);
+//        tv_music_vertical_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new MusicsFragment()));
     }
 
 
@@ -301,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     protected void onDestroy() {
         unbinder.unbind();
         super.onDestroy();
-        disposable.dispose();
     }
 
 
@@ -313,6 +316,18 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @Override
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }
 

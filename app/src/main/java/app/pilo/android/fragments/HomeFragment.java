@@ -26,6 +26,7 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistsListAdapter;
+import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
@@ -148,7 +149,17 @@ public class HomeFragment extends BaseFragment {
         if (rc_music_carousel != null) {
             sfl_music.setVisibility(View.GONE);
             rc_music_carousel.setVisibility(View.VISIBLE);
-            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
+            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, new ClickListenerPlayList() {
+                @Override
+                public void onClick(int position) {
+
+                }
+
+                @Override
+                public void onItemZero() {
+
+                }
+            });
             rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
             rc_music_carousel.setAdapter(musicCarouselAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();

@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
@@ -47,7 +48,17 @@ public class SearchMusicsFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (rc_musics != null) {
-            MusicsListAdapter musicsAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics,R.layout.music_item_full_width);
+            MusicsListAdapter musicsAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
+                @Override
+                public void onClick(int position) {
+
+                }
+
+                @Override
+                public void onItemZero() {
+
+                }
+            });
             rc_musics.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             rc_musics.setAdapter(musicsAdapter);
         }
