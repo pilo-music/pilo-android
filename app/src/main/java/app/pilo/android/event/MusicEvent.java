@@ -1,4 +1,4 @@
-package app.pilo.android.utils;
+package app.pilo.android.event;
 
 import java.util.ArrayList;
 import java.util.List;

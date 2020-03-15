@@ -8,4 +8,16 @@
     <dimen name="small_font_size">@dimen/_9ssp</dimen>
     <dimen name="box_height">@dimen/_38sdp</dimen>
     <dimen name="button_height">@dimen/_45sdp</dimen>
+
+
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">140dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="status_bar_album_art">64dp</dimen>
+    <dimen name="status_bar_button_info_container_padding_left">11dp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 </resources>

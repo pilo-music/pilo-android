@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +27,12 @@ import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Music;
-import app.pilo.android.utils.MusicEvent;
+import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static app.pilo.android.utils.Constant.addedFrom;
 
 public class MusicsFragment extends BaseFragment {
     private View view;
@@ -66,9 +66,7 @@ public class MusicsFragment extends BaseFragment {
         musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
             @Override
             public void onClick(int position) {
-                if (musics.size() > 0 && musics.get(position) != null) {
-                    Utils.addToPlaylist(getActivity(), musics.get(position), musics);
-                }
+
             }
 
             @Override

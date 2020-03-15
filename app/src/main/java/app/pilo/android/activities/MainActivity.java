@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +29,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,9 +39,9 @@ import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
-import app.pilo.android.models.Music;
+import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
-import app.pilo.android.utils.MusicEvent;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.views.FragNavController;
 import app.pilo.android.views.NestedScrollableViewHelper;
 import butterknife.BindArray;
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @BindArray(R.array.tab_name)
     String[] TABS;
     MusicVerticalListAdapter musicVerticalListAdapter;
-    private List<Music> musics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,6 +326,35 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+
+
+
+
+
+
+    public void changeImageAnimation(Boolean isPlay) {
+        try {
+//            if (!isPlay) {
+//                rotateAnimation.pause();
+//            } else {
+//                if (!isRotateAnim) {
+//                    isRotateAnim = true;
+//                    if (imageView_pager != null) {
+//                        imageView_pager.setAnimation(null);
+//                    }
+//                    View view_pager = viewpager.findViewWithTag("myview" + Constant.playPos);
+//                    newRotateAnim();
+//                    imageView_pager = view_pager.findViewById(R.id.image);
+//                    imageView_pager.startAnimation(rotateAnimation);
+//                } else {
+//                    rotateAnimation.resume();
+//                }
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

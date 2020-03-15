@@ -1,5 +1,9 @@
 package app.pilo.android.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -7,8 +11,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -16,12 +24,16 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.db.AppDatabase;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.CurrentPlaylistItem;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 
 public class Utils {
+    private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR = new DecelerateInterpolator();
+    private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
+    private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
 
     public static Typeface font(Context context) {
         return Typeface.createFromAsset(context.getAssets(), "font/font.ttf");
@@ -118,4 +130,83 @@ public class Utils {
 
         EventBus.getDefault().post(new MusicEvent(music,musics));
     }
+
+    public void animateHeartButton(final View v) {
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(v, "rotation", 0f, 360f);
+        rotationAnim.setDuration(300);
+        rotationAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
+
+        ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(v, "scaleX", 0.2f, 1f);
+        bounceAnimX.setDuration(300);
+        bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
+
+        ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(v, "scaleY", 0.2f, 1f);
+        bounceAnimY.setDuration(300);
+        bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
+        bounceAnimY.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            }
+        });
+
+        animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
+        animatorSet.start();
+    }
+
+    public void animatePhotoLike(final View vBgLike, final View ivLike) {
+        vBgLike.setVisibility(View.VISIBLE);
+        ivLike.setVisibility(View.VISIBLE);
+
+        vBgLike.setScaleY(0.1f);
+        vBgLike.setScaleX(0.1f);
+        vBgLike.setAlpha(1f);
+        ivLike.setScaleY(0.1f);
+        ivLike.setScaleX(0.1f);
+
+        android.animation.AnimatorSet animatorSet = new android.animation.AnimatorSet();
+
+        android.animation.ObjectAnimator bgScaleYAnim = android.animation.ObjectAnimator.ofFloat(vBgLike, "scaleY", 0.1f, 1f);
+        bgScaleYAnim.setDuration(200);
+        bgScaleYAnim.setInterpolator(DECCELERATE_INTERPOLATOR);
+        android.animation.ObjectAnimator bgScaleXAnim = android.animation.ObjectAnimator.ofFloat(vBgLike, "scaleX", 0.1f, 1f);
+        bgScaleXAnim.setDuration(200);
+        bgScaleXAnim.setInterpolator(DECCELERATE_INTERPOLATOR);
+        android.animation.ObjectAnimator bgAlphaAnim = android.animation.ObjectAnimator.ofFloat(vBgLike, "alpha", 1f, 0f);
+        bgAlphaAnim.setDuration(200);
+        bgAlphaAnim.setStartDelay(150);
+        bgAlphaAnim.setInterpolator(DECCELERATE_INTERPOLATOR);
+
+        android.animation.ObjectAnimator imgScaleUpYAnim = android.animation.ObjectAnimator.ofFloat(ivLike, "scaleY", 0.1f, 1f);
+        imgScaleUpYAnim.setDuration(300);
+        imgScaleUpYAnim.setInterpolator(DECCELERATE_INTERPOLATOR);
+        android.animation.ObjectAnimator imgScaleUpXAnim = android.animation.ObjectAnimator.ofFloat(ivLike, "scaleX", 0.1f, 1f);
+        imgScaleUpXAnim.setDuration(300);
+        imgScaleUpXAnim.setInterpolator(DECCELERATE_INTERPOLATOR);
+
+        android.animation.ObjectAnimator imgScaleDownYAnim = android.animation.ObjectAnimator.ofFloat(ivLike, "scaleY", 1f, 0f);
+        imgScaleDownYAnim.setDuration(300);
+        imgScaleDownYAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
+        android.animation.ObjectAnimator imgScaleDownXAnim = android.animation.ObjectAnimator.ofFloat(ivLike, "scaleX", 1f, 0f);
+        imgScaleDownXAnim.setDuration(300);
+        imgScaleDownXAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
+
+        animatorSet.playTogether(bgScaleYAnim, bgScaleXAnim, bgAlphaAnim, imgScaleUpYAnim, imgScaleUpXAnim);
+        animatorSet.play(imgScaleDownYAnim).with(imgScaleDownXAnim).after(imgScaleUpYAnim);
+
+        animatorSet.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                vBgLike.setVisibility(View.INVISIBLE);
+                ivLike.setVisibility(View.INVISIBLE);
+            }
+        });
+        animatorSet.start();
+    }
+
 }

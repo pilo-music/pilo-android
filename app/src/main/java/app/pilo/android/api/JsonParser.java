@@ -25,6 +25,7 @@ import app.pilo.android.models.Video;
 class JsonParser {
     static Music singleMusicParser(JSONObject jsonObject) {
         try {
+            //todo add duration
             JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
             return new Music(
                     jsonObject.getInt("id"),

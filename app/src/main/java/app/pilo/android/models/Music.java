@@ -31,6 +31,8 @@ public class Music {
     private String artist_name;
     @ColumnInfo(name = "artist_slug")
     private String artist_slug;
+    @ColumnInfo(name = "duration")
+    private long duration;
 
     public Music() {
         this.id = 0;
@@ -156,5 +158,13 @@ public class Music {
 
     public void setUid(int uid) {
         this.uid = uid;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }

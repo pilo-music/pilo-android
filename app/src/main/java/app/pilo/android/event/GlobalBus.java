@@ -1,4 +1,4 @@
-package app.pilo.android.utils;
+package app.pilo.android.event;
 
 import org.greenrobot.eventbus.EventBus;
 
