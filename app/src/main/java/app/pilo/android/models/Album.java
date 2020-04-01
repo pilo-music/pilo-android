@@ -1,52 +1,47 @@
 package app.pilo.android.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Album {
-    private int id;
+
+    private String slug;
     private String title;
     private String image;
-    private int isbest;
-    private String slug;
-    private boolean has_like;
-    private int artist_id;
-    private String artist_name;
-    private String artist_slug;
-    private List<Music> musics;
+    private String thumbnail;
+    private int music_count;
+    private int like_count;
+    private int play_count;
+    private String created_at;
+    private Artist artist;
 
     public Album() {
-        this.id = 0;
+        this.slug = "";
         this.title = "";
         this.image = "";
-        this.isbest = 0;
-        this.slug = "";
-        this.has_like = false;
-        this.artist_id = 0;
-        this.artist_name = "";
-        this.artist_slug = "";
-        this.musics = new ArrayList<>();
+        this.thumbnail = "";
+        this.music_count = 0;
+        this.like_count = 0;
+        this.play_count = 0;
+        this.created_at = "";
+        this.artist = new Artist();
     }
 
-    public Album(int id, String title, String image, int isbest, String slug, boolean has_like, int artist_id, String artist_name, String artist_slug, List<Music> musics) {
-        this.id = id;
+    public Album(String slug, String title, String image, String thumbnail, int music_count, int like_count, int play_count, String created_at, Artist artist) {
+        this.slug = slug;
         this.title = title;
         this.image = image;
-        this.isbest = isbest;
+        this.thumbnail = thumbnail;
+        this.music_count = music_count;
+        this.like_count = like_count;
+        this.play_count = play_count;
+        this.created_at = created_at;
+        this.artist = artist;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
         this.slug = slug;
-        this.has_like = has_like;
-        this.artist_id = artist_id;
-        this.artist_name = artist_name;
-        this.artist_slug = artist_slug;
-        this.musics = musics;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -65,59 +60,51 @@ public class Album {
         this.image = image;
     }
 
-    public int getIsbest() {
-        return isbest;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setIsbest(int isbest) {
-        this.isbest = isbest;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
-    public String getSlug() {
-        return slug;
+    public int getMusic_count() {
+        return music_count;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setMusic_count(int music_count) {
+        this.music_count = music_count;
     }
 
-    public List<Music> getMusics() {
-        return musics;
+    public int getLike_count() {
+        return like_count;
     }
 
-    public void setMusics(List<Music> musics) {
-        this.musics = musics;
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
     }
 
-    public int getArtist_id() {
-        return artist_id;
+    public int getPlay_count() {
+        return play_count;
     }
 
-    public void setArtist_id(int artist_id) {
-        this.artist_id = artist_id;
+    public void setPlay_count(int play_count) {
+        this.play_count = play_count;
     }
 
-    public String getArtist_name() {
-        return artist_name;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setArtist_name(String artist_name) {
-        this.artist_name = artist_name;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public String getArtist_slug() {
-        return artist_slug;
+    public Artist getArtist() {
+        return artist;
     }
 
-    public void setArtist_slug(String artist_slug) {
-        this.artist_slug = artist_slug;
-    }
-
-    public boolean getHas_like() {
-        return has_like;
-    }
-
-    public void setHas_like(boolean has_like) {
-        this.has_like = has_like;
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 }

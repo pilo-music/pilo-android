@@ -48,25 +48,17 @@ class JsonParser {
 
     static Album albumParser(JSONObject jsonObject) {
         try {
-            List<Music> musics = new ArrayList<>();
-            JSONArray musicsJsonArray = jsonObject.getJSONArray("musics");
-            for (int i = 0; i < musicsJsonArray.length(); i++) {
-                Music music = JsonParser.singleMusicParser(musicsJsonArray.getJSONObject(i));
-                if (music != null)
-                    musics.add(music);
-            }
-            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
+            Artist artist = JsonParser.artistParser(jsonObject.getJSONObject("artist"));
             return new Album(
-                    jsonObject.getInt("id"),
+                    jsonObject.getString("slug"),
                     jsonObject.getString("title"),
                     jsonObject.getString("image"),
-                    jsonObject.getInt("isbest"),
-                    jsonObject.getString("slug"),
-                    jsonObject.getBoolean("has_like"),
-                    jsonObjectArtist.getInt("id"),
-                    jsonObjectArtist.getString("name"),
-                    jsonObjectArtist.getString("slug"),
-                    musics
+                    jsonObject.getString("thumbnail"),
+                    jsonObject.getInt("music_count"),
+                    jsonObject.getInt("like_count"),
+                    jsonObject.getInt("play_count"),
+                    jsonObject.getString("created_at"),
+                    artist
             );
         } catch (JSONException e) {
             Log.e("Albums", "albumParser: " + e.getMessage());
@@ -77,59 +69,52 @@ class JsonParser {
     static SingleAlbum singleAlbumParser(JSONObject data) throws JSONException {
 
         SingleAlbum singleAlbum = new SingleAlbum();
-        List<Playlist> playlists = new ArrayList<>();
 
-        //parse album
+        List<Music> musics = new ArrayList<>();
+        List<Album> related = new ArrayList<>();
+
         Album album = JsonParser.albumParser(data.getJSONObject("album"));
+        boolean has_like = data.getBoolean("has_like");
+        boolean has_bookmark = data.getBoolean("has_bookmark");
 
+        // parse musics
+        JSONArray musicsJsonArray = data.getJSONArray("musics");
+        for (int i = 0; i < musicsJsonArray.length(); i++) {
+            Music music = JsonParser.singleMusicParser(musicsJsonArray.getJSONObject(i));
+            if (music != null)
+                musics.add(music);
+        }
 
-        // parse playlist
-        JSONArray playlistJsonArray = data.getJSONArray("playlist");
-        for (int i = 0; i < playlistJsonArray.length(); i++) {
-            Playlist playlist = JsonParser.playlistParser(playlistJsonArray.getJSONObject(i));
-            if (playlist != null)
-                playlists.add(playlist);
+        // parse related
+        JSONArray relatedJsonArray = data.getJSONArray("related");
+        for (int i = 0; i < relatedJsonArray.length(); i++) {
+            Album albumItem = JsonParser.albumParser(musicsJsonArray.getJSONObject(i));
+            if (albumItem != null)
+                related.add(albumItem);
         }
 
         singleAlbum.setAlbum(album);
-        singleAlbum.setPlaylists(playlists);
+        singleAlbum.setMusics(musics);
+        singleAlbum.setRelated(related);
+        singleAlbum.setHas_bookmark(has_bookmark);
+        singleAlbum.setHas_like(has_like);
 
         return singleAlbum;
     }
 
     static Artist artistParser(JSONObject jsonObject) {
         try {
-            int music_count = 0;
-            if (!jsonObject.isNull("music_count"))
-                music_count = jsonObject.getInt("music_count");
-
-            int album_count = 0;
-            if (!jsonObject.isNull("album_count"))
-                album_count = jsonObject.getInt("album_count");
-
-            int video_count = 0;
-            if (!jsonObject.isNull("video_count"))
-                video_count = jsonObject.getInt("video_count");
-
-            boolean is_follow = false;
-            if (!jsonObject.isNull("is_follow"))
-                is_follow = jsonObject.getBoolean("is_follow");
-
-            int is_best = 0;
-            if (!jsonObject.isNull("isbest"))
-                is_best = jsonObject.getInt("isbest");
-
-
             return new Artist(
-                    jsonObject.getInt("id"),
+                    jsonObject.getString("slug"),
                     jsonObject.getString("name"),
                     jsonObject.getString("image"),
-                    is_best,
-                    jsonObject.getString("slug"),
-                    music_count,
-                    album_count,
-                    video_count,
-                    is_follow
+                    jsonObject.getString("thumbnail"),
+                    jsonObject.getInt("music_count"),
+                    jsonObject.getInt("album_count"),
+                    jsonObject.getInt("video_count"),
+                    jsonObject.getInt("followers_count"),
+                    jsonObject.getInt("playlist_count"),
+                    jsonObject.getString("created_at")
             );
         } catch (JSONException e) {
             e.printStackTrace();

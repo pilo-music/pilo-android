@@ -12,9 +12,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
+import app.pilo.android.models.SingleAlbum;
 import app.pilo.android.models.SingleArtist;
 
 public class ArtistApi {
@@ -26,53 +30,67 @@ public class ArtistApi {
     }
 
 
-    public void get(int page, final RequestHandler.RequestHandlerWithList<Artist> requestHandler) {
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTISTS_GET + page , null,
-                response -> {
-                    try {
-                        String status = response.getString("status");
-                        if (status.equals("success")) {
+    public void get(HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            for (Map.Entry<String, Object> item : params.entrySet()) {
+                jsonObject.put(item.getKey(), item.getValue());
+            }
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTIST_GET, jsonObject,
+                    response -> {
+                        try {
                             JSONArray data = response.getJSONArray("data");
-                            List<Artist> artists = new ArrayList<>();
-                            for (int i = 0; i < data.length(); i++) {
-                                Artist artist = JsonParser.artistParser(data.getJSONObject(i));
-                                if (artist != null)
-                                    artists.add(artist);
-                            }
-                            requestHandler.onGetInfo(status, artists);
-                        } else
-                            requestHandler.onGetInfo(status, null);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        requestHandler.onGetError(null);
-                    }
-                }, requestHandler::onGetError);
-        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        Volley.newRequestQueue(context).add(request);
-    }
-
-    public void single(String slug, final RequestHandler.RequestHandlerWithModel<SingleArtist> requestHandler) {
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTIST_GET + slug, null,
-                response -> {
-                    try {
-                        JSONObject data = response.getJSONObject("data");
-                        String status = response.getString("status");
-                        if (status.equals("success")) {
-                            SingleArtist singleArtist = JsonParser.singleArtistParser(data);
-                            if (singleArtist != null)
-                                requestHandler.onGetInfo(status, singleArtist);
-                            else
-                                requestHandler.onGetError(null);
-                        } else {
-                            requestHandler.onGetInfo(status, null);
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            if (status) {
+                                List<Artist> artists = new ArrayList<>();
+                                for (int i = 0; i < data.length(); i++) {
+                                    Artist artist = JsonParser.artistParser(data.getJSONObject(i));
+                                    if (artist != null)
+                                        artists.add(artist);
+                                }
+                                requestHandler.onGetInfo(artists, message, status);
+                            } else
+                                requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        requestHandler.onGetError(null);
-                    }
-                }, requestHandler::onGetError);
-        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        Volley.newRequestQueue(context).add(request);
+                    }, requestHandler::onGetError);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
+
+    public void single(HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            for (Map.Entry<String, Object> item : params.entrySet()) {
+                jsonObject.put(item.getKey(), item.getValue());
+            }
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTIST_SINGLE, jsonObject,
+                    response -> {
+                        try {
+                            JSONObject data = response.getJSONObject("data");
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            if (status) {
+                                SingleArtist singleAlbum = JsonParser.singleArtistParser(data);
+                                requestHandler.onGetInfo(singleAlbum, message, status);
+                            } else
+                                requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -20,7 +20,7 @@ public class VersionApi {
         this.context = context;
     }
 
-    public void version(final HttpHandler.RequestHandlerWithData requestHandler) {
+    public void version(final HttpHandler.RequestHandler requestHandler) {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.VERSION, null,
                 response -> {
                     try {

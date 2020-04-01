@@ -40,7 +40,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void checkUpdate() {
         cpb_splash.setVisibility(View.VISIBLE);
         ll_try_again.setVisibility(View.GONE);
-        new VersionApi(this).version(new HttpHandler.RequestHandlerWithData() {
+        new VersionApi(this).version(new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 int versionCode = BuildConfig.VERSION_CODE;

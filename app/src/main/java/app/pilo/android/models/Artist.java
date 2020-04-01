@@ -1,47 +1,51 @@
 package app.pilo.android.models;
 
 public class Artist {
-    private int id;
+    private String slug;
     private String name;
     private String image;
-    private int isbest;
-    private String slug;
-
+    private String thumbnail;
     private int musics_count;
     private int album_count;
     private int video_count;
-    private boolean is_follow;
+    private int playlist_count;
+    private int followers_count;
+    private String created_at;
 
     public Artist() {
-        this.id = 0;
+        this.slug = "";
         this.name = "";
         this.image = "";
-        this.isbest = 0;
-        this.slug = "";
+        this.thumbnail = "";
         this.musics_count = 0;
         this.album_count = 0;
         this.video_count = 0;
-        this.is_follow = false;
+        this.playlist_count = 0;
+        this.followers_count = 0;
+        this.created_at = "";
     }
 
-    public Artist(int id, String name, String image, int isbest, String slug, int musics_count, int album_count, int video_count, boolean is_follow) {
-        this.id = id;
+    public Artist(
+            String slug,
+            String name,
+            String image,
+            String thumbnail,
+            int musics_count,
+            int album_count,
+            int video_count,
+            int playlist_count,
+            int followers_count,
+            String created_at) {
+        this.slug = slug;
         this.name = name;
         this.image = image;
-        this.isbest = isbest;
-        this.slug = slug;
+        this.thumbnail = thumbnail;
         this.musics_count = musics_count;
         this.album_count = album_count;
         this.video_count = video_count;
-        this.is_follow = is_follow;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.playlist_count = playlist_count;
+        this.followers_count = followers_count;
+        this.created_at = created_at;
     }
 
     public String getName() {
@@ -60,13 +64,6 @@ public class Artist {
         this.image = image;
     }
 
-    public int getIsbest() {
-        return isbest;
-    }
-
-    public void setIsbest(int isbest) {
-        this.isbest = isbest;
-    }
 
     public String getSlug() {
         return slug;
@@ -100,11 +97,35 @@ public class Artist {
         this.video_count = video_count;
     }
 
-    public boolean isIs_follow() {
-        return is_follow;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setIs_follow(boolean is_follow) {
-        this.is_follow = is_follow;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public int getFollowers_count() {
+        return followers_count;
+    }
+
+    public void setFollowers_count(int followers_count) {
+        this.followers_count = followers_count;
+    }
+
+    public int getPlaylist_count() {
+        return playlist_count;
+    }
+
+    public void setPlaylist_count(int playlist_count) {
+        this.playlist_count = playlist_count;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

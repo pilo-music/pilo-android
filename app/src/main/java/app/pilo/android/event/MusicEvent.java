@@ -6,6 +6,7 @@ import java.util.List;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
+import app.pilo.android.models.SingleAlbum;
 
 public class MusicEvent {
 
@@ -17,7 +18,7 @@ public class MusicEvent {
         musics.addAll(playlist.getMusics());
     }
 
-    public MusicEvent(Music music, Album album) {
+    public MusicEvent(Music music, SingleAlbum album) {
         this.music = music;
         musics.addAll(album.getMusics());
     }
