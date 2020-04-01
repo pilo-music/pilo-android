@@ -26,6 +26,16 @@
         <item name="android:popupBackground">@drawable/popup_menu_style</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_bottom</item>
+    </style>
+
     <style name="widget.popupMenu.rtl">
         <item name="android:layoutDirection">rtl</item>
     </style>

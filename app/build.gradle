@@ -29,8 +29,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
-    implementation "com.google.android.material:material:1.2.0-alpha01"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation "com.google.android.material:material:1.2.0-alpha05"
 
     //butterknife
     implementation 'com.jakewharton:butterknife:10.2.0'
@@ -43,8 +43,9 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+
     //kotlin
-    implementation "androidx.core:core-ktx:1.1.0"
+    implementation "androidx.core:core-ktx:1.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.makeramen:roundedimageview:2.3.0'
@@ -60,6 +61,7 @@ dependencies {
     implementation 'com.intuit.ssp:ssp-android:1.0.6'
     implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
     implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.github.castorflex.smoothprogressbar:library-circular:1.3.0@aar'
 }
 repositories {
     mavenCentral()

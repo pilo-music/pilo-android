@@ -1,0 +1,84 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <ImageView
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center"
+            android:src="@drawable/ic_pilo_logo" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/font"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size"
+            tools:text="بروزرسانی جدید " />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:background="#D0D0D0" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:fontFamily="@font/font"
+        android:textColor="@color/colorDark"
+        android:textSize="@dimen/normal_font_size" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:fontFamily="@font/font"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/update_later"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
+
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/green_round_box_background"
+            android:fontFamily="@font/font"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/update"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/normal_font_size" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -6,7 +6,8 @@ import com.android.volley.error.VolleyError;
 
 import java.util.List;
 
-public interface RequestHandler{
+@Deprecated
+public interface RequestHandler {
 
     interface RequestHandlerWithStatus {
         void onGetInfo(String status);

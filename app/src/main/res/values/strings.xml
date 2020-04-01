@@ -9,6 +9,7 @@
 
     <string name="app_name">Pilo</string>
     <string name="exit_message">"برای خروج دوباره دکمه بازگشت را فشار دهید</string>
+    <string name="try_again">تلاش مجدد</string>
 
     <string name="server_connection_error">مشکلی در ارتباط با سرور رخ داده است</string>
     <string name="server_connection_message">لطفا مجددا تلاش نمایید</string>
@@ -65,6 +66,8 @@
     <string name="you">شما</string>
     <string name="send">ارسال</string>
     <string name="filed_required">وارد کردن این فیلد الزامی است</string>
+    <string name="update">اپدیت کن</string>
+    <string name="update_later">الان نه</string>
 
     <string name="show_more">نمایش همه</string>
     <string name="new_best">جدیدترین های برگزیده</string>
