@@ -21,11 +21,14 @@ import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.ArtistsListAdapter;
 import app.pilo.android.api.ArtistApi;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Artist;
 import app.pilo.android.utils.Utils;
@@ -96,42 +99,29 @@ public class ArtistsFragment extends BaseFragment {
 
     private void getDataFromServer() {
         progressBar.setVisibility(View.VISIBLE);
-        artistApi.get(page, new RequestHandler.RequestHandlerWithList<Artist>() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page", page);
+        params.put("count", 12);
+        artistApi.get(params, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, List<Artist> list) {
+            public void onGetInfo(Object data, String message, boolean status) {
                 if (view != null) {
                     progressBar.setVisibility(View.GONE);
-                    if (status.equals("success")) {
-                        artists.addAll(list);
+                    if (status) {
+                        artists.addAll((List<Artist>)data);
                         page++;
                         artistsListAdapter.notifyDataSetChanged();
                     } else {
-                        Alerter.create(getActivity())
-                                .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(Utils.font(getActivity()))
-                                .setTitleTypeface(Utils.font(getActivity()))
-                                .setButtonTypeface(Utils.font(getActivity()))
-                                .setText(R.string.server_connection_message)
-                                .setBackgroundColorRes(R.color.colorError)
-                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                                .show();
+                        new HttpErrorHandler(getActivity(), message);
                     }
                 }
             }
 
             @Override
-            public void onGetError(VolleyError error) {
-                if (view != null) {
+            public void onGetError(@Nullable VolleyError error) {
+                if (view != null){
                     progressBar.setVisibility(View.GONE);
-                    Alerter.create(getActivity())
-                            .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(Utils.font(getActivity()))
-                            .setTitleTypeface(Utils.font(getActivity()))
-                            .setButtonTypeface(Utils.font(getActivity()))
-                            .setText(R.string.server_connection_message)
-                            .setBackgroundColorRes(R.color.colorError)
-                            .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                            .show();
+                    new HttpErrorHandler(getActivity());
                 }
             }
         });

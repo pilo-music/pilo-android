@@ -16,10 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.SingleAlbum;
 import app.pilo.android.models.SingleArtist;
+import app.pilo.android.repositories.UserRepo;
 
 public class ArtistApi {
 
@@ -30,11 +33,13 @@ public class ArtistApi {
     }
 
 
-    public void get(HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
+    public void get(@Nullable HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
         JSONObject jsonObject = new JSONObject();
         try {
-            for (Map.Entry<String, Object> item : params.entrySet()) {
-                jsonObject.put(item.getKey(), item.getValue());
+            if (params != null) {
+                for (Map.Entry<String, Object> item : params.entrySet()) {
+                    jsonObject.put(item.getKey(), item.getValue());
+                }
             }
             final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTIST_GET, jsonObject,
                     response -> {
@@ -56,7 +61,16 @@ public class ArtistApi {
                             e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
-                    }, requestHandler::onGetError);
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                    return params;
+                }
+            };
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -65,12 +79,10 @@ public class ArtistApi {
     }
 
 
-    public void single(HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
+    public void single(String slug, final HttpHandler.RequestHandler requestHandler) {
         JSONObject jsonObject = new JSONObject();
         try {
-            for (Map.Entry<String, Object> item : params.entrySet()) {
-                jsonObject.put(item.getKey(), item.getValue());
-            }
+            jsonObject.put("slug", slug);
             final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ARTIST_SINGLE, jsonObject,
                     response -> {
                         try {
@@ -86,7 +98,16 @@ public class ArtistApi {
                             e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
-                    }, requestHandler::onGetError);
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                    return params;
+                }
+            };
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {

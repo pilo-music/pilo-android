@@ -25,29 +25,6 @@ public class Artist {
         this.created_at = "";
     }
 
-    public Artist(
-            String slug,
-            String name,
-            String image,
-            String thumbnail,
-            int musics_count,
-            int album_count,
-            int video_count,
-            int playlist_count,
-            int followers_count,
-            String created_at) {
-        this.slug = slug;
-        this.name = name;
-        this.image = image;
-        this.thumbnail = thumbnail;
-        this.musics_count = musics_count;
-        this.album_count = album_count;
-        this.video_count = video_count;
-        this.playlist_count = playlist_count;
-        this.followers_count = followers_count;
-        this.created_at = created_at;
-    }
-
     public String getName() {
         return name;
     }

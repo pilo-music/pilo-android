@@ -70,7 +70,7 @@ public class HomeApi {
         // parse best musics
         JSONArray bestMusicJsonArray = data.getJSONArray("best_musics");
         for (int i = 0; i < bestMusicJsonArray.length(); i++) {
-            Music music = JsonParser.singleMusicParser(bestMusicJsonArray.getJSONObject(i));
+            Music music = JsonParser.musicParser(bestMusicJsonArray.getJSONObject(i));
             if (music != null)
                 bestMusics.add(music);
         }
@@ -91,14 +91,14 @@ public class HomeApi {
 //        // parse videos
         JSONArray videosJsonArray = data.getJSONArray("videos");
         for (int i = 0; i < albumJsonArray.length(); i++) {
-            Video video = JsonParser.videoJsonArray(videosJsonArray.getJSONObject(i));
+            Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
             if (video != null)
                 videos.add(video);
         }
 //        // parse last musics
         JSONArray lastMusicJsonArray = data.getJSONArray("last_musics");
         for (int i = 0; i < lastMusicJsonArray.length(); i++) {
-            Music music = JsonParser.singleMusicParser(lastMusicJsonArray.getJSONObject(i));
+            Music music = JsonParser.musicParser(lastMusicJsonArray.getJSONObject(i));
             if (music != null)
                 lastMusics.add(music);
         }

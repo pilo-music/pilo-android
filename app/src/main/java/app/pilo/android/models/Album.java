@@ -24,17 +24,6 @@ public class Album {
         this.artist = new Artist();
     }
 
-    public Album(String slug, String title, String image, String thumbnail, int music_count, int like_count, int play_count, String created_at, Artist artist) {
-        this.slug = slug;
-        this.title = title;
-        this.image = image;
-        this.thumbnail = thumbnail;
-        this.music_count = music_count;
-        this.like_count = like_count;
-        this.play_count = play_count;
-        this.created_at = created_at;
-        this.artist = artist;
-    }
 
     public String getSlug() {
         return slug;

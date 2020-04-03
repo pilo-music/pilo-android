@@ -19,6 +19,8 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.LikeListAdapter;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Like;
@@ -27,54 +29,56 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-        public class LikesActivity extends AppCompatActivity {
+public class LikesActivity extends AppCompatActivity {
 
-            @BindView(R.id.rc_likes)
-            RecyclerView recyclerView;
-            @BindView(R.id.tv_header_title)
-            TextView tv_header_title;
-            @BindView(R.id.img_header_back)
-            ImageView img_header_back;
-            @BindView(R.id.swipe_refresh_layout)
-            SwipeRefreshLayout swipe_refresh_layout;
+    @BindView(R.id.rc_likes)
+    RecyclerView recyclerView;
+    @BindView(R.id.tv_header_title)
+    TextView tv_header_title;
+    @BindView(R.id.img_header_back)
+    ImageView img_header_back;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipe_refresh_layout;
 
-            private Unbinder unbinder;
-            private int page = 1;
+    private Unbinder unbinder;
+    private int page = 1;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_likes);
+        unbinder = ButterKnife.bind(this);
+        tv_header_title.setText(getString(R.string.profile_likes));
+        getDataFromServer();
+    }
+
+    private void getDataFromServer() {
+        LikeApi likeApi = new LikeApi(this);
+        swipe_refresh_layout.setRefreshing(true);
+        likeApi.get(null, new HttpHandler.RequestHandler() {
             @Override
-            protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.activity_likes);
-                unbinder = ButterKnife.bind(this);
-                tv_header_title.setText(getString(R.string.profile_likes));
-                getDataFromServer();
-            }
-
-            private void getDataFromServer() {
-                //todo : handle errors
-                LikeApi likeApi = new LikeApi(this);
-                swipe_refresh_layout.setRefreshing(true);
-        likeApi.get(new RequestHandler.RequestHandlerWithList<Like>() {
-            @Override
-            public void onGetInfo(String status, List<Like> data) {
+            public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
-                if (status.equals("success")) {
-                    LikeListAdapter likeListAdapter = new LikeListAdapter(new WeakReference<>(LikesActivity.this), data);
+                if (status) {
+                    LikeListAdapter likeListAdapter = new LikeListAdapter(new WeakReference<>(LikesActivity.this), (List<Like>) data);
                     recyclerView.setLayoutManager(new LinearLayoutManager(LikesActivity.this, RecyclerView.VERTICAL, false));
                     recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(LikesActivity.this, android.R.anim.fade_in)));
                     recyclerView.setAdapter(likeListAdapter);
+                } else {
+                    new HttpErrorHandler(LikesActivity.this, message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 swipe_refresh_layout.setRefreshing(false);
+                new HttpErrorHandler(LikesActivity.this);
             }
         });
     }
 
     @OnClick(R.id.img_header_back)
-    void back(){
+    void back() {
         finish();
     }
 

@@ -13,16 +13,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
+import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.BookmarkListAdapter;
 import app.pilo.android.api.BookmarkApi;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Bookmark;
 import app.pilo.android.models.User;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,30 +56,32 @@ public class BookmarksActivity extends AppCompatActivity {
     }
 
     private void getDataFromServer() {
-        //todo : handle errors
         BookmarkApi bookmarkApi = new BookmarkApi(this);
         swipe_refresh_layout.setRefreshing(true);
-        bookmarkApi.get(new RequestHandler.RequestHandlerWithList<Bookmark>() {
+        bookmarkApi.get(null, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, List<Bookmark> data) {
+            public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
-                if (status.equals("success")) {
-                    BookmarkListAdapter bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(BookmarksActivity.this), data);
+                if (status) {
+                    BookmarkListAdapter bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(BookmarksActivity.this), (List<Bookmark>) data);
                     recyclerView.setLayoutManager(new LinearLayoutManager(BookmarksActivity.this, RecyclerView.VERTICAL, false));
                     recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(BookmarksActivity.this, android.R.anim.fade_in)));
                     recyclerView.setAdapter(bookmarkListAdapter);
+                } else {
+                    new HttpErrorHandler(BookmarksActivity.this, message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 swipe_refresh_layout.setRefreshing(false);
+                new HttpErrorHandler(BookmarksActivity.this);
             }
         });
     }
 
     @OnClick(R.id.img_header_back)
-    void back(){
+    void back() {
         finish();
     }
 

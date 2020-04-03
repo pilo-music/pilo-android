@@ -23,10 +23,14 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.api.AlbumApi;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.helpers.UserSharedPrefManager;
+import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleAlbum;
+import app.pilo.android.models.SingleArtist;
 import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,49 +95,33 @@ public class SingleAlbumFragment extends BaseFragment {
 
     private void getDataFromServer() {
         AlbumApi albumApi = new AlbumApi(getActivity());
-        albumApi.single(slug, new RequestHandler.RequestHandlerWithModel<SingleAlbum>() {
+        albumApi.single(slug, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, SingleAlbum data) {
-                if (status.equals("success") && data != null) {
-                    if (data.getAlbum().getMusics() != null) {
-                        tv_album_count.setText(data.getAlbum().getMusics().size() + " " + getActivity().getString(R.string.music));
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
+                    if (((SingleAlbum) data).getMusics() != null) {
+                        tv_album_count.setText(((SingleAlbum) data).getMusics().size() + " " + getActivity().getString(R.string.music));
                     } else {
                         tv_album_count.setText("0" + " " + getActivity().getString(R.string.music));
                     }
 
-                    if (sharedPrefManager.getLocal().equals("fa")){
+                    if (sharedPrefManager.getLocal().equals("fa")) {
                         tv_album_artist.setTextDirection(View.TEXT_DIRECTION_RTL);
                         tv_album_name.setTextDirection(View.TEXT_DIRECTION_RTL);
                     }
 
 
-                    tv_album_artist.setText(data.getAlbum().getArtist_name());
-                    setupMusic(data.getAlbum().getMusics());
+                    tv_album_artist.setText(((SingleAlbum) data).getAlbum().getArtist().getName());
+                    setupMusic(((SingleAlbum) data).getMusics());
 
                 } else {
-                    Alerter.create(getActivity())
-                            .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(Utils.font(getActivity()))
-                            .setTitleTypeface(Utils.font(getActivity()))
-                            .setButtonTypeface(Utils.font(getActivity()))
-                            .setText(R.string.server_connection_message)
-                            .setBackgroundColorRes(R.color.colorError)
-                            .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                            .show();
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
-            public void onGetError(VolleyError error) {
-                Alerter.create(getActivity())
-                        .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(Utils.font(getActivity()))
-                        .setTitleTypeface(Utils.font(getActivity()))
-                        .setButtonTypeface(Utils.font(getActivity()))
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorRes(R.color.colorError)
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
+            public void onGetError(@Nullable VolleyError error) {
+                new HttpErrorHandler(getActivity());
             }
         });
     }

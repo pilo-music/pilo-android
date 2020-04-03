@@ -62,7 +62,7 @@
     <string name="subject">موضوع</string>
     <string name="message">پیام</string>
     <string name="messages">پیام ها</string>
-    <string name="admin">پیام ها</string>
+    <string name="admin">ادمین</string>
     <string name="you">شما</string>
     <string name="send">ارسال</string>
     <string name="filed_required">وارد کردن این فیلد الزامی است</string>

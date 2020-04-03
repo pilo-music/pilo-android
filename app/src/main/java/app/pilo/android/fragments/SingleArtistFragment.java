@@ -19,7 +19,6 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
-import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -31,12 +30,12 @@ import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.ArtistApi;
-import app.pilo.android.api.RequestHandler;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleArtist;
 import app.pilo.android.models.Video;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -134,44 +133,25 @@ public class SingleArtistFragment extends BaseFragment {
 
     private void getDataFromServer() {
         ArtistApi artistApi = new ArtistApi(getActivity());
-        artistApi.single(slug, new RequestHandler.RequestHandlerWithModel<SingleArtist>() {
+        artistApi.single(slug, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, SingleArtist data) {
-                if (view != null) {
-                    if (status.equals("success") && data != null) {
-                        tv_album_count.setText(String.valueOf(data.getArtist().getAlbum_count()));
-                        tv_music_count.setText(String.valueOf(data.getArtist().getMusics_count()));
-                        tv_video_count.setText(String.valueOf(data.getArtist().getVideo_count()));
-                        setupBestMusicCarousel(data.getBest_musics());
-                        setupVideoViewPager(data.getVideos());
-                        setupAlbumViewPager(data.getAlbums());
-                        setupLastVerticalMusicList(data.getLast_musics());
-
-                    } else {
-                        Alerter.create(getActivity())
-                                .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(Utils.font(getActivity()))
-                                .setTitleTypeface(Utils.font(getActivity()))
-                                .setButtonTypeface(Utils.font(getActivity()))
-                                .setText(R.string.server_connection_message)
-                                .setBackgroundColorRes(R.color.colorError)
-                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                                .show();
-                    }
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
+                    tv_album_count.setText(String.valueOf(((SingleArtist) data).getArtist().getAlbum_count()));
+                    tv_music_count.setText(String.valueOf(((SingleArtist) data).getArtist().getMusics_count()));
+                    tv_video_count.setText(String.valueOf(((SingleArtist) data).getArtist().getVideo_count()));
+                    setupBestMusicCarousel(((SingleArtist) data).getBest_musics());
+                    setupVideoViewPager(((SingleArtist) data).getVideos());
+                    setupAlbumViewPager(((SingleArtist) data).getAlbums());
+                    setupLastVerticalMusicList(((SingleArtist) data).getLast_musics());
+                } else {
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
-            public void onGetError(VolleyError error) {
-                Alerter.create(getActivity())
-                        .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(Utils.font(getActivity()))
-                        .setTitleTypeface(Utils.font(getActivity()))
-                        .setButtonTypeface(Utils.font(getActivity()))
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorRes(R.color.colorError)
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
+            public void onGetError(@Nullable VolleyError error) {
+                new HttpErrorHandler(getActivity());
             }
         });
 
@@ -186,7 +166,7 @@ public class SingleArtistFragment extends BaseFragment {
                 MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, new ClickListenerPlayList() {
                     @Override
                     public void onClick(int position) {
-                        
+
                     }
 
                     @Override
@@ -196,7 +176,7 @@ public class SingleArtistFragment extends BaseFragment {
                 });
                 rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_music_carousel.setAdapter(musicCarouselAdapter);
-            }else{
+            } else {
                 tv_music_carousel_show_more.setVisibility(View.GONE);
                 tv_music_carousel_title.setVisibility(View.GONE);
             }
@@ -212,7 +192,7 @@ public class SingleArtistFragment extends BaseFragment {
                 sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
                 sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
 
-            }else{
+            } else {
                 tv_video_carousel_show_more.setVisibility(View.GONE);
                 tv_video_carousel_title.setVisibility(View.GONE);
             }
@@ -227,7 +207,7 @@ public class SingleArtistFragment extends BaseFragment {
                 AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums);
                 rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_album_carousel.setAdapter(albumCarouselAdapter);
-            }else{
+            } else {
                 tv_album_carousel_show_more.setVisibility(View.GONE);
                 tv_album_carousel_title.setVisibility(View.GONE);
             }
@@ -240,7 +220,7 @@ public class SingleArtistFragment extends BaseFragment {
                 MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
                 rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                 rc_music_vertical.setAdapter(musicVerticalListAdapter);
-            }else {
+            } else {
                 tv_music_vertical_show_more.setVisibility(View.GONE);
                 tv_music_vertical_title.setVisibility(View.GONE);
             }

@@ -1,6 +1,7 @@
 package app.pilo.android.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -26,8 +27,11 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.SearchApi;
 import app.pilo.android.fragments.search_fragment.SearchAlbumFragment;
@@ -70,8 +74,8 @@ public class SearchActivity extends AppCompatActivity {
         userSharedPrefManager = new UserSharedPrefManager(this);
         initSearchView();
 
-        String text =getIntent().getStringExtra("text");
-        if (text != null && text.length() > 0){
+        String text = getIntent().getStringExtra("text");
+        if (text != null && text.length() > 0) {
             this.et_search.setText(text);
             search(text);
         }
@@ -180,39 +184,23 @@ public class SearchActivity extends AppCompatActivity {
     private void search(String text) {
         progressBar.setVisibility(View.VISIBLE);
         SearchApi searchApi = new SearchApi(this);
-        searchApi.get(text, new RequestHandler.RequestHandlerWithModel<Search>() {
+        searchApi.get(text, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, Search data) {
-                if (!status.equals("success")) {
-                    Alerter.create(SearchActivity.this)
-                            .setTitle(R.string.server_connection_error)
-                            .setText(R.string.server_connection_message)
-                            .setBackgroundColorRes(R.color.colorError)
-                            .setTitleTypeface(Utils.font(SearchActivity.this))
-                            .setTextTypeface(Utils.font(SearchActivity.this))
-                            .setButtonTypeface(Utils.font(SearchActivity.this))
-                            .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                            .show();
-                } else {
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
                     progressBar.setVisibility(View.INVISIBLE);
                     tabLayout.setVisibility(View.VISIBLE);
                     viewPager.setVisibility(View.VISIBLE);
-                    initTabLayout(data);
+                    initTabLayout((Search) data);
+                } else {
+                    new HttpErrorHandler(SearchActivity.this, message);
                 }
             }
 
             @Override
-            public void onGetError(VolleyError error) {
+            public void onGetError(@Nullable VolleyError error) {
                 progressBar.setVisibility(View.INVISIBLE);
-                Alerter.create(SearchActivity.this)
-                        .setTitle(R.string.server_connection_error)
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorRes(R.color.colorError)
-                        .setTitleTypeface(Utils.font(SearchActivity.this))
-                        .setTextTypeface(Utils.font(SearchActivity.this))
-                        .setButtonTypeface(Utils.font(SearchActivity.this))
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
+                new HttpErrorHandler(SearchActivity.this);
             }
         });
 

@@ -22,6 +22,8 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.adapters.LikeListAdapter;
 import app.pilo.android.adapters.MessageListAdapter;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.MessageApi;
 import app.pilo.android.api.RequestHandler;
@@ -56,24 +58,26 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
     private void getDataFromServer() {
-        //todo : handle errors
         MessageApi messageApi = new MessageApi(this);
         swipe_refresh_layout.setRefreshing(true);
-        messageApi.get(new RequestHandler.RequestHandlerWithList<Message>() {
+        messageApi.get(null, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, List<Message> data) {
+            public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
-                if (status.equals("success")) {
-                    MessageListAdapter messageListAdapter = new MessageListAdapter(new WeakReference<>(MessagesActivity.this), data);
+                if (status) {
+                    MessageListAdapter messageListAdapter = new MessageListAdapter(new WeakReference<>(MessagesActivity.this), (List<Message>) data);
                     recyclerView.setLayoutManager(new LinearLayoutManager(MessagesActivity.this, RecyclerView.VERTICAL, false));
                     recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(MessagesActivity.this, android.R.anim.fade_in)));
                     recyclerView.setAdapter(messageListAdapter);
+                } else {
+                    new HttpErrorHandler(MessagesActivity.this, message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 swipe_refresh_layout.setRefreshing(false);
+                new HttpErrorHandler(MessagesActivity.this);
             }
         });
     }
@@ -85,7 +89,7 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.img_header_back)
-    void back(){
+    void back() {
         finish();
     }
 

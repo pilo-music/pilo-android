@@ -16,6 +16,8 @@ import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
 import app.pilo.android.R;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.MessageApi;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.utils.Utils;
@@ -56,16 +58,16 @@ public class ContactUsActivity extends AppCompatActivity {
                 et_text.setError(getText(R.string.filed_required));
                 return;
             }
-            //todo : handle errors
+
             ll_send.setEnabled(false);
             progressBar.setVisibility(View.VISIBLE);
             MessageApi messageApi = new MessageApi(this);
-            messageApi.send(et_subject.getText().toString(), et_text.getText().toString(), new RequestHandler.RequestHandlerWithStatus() {
+            messageApi.message(et_subject.getText().toString(), et_text.getText().toString(), new HttpHandler.RequestHandler() {
                 @Override
-                public void onGetInfo(String status) {
+                public void onGetInfo(Object data, String message, boolean status) {
                     ll_send.setEnabled(true);
                     progressBar.setVisibility(View.GONE);
-                    if (status.equals("success")){
+                    if (status) {
                         Alerter.create(ContactUsActivity.this)
                                 .setTitle(R.string.operation_done)
                                 .setTextTypeface(Utils.font(ContactUsActivity.this))
@@ -73,6 +75,8 @@ public class ContactUsActivity extends AppCompatActivity {
                                 .setButtonTypeface(Utils.font(ContactUsActivity.this))
                                 .setBackgroundColorRes(R.color.colorGreen)
                                 .show();
+                    } else {
+                        new HttpErrorHandler(ContactUsActivity.this, message);
                     }
                 }
 
@@ -80,13 +84,15 @@ public class ContactUsActivity extends AppCompatActivity {
                 public void onGetError(@Nullable VolleyError error) {
                     ll_send.setEnabled(true);
                     progressBar.setVisibility(View.GONE);
+                    new HttpErrorHandler(ContactUsActivity.this);
                 }
             });
         });
     }
 
+
     @OnClick(R.id.img_header_back)
-    void back(){
+    void back() {
         finish();
     }
 

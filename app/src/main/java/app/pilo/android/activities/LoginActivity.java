@@ -60,78 +60,77 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         ll_login.setEnabled(false);
         UserApi userApi = new UserApi(this);
-        userApi.login(email, password, new RequestHandler.RequestHandlerWithModel<User>() {
-            @Override
-            public void onGetInfo(String status, User data) {
-                progressBar.setVisibility(View.GONE);
-                ll_login.setEnabled(true);
-                switch (status) {
-                    case "success":
-                        doLogin(data);
-                        break;
-                    case "Unauthorized":
-                        Alerter.create(LoginActivity.this)
-                                .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(Utils.font(LoginActivity.this))
-                                .setTitleTypeface(Utils.font(LoginActivity.this))
-                                .setButtonTypeface(Utils.font(LoginActivity.this))
-                                .setText(R.string.wrong_email_password)
-                                .setBackgroundColorRes(R.color.colorWarning)
-                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                                .show();
-                        break;
-                    case "not_verify":
-                        Alerter.create(LoginActivity.this)
-                                .setTitle(R.string.user_not_verify)
-                                .setTextTypeface(Utils.font(LoginActivity.this))
-                                .setTitleTypeface(Utils.font(LoginActivity.this))
-                                .setButtonTypeface(Utils.font(LoginActivity.this))
-                                .setText(R.string.server_connection_message)
-                                .setBackgroundColorRes(R.color.colorWarning)
-                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                                .show();
-                        break;
-                    case "deactive":
-                        Alerter.create(LoginActivity.this)
-                                .setTitle(R.string.user_deactivate)
-                                .setTextTypeface(Utils.font(LoginActivity.this))
-                                .setTitleTypeface(Utils.font(LoginActivity.this))
-                                .setButtonTypeface(Utils.font(LoginActivity.this))
-                                .setText(R.string.server_connection_message)
-                                .setBackgroundColorRes(R.color.colorError)
-                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                                .show();
-                        break;
-                    default:
-                        Alerter.create(LoginActivity.this)
-                                .setTitle(R.string.server_connection_error)
-                                .setTextTypeface(Utils.font(LoginActivity.this))
-                                .setTitleTypeface(Utils.font(LoginActivity.this))
-                                .setButtonTypeface(Utils.font(LoginActivity.this))
-                                .setText(R.string.server_connection_message)
-                                .setBackgroundColorRes(R.color.colorError)
-                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                                .show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onGetError(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                ll_login.setEnabled(true);
-                Alerter.create(LoginActivity.this)
-                        .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(Utils.font(LoginActivity.this))
-                        .setTitleTypeface(Utils.font(LoginActivity.this))
-                        .setButtonTypeface(Utils.font(LoginActivity.this))
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorRes(R.color.colorError)
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
-            }
-        });
-
+//        userApi.login(email, password, new RequestHandler.RequestHandlerWithModel<User>() {
+//            @Override
+//            public void onGetInfo(String status, User data) {
+//                progressBar.setVisibility(View.GONE);
+//                ll_login.setEnabled(true);
+//                switch (status) {
+//                    case "success":
+//                        doLogin(data);
+//                        break;
+//                    case "Unauthorized":
+//                        Alerter.create(LoginActivity.this)
+//                                .setTitle(R.string.server_connection_error)
+//                                .setTextTypeface(Utils.font(LoginActivity.this))
+//                                .setTitleTypeface(Utils.font(LoginActivity.this))
+//                                .setButtonTypeface(Utils.font(LoginActivity.this))
+//                                .setText(R.string.wrong_email_password)
+//                                .setBackgroundColorRes(R.color.colorWarning)
+//                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+//                                .show();
+//                        break;
+//                    case "not_verify":
+//                        Alerter.create(LoginActivity.this)
+//                                .setTitle(R.string.user_not_verify)
+//                                .setTextTypeface(Utils.font(LoginActivity.this))
+//                                .setTitleTypeface(Utils.font(LoginActivity.this))
+//                                .setButtonTypeface(Utils.font(LoginActivity.this))
+//                                .setText(R.string.server_connection_message)
+//                                .setBackgroundColorRes(R.color.colorWarning)
+//                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+//                                .show();
+//                        break;
+//                    case "deactive":
+//                        Alerter.create(LoginActivity.this)
+//                                .setTitle(R.string.user_deactivate)
+//                                .setTextTypeface(Utils.font(LoginActivity.this))
+//                                .setTitleTypeface(Utils.font(LoginActivity.this))
+//                                .setButtonTypeface(Utils.font(LoginActivity.this))
+//                                .setText(R.string.server_connection_message)
+//                                .setBackgroundColorRes(R.color.colorError)
+//                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+//                                .show();
+//                        break;
+//                    default:
+//                        Alerter.create(LoginActivity.this)
+//                                .setTitle(R.string.server_connection_error)
+//                                .setTextTypeface(Utils.font(LoginActivity.this))
+//                                .setTitleTypeface(Utils.font(LoginActivity.this))
+//                                .setButtonTypeface(Utils.font(LoginActivity.this))
+//                                .setText(R.string.server_connection_message)
+//                                .setBackgroundColorRes(R.color.colorError)
+//                                .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+//                                .show();
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onGetError(VolleyError error) {
+//                progressBar.setVisibility(View.GONE);
+//                ll_login.setEnabled(true);
+//                Alerter.create(LoginActivity.this)
+//                        .setTitle(R.string.server_connection_error)
+//                        .setTextTypeface(Utils.font(LoginActivity.this))
+//                        .setTitleTypeface(Utils.font(LoginActivity.this))
+//                        .setButtonTypeface(Utils.font(LoginActivity.this))
+//                        .setText(R.string.server_connection_message)
+//                        .setBackgroundColorRes(R.color.colorError)
+//                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
+//                        .show();
+//            }
+//        });
     }
 
     @OnClick(R.id.ll_login_google)

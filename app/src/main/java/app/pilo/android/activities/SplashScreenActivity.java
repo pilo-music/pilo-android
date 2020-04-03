@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import app.pilo.android.BuildConfig;
 import app.pilo.android.R;
+import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.VersionApi;
 import app.pilo.android.helpers.LocalHelper;
@@ -40,7 +41,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void checkUpdate() {
         cpb_splash.setVisibility(View.VISIBLE);
         ll_try_again.setVisibility(View.GONE);
-        new VersionApi(this).version(new HttpHandler.RequestHandler() {
+        new VersionApi(this).get(new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 int versionCode = BuildConfig.VERSION_CODE;
@@ -61,6 +62,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 } else {
                     cpb_splash.setVisibility(View.GONE);
                     ll_try_again.setVisibility(View.VISIBLE);
+                    new HttpErrorHandler(SplashScreenActivity.this, message);
                 }
             }
 
@@ -68,6 +70,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void onGetError(@Nullable VolleyError error) {
                 cpb_splash.setVisibility(View.GONE);
                 ll_try_again.setVisibility(View.VISIBLE);
+                new HttpErrorHandler(SplashScreenActivity.this);
             }
         });
 
