@@ -2,13 +2,14 @@ package app.pilo.android.api;
 
 public class PiloApi {
 
-    private static final String BASE_URL = "192.168.1.2:8000/api/v1/";
+    private static final String BASE_URL = "http://new.pilo.app/api/v1/";
     static final String VERSION = BASE_URL + "version";
     static final String HOME_GET = BASE_URL + "home/get";
     static final String BROWSER_GET = BASE_URL + "browser/get";
     static final String SEARCH = BASE_URL + "search/";
     static final String LOGIN = BASE_URL + "login";
     static final String REGISTER = BASE_URL + "register";
+    static final String VERIFY = BASE_URL + "verify";
     static final String ME = BASE_URL + "me";
     static final String UPDATE_PROFILE = BASE_URL + "me";
     static final String ALBUM_SINGLE = BASE_URL + "album/";

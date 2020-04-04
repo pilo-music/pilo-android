@@ -35,8 +35,12 @@ public class UserApi {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
                             JSONObject data = response.getJSONObject("data");
+                            Map<String, Object> user = new HashMap<>();
                             if (status) {
-                                User user = JsonParser.userParser(data);
+                                if (data.getString("status").equals("login")) {
+                                    user.put("user", JsonParser.userParser(data));
+                                }
+                                user.put("status", data.getString("status"));
                                 requestHandler.onGetInfo(user, message, status);
                             } else {
                                 requestHandler.onGetInfo(null, message, status);
@@ -61,17 +65,56 @@ public class UserApi {
         }
     }
 
-    public void register(String email, String password, final RequestHandler.RequestHandlerWithStatus requestHandler) {
+    public void register(String name, String email, String password, String confirm, final HttpHandler.RequestHandler requestHandler) {
         JSONObject requestJsonObject = new JSONObject();
         try {
+            requestJsonObject.put("name", name);
             requestJsonObject.put("email", email);
             requestJsonObject.put("password", password);
+            requestJsonObject.put("password_confirmation", confirm);
             final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.REGISTER, requestJsonObject,
                     response -> {
                         try {
-                            String status = response.getString("status");
-                            requestHandler.onGetInfo(status);
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            JSONObject data = response.getJSONObject("data");
+                            if (status) {
+                                User user = JsonParser.userParser(data);
+                                requestHandler.onGetInfo(user, message, status);
+                            } else {
+                                requestHandler.onGetInfo(null, message, status);
+                            }
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            requestHandler.onGetError(null);
+        }
+    }
+
+    public void verify(String email, String code, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject requestJsonObject = new JSONObject();
+        try {
+            requestJsonObject.put("email", email);
+            requestJsonObject.put("code", code);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.VERSION, requestJsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            JSONObject data = response.getJSONObject("data");
+                            if (status) {
+                                User user = JsonParser.userParser(data);
+                                requestHandler.onGetInfo(user, message, status);
+                            } else {
+                                requestHandler.onGetInfo(null, message, status);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
                     }, requestHandler::onGetError);

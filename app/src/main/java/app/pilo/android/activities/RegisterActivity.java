@@ -15,6 +15,8 @@ import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
 import app.pilo.android.R;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.utils.Utils;
@@ -23,6 +25,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RegisterActivity extends AppCompatActivity {
+    @BindView(R.id.et_register_name)
+    EditText et_name;
     @BindView(R.id.et_register_email)
     EditText et_email;
     @BindView(R.id.et_register_confirm)
@@ -56,54 +60,23 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendDataToServer() {
         progressBar.setVisibility(View.VISIBLE);
-        userApi.register(et_email.getText().toString(), et_password.getText().toString(), new RequestHandler.RequestHandlerWithStatus() {
+        userApi.register(et_name.getText().toString(), et_email.getText().toString(), et_password.getText().toString(), et_confirm.getText().toString(), new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status) {
+            public void onGetInfo(Object data, String message, boolean status) {
                 progressBar.setVisibility(View.GONE);
-                if (status.equals("exists")){
-                    Alerter.create(RegisterActivity.this)
-                            .setTitle(R.string.user_exist)
-                            .setTextTypeface(Utils.font(RegisterActivity.this))
-                            .setTitleTypeface(Utils.font(RegisterActivity.this))
-                            .setButtonTypeface(Utils.font(RegisterActivity.this))
-                            .setText(R.string.user_exist_description)
-                            .setBackgroundColorRes(R.color.colorWarning)
-                            .show();
-                }else if (status.equals("success")){
-                    Alerter.create(RegisterActivity.this)
-                            .setTitle(R.string.register_success)
-                            .setTextTypeface(Utils.font(RegisterActivity.this))
-                            .setTitleTypeface(Utils.font(RegisterActivity.this))
-                            .setButtonTypeface(Utils.font(RegisterActivity.this))
-                            .setText(R.string.register_success_description)
-                            .setBackgroundColorRes(R.color.colorGreen)
-                            .show();
-                }else{
-                    Alerter.create(RegisterActivity.this)
-                            .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(Utils.font(RegisterActivity.this))
-                            .setTitleTypeface(Utils.font(RegisterActivity.this))
-                            .setButtonTypeface(Utils.font(RegisterActivity.this))
-                            .setText(R.string.server_connection_message)
-                            .setBackgroundColorRes(R.color.colorError)
-                            .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                            .show();
+                if (status) {
+                    Intent intent = new Intent(RegisterActivity.this, VerifyActivity.class);
+                    intent.putExtra("email", et_email.getText().toString());
+                    startActivity(intent);
+                } else {
+                    new HttpErrorHandler(RegisterActivity.this, message);
                 }
-
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                Alerter.create(RegisterActivity.this)
-                        .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(Utils.font(RegisterActivity.this))
-                        .setTitleTypeface(Utils.font(RegisterActivity.this))
-                        .setButtonTypeface(Utils.font(RegisterActivity.this))
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorRes(R.color.colorError)
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
+                new HttpErrorHandler(RegisterActivity.this);
             }
         });
 
@@ -112,6 +85,12 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validateData() {
         String password = et_password.getText().toString();
         String confirm = et_confirm.getText().toString();
+        String name = et_name.getText().toString();
+
+        if (name.length() < 1) {
+            et_name.setError(getString(R.string.filed_required));
+            return false;
+        }
 
         if (!isValidEmail(et_email.getText().toString())) {
             et_email.setError(getString(R.string.email_not_valid));
