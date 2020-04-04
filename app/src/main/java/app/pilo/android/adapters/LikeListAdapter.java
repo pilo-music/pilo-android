@@ -40,19 +40,42 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.LikeLi
     @Override
     public void onBindViewHolder(@NonNull LikeListAdapterViewHolder holder, final int position) {
         final Like like = likes.get(position);
-        if (like.getType().equals("music"))
-            holder.tv_like_label.setText("MP3");
-        else if (like.getType().equals("video"))
-            holder.tv_like_label.setText("MP4");
-        else
-            holder.tv_like_label.setText("ALBUM");
+        String image;
+        String title;
+        String artist;
+        switch (like.getType()) {
+            case "music":
+                holder.tv_like_label.setText("MP3");
+                image = like.getMusic().getImage();
+                artist = like.getMusic().getArtist().getName();
+                title = like.getMusic().getTitle();
+                break;
+            case "video":
+                holder.tv_like_label.setText("MP4");
+                image = like.getVideo().getImage();
+                artist = like.getVideo().getArtist_name();
+                title = like.getVideo().getTitle();
+                break;
+            case "album":
+                holder.tv_like_label.setText("ALBUM");
+                image = like.getAlbum().getImage();
+                artist = like.getAlbum().getArtist().getName();
+                title = like.getAlbum().getTitle();
+                break;
+            default:
+                holder.tv_like_label.setText("PLAYLIST");
+                image = like.getPlaylist().getImage();
+                artist = like.getPlaylist().getArtist_name();
+                title = like.getPlaylist().getTitle();
+                break;
+        }
 
-        holder.tv_like_name.setText(like.getTitle());
-        holder.tv_like_artist.setText(like.getArtist_name());
+        holder.tv_like_name.setText(title);
+        holder.tv_like_artist.setText(artist);
         holder.tv_like_date.setText(like.getCreated_at());
 
         Glide.with(context)
-                .load(like.getImage())
+                .load(image)
                 .placeholder(R.drawable.ic_music_placeholder)
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

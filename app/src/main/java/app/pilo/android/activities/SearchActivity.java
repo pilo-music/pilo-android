@@ -24,15 +24,12 @@ import android.widget.Toast;
 import com.android.volley.error.VolleyError;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.SearchApi;
 import app.pilo.android.fragments.search_fragment.SearchAlbumFragment;
 import app.pilo.android.fragments.search_fragment.SearchArtistsFragment;
@@ -43,7 +40,6 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Search;
 import app.pilo.android.models.SearchHistory;
 import app.pilo.android.repositories.SearchHistoryRepo;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

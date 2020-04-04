@@ -56,7 +56,7 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
     public void onBindViewHolder(@NonNull MusicCarouselAdapterViewHolder holder, final int position) {
         final Music music = musics.get(position);
         holder.tv_music_title.setText(music.getTitle());
-        holder.tv_music_artist.setText(music.getArtist_name());
+        holder.tv_music_artist.setText(music.getArtist().getName());
         Glide.with(context)
                 .load(music.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)
@@ -67,16 +67,16 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
 
         holder.ll_music_item.setOnClickListener(v ->{
             if (musics.size() > holder.getAdapterPosition()) {
-                recyclerClickListener.onClick(getPosition(musics.get(holder.getAdapterPosition()).getId()));
+                recyclerClickListener.onClick(getPosition(musics.get(holder.getAdapterPosition()).getSlug()));
             }
         });
     }
 
 
-    private int getPosition(int id) {
+    private int getPosition(String id) {
         int count = 0;
         for (int i = 0; i < filteredArrayList.size(); i++) {
-            if (id == (filteredArrayList.get(i).getId())) {
+            if (id.equals(filteredArrayList.get(i).getSlug())) {
                 count = i;
                 break;
             }

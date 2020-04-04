@@ -41,7 +41,7 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
     public void onBindViewHolder(@NonNull MusicCarouselAdapterViewHolder holder, final int position) {
         final Music music = musics.get(position);
         holder.tv_music_title.setText(music.getTitle());
-        holder.tv_music_artist.setText(music.getArtist_name());
+        holder.tv_music_artist.setText(music.getArtist().getName());
         Glide.with(context)
                 .load(music.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)

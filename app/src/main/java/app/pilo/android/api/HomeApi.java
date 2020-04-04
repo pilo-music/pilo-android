@@ -10,13 +10,17 @@ import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
+import app.pilo.android.repositories.UserRepo;
 
 public class HomeApi {
     private Context context;
@@ -25,28 +29,32 @@ public class HomeApi {
         this.context = context;
     }
 
-    public void get(final RequestHandler.RequestHandlerWithModel<Home> requestHandler) {
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.HOME_GET, null,
+    public void get(final HttpHandler.RequestHandler requestHandler) {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET, null,
                 response -> {
                     try {
                         JSONObject data = response.getJSONObject("data");
-                        String status = response.getString("status");
-                        if (status.equals("success")) {
+                        boolean status = response.getBoolean("status");
+                        String message = response.getString("message");
+                        if (status) {
                             Home home = parsHomeApiData(data);
-                            if (home != null)
-                                requestHandler.onGetInfo(status, home);
-                            else
-                                requestHandler.onGetError(null);
-                        } else {
-                            requestHandler.onGetInfo(status, null);
-                        }
+                            requestHandler.onGetInfo(home, message, status);
+                        } else
+                            requestHandler.onGetInfo(null, message, status);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         requestHandler.onGetError(null);
                     }
-                }, requestHandler::onGetError);
-        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        Volley.newRequestQueue(context).add(request);
+                }, requestHandler::onGetError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                return params;
+            }
+        };
     }
 
     private Home parsHomeApiData(JSONObject data) throws JSONException {

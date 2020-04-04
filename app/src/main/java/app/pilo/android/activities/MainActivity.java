@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     public void onMessageEvent(MusicEvent event) {
         tv_music_player_collapsed_title.setText(event.music.getTitle());
         tv_extended_music_player_title.setText(event.music.getTitle());
-        tv_extended_music_player_artist.setText(event.music.getArtist_name());
-        tv_music_player_collapsed_artist.setText(event.music.getArtist_name());
+        tv_extended_music_player_artist.setText(event.music.getArtist().getName());
+        tv_music_player_collapsed_artist.setText(event.music.getArtist().getName());
         Glide.with(MainActivity.this)
                 .load(event.music.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)

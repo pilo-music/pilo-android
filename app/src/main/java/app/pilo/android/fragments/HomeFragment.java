@@ -31,7 +31,8 @@ import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.HomeApi;
-import app.pilo.android.api.RequestHandler;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
@@ -111,36 +112,23 @@ public class HomeFragment extends BaseFragment {
 
     private void getHomeApi() {
         HomeApi homeApi = new HomeApi(getActivity());
-        homeApi.get(new RequestHandler.RequestHandlerWithModel<Home>() {
+        homeApi.get(new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, Home data) {
-                if (status.equals("success")) {
-                    setupBestMusicCarousel(data.getBest_musics());
-                    setupArtistCarousel(data.getArtists());
-                    setupVideoViewPager(data.getVideos());
-                    setupAlbumViewPager(data.getAlbums());
-                    setupLastVerticalMusicList(data.getLast_music());
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
+                    setupBestMusicCarousel(((Home)data).getBest_musics());
+                    setupArtistCarousel(((Home)data).getArtists());
+                    setupVideoViewPager(((Home)data).getVideos());
+                    setupAlbumViewPager(((Home)data).getAlbums());
+                    setupLastVerticalMusicList(((Home)data).getLast_music());
                 } else {
-                    Alerter.create(getActivity())
-                            .setTitle(R.string.server_connection_error)
-                            .setText(R.string.server_connection_message)
-                            .setBackgroundColorRes(R.color.colorError)
-                            .setTitleTypeface(Utils.font(getActivity()))
-                            .setTextTypeface(Utils.font(getActivity()))
-                            .setButtonTypeface(Utils.font(getActivity()))
-                            .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                            .show();
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
-            public void onGetError(VolleyError error) {
-                Alerter.create(getActivity())
-                        .setTitle(R.string.server_connection_error)
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorInt(R.color.design_default_color_error)
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
+            public void onGetError(@Nullable VolleyError error) {
+                new HttpErrorHandler(getActivity());
             }
         });
     }
@@ -164,7 +152,7 @@ public class HomeFragment extends BaseFragment {
             rc_music_carousel.setAdapter(musicCarouselAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("title",getString(R.string.music_best));
+            bundle.putString("title", getString(R.string.music_best));
             musicsFragment.setArguments(bundle);
             tv_music_carousel_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new MusicsFragment()));
         }
@@ -209,7 +197,7 @@ public class HomeFragment extends BaseFragment {
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("title",getString(R.string.music_new));
+            bundle.putString("title", getString(R.string.music_new));
             musicsFragment.setArguments(bundle);
             tv_music_vertical_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new MusicsFragment()));
         }

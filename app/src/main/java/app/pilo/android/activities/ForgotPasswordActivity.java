@@ -14,7 +14,8 @@ import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
 import app.pilo.android.R;
-import app.pilo.android.api.RequestHandler;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.utils.Utils;
 import butterknife.BindView;
@@ -45,50 +46,35 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
-        userApi.forgotPassword(et_email.getText().toString(), new RequestHandler.RequestHandlerWithData() {
+        userApi.forgotPasswordCreate(et_email.getText().toString(), new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, String data) {
+            public void onGetInfo(Object data, String message, boolean status) {
                 progressBar.setVisibility(View.GONE);
-                if (status.equals("success")) {
+                if (status) {
                     Alerter.create(ForgotPasswordActivity.this)
-                            .setTitle(R.string.server_connection_error)
+                            .setTitle(message)
                             .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
                             .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
                             .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setText(R.string.forgot_password_send)
+                            .setText("")
                             .setBackgroundColorRes(R.color.colorGreen)
                             .show();
                 } else {
-                    Alerter.create(ForgotPasswordActivity.this)
-                            .setTitle(R.string.server_connection_error)
-                            .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setText(data)
-                            .setBackgroundColorRes(R.color.colorWarning)
-                            .show();
+                    new HttpErrorHandler(ForgotPasswordActivity.this, message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                Alerter.create(ForgotPasswordActivity.this)
-                        .setTitle(R.string.server_connection_error)
-                        .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
-                        .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
-                        .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
-                        .setText(R.string.server_connection_message)
-                        .setBackgroundColorRes(R.color.colorError)
-                        .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
-                        .show();
+                new HttpErrorHandler(ForgotPasswordActivity.this);
             }
         });
     }
 
 
     @OnClick(R.id.tv_login)
-    void goToLogin(){
+    void goToLogin() {
         finish();
     }
 

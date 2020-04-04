@@ -19,31 +19,66 @@ import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SingleAlbum;
 import app.pilo.android.models.SingleArtist;
+import app.pilo.android.models.SingleMusic;
 import app.pilo.android.models.User;
 import app.pilo.android.models.Video;
 
 class JsonParser {
     static Music musicParser(JSONObject jsonObject) {
         try {
-            //todo add duration
-            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
-            return new Music(
-                    jsonObject.getInt("id"),
-                    jsonObject.getString("slug"),
-                    jsonObject.getString("title"),
-                    jsonObject.getString("image"),
-                    jsonObject.getString("url"),
-                    jsonObject.getInt("isbest"),
-                    jsonObject.getBoolean("has_like"),
-                    jsonObject.getBoolean("has_bookmark"),
-                    jsonObjectArtist.getInt("id"),
-                    jsonObjectArtist.getString("name"),
-                    jsonObjectArtist.getString("slug")
-            );
+            Artist artist = JsonParser.artistParser(jsonObject.getJSONObject("artist"));
+
+            List<Artist> tags = new ArrayList<>();
+            JSONArray tagsJsonArray = jsonObject.getJSONArray("tags");
+            for (int i = 0; i < tagsJsonArray.length(); i++) {
+                Artist item = JsonParser.artistParser(tagsJsonArray.getJSONObject(i));
+                if (item != null)
+                    tags.add(item);
+            }
+
+            Music music = new Music();
+            music.setSlug(jsonObject.getString("slug"));
+            music.setTitle(jsonObject.getString("title"));
+            music.setImage(jsonObject.getString("image"));
+            music.setThumbnail(jsonObject.getString("thumbnail"));
+            music.setLink128(jsonObject.getString("link128"));
+            music.setLink320(jsonObject.getString("link320"));
+            music.setLyric(jsonObject.getString("lyric"));
+            music.setLike_count(jsonObject.getInt("like_count"));
+            music.setPlay_count(jsonObject.getInt("play_count"));
+            music.setCreated_at(jsonObject.getString("created_at"));
+            music.setArtist(artist);
+            music.setTags(tags);
+            return music;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    static SingleMusic singleMusicParser(JSONObject data) throws JSONException {
+
+        SingleMusic singleMusic = new SingleMusic();
+        List<Music> related = new ArrayList<>();
+
+        Music music = JsonParser.musicParser(data.getJSONObject("music"));
+        boolean has_like = data.getBoolean("has_like");
+        boolean has_bookmark = data.getBoolean("has_bookmark");
+
+        // parse related
+        JSONArray relatedJsonArray = data.getJSONArray("related");
+        for (int i = 0; i < relatedJsonArray.length(); i++) {
+            Music item = JsonParser.musicParser(relatedJsonArray.getJSONObject(i));
+            if (item != null)
+                related.add(item);
+        }
+
+        singleMusic.setMusic(music);
+        singleMusic.setHas_bookmark(has_bookmark);
+        singleMusic.setHas_like(has_like);
+        singleMusic.setRelated(related);
+
+        return singleMusic;
     }
 
     static Album albumParser(JSONObject jsonObject) {
@@ -260,6 +295,7 @@ class JsonParser {
         try {
             Bookmark bookmark = new Bookmark();
             bookmark.setType(jsonObject.getString("type"));
+            bookmark.setCreated_at(jsonObject.getString("created_at"));
 
             switch (jsonObject.getString("type")) {
                 case "music":
@@ -289,6 +325,7 @@ class JsonParser {
         try {
             Like like = new Like();
             like.setType(jsonObject.getString("type"));
+            like.setCreated_at(jsonObject.getString("created_at"));
 
             switch (jsonObject.getString("type")) {
                 case "music":

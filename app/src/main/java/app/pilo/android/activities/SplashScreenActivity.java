@@ -16,6 +16,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -53,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     int version = Integer.parseInt(((Map) data).get("version").toString());
                     int minVersion = Integer.parseInt(((Map) data).get("min_version").toString());
 
-                    if (version < versionCode) {
+                    if (versionCode < version) {
                         showUpdateDialog(version, minVersion, title, update_description, update_link);
                     } else {
                         checkForLogin();
@@ -71,6 +72,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 cpb_splash.setVisibility(View.GONE);
                 ll_try_again.setVisibility(View.VISIBLE);
                 new HttpErrorHandler(SplashScreenActivity.this);
+                Log.e("error", "onGetError: "+error.getMessage() );
             }
         });
 

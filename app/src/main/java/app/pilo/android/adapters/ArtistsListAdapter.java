@@ -74,7 +74,6 @@ public class ArtistsListAdapter extends RecyclerView.Adapter<ArtistsListAdapter.
         mBundle.putString("slug", artist.getSlug());
         mBundle.putString("name", artist.getName());
         mBundle.putString("image", artist.getImage());
-        mBundle.putInt("id", artist.getId());
         SingleArtistFragment fragment = new SingleArtistFragment();
         fragment.setArguments(mBundle);
         ((MainActivity) context).pushFragment(fragment);

@@ -11,13 +11,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.error.VolleyError;
-import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,9 +27,7 @@ import app.pilo.android.adapters.ArtistsListAdapter;
 import app.pilo.android.api.ArtistApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Artist;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

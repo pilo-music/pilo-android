@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.error.VolleyError;
 
@@ -21,7 +20,7 @@ import app.pilo.android.activities.EditProfileActivity;
 import app.pilo.android.activities.LikesActivity;
 import app.pilo.android.activities.LoginActivity;
 import app.pilo.android.activities.MessagesActivity;
-import app.pilo.android.api.RequestHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.User;
@@ -47,24 +46,21 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void checkUserLogin() {
-        //todo : handle errors
         if (user != null)
             cv_login.setVisibility(View.GONE);
         else {
             UserApi userApi = new UserApi(getActivity());
-            userApi.me(new RequestHandler.RequestHandlerWithModel<User>() {
+            userApi.me(new HttpHandler.RequestHandler() {
                 @Override
-                public void onGetInfo(String status, User data) {
+                public void onGetInfo(Object data, String message, boolean status) {
 
                 }
 
                 @Override
                 public void onGetError(@Nullable VolleyError error) {
-                    Log.e("sadas", "onGetError: " + error.getMessage());
+
                 }
             });
-
-
         }
     }
 

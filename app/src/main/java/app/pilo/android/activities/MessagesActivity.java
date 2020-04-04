@@ -14,20 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.LikeListAdapter;
 import app.pilo.android.adapters.MessageListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.MessageApi;
-import app.pilo.android.api.RequestHandler;
-import app.pilo.android.models.Like;
 import app.pilo.android.models.Message;
 import butterknife.BindView;
 import butterknife.ButterKnife;

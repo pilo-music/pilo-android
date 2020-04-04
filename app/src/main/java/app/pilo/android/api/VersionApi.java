@@ -25,7 +25,7 @@ public class VersionApi {
 
     public void get(final HttpHandler.RequestHandler requestHandler) {
         JSONObject jsonObject = new JSONObject();
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.MESSAGE_GET, jsonObject,
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.VERSION, jsonObject,
                 response -> {
                     try {
                         boolean status = response.getBoolean("status");

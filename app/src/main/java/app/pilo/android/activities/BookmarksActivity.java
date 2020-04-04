@@ -13,10 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
-import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -24,10 +22,7 @@ import app.pilo.android.adapters.BookmarkListAdapter;
 import app.pilo.android.api.BookmarkApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Bookmark;
-import app.pilo.android.models.User;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

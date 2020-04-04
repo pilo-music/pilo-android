@@ -2,6 +2,7 @@ package app.pilo.android.models;
 
 public class Like {
     private String type;
+    private String created_at;
     private Music music;
     private Video video;
     private Album album;
@@ -9,6 +10,7 @@ public class Like {
 
     public Like() {
         this.type = "";
+        this.created_at = "";
         this.music = null;
         this.video = null;
         this.album = null;
@@ -53,5 +55,13 @@ public class Like {
 
     public void setPlaylist(Playlist playlist) {
         this.playlist = playlist;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

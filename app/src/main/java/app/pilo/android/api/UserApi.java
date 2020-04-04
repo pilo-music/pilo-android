@@ -2,11 +2,14 @@ package app.pilo.android.api;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +32,7 @@ public class UserApi {
         try {
             jsonObject.put("email", email);
             jsonObject.put("password", password);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.LIKE_ADD, jsonObject,
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.LOGIN, jsonObject,
                     response -> {
                         try {
                             boolean status = response.getBoolean("status");
@@ -88,7 +91,15 @@ public class UserApi {
                             e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
-                    }, requestHandler::onGetError);
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    return params;
+                }
+            };
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -101,7 +112,7 @@ public class UserApi {
         try {
             requestJsonObject.put("email", email);
             requestJsonObject.put("code", code);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.VERSION, requestJsonObject,
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.VERIFY, requestJsonObject,
                     response -> {
                         try {
                             boolean status = response.getBoolean("status");
@@ -117,7 +128,15 @@ public class UserApi {
                             e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
-                    }, requestHandler::onGetError);
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    return params;
+                }
+            };
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -125,17 +144,51 @@ public class UserApi {
         }
     }
 
-    public void forgotPassword(String email, final RequestHandler.RequestHandlerWithData requestHandler) {
+    public void forgotPasswordCreate(String email, HttpHandler.RequestHandler requestHandler) {
         JSONObject requestJsonObject = new JSONObject();
         try {
             requestJsonObject.put("email", email);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.FORGOT_PASSWORD_CREATE, requestJsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    return params;
+                }
+            };
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            requestHandler.onGetError(null);
+        }
+    }
+
+    public void forgotPassword(String email, String code, String password, String password_confirmation, HttpHandler.RequestHandler requestHandler) {
+        JSONObject requestJsonObject = new JSONObject();
+        try {
+            requestJsonObject.put("email", email);
+            requestJsonObject.put("code", code);
+            requestJsonObject.put("password", password);
+            requestJsonObject.put("password_confirmation", password_confirmation);
             final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.FORGOT_PASSWORD, requestJsonObject,
                     response -> {
                         try {
-                            String status = response.getString("status");
-                            String data = response.getString("data");
-                            requestHandler.onGetInfo(status, data);
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            requestHandler.onGetInfo(null, message, status);
                         } catch (JSONException e) {
+                            e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
                     }, requestHandler::onGetError);
@@ -146,50 +199,73 @@ public class UserApi {
         }
     }
 
-
-    public void update(String name, String password, String image, final RequestHandler.RequestHandlerWithStatus requestHandler) {
-        JSONObject requestJsonObject = new JSONObject();
+    public void update(HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
         try {
-            if (name != null && !name.equals(""))
-                requestJsonObject.put("name", name);
-            if (password != null && !password.equals(""))
-                requestJsonObject.put("password", password);
-            if (image != null && !image.equals(""))
-                requestJsonObject.put("image", image);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.UPDATE_PROFILE, requestJsonObject,
+            if (params != null) {
+                for (Map.Entry<String, Object> item : params.entrySet()) {
+                    jsonObject.put(item.getKey(), item.getValue());
+                }
+            }
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET, jsonObject,
                     response -> {
                         try {
-                            String status = response.getString("status");
-                            requestHandler.onGetInfo(status);
+                            JSONObject data = response.getJSONObject("data");
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            if (status) {
+                                User user = JsonParser.userParser(data);
+                                requestHandler.onGetInfo(user, message, status);
+                            } else
+                                requestHandler.onGetInfo(null, message, status);
                         } catch (JSONException e) {
+                            e.printStackTrace();
                             requestHandler.onGetError(null);
                         }
-                    }, requestHandler::onGetError);
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                    return params;
+                }
+            };
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
-            requestHandler.onGetError(null);
+            e.printStackTrace();
         }
     }
 
 
-    public void me(final RequestHandler.RequestHandlerWithModel<User> requestHandler) {
-        JSONObject requestJsonObject = new JSONObject();
-        String token = UserRepo.getInstance(context).get().getAccess_token();
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.ME + "?token=" + token, requestJsonObject,
+    public void me(final HttpHandler.RequestHandler requestHandler) {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET, null,
                 response -> {
                     try {
-                        String status;
-                        User user = null;
-                        status = response.getString("status");
-                        if (status.equals("success"))
-                            user = JsonParser.userParser(response.getJSONObject("data"));
-
-                        requestHandler.onGetInfo(status, user);
+                        JSONObject data = response.getJSONObject("data");
+                        boolean status = response.getBoolean("status");
+                        String message = response.getString("message");
+                        if (status) {
+                            User user = JsonParser.userParser(data);
+                            requestHandler.onGetInfo(user, message, status);
+                        } else
+                            requestHandler.onGetInfo(null, message, status);
                     } catch (JSONException e) {
+                        e.printStackTrace();
                         requestHandler.onGetError(null);
                     }
-                }, requestHandler::onGetError);
+                }, requestHandler::onGetError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                return params;
+            }
+        };
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
     }

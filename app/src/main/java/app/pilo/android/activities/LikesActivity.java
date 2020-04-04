@@ -22,7 +22,6 @@ import app.pilo.android.adapters.LikeListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Like;
 import butterknife.BindView;
 import butterknife.ButterKnife;

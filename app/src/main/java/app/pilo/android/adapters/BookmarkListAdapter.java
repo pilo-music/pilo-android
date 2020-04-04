@@ -44,19 +44,42 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
     @Override
     public void onBindViewHolder(@NonNull BookmarkListAdapterViewHolder holder, final int position) {
         final Bookmark bookmark = bookmarks.get(position);
-        if (bookmark.getType().equals("music"))
-            holder.tv_bookmark_label.setText("MP3");
-        else if (bookmark.getType().equals("video"))
-            holder.tv_bookmark_label.setText("MP4");
-        else
-            holder.tv_bookmark_label.setText("ALBUM");
+        String image;
+        String title;
+        String artist;
+        switch (bookmark.getType()) {
+            case "music":
+                holder.tv_bookmark_label.setText("MP3");
+                image = bookmark.getMusic().getImage();
+                artist = bookmark.getMusic().getArtist().getName();
+                title = bookmark.getMusic().getTitle();
+                break;
+            case "video":
+                holder.tv_bookmark_label.setText("MP4");
+                image = bookmark.getVideo().getImage();
+                artist = bookmark.getVideo().getArtist_name();
+                title = bookmark.getVideo().getTitle();
+                break;
+            case "album":
+                holder.tv_bookmark_label.setText("ALBUM");
+                image = bookmark.getAlbum().getImage();
+                artist = bookmark.getAlbum().getArtist().getName();
+                title = bookmark.getAlbum().getTitle();
+                break;
+            default:
+                holder.tv_bookmark_label.setText("PLAYLIST");
+                image = bookmark.getPlaylist().getImage();
+                artist = bookmark.getPlaylist().getArtist_name();
+                title = bookmark.getPlaylist().getTitle();
+                break;
+        }
 
-        holder.tv_bookmark_name.setText(bookmark.getTitle());
-        holder.tv_bookmark_artist.setText(bookmark.getArtist_name());
+        holder.tv_bookmark_name.setText(title);
+        holder.tv_bookmark_artist.setText(artist);
         holder.tv_bookmark_date.setText(bookmark.getCreated_at());
 
         Glide.with(context)
-                .load(bookmark.getImage())
+                .load(image)
                 .placeholder(R.drawable.ic_music_placeholder)
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

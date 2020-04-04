@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,10 +27,14 @@ import com.tapadoo.alerter.Alerter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.core.app.ActivityCompat;
+
 import app.pilo.android.R;
-import app.pilo.android.api.RequestHandler;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
@@ -91,12 +94,11 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void getDataFromServer() {
-        //todo : handle errors
-        userApi.me(new RequestHandler.RequestHandlerWithModel<User>() {
+        userApi.me(new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status, User data) {
-                if (status.equals("success")) {
-                    et_name.setText(data.getName());
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
+                    et_name.setText(((User) data).getName());
                     if (!user.getPic().equals("")) {
                         Glide.with(EditProfileActivity.this)
                                 .load(user.getPic())
@@ -105,12 +107,14 @@ public class EditProfileActivity extends AppCompatActivity {
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(civ_user);
                     }
+                } else {
+                    new HttpErrorHandler(EditProfileActivity.this, message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-
+                new HttpErrorHandler(EditProfileActivity.this);
             }
         });
 
@@ -129,29 +133,40 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         progressBar.setVisibility(View.VISIBLE);
         ll_save.setEnabled(false);
-        userApi.update(et_name.getText().toString(), et_password.getText().toString(), imageToString(bitmap), new RequestHandler.RequestHandlerWithStatus() {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("name", et_name.getText().toString());
+        params.put("password", et_password.getText().toString());
+        params.put("password_confirmation", et_confirm.getText().toString());
+        if (!imageToString(bitmap).equals("")) {
+            params.put("pic", imageToString(bitmap));
+        }
+
+        userApi.update(params, new HttpHandler.RequestHandler() {
             @Override
-            public void onGetInfo(String status) {
-                if (status.equals("success")) {
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
                     Alerter.create(EditProfileActivity.this)
-                            .setTitle(R.string.operation_done)
+                            .setTitle(message)
                             .setTextTypeface(Utils.font(EditProfileActivity.this))
                             .setTitleTypeface(Utils.font(EditProfileActivity.this))
                             .setButtonTypeface(Utils.font(EditProfileActivity.this))
                             .setBackgroundColorRes(R.color.colorGreen)
                             .show();
+                } else {
+                    new HttpErrorHandler(EditProfileActivity.this, message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-
+                new HttpErrorHandler(EditProfileActivity.this);
             }
         });
 
     }
 
-    @OnClick({R.id.btn_profile_pick_photo,R.id.civ_profile_user})
+    @OnClick({R.id.btn_profile_pick_photo, R.id.civ_profile_user})
     void pickImage() {
         ActivityCompat.requestPermissions(
                 EditProfileActivity.this,

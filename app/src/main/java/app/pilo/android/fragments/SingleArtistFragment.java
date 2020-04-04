@@ -43,7 +43,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SingleArtistFragment extends BaseFragment {
     private View view;
     private String slug, name, image;
-    private int id;
 
     @BindView(R.id.tv_single_artist_name)
     TextView tv_artist_name;
@@ -104,7 +103,6 @@ public class SingleArtistFragment extends BaseFragment {
             slug = getArguments().getString("slug");
             name = getArguments().getString("name");
             image = getArguments().getString("image");
-            id = getArguments().getInt("id");
         }
         setupViews();
         getDataFromServer();

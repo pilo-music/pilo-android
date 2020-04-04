@@ -56,7 +56,7 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.Al
         final Album album = albums.get(position);
 
         holder.tv_album_title.setText(album.getTitle());
-        holder.tv_album_artist.setText(album.getArtist_name());
+        holder.tv_album_artist.setText(album.getArtist().getName());
         Glide.with(context)
                 .load(album.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)
@@ -70,8 +70,8 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.Al
         Bundle mBundle = new Bundle();
         mBundle.putString("slug", album.getSlug());
         mBundle.putString("title", album.getTitle());
-        mBundle.putString("artist", album.getArtist_name());
-        mBundle.putString("artist_slug", album.getArtist_slug());
+        mBundle.putString("artist", album.getArtist().getName());
+        mBundle.putString("artist_slug", album.getArtist().getName());
         mBundle.putString("image", album.getImage());
 
         SingleAlbumFragment fragment = new SingleAlbumFragment();

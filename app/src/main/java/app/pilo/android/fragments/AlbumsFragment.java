@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.error.VolleyError;
-import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -28,9 +27,7 @@ import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Album;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

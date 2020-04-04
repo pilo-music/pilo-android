@@ -27,7 +27,8 @@ public class PiloApi {
     static final String BOOKMARK_ADD = BASE_URL + "bookmarks";
     static final String MESSAGE_GET = BASE_URL + "messages";
     static final String MESSAGE_ADD = BASE_URL + "message";
-    static final String FORGOT_PASSWORD = BASE_URL + "password/create";
+    static final String FORGOT_PASSWORD_CREATE = BASE_URL + "forgot-passport/create";
+    static final String FORGOT_PASSWORD = BASE_URL + "forgot-passport/reset";
     static final String CONTACTUS = BASE_URL + "message/add";
 
 }

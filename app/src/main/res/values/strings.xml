@@ -53,7 +53,7 @@
     <string name="name">نام</string>
     <string name="subject">موضوع</string>
     <string name="message">پیام</string>
-    <string name="messages">پیام ها</string>
+    <string name="messages">پیام ها</string>forgot_password_send
     <string name="admin">ادمین</string>
     <string name="you">شما</string>
     <string name="send">ارسال</string>
@@ -62,6 +62,7 @@
     <string name="update_later">الان نه</string>
     <string name="verify_account">تایید حساب کاربری</string>
     <string name="forgot_password">رمزعبور خود را فراموش کرده اید ؟</string>
+    <string name="operation_done">عملیات با موفقیت انجام شد</string>
 
 
     <string name="show_more">نمایش همه</string>

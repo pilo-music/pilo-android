@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -15,18 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.error.VolleyError;
-import com.tapadoo.alerter.Alerter;
 
 import java.util.Map;
 
 import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

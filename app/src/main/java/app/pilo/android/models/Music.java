@@ -2,74 +2,68 @@ package app.pilo.android.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "musics")
 public class Music {
+
     @PrimaryKey(autoGenerate = true)
     private int uid;
-
-    @ColumnInfo(name = "id")
-    private int id;
     @ColumnInfo(name = "slug")
     private String slug;
     @ColumnInfo(name = "title")
     private String title;
     @ColumnInfo(name = "image")
     private String image;
-    @ColumnInfo(name = "url")
-    private String url;
-    @ColumnInfo(name = "is_best")
-    private int isbest;
-    @ColumnInfo(name = "has_like")
-    private boolean has_like;
-    @ColumnInfo(name = "has_bookmark")
-    private boolean has_bookmark;
-    @ColumnInfo(name = "artist_id")
-    private int artist_id;
-    @ColumnInfo(name = "artist_name")
-    private String artist_name;
-    @ColumnInfo(name = "artist_slug")
-    private String artist_slug;
-    @ColumnInfo(name = "duration")
-    private long duration;
+    @ColumnInfo(name = "thumbnail")
+    private String thumbnail;
+    @ColumnInfo(name = "link128")
+    private String link128;
+    @ColumnInfo(name = "link320")
+    private String link320;
+    @ColumnInfo(name = "lyric")
+    private String lyric;
+    @ColumnInfo(name = "like_count")
+    private int like_count;
+    @ColumnInfo(name = "play_count")
+    private int play_count;
+    @ColumnInfo(name = "created_at")
+    private String created_at;
+
+    @Ignore
+    private Artist artist;
+    @Ignore
+    private List<Artist> tags;
+
 
     public Music() {
-        this.id = 0;
         this.slug = "";
         this.title = "";
         this.image = "";
-        this.url = "";
-        this.isbest = 0;
-        this.has_like = false;
-        this.has_bookmark = false;
-        this.artist_id = 0;
-        this.artist_name = "";
-        this.artist_slug = "";
+        this.thumbnail = "";
+        this.link128 = "";
+        this.link320 = "";
+        this.lyric = "";
+        this.like_count = 0;
+        this.play_count = 0;
+        this.created_at = "";
+        this.artist = new Artist();
+        this.tags = new ArrayList<>();
     }
 
 
-    public Music(int id, String slug, String title, String image, String url, int isbest, boolean has_like, boolean has_bookmark, int artist_id, String artist_name, String artist_slug) {
-        this.id = id;
-        this.slug = slug;
-        this.title = title;
-        this.image = image;
-        this.url = url;
-        this.isbest = isbest;
-        this.has_like = has_like;
-        this.has_bookmark = has_bookmark;
-        this.artist_id = artist_id;
-        this.artist_name = artist_name;
-        this.artist_slug = artist_slug;
+
+
+    public int getUid() {
+        return uid;
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public String getSlug() {
@@ -96,75 +90,76 @@ public class Music {
         this.image = image;
     }
 
-    public String getUrl() {
-        return url;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
-    public int getIsbest() {
-        return isbest;
+    public String getLink128() {
+        return link128;
     }
 
-    public void setIsbest(int isbest) {
-        this.isbest = isbest;
+    public void setLink128(String link128) {
+        this.link128 = link128;
     }
 
-    public boolean getHas_like() {
-        return has_like;
+    public String getLink320() {
+        return link320;
     }
 
-    public void setHas_like(boolean has_like) {
-        this.has_like = has_like;
+    public void setLink320(String link320) {
+        this.link320 = link320;
     }
 
-    public boolean getHas_bookmark() {
-        return has_bookmark;
+    public String getLyric() {
+        return lyric;
     }
 
-    public void setHas_bookmark(boolean has_bookmark) {
-        this.has_bookmark = has_bookmark;
+    public void setLyric(String lyric) {
+        this.lyric = lyric;
     }
 
-    public int getArtist_id() {
-        return artist_id;
+    public int getLike_count() {
+        return like_count;
     }
 
-    public void setArtist_id(int artist_id) {
-        this.artist_id = artist_id;
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
     }
 
-    public String getArtist_name() {
-        return artist_name;
+    public int getPlay_count() {
+        return play_count;
     }
 
-    public void setArtist_name(String artist_name) {
-        this.artist_name = artist_name;
+    public void setPlay_count(int play_count) {
+        this.play_count = play_count;
     }
 
-    public String getArtist_slug() {
-        return artist_slug;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setArtist_slug(String artist_slug) {
-        this.artist_slug = artist_slug;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public int getUid() {
-        return uid;
+    public Artist getArtist() {
+        return artist;
     }
 
-    public void setUid(int uid) {
-        this.uid = uid;
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 
-    public long getDuration() {
-        return duration;
+    public List<Artist> getTags() {
+        return tags;
     }
 
-    public void setDuration(long duration) {
-        this.duration = duration;
+    public void setTags(List<Artist> tags) {
+        this.tags = tags;
     }
+
 }

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -25,13 +24,9 @@ import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.helpers.UserSharedPrefManager;
-import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleAlbum;
-import app.pilo.android.models.SingleArtist;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

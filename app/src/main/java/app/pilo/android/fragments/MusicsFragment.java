@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
-import com.tapadoo.alerter.Alerter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -28,14 +27,9 @@ import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.MusicApi;
-import app.pilo.android.api.RequestHandler;
 import app.pilo.android.models.Music;
-import app.pilo.android.utils.Constant;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static app.pilo.android.utils.Constant.addedFrom;
 
 public class MusicsFragment extends BaseFragment {
     private View view;
