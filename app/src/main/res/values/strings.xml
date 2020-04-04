@@ -30,6 +30,7 @@
     <string name="login">ورود</string>
     <string name="email">ایمیل</string>
     <string name="enter_email">ایمیل خود را وارد کنید</string>
+    <string name="forgot_password_btn_create">ارسال کد بازیابی رمز عبور</string>
     <string name="forgot_password_btn">بازیابی رمز عبور</string>
     <string name="verify_code">کد تایید</string>
     <string name="invalid_verify_code">کد تایید نادرست میباشد</string>

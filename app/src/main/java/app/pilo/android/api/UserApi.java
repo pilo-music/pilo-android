@@ -80,13 +80,7 @@ public class UserApi {
                         try {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
-                            JSONObject data = response.getJSONObject("data");
-                            if (status) {
-                                User user = JsonParser.userParser(data);
-                                requestHandler.onGetInfo(user, message, status);
-                            } else {
-                                requestHandler.onGetInfo(null, message, status);
-                            }
+                            requestHandler.onGetInfo(null, message, status);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             requestHandler.onGetError(null);
@@ -186,7 +180,13 @@ public class UserApi {
                         try {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
-                            requestHandler.onGetInfo(null, message, status);
+                            JSONObject data = response.getJSONObject("data");
+                            if (status) {
+                                User user = JsonParser.userParser(data);
+                                requestHandler.onGetInfo(user, message, status);
+                            } else {
+                                requestHandler.onGetInfo(null, message, status);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             requestHandler.onGetError(null);
