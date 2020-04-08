@@ -4,49 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist {
-    private int id;
+    private String slug;
     private String title;
     private String image;
-    private int isbest;
-    private String slug;
-    private boolean has_like;
-    private int artist_id;
-    private String artist_name;
-    private String artist_slug;
-    private List<Music> musics;
+    private String image_one;
+    private String image_two;
+    private String image_three;
+    private String image_four;
+    private int music_count;
+    private int like_count;
+    private int play_count;
+    private String created_at;
 
-    public Playlist() {
-        this.id = 0;
+    public Playlist(){
+        this.slug = "";
         this.title = "";
         this.image = "";
-        this.isbest = 0;
-        this.slug = "";
-        this.has_like = false;
-        this.artist_id = 0;
-        this.artist_name = "";
-        this.artist_slug = "";
-        this.musics = new ArrayList<>();
+        this.image_one = "";
+        this.image_two = "";
+        this.image_three = "";
+        this.image_four = "";
+        this.music_count = 0;
+        this.like_count = 0;
+        this.play_count = 0;
+        this.created_at = "";
     }
 
-    public Playlist(int id, String title, String image, int isbest, String slug, boolean has_like, int artist_id, String artist_name, String artist_slug, List<Music> musics) {
-        this.id = id;
-        this.title = title;
-        this.image = image;
-        this.isbest = isbest;
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
         this.slug = slug;
-        this.has_like = has_like;
-        this.artist_id = artist_id;
-        this.artist_name = artist_name;
-        this.artist_slug = artist_slug;
-        this.musics = musics;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -65,59 +54,67 @@ public class Playlist {
         this.image = image;
     }
 
-    public int getIsbest() {
-        return isbest;
+    public String getImage_one() {
+        return image_one;
     }
 
-    public void setIsbest(int isbest) {
-        this.isbest = isbest;
+    public void setImage_one(String image_one) {
+        this.image_one = image_one;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getImage_two() {
+        return image_two;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setImage_two(String image_two) {
+        this.image_two = image_two;
     }
 
-    public List<Music> getMusics() {
-        return musics;
+    public String getImage_three() {
+        return image_three;
     }
 
-    public void setMusics(List<Music> musics) {
-        this.musics = musics;
+    public void setImage_three(String image_three) {
+        this.image_three = image_three;
     }
 
-    public int getArtist_id() {
-        return artist_id;
+    public String getImage_four() {
+        return image_four;
     }
 
-    public void setArtist_id(int artist_id) {
-        this.artist_id = artist_id;
+    public void setImage_four(String image_four) {
+        this.image_four = image_four;
     }
 
-    public String getArtist_name() {
-        return artist_name;
+    public int getMusic_count() {
+        return music_count;
     }
 
-    public void setArtist_name(String artist_name) {
-        this.artist_name = artist_name;
+    public void setMusic_count(int music_count) {
+        this.music_count = music_count;
     }
 
-    public String getArtist_slug() {
-        return artist_slug;
+    public int getLike_count() {
+        return like_count;
     }
 
-    public void setArtist_slug(String artist_slug) {
-        this.artist_slug = artist_slug;
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
     }
 
-    public boolean getHas_like() {
-        return has_like;
+    public int getPlay_count() {
+        return play_count;
     }
 
-    public void setHas_like(boolean has_like) {
-        this.has_like = has_like;
+    public void setPlay_count(int play_count) {
+        this.play_count = play_count;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

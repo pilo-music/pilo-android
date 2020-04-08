@@ -12,18 +12,21 @@ import java.util.List;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Bookmark;
-import app.pilo.android.models.HeroSlider;
 import app.pilo.android.models.Like;
 import app.pilo.android.models.Message;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
+import app.pilo.android.models.Promotion;
 import app.pilo.android.models.SingleAlbum;
 import app.pilo.android.models.SingleArtist;
 import app.pilo.android.models.SingleMusic;
+import app.pilo.android.models.SinglePlaylist;
+import app.pilo.android.models.SingleVideo;
 import app.pilo.android.models.User;
 import app.pilo.android.models.Video;
 
 class JsonParser {
+
     static Music musicParser(JSONObject jsonObject) {
         try {
             Artist artist = JsonParser.artistParser(jsonObject.getJSONObject("artist"));
@@ -209,32 +212,55 @@ class JsonParser {
         return singleArtist;
     }
 
+    static SingleVideo singleVideoParser(JSONObject data) throws JSONException {
+
+        SingleVideo singleVideo = new SingleVideo();
+        List<Video> related = new ArrayList<>();
+
+        Video video = JsonParser.videoJson(data.getJSONObject("video"));
+        boolean has_like = data.getBoolean("has_like");
+        boolean has_bookmark = data.getBoolean("has_bookmark");
+
+        // parse related
+        JSONArray relatedJsonArray = data.getJSONArray("related");
+        for (int i = 0; i < relatedJsonArray.length(); i++) {
+            Video item = JsonParser.videoJson(relatedJsonArray.getJSONObject(i));
+            if (item != null)
+                related.add(item);
+        }
+
+        singleVideo.setVideo(video);
+        singleVideo.setHas_bookmark(has_bookmark);
+        singleVideo.setHas_like(has_like);
+        singleVideo.setRelated(related);
+
+        return singleVideo;
+    }
+
+
     static Video videoJson(JSONObject jsonObject) {
         try {
-            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
-            return new Video(
-                    jsonObject.getInt("id"),
-                    jsonObject.getString("title"),
-                    jsonObject.getString("image"),
-                    jsonObject.getString("slug"),
-                    jsonObject.getInt("isbest"),
-                    jsonObject.getString("video480"),
-                    jsonObject.getString("video720"),
-                    jsonObject.getString("video1080"),
-                    jsonObject.getString("url"),
-                    jsonObject.getBoolean("has_like"),
-                    jsonObject.getBoolean("has_bookmark"),
-                    jsonObjectArtist.getInt("id"),
-                    jsonObjectArtist.getString("name"),
-                    jsonObjectArtist.getString("slug")
-            );
+            Artist artist = JsonParser.artistParser(jsonObject.getJSONObject("artist"));
+            Video video = new Video();
+            video.setSlug(jsonObject.getString("slug"));
+            video.setTitle(jsonObject.getString("title"));
+            video.setImage(jsonObject.getString("image"));
+            video.setThumbnail(jsonObject.getString("thumbnail"));
+            video.setVideo480(jsonObject.getString("video480"));
+            video.setVideo720(jsonObject.getString("video720"));
+            video.setVideo1080(jsonObject.getString("video1080"));
+            video.setLike_count(jsonObject.getInt("like_count"));
+            video.setPlay_count(jsonObject.getInt("play_count"));
+            video.setArtist(artist);
+            video.setSlug(jsonObject.getString("created_at"));
+            return video;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    static Playlist playlistParser(JSONObject jsonObject) {
+    static SinglePlaylist singlePlaylistParser(JSONObject jsonObject) {
         try {
             List<Music> musics = new ArrayList<>();
             JSONArray musicsJsonArray = jsonObject.getJSONArray("musics");
@@ -243,19 +269,14 @@ class JsonParser {
                 if (music != null)
                     musics.add(music);
             }
-            JSONObject jsonObjectArtist = jsonObject.getJSONObject("artist");
-            return new Playlist(
-                    jsonObject.getInt("id"),
-                    jsonObject.getString("title"),
-                    jsonObject.getString("image"),
-                    jsonObject.getInt("isbest"),
-                    jsonObject.getString("slug"),
-                    jsonObject.getBoolean("has_like"),
-                    jsonObjectArtist.getInt("id"),
-                    jsonObjectArtist.getString("name"),
-                    jsonObjectArtist.getString("slug"),
-                    musics
-            );
+            Playlist playlist = JsonParser.playlistParser(jsonObject.getJSONObject("playlist"));
+
+            SinglePlaylist singlePlaylist = new SinglePlaylist();
+            singlePlaylist.setPlaylist(playlist);
+            singlePlaylist.setMusics(musics);
+            singlePlaylist.setHas_like(jsonObject.getBoolean("has_like"));
+            singlePlaylist.setHas_bookmark(jsonObject.getBoolean("has_bookmark"));
+            return singlePlaylist;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -263,10 +284,42 @@ class JsonParser {
     }
 
 
-    static HeroSlider heroSliderParser(JSONObject jsonObject) {
-        HeroSlider heroSlider = new HeroSlider();
+    static Playlist playlistParser(JSONObject jsonObject) {
+        try {
+            Playlist playlist = new Playlist();
+            playlist.setSlug(jsonObject.getString("slug"));
+            playlist.setTitle(jsonObject.getString("title"));
+            playlist.setImage(jsonObject.getString("image"));
+            playlist.setImage_one(jsonObject.getString("image_one"));
+            playlist.setImage_two(jsonObject.getString("image_two"));
+            playlist.setImage_three(jsonObject.getString("image_three"));
+            playlist.setImage_four(jsonObject.getString("image_four"));
+            playlist.setMusic_count(jsonObject.getInt("music_count"));
+            playlist.setLike_count(jsonObject.getInt("like_count"));
+            playlist.setPlay_count(jsonObject.getInt("play_count"));
+            playlist.setCreated_at(jsonObject.getString("created_at"));
+            return playlist;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-        return heroSlider;
+
+    static Promotion promotionParser(JSONObject jsonObject) {
+        Promotion promotion = new Promotion();
+        try {
+            JSONObject userJsonObject = jsonObject.getJSONObject("promotion");
+            promotion.setTitle(userJsonObject.getString("title"));
+            promotion.setSlug(userJsonObject.getString("slug"));
+            promotion.setImage(userJsonObject.getString("image"));
+            promotion.setType(userJsonObject.getString("type"));
+            promotion.setUrl(userJsonObject.getString("url"));
+            return promotion;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     static User userParser(JSONObject jsonObject) {
@@ -284,10 +337,11 @@ class JsonParser {
                 user.setGender(userJsonObject.getString("gender"));
                 user.setPic(userJsonObject.getString("pic"));
             }
+            return user;
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-        return user;
     }
 
 

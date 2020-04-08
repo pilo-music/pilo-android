@@ -19,6 +19,8 @@ import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.Playlist;
+import app.pilo.android.models.Promotion;
 import app.pilo.android.models.Video;
 import app.pilo.android.repositories.UserRepo;
 
@@ -33,12 +35,11 @@ public class HomeApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET, null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
+                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
-                            Home home = parsHomeApiData(data);
-                            requestHandler.onGetInfo(home, message, status);
+                            requestHandler.onGetInfo(parsHomeApiData(data), message, status);
                         } else
                             requestHandler.onGetInfo(null, message, status);
                     } catch (JSONException e) {
@@ -55,69 +56,110 @@ public class HomeApi {
                 return params;
             }
         };
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 
-    private Home parsHomeApiData(JSONObject data) throws JSONException {
-        Home home = new Home();
-        List<Music> bestMusics = new ArrayList<>();
-        List<Album> albums = new ArrayList<>();
-        List<Artist> artists = new ArrayList<>();
-        List<Video> videos = new ArrayList<>();
-        List<Music> lastMusics = new ArrayList<>();
-//        List<HeroSlider> heroSliders = new ArrayList<>();
-
-        //parse hero slider
-
-//        JSONArray heroSliderParser = data.getJSONArray("hero_slider");
-//        for (int i = 0; i < heroSliderParser.length(); i++) {
-//            HeroSlider heroSlider = JsonParser.heroSliderParser(heroSliderParser.getJSONObject(i));
-//            if (heroSlider != null)
-//                heroSliders.add(heroSlider);
-//        }
-
-        // parse best musics
-        JSONArray bestMusicJsonArray = data.getJSONArray("best_musics");
-        for (int i = 0; i < bestMusicJsonArray.length(); i++) {
-            Music music = JsonParser.musicParser(bestMusicJsonArray.getJSONObject(i));
-            if (music != null)
-                bestMusics.add(music);
+    private List<Home> parsHomeApiData(JSONArray jsonArray) throws JSONException {
+        List<Home> homes = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Home home = new Home();
+            Object data = new Object();
+            switch (jsonArray.getJSONObject(i).getString("type")) {
+                case "artists":
+                    List<Artist> artists = new ArrayList<>();
+                    JSONArray artistsData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < artistsData.length(); j++) {
+                        Artist artist = JsonParser.artistParser(artistsData.getJSONObject(i));
+                        if (artist != null)
+                            artists.add(artist);
+                    }
+                    data = artists;
+                    break;
+                case "musics":
+                    List<Music> musics = new ArrayList<>();
+                    JSONArray musicsData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < musicsData.length(); j++) {
+                        Music music = JsonParser.musicParser(musicsData.getJSONObject(i));
+                        if (music != null)
+                            musics.add(music);
+                    }
+                    data = musics;
+                    break;
+                case "albums":
+                    List<Album> albums = new ArrayList<>();
+                    JSONArray albumsData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < albumsData.length(); j++) {
+                        Album album = JsonParser.albumParser(albumsData.getJSONObject(i));
+                        if (album != null)
+                            albums.add(album);
+                    }
+                    data = albums;
+                    break;
+                case "playlists":
+                    List<Playlist> playlists = new ArrayList<>();
+                    JSONArray playlistsData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < playlistsData.length(); j++) {
+                        Playlist playlist = JsonParser.playlistParser(playlistsData.getJSONObject(i));
+                        if (playlist != null)
+                            playlists.add(playlist);
+                    }
+                    data = playlists;
+                    break;
+                case "promotion":
+                    List<Promotion> promotions = new ArrayList<>();
+                    JSONArray promotionsData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < promotionsData.length(); j++) {
+                        Promotion promotion = JsonParser.promotionParser(promotionsData.getJSONObject(i));
+                        if (promotion != null)
+                            promotions.add(promotion);
+                    }
+                    data = promotions;
+                    break;
+                case "album_music_grid":
+                    break;
+                case "music_grid":
+                    List<Music> musicGrids = new ArrayList<>();
+                    JSONArray musicGridData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < musicGridData.length(); j++) {
+                        Music music = JsonParser.musicParser(musicGridData.getJSONObject(i));
+                        if (music != null)
+                            musicGrids.add(music);
+                    }
+                    data = musicGrids;
+                    break;
+                case "playlist_grid":
+                    List<Playlist> playlistGrids = new ArrayList<>();
+                    JSONArray playlistGrid = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < playlistGrid.length(); j++) {
+                        Playlist playlist = JsonParser.playlistParser(playlistGrid.getJSONObject(i));
+                        if (playlist != null)
+                            playlistGrids.add(playlist);
+                    }
+                    data = playlistGrids;
+                    break;
+                case "trending":
+                    List<Music> trending = new ArrayList<>();
+                    JSONArray trendingData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < trendingData.length(); j++) {
+                        Music music = JsonParser.musicParser(trendingData.getJSONObject(i));
+                        if (music != null)
+                            trending.add(music);
+                    }
+                    data = trending;
+                    break;
+                default:
+                    data = null;
+                    break;
+            }
+            if (data != null) {
+                home.setData(data);
+                home.setType(jsonArray.getJSONObject(i).getString("type"));
+                home.setId(jsonArray.getJSONObject(i).getInt("id"));
+                home.setName(jsonArray.getJSONObject(i).getString("name"));
+                homes.add(home);
+            }
         }
-//        // parse albums
-        JSONArray albumJsonArray = data.getJSONArray("albums");
-        for (int i = 0; i < albumJsonArray.length(); i++) {
-            Album album = JsonParser.albumParser(albumJsonArray.getJSONObject(i));
-            if (album != null)
-                albums.add(album);
-        }
-//        // parse artists
-        JSONArray artistsJsonArray = data.getJSONArray("artists");
-        for (int i = 0; i < albumJsonArray.length(); i++) {
-            Artist artist = JsonParser.artistParser(artistsJsonArray.getJSONObject(i));
-            if (artist != null)
-                artists.add(artist);
-        }
-//        // parse videos
-        JSONArray videosJsonArray = data.getJSONArray("videos");
-        for (int i = 0; i < albumJsonArray.length(); i++) {
-            Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
-            if (video != null)
-                videos.add(video);
-        }
-//        // parse last musics
-        JSONArray lastMusicJsonArray = data.getJSONArray("last_musics");
-        for (int i = 0; i < lastMusicJsonArray.length(); i++) {
-            Music music = JsonParser.musicParser(lastMusicJsonArray.getJSONObject(i));
-            if (music != null)
-                lastMusics.add(music);
-        }
-
-        home.setAlbums(albums);
-        home.setArtists(artists);
-        home.setBest_musics(bestMusics);
-        home.setLast_music(lastMusics);
-//        home.setHero_sliders(heroSliders);
-        home.setVideos(videos);
-
-        return home;
+        return homes;
     }
 }

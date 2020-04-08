@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                         doLogin((User) ((Map) data).get("user"));
                     } else {
                         Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
-                        intent.putExtra("email",email);
+                        intent.putExtra("email", email);
                         startActivity(intent);
                     }
                 } else {
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void doLogin(User data) {
-        if (data.getAccess_token() != null) {
+        if (data != null && data.getAccess_token() != null) {
             User user = new User(data.getAccess_token(), data.getName(), data.getEmail(), data.getPhone(), data.getBirth(), data.getGender(), data.getPic());
             UserRepo.getInstance(this).insert(user);
             startActivity(new Intent(LoginActivity.this, MainActivity.class));

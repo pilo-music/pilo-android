@@ -1,63 +1,38 @@
 package app.pilo.android.models;
 
 public class Video {
-    private int id;
+    private String slug;
     private String title;
     private String image;
-    private String slug;
-    private int isbest;
+    private String thumbnail;
     private String video480;
     private String video720;
     private String video1080;
-    private String url;
-    private boolean has_like;
-    private boolean has_bookmark;
-    private int artist_id;
-    private String artist_name;
-    private String artist_slug;
-
+    private int like_count;
+    private int play_count;
+    private Artist artist;
+    private String created_at;
 
     public Video() {
-        this.id = 0;
+        this.slug = "";
         this.title = "";
         this.image = "";
-        this.slug = "";
-        this.isbest = 0;
+        this.thumbnail = "";
         this.video480 = "";
         this.video720 = "";
         this.video1080 = "";
-        this.url = "";
-        this.has_like = false;
-        this.has_bookmark = false;
-        this.artist_id = 0;
-        this.artist_name = "";
-        this.artist_slug = "";
+        this.like_count = 0;
+        this.play_count = 0;
+        this.artist = new Artist();
+        this.created_at = "";
     }
 
-    public Video(int id, String title, String image, String slug, int isbest, String video480, String video720, String video1080, String url,
-                 boolean has_like, boolean has_bookmark, int artist_id, String artist_name, String artist_slug) {
-        this.id = id;
-        this.title = title;
-        this.image = image;
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
         this.slug = slug;
-        this.isbest = isbest;
-        this.video480 = video480;
-        this.video720 = video720;
-        this.video1080 = video1080;
-        this.url = url;
-        this.has_like = has_like;
-        this.has_bookmark = has_bookmark;
-        this.artist_id = artist_id;
-        this.artist_name = artist_name;
-        this.artist_slug = artist_slug;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -76,20 +51,12 @@ public class Video {
         this.image = image;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getThumbnail() {
+        return thumbnail;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
-
-    public int getIsbest() {
-        return isbest;
-    }
-
-    public void setIsbest(int isbest) {
-        this.isbest = isbest;
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public String getVideo480() {
@@ -116,51 +83,35 @@ public class Video {
         this.video1080 = video1080;
     }
 
-    public String getUrl() {
-        return url;
+    public int getLike_count() {
+        return like_count;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLike_count(int like_count) {
+        this.like_count = like_count;
     }
 
-    public int getArtist_id() {
-        return artist_id;
+    public int getPlay_count() {
+        return play_count;
     }
 
-    public void setArtist_id(int artist_id) {
-        this.artist_id = artist_id;
+    public void setPlay_count(int play_count) {
+        this.play_count = play_count;
     }
 
-    public String getArtist_name() {
-        return artist_name;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setArtist_name(String artist_name) {
-        this.artist_name = artist_name;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
-    public String getArtist_slug() {
-        return artist_slug;
+    public Artist getArtist() {
+        return artist;
     }
 
-    public void setArtist_slug(String artist_slug) {
-        this.artist_slug = artist_slug;
-    }
-
-    public boolean isHas_like() {
-        return has_like;
-    }
-
-    public void setHas_like(boolean has_like) {
-        this.has_like = has_like;
-    }
-
-    public boolean isHas_bookmark() {
-        return has_bookmark;
-    }
-
-    public void setHas_bookmark(boolean has_bookmark) {
-        this.has_bookmark = has_bookmark;
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 }
