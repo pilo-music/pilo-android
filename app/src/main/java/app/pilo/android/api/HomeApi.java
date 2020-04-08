@@ -70,7 +70,7 @@ public class HomeApi {
                     List<Artist> artists = new ArrayList<>();
                     JSONArray artistsData = jsonArray.getJSONObject(i).getJSONArray("data");
                     for (int j = 0; j < artistsData.length(); j++) {
-                        Artist artist = JsonParser.artistParser(artistsData.getJSONObject(i));
+                        Artist artist = JsonParser.artistParser(artistsData.getJSONObject(j));
                         if (artist != null)
                             artists.add(artist);
                     }
@@ -83,7 +83,7 @@ public class HomeApi {
                     List<Music> musics = new ArrayList<>();
                     JSONArray musicsData = jsonArray.getJSONObject(i).getJSONArray("data");
                     for (int j = 0; j < musicsData.length(); j++) {
-                        Music music = JsonParser.musicParser(musicsData.getJSONObject(i));
+                        Music music = JsonParser.musicParser(musicsData.getJSONObject(j));
                         if (music != null)
                             musics.add(music);
                     }
@@ -93,7 +93,7 @@ public class HomeApi {
                     List<Album> albums = new ArrayList<>();
                     JSONArray albumsData = jsonArray.getJSONObject(i).getJSONArray("data");
                     for (int j = 0; j < albumsData.length(); j++) {
-                        Album album = JsonParser.albumParser(albumsData.getJSONObject(i));
+                        Album album = JsonParser.albumParser(albumsData.getJSONObject(j));
                         if (album != null)
                             albums.add(album);
                     }
@@ -103,7 +103,7 @@ public class HomeApi {
                     List<Playlist> playlists = new ArrayList<>();
                     JSONArray playlistsData = jsonArray.getJSONObject(i).getJSONArray("data");
                     for (int j = 0; j < playlistsData.length(); j++) {
-                        Playlist playlist = JsonParser.playlistParser(playlistsData.getJSONObject(i));
+                        Playlist playlist = JsonParser.playlistParser(playlistsData.getJSONObject(j));
                         if (playlist != null)
                             playlists.add(playlist);
                     }
@@ -120,11 +120,11 @@ public class HomeApi {
                     for (int j = 0; j < albumMusicsData.length(); j++) {
                         String type = albumMusicsData.getJSONObject(i).getString("type");
                         if (type.equals("music")) {
-                            Music music = JsonParser.musicParser(albumMusicsData.getJSONObject(i));
+                            Music music = JsonParser.musicParser(albumMusicsData.getJSONObject(j));
                             if (music != null)
                                 albumMusics.add(music);
                         } else {
-                            Album album = JsonParser.albumParser(albumMusicsData.getJSONObject(i));
+                            Album album = JsonParser.albumParser(albumMusicsData.getJSONObject(j));
                             if (album != null)
                                 albumMusics.add(album);
                         }
@@ -135,7 +135,7 @@ public class HomeApi {
                     List<Playlist> playlistGrids = new ArrayList<>();
                     JSONArray playlistGrid = jsonArray.getJSONObject(i).getJSONArray("data");
                     for (int j = 0; j < playlistGrid.length(); j++) {
-                        Playlist playlist = JsonParser.playlistParser(playlistGrid.getJSONObject(i));
+                        Playlist playlist = JsonParser.playlistParser(playlistGrid.getJSONObject(j));
                         if (playlist != null)
                             playlistGrids.add(playlist);
                     }
@@ -145,7 +145,7 @@ public class HomeApi {
                     List<Video> videos = new ArrayList<>();
                     JSONArray videoData = jsonArray.getJSONObject(i).getJSONArray("data");
                     for (int j = 0; j < videoData.length(); j++) {
-                        Video video = JsonParser.videoJson(videoData.getJSONObject(i));
+                        Video video = JsonParser.videoJson(videoData.getJSONObject(j));
                         if (video != null)
                             videos.add(video);
                     }
