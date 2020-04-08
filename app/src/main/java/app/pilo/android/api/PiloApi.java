@@ -4,7 +4,7 @@ public class PiloApi {
 
     private static final String BASE_URL = "http://new.pilo.app/api/v1/";
     static final String VERSION = BASE_URL + "version";
-    static final String HOME_GET = BASE_URL + "home/get";
+    static final String HOME_GET = BASE_URL + "homes";
     static final String BROWSER_GET = BASE_URL + "browser/get";
     static final String SEARCH = BASE_URL + "search/";
     static final String LOGIN = BASE_URL + "login";

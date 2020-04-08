@@ -1,10 +1,29 @@
 package app.pilo.android.models;
 
 public class Home {
+    public final static String TYPE_ARTISTS = "artists";
+    public final static String TYPE_MUSICS = "musics";
+    public final static String TYPE_ALBUMS = "albums";
+    public final static String TYPE_PLAYLISTS = "playlists";
+    public final static String TYPE_PROMOTION = "promotion";
+    public final static String TYPE_ALBUM_MUSIC_GRID = "album_music_grid";
+    public final static String TYPE_MUSIC_GRID = "music_grid";
+    public final static String TYPE_PLAYLIST_GRID = "playlist_grid";
+    public final static String TYPE_TRENDING = "trending";
+    public final static String TYPE_VIDEOS = "videos";
+    public final static String TYPE_MUSIC_VERTICAL = "music_vertical";
+
     private int id;
     private String type;
     private String name;
     private Object data;
+
+    public Home() {
+        this.id = 0;
+        this.type = "";
+        this.name = "";
+        this.data = null;
+    }
 
 
     public int getId() {
