@@ -44,7 +44,7 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
         Video video = videos.get(position);
-        viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist_name());
+        viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist().getName());
         Glide.with(context)
                 .load(video.getImage())
                 .placeholder(R.drawable.ic_video_placeholder)
@@ -59,10 +59,10 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
         Bundle mBundle = new Bundle();
         mBundle.putString("slug", video.getSlug());
         mBundle.putString("title", video.getTitle());
-        mBundle.putString("artist", video.getArtist_name());
-        mBundle.putString("artist_slug", video.getArtist_slug());
+        mBundle.putString("artist", video.getArtist().getName());
+        mBundle.putString("artist_slug", video.getArtist().getName());
         mBundle.putString("image", video.getImage());
-        mBundle.putString("url", video.getUrl());
+        mBundle.putString("url", video.getVideo480());
         SingleVideoFragment fragment = new SingleVideoFragment();
         fragment.setArguments(mBundle);
         ((MainActivity) context).pushFragment(fragment);

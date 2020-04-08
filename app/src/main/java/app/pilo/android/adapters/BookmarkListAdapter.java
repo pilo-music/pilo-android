@@ -57,7 +57,7 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
             case "video":
                 holder.tv_bookmark_label.setText("MP4");
                 image = bookmark.getVideo().getImage();
-                artist = bookmark.getVideo().getArtist_name();
+                artist = bookmark.getVideo().getArtist().getName();
                 title = bookmark.getVideo().getTitle();
                 break;
             case "album":
@@ -69,7 +69,7 @@ public class BookmarkListAdapter extends RecyclerView.Adapter<BookmarkListAdapte
             default:
                 holder.tv_bookmark_label.setText("PLAYLIST");
                 image = bookmark.getPlaylist().getImage();
-                artist = bookmark.getPlaylist().getArtist_name();
+                artist = "";
                 title = bookmark.getPlaylist().getTitle();
                 break;
         }

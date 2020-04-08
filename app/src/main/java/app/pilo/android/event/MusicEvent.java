@@ -7,13 +7,14 @@ import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SingleAlbum;
+import app.pilo.android.models.SinglePlaylist;
 
 public class MusicEvent {
 
     public final Music music;
     public final List<Music> musics = new ArrayList<>();
 
-    public MusicEvent(Music music, Playlist playlist) {
+    public MusicEvent(Music music, SinglePlaylist playlist) {
         this.music = music;
         musics.addAll(playlist.getMusics());
     }

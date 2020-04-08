@@ -61,7 +61,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
         final Playlist playlist = playlists.get(position);
         holder.tv_playlist_title.setText(playlist.getTitle());
-        holder.tv_playlist_artist.setText(playlist.getArtist_name());
+        holder.tv_playlist_artist.setText("");
         Glide.with(context)
                 .load(playlist.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)
@@ -76,8 +76,8 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
         Bundle mBundle = new Bundle();
         mBundle.putString("slug", playlist.getSlug());
         mBundle.putString("title", playlist.getTitle());
-        mBundle.putString("artist", playlist.getArtist_name());
-        mBundle.putString("artist_slug", playlist.getArtist_slug());
+        mBundle.putString("artist", "");
+        mBundle.putString("artist_slug", "");
         mBundle.putString("image", playlist.getImage());
         mFragment.setArguments(mBundle);
         ((MainActivity) context).pushFragment(mFragment);

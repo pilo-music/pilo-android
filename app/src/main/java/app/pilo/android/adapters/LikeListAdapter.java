@@ -53,7 +53,7 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.LikeLi
             case "video":
                 holder.tv_like_label.setText("MP4");
                 image = like.getVideo().getImage();
-                artist = like.getVideo().getArtist_name();
+                artist = like.getVideo().getArtist().getName();
                 title = like.getVideo().getTitle();
                 break;
             case "album":
@@ -65,7 +65,7 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.LikeLi
             default:
                 holder.tv_like_label.setText("PLAYLIST");
                 image = like.getPlaylist().getImage();
-                artist = like.getPlaylist().getArtist_name();
+                artist = "";
                 title = like.getPlaylist().getTitle();
                 break;
         }

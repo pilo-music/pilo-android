@@ -107,14 +107,9 @@ public class HomeApi {
                     data = playlists;
                     break;
                 case "promotion":
-                    List<Promotion> promotions = new ArrayList<>();
-                    JSONArray promotionsData = jsonArray.getJSONArray(i);
-                    for (int j = 0; j < promotionsData.length(); j++) {
-                        Promotion promotion = JsonParser.promotionParser(promotionsData.getJSONObject(i));
-                        if (promotion != null)
-                            promotions.add(promotion);
-                    }
-                    data = promotions;
+                    JSONObject promotionsData = jsonArray.getJSONObject(i);
+                    Promotion  promotion = JsonParser.promotionParser(promotionsData.getJSONObject("promotion"));
+                    data = promotion;
                     break;
                 case "album_music_grid":
                     break;
@@ -147,6 +142,16 @@ public class HomeApi {
                             trending.add(music);
                     }
                     data = trending;
+                    break;
+                case "videos":
+                    List<Video> videos = new ArrayList<>();
+                    JSONArray videoData = jsonArray.getJSONArray(i);
+                    for (int j = 0; j < videoData.length(); j++) {
+                        Video video = JsonParser.videoJson(videoData.getJSONObject(i));
+                        if (video != null)
+                            videos.add(video);
+                    }
+                    data = videos;
                     break;
                 default:
                     data = null;

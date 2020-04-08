@@ -34,6 +34,7 @@ import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
+import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
 import butterknife.BindView;
