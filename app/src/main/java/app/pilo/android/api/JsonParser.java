@@ -33,10 +33,12 @@ class JsonParser {
 
             List<Artist> tags = new ArrayList<>();
             JSONArray tagsJsonArray = jsonObject.getJSONArray("tags");
-            for (int i = 0; i < tagsJsonArray.length(); i++) {
-                Artist item = JsonParser.artistParser(tagsJsonArray.getJSONObject(i));
-                if (item != null)
-                    tags.add(item);
+            if (tagsJsonArray.length() > 0) {
+                for (int i = 0; i < tagsJsonArray.length(); i++) {
+                    Artist item = JsonParser.artistParser(tagsJsonArray.getJSONObject(i));
+                    if (item != null)
+                        tags.add(item);
+                }
             }
 
             Music music = new Music();
@@ -70,10 +72,12 @@ class JsonParser {
 
         // parse related
         JSONArray relatedJsonArray = data.getJSONArray("related");
-        for (int i = 0; i < relatedJsonArray.length(); i++) {
-            Music item = JsonParser.musicParser(relatedJsonArray.getJSONObject(i));
-            if (item != null)
-                related.add(item);
+        if (relatedJsonArray.length() > 0) {
+            for (int i = 0; i < relatedJsonArray.length(); i++) {
+                Music item = JsonParser.musicParser(relatedJsonArray.getJSONObject(i));
+                if (item != null)
+                    related.add(item);
+            }
         }
 
         singleMusic.setMusic(music);
@@ -129,10 +133,12 @@ class JsonParser {
 
         // parse related
         JSONArray relatedJsonArray = data.getJSONArray("related");
-        for (int i = 0; i < relatedJsonArray.length(); i++) {
-            Album albumItem = JsonParser.albumParser(musicsJsonArray.getJSONObject(i));
-            if (albumItem != null)
-                related.add(albumItem);
+        if (relatedJsonArray.length() > 0) {
+            for (int i = 0; i < relatedJsonArray.length(); i++) {
+                Album albumItem = JsonParser.albumParser(musicsJsonArray.getJSONObject(i));
+                if (albumItem != null)
+                    related.add(albumItem);
+            }
         }
 
         singleAlbum.setAlbum(album);
@@ -177,10 +183,12 @@ class JsonParser {
 
         // parse best musics
         JSONArray bestMusicJsonArray = data.getJSONArray("best_musics");
-        for (int i = 0; i < bestMusicJsonArray.length(); i++) {
-            Music music = JsonParser.musicParser(bestMusicJsonArray.getJSONObject(i));
-            if (music != null)
-                bestMusics.add(music);
+        if (bestMusicJsonArray.length() > 0) {
+            for (int i = 0; i < bestMusicJsonArray.length(); i++) {
+                Music music = JsonParser.musicParser(bestMusicJsonArray.getJSONObject(i));
+                if (music != null)
+                    bestMusics.add(music);
+            }
         }
 //        // parse albums
         JSONArray albumJsonArray = data.getJSONArray("albums");
@@ -192,17 +200,21 @@ class JsonParser {
 
 //        // parse videos
         JSONArray videosJsonArray = data.getJSONArray("videos");
-        for (int i = 0; i < albumJsonArray.length(); i++) {
-            Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
-            if (video != null)
-                videos.add(video);
+        if (videosJsonArray.length() > 0) {
+            for (int i = 0; i < albumJsonArray.length(); i++) {
+                Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
+                if (video != null)
+                    videos.add(video);
+            }
         }
 //        // parse last musics
         JSONArray lastMusicJsonArray = data.getJSONArray("last_musics");
-        for (int i = 0; i < lastMusicJsonArray.length(); i++) {
-            Music music = JsonParser.musicParser(lastMusicJsonArray.getJSONObject(i));
-            if (music != null)
-                lastMusics.add(music);
+        if (lastMusicJsonArray.length() > 0) {
+            for (int i = 0; i < lastMusicJsonArray.length(); i++) {
+                Music music = JsonParser.musicParser(lastMusicJsonArray.getJSONObject(i));
+                if (music != null)
+                    lastMusics.add(music);
+            }
         }
 
         singleArtist.setAlbums(albums);
@@ -225,10 +237,12 @@ class JsonParser {
 
         // parse related
         JSONArray relatedJsonArray = data.getJSONArray("related");
-        for (int i = 0; i < relatedJsonArray.length(); i++) {
-            Video item = JsonParser.videoJson(relatedJsonArray.getJSONObject(i));
-            if (item != null)
-                related.add(item);
+        if (relatedJsonArray.length() > 0) {
+            for (int i = 0; i < relatedJsonArray.length(); i++) {
+                Video item = JsonParser.videoJson(relatedJsonArray.getJSONObject(i));
+                if (item != null)
+                    related.add(item);
+            }
         }
 
         singleVideo.setVideo(video);
@@ -266,10 +280,12 @@ class JsonParser {
         try {
             List<Music> musics = new ArrayList<>();
             JSONArray musicsJsonArray = jsonObject.getJSONArray("musics");
-            for (int i = 0; i < musicsJsonArray.length(); i++) {
-                Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
-                if (music != null)
-                    musics.add(music);
+            if (musicsJsonArray.length() > 0) {
+                for (int i = 0; i < musicsJsonArray.length(); i++) {
+                    Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
+                    if (music != null)
+                        musics.add(music);
+                }
             }
             Playlist playlist = JsonParser.playlistParser(jsonObject.getJSONObject("playlist"));
 

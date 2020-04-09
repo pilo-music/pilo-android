@@ -77,46 +77,56 @@ public class SearchApi {
         // parse best musics
         if (data.has("musics")) {
             JSONArray musicsJsonArray = data.getJSONArray("musics");
-            for (int i = 0; i < musicsJsonArray.length(); i++) {
-                Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
-                if (music != null)
-                    musics.add(music);
+            if (musicsJsonArray.length() > 0) {
+                for (int i = 0; i < musicsJsonArray.length(); i++) {
+                    Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
+                    if (music != null)
+                        musics.add(music);
+                }
             }
         }
 //        // parse albums
         if (data.has("albums")) {
             JSONArray albumJsonArray = data.getJSONArray("albums");
-            for (int i = 0; i < albumJsonArray.length(); i++) {
-                Album album = JsonParser.albumParser(albumJsonArray.getJSONObject(i));
-                if (album != null)
-                    albums.add(album);
+            if (albumJsonArray.length() > 0) {
+                for (int i = 0; i < albumJsonArray.length(); i++) {
+                    Album album = JsonParser.albumParser(albumJsonArray.getJSONObject(i));
+                    if (album != null)
+                        albums.add(album);
+                }
             }
         }
 //        // parse artists
         if (data.has("artists")) {
             JSONArray artistsJsonArray = data.getJSONArray("artists");
-            for (int i = 0; i < artistsJsonArray.length(); i++) {
-                Artist artist = JsonParser.artistParser(artistsJsonArray.getJSONObject(i));
-                if (artist != null)
-                    artists.add(artist);
+            if (artistsJsonArray.length() > 0) {
+                for (int i = 0; i < artistsJsonArray.length(); i++) {
+                    Artist artist = JsonParser.artistParser(artistsJsonArray.getJSONObject(i));
+                    if (artist != null)
+                        artists.add(artist);
+                }
             }
         }
 //        // parse videos
         if (data.has("videos")) {
             JSONArray videosJsonArray = data.getJSONArray("videos");
-            for (int i = 0; i < videosJsonArray.length(); i++) {
-                Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
-                if (video != null)
-                    videos.add(video);
+            if (videosJsonArray.length() > 0) {
+                for (int i = 0; i < videosJsonArray.length(); i++) {
+                    Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
+                    if (video != null)
+                        videos.add(video);
+                }
             }
         }
 //        // parse playlist
         if (data.has("playlists")) {
             JSONArray playlistsJsonArray = data.getJSONArray("playlists");
-            for (int i = 0; i < playlistsJsonArray.length(); i++) {
-                Playlist playlist = JsonParser.playlistParser(playlistsJsonArray.getJSONObject(i));
-                if (playlist != null)
-                    playlists.add(playlist);
+            if (playlistsJsonArray.length() > 0) {
+                for (int i = 0; i < playlistsJsonArray.length(); i++) {
+                    Playlist playlist = JsonParser.playlistParser(playlistsJsonArray.getJSONObject(i));
+                    if (playlist != null)
+                        playlists.add(playlist);
+                }
             }
         }
 
