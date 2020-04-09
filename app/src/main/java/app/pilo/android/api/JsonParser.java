@@ -119,10 +119,12 @@ class JsonParser {
 
         // parse musics
         JSONArray musicsJsonArray = data.getJSONArray("musics");
-        for (int i = 0; i < musicsJsonArray.length(); i++) {
-            Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
-            if (music != null)
-                musics.add(music);
+        if (musicsJsonArray.length() > 0) {
+            for (int i = 0; i < musicsJsonArray.length(); i++) {
+                Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
+                if (music != null)
+                    musics.add(music);
+            }
         }
 
         // parse related

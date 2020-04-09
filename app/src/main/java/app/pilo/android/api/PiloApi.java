@@ -19,6 +19,7 @@ public class PiloApi {
     static final String VIDEO_GET = BASE_URL + "video/";
     static final String VIDEOS_GET = BASE_URL + "videos/";
     static final String MUSICS_GET = BASE_URL + "musics/";
+    static final String MUSICS_SINGLE = BASE_URL + "music/";
     static final String ARTIST_SINGLE = BASE_URL + "artist/";
     static final String ARTIST_GET = BASE_URL + "artists/";
     static final String LIKE_GET = BASE_URL + "likes";

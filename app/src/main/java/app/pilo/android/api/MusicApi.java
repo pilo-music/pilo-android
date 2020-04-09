@@ -78,38 +78,34 @@ public class MusicApi {
     }
 
     public void single(String slug, final HttpHandler.RequestHandler requestHandler) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("slug", slug);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.MESSAGE_GET, jsonObject,
-                    response -> {
-                        try {
-                            JSONObject data = response.getJSONObject("data");
-                            boolean status = response.getBoolean("status");
-                            String message = response.getString("message");
-                            if (status) {
-                                SingleMusic singleMusic = JsonParser.singleMusicParser(data);
-                                requestHandler.onGetInfo(singleMusic, message, status);
-                            } else
-                                requestHandler.onGetInfo(null, message, status);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            requestHandler.onGetError(null);
-                        }
-                    }, requestHandler::onGetError) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Accept", "application/json");
-                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
-                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
-                    return params;
-                }
-            };
-            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            Volley.newRequestQueue(context).add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        StringBuilder url = new StringBuilder(PiloApi.MUSICS_SINGLE);
+        url.append("?").append("slug").append("=").append(slug);
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        boolean status = response.getBoolean("status");
+                        String message = response.getString("message");
+                        if (status) {
+                            SingleMusic singleMusic = JsonParser.singleMusicParser(data);
+                            requestHandler.onGetInfo(singleMusic, message, status);
+                        } else
+                            requestHandler.onGetInfo(null, message, status);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 }

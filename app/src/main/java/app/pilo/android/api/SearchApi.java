@@ -6,6 +6,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.request.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.Nullable;
+
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
@@ -33,39 +35,35 @@ public class SearchApi {
     }
 
     public void get(String query, final HttpHandler.RequestHandler requestHandler) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("query",query);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.SEARCH, jsonObject,
-                    response -> {
-                        try {
-                            JSONObject data = response.getJSONObject("data");
-                            boolean status = response.getBoolean("status");
-                            String message = response.getString("message");
-                            if (status) {
-                                Search search = parsSearchApiData(data);
-                                requestHandler.onGetInfo(search, message, status);
-                            } else
-                                requestHandler.onGetInfo(null, message, status);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            requestHandler.onGetError(null);
-                        }
-                    }, requestHandler::onGetError) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Accept", "application/json");
-                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
-                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
-                    return params;
-                }
-            };
-            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            Volley.newRequestQueue(context).add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        StringBuilder url = new StringBuilder(PiloApi.SEARCH);
+        url.append("?").append("query").append("=").append(query);
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        boolean status = response.getBoolean("status");
+                        String message = response.getString("message");
+                        if (status) {
+                            Search search = parsSearchApiData(data);
+                            requestHandler.onGetInfo(search, message, status);
+                        } else
+                            requestHandler.onGetInfo(null, message, status);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
     }
 
     private Search parsSearchApiData(JSONObject data) throws JSONException {
