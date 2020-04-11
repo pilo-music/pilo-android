@@ -61,6 +61,7 @@ public class UserApi {
                     return params;
                 }
             };
+            request.setShouldCache(false);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -94,6 +95,7 @@ public class UserApi {
                     return params;
                 }
             };
+            request.setShouldCache(false);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -131,6 +133,7 @@ public class UserApi {
                     return params;
                 }
             };
+            request.setShouldCache(false);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -161,6 +164,7 @@ public class UserApi {
                     return params;
                 }
             };
+            request.setShouldCache(false);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -192,6 +196,7 @@ public class UserApi {
                             requestHandler.onGetError(null);
                         }
                     }, requestHandler::onGetError);
+            request.setShouldCache(false);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -232,6 +237,7 @@ public class UserApi {
                     return params;
                 }
             };
+            request.setShouldCache(false);
             request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             Volley.newRequestQueue(context).add(request);
         } catch (JSONException e) {
@@ -266,6 +272,7 @@ public class UserApi {
                 return params;
             }
         };
+        request.setShouldCache(false);
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
     }

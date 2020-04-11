@@ -135,7 +135,7 @@ class JsonParser {
         JSONArray relatedJsonArray = data.getJSONArray("related");
         if (relatedJsonArray.length() > 0) {
             for (int i = 0; i < relatedJsonArray.length(); i++) {
-                Album albumItem = JsonParser.albumParser(musicsJsonArray.getJSONObject(i));
+                Album albumItem = JsonParser.albumParser(relatedJsonArray.getJSONObject(i));
                 if (albumItem != null)
                     related.add(albumItem);
             }

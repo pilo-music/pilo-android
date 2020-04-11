@@ -73,6 +73,7 @@ public class MusicApi {
                 return params;
             }
         };
+        request.setShouldCache(false);
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
     }
@@ -105,6 +106,7 @@ public class MusicApi {
                 return params;
             }
         };
+        request.setShouldCache(false);
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
     }
