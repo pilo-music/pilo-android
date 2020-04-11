@@ -30,6 +30,7 @@ import app.pilo.android.fragments.AlbumsFragment;
 import app.pilo.android.fragments.ArtistsFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.MusicsFragment;
+import app.pilo.android.fragments.SingleHomeFragment;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
@@ -121,7 +122,7 @@ public class HomeItemHelper {
             Bundle bundle = new Bundle();
             bundle.putString("title", home.getName());
             musicsFragment.setArguments(bundle);
-            tv_music_carousel_show_more.setOnClickListener(v -> ((MainActivity) fragment.getActivity()).pushFragment(new MusicsFragment()));
+            tv_music_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
         }
     }
 
@@ -139,7 +140,7 @@ public class HomeItemHelper {
             rc_artist_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
             rc_artist_carousel.setAdapter(artistCarouselAdapter);
         }
-        tv_artist_carousel_show_more.setOnClickListener(v -> ((MainActivity) fragment.getActivity()).pushFragment(new ArtistsFragment()));
+        tv_artist_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
     }
 
 
@@ -156,6 +157,8 @@ public class HomeItemHelper {
             sliderView.setSliderAdapter(new VideoCarouselAdapter(new WeakReference<>(fragment.getActivity()), ((List<Video>) home.getData())));
             sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
             sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+
+            tv_video_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
         }
     }
 
@@ -172,7 +175,7 @@ public class HomeItemHelper {
             AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Album>) home.getData()));
             rc_album_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
             rc_album_carousel.setAdapter(albumCarouselAdapter);
-            tv_album_carousel_show_more.setOnClickListener(v -> ((MainActivity) fragment.getActivity()).pushFragment(new AlbumsFragment()));
+            tv_album_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
         }
     }
 
@@ -186,13 +189,19 @@ public class HomeItemHelper {
             MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
             rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
-            MusicsFragment musicsFragment = new MusicsFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("title", home.getName());
-            musicsFragment.setArguments(bundle);
-            tv_music_vertical_show_more.setOnClickListener(v -> ((MainActivity) fragment.getActivity()).pushFragment(new MusicsFragment()));
+            tv_music_vertical_show_more.setOnClickListener(v -> goToSingleHome(home));
         }
     }
 
+
+    private void goToSingleHome(Home home) {
+        SingleHomeFragment singleHomeFragment = new SingleHomeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", home.getId());
+        bundle.putString("type", home.getType());
+        singleHomeFragment.setArguments(bundle);
+        ((MainActivity) fragment.getActivity()).pushFragment(singleHomeFragment);
+
+    }
 
 }

@@ -269,7 +269,7 @@ class JsonParser {
             video.setLike_count(jsonObject.getInt("like_count"));
             video.setPlay_count(jsonObject.getInt("play_count"));
             video.setArtist(artist);
-            video.setSlug(jsonObject.getString("created_at"));
+            video.setCreated_at(jsonObject.getString("created_at"));
             return video;
         } catch (JSONException e) {
             e.printStackTrace();

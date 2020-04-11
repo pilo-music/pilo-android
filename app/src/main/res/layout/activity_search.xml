@@ -31,6 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"
+            android:focusedByDefault="true"
             android:fontFamily="@font/font"
             android:hint="@string/search_search_hint"
             android:inputType="text"

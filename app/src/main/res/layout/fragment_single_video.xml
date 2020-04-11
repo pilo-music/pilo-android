@@ -26,6 +26,37 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <FrameLayout
+                    android:id="@+id/fl_single_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_160sdp"
+                    android:layout_marginStart="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_vertical_margin">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/riv_single_video_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_160sdp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        app:riv_corner_radius="10dp"
+                        app:riv_mutate_background="true"
+                        tools:src="@drawable/video_sample" />
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_160sdp"
+                        android:background="#41000000"
+                        app:riv_corner_radius="10dp" />
+
+
+                    <ImageView
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_circle_play_black" />
+                </FrameLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
 
@@ -58,12 +89,13 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:visibility="invisible"
                             android:id="@+id/img_single_video_like"
-                            android:layout_width="@dimen/_15sdp"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_width="@dimen/_20sdp"
+                            android:layout_height="@dimen/_20sdp"
+                            android:padding="3dp"
                             android:layout_marginEnd="@dimen/activity_vertical_margin"
-                            android:adjustViewBounds="true"
-                            android:src="@drawable/ic_like_off" />
+                            tools:src="@drawable/ic_like_off" />
 
                         <ImageView
                             android:id="@+id/img_single_video_download"
@@ -85,40 +117,7 @@
 
                 </LinearLayout>
 
-
-                <FrameLayout
-                    android:id="@+id/fl_single_video"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_160sdp"
-                    android:layout_marginStart="@dimen/activity_vertical_margin"
-                    android:layout_marginEnd="@dimen/activity_vertical_margin">
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/riv_single_video_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_160sdp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        app:riv_corner_radius="10dp"
-                        app:riv_mutate_background="true"
-                        tools:src="@drawable/video_sample" />
-
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_160sdp"
-                        android:background="#41000000"
-                        app:riv_corner_radius="10dp" />
-
-
-                    <ImageView
-                        android:layout_width="@dimen/_50sdp"
-                        android:layout_height="@dimen/_50sdp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_circle_play_black" />
-                </FrameLayout>
-
-
-                <include layout="@layout/music_vertical_list" />
+<!--                <include layout="@layout/music_vertical_list" />-->
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -20,7 +20,6 @@ import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
-import app.pilo.android.models.Promotion;
 import app.pilo.android.models.Video;
 import app.pilo.android.repositories.UserRepo;
 
@@ -60,6 +59,39 @@ public class HomeApi {
         request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(request);
     }
+
+    public void single(int id, final HttpHandler.RequestHandler requestHandler) {
+        StringBuilder url = new StringBuilder(PiloApi.HOME_SINGLE);
+        url.append("?").append("id").append("=").append(id);
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        boolean status = response.getBoolean("status");
+                        String message = response.getString("message");
+                        if (status) {
+                            requestHandler.onGetInfo(parsSingleHomeApiData(data), message, status);
+                        } else
+                            requestHandler.onGetInfo(null, message, status);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                return params;
+            }
+        };
+        request.setShouldCache(false);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
+    }
+
 
     private List<Home> parsHomeApiData(JSONArray jsonArray) throws JSONException {
         List<Home> homes = new ArrayList<>();
@@ -107,6 +139,7 @@ public class HomeApi {
                     data = albums;
                     break;
                 case Home.TYPE_PLAYLISTS:
+                case Home.TYPE_PLAYLIST_GRID:
                     List<Playlist> playlists = new ArrayList<>();
                     JSONArray playlistsData = jsonArray.getJSONObject(i).getJSONArray("data");
                     if (playlistsData.length() > 0) {
@@ -141,22 +174,10 @@ public class HomeApi {
                     }
                     data = albumMusics;
                     break;
-                case Home.TYPE_PLAYLIST_GRID:
-                    List<Playlist> playlistGrids = new ArrayList<>();
-                    JSONArray playlistGrid = jsonArray.getJSONObject(i).getJSONArray("data");
-                    if (playlistGrid.length() > 0) {
-                        for (int j = 0; j < playlistGrid.length(); j++) {
-                            Playlist playlist = JsonParser.playlistParser(playlistGrid.getJSONObject(j));
-                            if (playlist != null)
-                                playlistGrids.add(playlist);
-                        }
-                    }
-                    data = playlistGrids;
-                    break;
                 case Home.TYPE_VIDEOS:
                     List<Video> videos = new ArrayList<>();
                     JSONArray videoData = jsonArray.getJSONObject(i).getJSONArray("data");
-                    if (videoData.length() > 0){
+                    if (videoData.length() > 0) {
                         for (int j = 0; j < videoData.length(); j++) {
                             Video video = JsonParser.videoJson(videoData.getJSONObject(j));
                             if (video != null)
@@ -178,5 +199,101 @@ public class HomeApi {
             }
         }
         return homes;
+    }
+
+
+    public Home parsSingleHomeApiData(JSONObject jsonObject) throws JSONException {
+        Home home = new Home();
+        Object data;
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
+        switch (jsonObject.getString("type")) {
+            case Home.TYPE_ARTISTS:
+                List<Artist> artists = new ArrayList<>();
+                if (jsonArray.length() > 0) {
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        Artist artist = JsonParser.artistParser(jsonArray.getJSONObject(j));
+                        if (artist != null)
+                            artists.add(artist);
+                    }
+                }
+                data = artists;
+                break;
+            case Home.TYPE_MUSICS:
+            case Home.TYPE_MUSIC_GRID:
+            case Home.TYPE_MUSIC_VERTICAL:
+            case Home.TYPE_TRENDING:
+                List<Music> musics = new ArrayList<>();
+                if (jsonArray.length() > 0) {
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        Music music = JsonParser.musicParser(jsonArray.getJSONObject(j));
+                        if (music != null)
+                            musics.add(music);
+                    }
+                }
+                data = musics;
+                break;
+            case Home.TYPE_ALBUMS:
+                List<Album> albums = new ArrayList<>();
+                if (jsonArray.length() > 0) {
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        Album album = JsonParser.albumParser(jsonArray.getJSONObject(j));
+                        if (album != null)
+                            albums.add(album);
+                    }
+                }
+                data = albums;
+                break;
+            case Home.TYPE_PLAYLISTS:
+            case Home.TYPE_PLAYLIST_GRID:
+                List<Playlist> playlists = new ArrayList<>();
+                if (jsonArray.length() > 0) {
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        Playlist playlist = JsonParser.playlistParser(jsonArray.getJSONObject(j));
+                        if (playlist != null)
+                            playlists.add(playlist);
+                    }
+                }
+                data = playlists;
+                break;
+            case Home.TYPE_ALBUM_MUSIC_GRID:
+                List<Object> albumMusics = new ArrayList<>();
+                if (jsonArray.length() > 0) {
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        String type = jsonArray.getJSONObject(j).getString("type");
+                        if (type.equals("music")) {
+                            Music music = JsonParser.musicParser(jsonArray.getJSONObject(j));
+                            if (music != null)
+                                albumMusics.add(music);
+                        } else {
+                            Album album = JsonParser.albumParser(jsonArray.getJSONObject(j));
+                            if (album != null)
+                                albumMusics.add(album);
+                        }
+                    }
+                }
+                data = albumMusics;
+                break;
+            case Home.TYPE_VIDEOS:
+                List<Video> videos = new ArrayList<>();
+                if (jsonArray.length() > 0) {
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        Video video = JsonParser.videoJson(jsonArray.getJSONObject(j));
+                        if (video != null)
+                            videos.add(video);
+                    }
+                }
+                data = videos;
+                break;
+            default:
+                data = null;
+                break;
+        }
+        if (data != null) {
+            home.setData(data);
+            home.setType(jsonObject.getString("type"));
+            home.setId(jsonObject.getInt("id"));
+            home.setName(jsonObject.getString("name"));
+        }
+        return home;
     }
 }

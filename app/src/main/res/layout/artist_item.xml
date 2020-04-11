@@ -21,7 +21,7 @@
         app:riv_corner_radius_top_right="@dimen/_43sdp"
         app:riv_corner_radius_top_left="0dp"
         app:riv_mutate_background="true"
-        tools:src="@drawable/ic_artist_placeholder" />
+        android:src="@drawable/ic_artist_placeholder" />
 
     <TextView
         android:id="@+id/tv_artist_item_name"
