@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.ArtistApi;
+import app.pilo.android.api.FollowApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.models.Album;
@@ -43,6 +45,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SingleArtistFragment extends BaseFragment {
     private View view;
     private String slug, name, image;
+    private SingleArtist artist;
+    private boolean followProcess = false;
+    private FollowApi followApi;
 
     @BindView(R.id.tv_single_artist_name)
     TextView tv_artist_name;
@@ -92,6 +97,8 @@ public class SingleArtistFragment extends BaseFragment {
     TextView tv_music_carousel_show_more;
     @BindView(R.id.sfl_music)
     ShimmerFrameLayout sfl_music;
+    @BindView(R.id.btn_single_artist_follow)
+    Button btn_single_artist_follow;
 
 
     @Nullable
@@ -104,6 +111,7 @@ public class SingleArtistFragment extends BaseFragment {
             name = getArguments().getString("name");
             image = getArguments().getString("image");
         }
+        followApi = new FollowApi(getActivity());
         setupViews();
         getDataFromServer();
         return view;
@@ -142,6 +150,8 @@ public class SingleArtistFragment extends BaseFragment {
                     setupVideoViewPager(((SingleArtist) data).getVideos());
                     setupAlbumViewPager(((SingleArtist) data).getAlbums());
                     setupLastVerticalMusicList(((SingleArtist) data).getLast_musics());
+                    artist = (SingleArtist) data;
+                    setupFollow();
                 } else {
                     new HttpErrorHandler(getActivity(), message);
                 }
@@ -153,6 +163,75 @@ public class SingleArtistFragment extends BaseFragment {
             }
         });
 
+    }
+
+    private void setupFollow() {
+        if (artist == null)
+            return;
+
+        if (artist.isIs_follow()) {
+            btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
+            btn_single_artist_follow.setText(getString(R.string.follow_on));
+        } else {
+            btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
+            btn_single_artist_follow.setText(getString(R.string.follow_off));
+        }
+
+        btn_single_artist_follow.setVisibility(View.VISIBLE);
+
+        btn_single_artist_follow.setOnClickListener(v -> {
+            if (followProcess)
+                return;
+            if (!artist.isIs_follow()) {
+                followProcess = true;
+                btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
+                btn_single_artist_follow.setText(getString(R.string.follow_on));
+                followApi.follow(artist.getArtist().getSlug(), "add", new HttpHandler.RequestHandler() {
+                    @Override
+                    public void onGetInfo(Object data, String message, boolean status) {
+                        if (!status) {
+                            new HttpErrorHandler(getActivity(), message);
+                            btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
+                            btn_single_artist_follow.setText(getString(R.string.follow_off));
+                        } else {
+                            artist.setIs_follow(true);
+                        }
+                    }
+
+                    @Override
+                    public void onGetError(@Nullable VolleyError error) {
+                        new HttpErrorHandler(getActivity());
+                        btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
+                        btn_single_artist_follow.setText(getString(R.string.follow_off));
+                    }
+                });
+                followProcess = false;
+            } else {
+                followProcess = true;
+                btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
+                btn_single_artist_follow.setText(getString(R.string.follow_off));
+                followApi.follow(artist.getArtist().getSlug(), "remove", new HttpHandler.RequestHandler() {
+                    @Override
+                    public void onGetInfo(Object data, String message, boolean status) {
+                        if (!status) {
+                            new HttpErrorHandler(getActivity(), message);
+                            btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
+                            btn_single_artist_follow.setText(getString(R.string.follow_on));
+                        } else {
+                            artist.setIs_follow(false);
+                        }
+                    }
+
+                    @Override
+                    public void onGetError(@Nullable VolleyError error) {
+                        new HttpErrorHandler(getActivity());
+                        btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
+                        btn_single_artist_follow.setText(getString(R.string.follow_on));
+                    }
+                });
+                followProcess = false;
+            }
+        });
     }
 
 

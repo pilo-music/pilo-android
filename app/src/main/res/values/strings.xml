@@ -64,6 +64,8 @@
     <string name="verify_account">تایید حساب کاربری</string>
     <string name="forgot_password">رمزعبور خود را فراموش کرده اید ؟</string>
     <string name="operation_done">عملیات با موفقیت انجام شد</string>
+    <string name="follow_on">دنبال شده</string>
+    <string name="follow_off">دنبال کردن</string>
 
 
     <string name="show_more">نمایش همه</string>

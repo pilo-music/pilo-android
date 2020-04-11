@@ -24,6 +24,8 @@ public class PiloApi {
     static final String ARTIST_GET = BASE_URL + "artists/";
     static final String LIKE_GET = BASE_URL + "likes";
     static final String LIKE_ADD = BASE_URL + "like";
+    static final String FOLLOW_GET = BASE_URL + "follows";
+    static final String FOLLOW_ADD = BASE_URL + "follow";
     static final String BOOKMARK_GET = BASE_URL + "bookmarks";
     static final String BOOKMARK_ADD = BASE_URL + "bookmarks";
     static final String MESSAGE_GET = BASE_URL + "messages";

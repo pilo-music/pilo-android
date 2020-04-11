@@ -12,6 +12,7 @@ import java.util.List;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Bookmark;
+import app.pilo.android.models.Follow;
 import app.pilo.android.models.Like;
 import app.pilo.android.models.Message;
 import app.pilo.android.models.Music;
@@ -392,6 +393,17 @@ class JsonParser {
         }
     }
 
+    static Follow followParser(JSONObject jsonObject) {
+        try {
+            Follow follow = new Follow();
+            follow.setCreated_at(jsonObject.getString("created_at"));
+            follow.setArtist(JsonParser.artistParser(jsonObject.getJSONObject("artist")));
+            return  follow;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     static Like likeParser(JSONObject jsonObject) {
         try {
@@ -401,16 +413,16 @@ class JsonParser {
 
             switch (jsonObject.getString("type")) {
                 case "music":
-                    like.setMusic(JsonParser.musicParser(jsonObject));
+                    like.setMusic(JsonParser.musicParser(jsonObject.getJSONObject("item")));
                     break;
                 case "video":
-                    like.setVideo(JsonParser.videoJson(jsonObject));
+                    like.setVideo(JsonParser.videoJson(jsonObject.getJSONObject("item")));
                     break;
                 case "album":
-                    like.setAlbum(JsonParser.albumParser(jsonObject));
+                    like.setAlbum(JsonParser.albumParser(jsonObject.getJSONObject("item")));
                     break;
                 case "playlist":
-                    like.setPlaylist(JsonParser.playlistParser(jsonObject));
+                    like.setPlaylist(JsonParser.playlistParser(jsonObject.getJSONObject("item")));
                     break;
                 default:
                     return null;
