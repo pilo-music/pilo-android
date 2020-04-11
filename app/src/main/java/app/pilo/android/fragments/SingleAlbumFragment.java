@@ -24,9 +24,11 @@ import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
+import app.pilo.android.api.LikeApi;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleAlbum;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,6 +36,10 @@ public class SingleAlbumFragment extends BaseFragment {
     private View view;
     private String slug, title, image, artist, artist_slug;
     private UserSharedPrefManager sharedPrefManager;
+    private SingleAlbum album;
+    private Utils utils;
+    private LikeApi likeApi;
+    private boolean likeProcess = false;
 
     @BindView(R.id.img_single_album)
     ImageView img_album;
@@ -49,6 +55,8 @@ public class SingleAlbumFragment extends BaseFragment {
     ImageView img_header_back;
     @BindView(R.id.rc_single_album)
     RecyclerView rc_album_musics;
+    @BindView(R.id.img_single_album_like)
+    ImageView img_single_album_like;
 
 
     @Nullable
@@ -64,10 +72,11 @@ public class SingleAlbumFragment extends BaseFragment {
             artist_slug = getArguments().getString("artist_slug");
             image = getArguments().getString("image");
         }
+        utils = new Utils();
+        likeApi = new LikeApi(getActivity());
         setupViews();
         sharedPrefManager = new UserSharedPrefManager(getActivity());
         getDataFromServer();
-
         return view;
     }
 
@@ -108,7 +117,8 @@ public class SingleAlbumFragment extends BaseFragment {
 
                     tv_album_artist.setText(((SingleAlbum) data).getAlbum().getArtist().getName());
                     setupMusic(((SingleAlbum) data).getMusics());
-
+                    album = ((SingleAlbum) data);
+                    setupLikeButton();
                 } else {
                     new HttpErrorHandler(getActivity(), message);
                 }
@@ -120,6 +130,71 @@ public class SingleAlbumFragment extends BaseFragment {
             }
         });
     }
+
+    private void setupLikeButton() {
+        if (album == null) {
+            return;
+        }
+
+        if (album.isHas_like()) {
+            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+        } else {
+            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+        }
+        img_single_album_like.setVisibility(View.VISIBLE);
+
+
+        img_single_album_like.setOnClickListener(v -> {
+            if (likeProcess)
+                return;
+            if (!album.isHas_like()) {
+                likeProcess = true;
+                utils.animateHeartButton(img_single_album_like);
+                img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                likeApi.like(album.getAlbum().getSlug(), "album", "add", new HttpHandler.RequestHandler() {
+                    @Override
+                    public void onGetInfo(Object data, String message, boolean status) {
+                        if (!status) {
+                            new HttpErrorHandler(getActivity(), message);
+                            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                        } else {
+                            album.setHas_like(true);
+                        }
+                    }
+
+                    @Override
+                    public void onGetError(@Nullable VolleyError error) {
+                        new HttpErrorHandler(getActivity());
+                        img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                    }
+                });
+                likeProcess = false;
+            } else {
+                likeProcess = true;
+                img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                likeApi.like(album.getAlbum().getSlug(), "album", "remove", new HttpHandler.RequestHandler() {
+                    @Override
+                    public void onGetInfo(Object data, String message, boolean status) {
+                        if (!status) {
+                            new HttpErrorHandler(getActivity(), message);
+                            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                        } else {
+                            album.setHas_like(false);
+                        }
+                    }
+
+                    @Override
+                    public void onGetError(@Nullable VolleyError error) {
+                        new HttpErrorHandler(getActivity());
+                        img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                    }
+                });
+                likeProcess = false;
+            }
+        });
+
+    }
+
 
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {

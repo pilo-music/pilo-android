@@ -136,16 +136,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="8dp">
+                    android:paddingTop="5dp">
 
                     <ImageView
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
+                        android:visibility="invisible"
+                        android:id="@+id/img_single_album_like"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:padding="3dp"
                         android:layout_marginEnd="@dimen/activity_vertical_margin"
-                        android:src="@drawable/ic_like_off" />
+                        tools:src="@drawable/ic_like_off" />
 
                     <ImageView
                         android:layout_width="@dimen/_15sdp"
+                        android:layout_marginTop="3dp"
                         android:layout_height="@dimen/_15sdp"
                         android:src="@drawable/ic_share" />
                 </LinearLayout>
