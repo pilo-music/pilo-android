@@ -5,8 +5,8 @@
     android:id="@+id/ll_playlist_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginStart="@dimen/activity_vertical_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginEnd="@dimen/activity_vertical_margin"
     android:layoutDirection="ltr"
     android:orientation="vertical">
@@ -57,7 +57,7 @@
                 android:paddingBottom="3dp"
                 android:text="PLAYLIST"
                 android:textColor="@android:color/white"
-                android:textSize="10sp"/>
+                android:textSize="10sp" />
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 
@@ -73,13 +73,13 @@
         tools:text="دختر ترک" />
 
     <TextView
-        android:id="@+id/tv_playlist_item_artist"
+        android:id="@+id/tv_playlist_item_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/font"
         android:gravity="center"
-        tools:text="علیرضا روزگار"
         android:textColor="@color/colorDark"
-        android:textSize="@dimen/small_font_size" />
+        android:textSize="@dimen/small_font_size"
+        tools:text="23 موزیک" />
 </LinearLayout>

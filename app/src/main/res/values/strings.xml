@@ -22,11 +22,15 @@
 
     <string name="results">نتایج</string>
     <string name="music">موزیک</string>
+    <string name="musics">موزیک ها</string>
     <string name="album">آلبوم</string>
+    <string name="albums">آلبوم ها</string>
     <string name="playlist">پلی لیست</string>
     <string name="playlists">پلی لیست ها</string>
     <string name="video">موزیک ویدیو</string>
+    <string name="videos">موزیک ویدیو ها</string>
     <string name="artist">خواننده</string>
+    <string name="artists">خواننده ها</string>
     <string name="login">ورود</string>
     <string name="email">ایمیل</string>
     <string name="enter_email">ایمیل خود را وارد کنید</string>

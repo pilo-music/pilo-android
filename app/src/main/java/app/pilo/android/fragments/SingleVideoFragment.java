@@ -24,6 +24,7 @@ import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.VideoApi;
 import app.pilo.android.models.SingleVideo;
+import app.pilo.android.models.Video;
 import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +33,8 @@ import butterknife.OnClick;
 public class SingleVideoFragment extends BaseFragment {
     private VideoApi videoApi;
     private LikeApi likeApi;
-    private SingleVideo video;
+    private SingleVideo singleVideo;
+    private Video video;
     private Utils utils;
     private boolean likeProcess = false;
 
@@ -47,20 +49,16 @@ public class SingleVideoFragment extends BaseFragment {
     @BindView(R.id.img_single_video_like)
     ImageView img_single_video_like;
 
-    private String slug;
-    private String title;
-    private String image;
+
+    public SingleVideoFragment(Video video) {
+        this.video = video;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_single_video, container, false);
         ButterKnife.bind(this, view);
-        if (getArguments() != null) {
-            slug = getArguments().getString("slug");
-            title = getArguments().getString("title");
-            image = getArguments().getString("image");
-        }
         videoApi = new VideoApi(getActivity());
         likeApi = new LikeApi(getActivity());
         utils = new Utils();
@@ -70,9 +68,9 @@ public class SingleVideoFragment extends BaseFragment {
     }
 
     private void setupViews() {
-        tv_header_title.setText(title);
+        tv_header_title.setText(video.getTitle());
         Glide.with(getActivity())
-                .load(image)
+                .load(video.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -89,9 +87,9 @@ public class SingleVideoFragment extends BaseFragment {
 
     @OnClick(R.id.fl_single_video)
     void playVideo() {
-        if (!video.getVideo().getVideo480().equals("")) {
+        if (!video.getVideo480().equals("")) {
             Intent mIntent = new Intent(getActivity(), VideoPlayerActivity.class);
-            mIntent.putExtra("url", video.getVideo().getVideo480());
+            mIntent.putExtra("url", video.getVideo480());
             startActivity(mIntent);
         } else {
             Toast.makeText(getActivity(), getString(R.string.server_connection_error), Toast.LENGTH_SHORT).show();
@@ -99,12 +97,12 @@ public class SingleVideoFragment extends BaseFragment {
     }
 
     private void getDataFromServer() {
-        videoApi.single(slug, new HttpHandler.RequestHandler() {
+        videoApi.single(video.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
                     if (data != null) {
-                        video = (SingleVideo) data;
+                        singleVideo = (SingleVideo) data;
                         setupLikeButton();
                     }
                 } else {
@@ -120,11 +118,11 @@ public class SingleVideoFragment extends BaseFragment {
     }
 
     private void setupLikeButton() {
-        if (video == null) {
+        if (singleVideo == null) {
             return;
         }
 
-        if (video.isHas_like()) {
+        if (singleVideo.isHas_like()) {
             img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
         } else {
             img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
@@ -135,18 +133,18 @@ public class SingleVideoFragment extends BaseFragment {
         img_single_video_like.setOnClickListener(v -> {
             if (likeProcess)
                 return;
-            if (!video.isHas_like()) {
+            if (!singleVideo.isHas_like()) {
                 likeProcess = true;
                 utils.animateHeartButton(img_single_video_like);
                 img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-                likeApi.like(video.getVideo().getSlug(), "video", "add", new HttpHandler.RequestHandler() {
+                likeApi.like(video.getSlug(), "video", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
                         } else {
-                            video.setHas_like(true);
+                            singleVideo.setHas_like(true);
                         }
                     }
 
@@ -160,14 +158,14 @@ public class SingleVideoFragment extends BaseFragment {
             } else {
                 likeProcess = true;
                 img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-                likeApi.like(video.getVideo().getSlug(), "video", "remove", new HttpHandler.RequestHandler() {
+                likeApi.like(video.getSlug(), "video", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
                         } else {
-                            video.setHas_like(false);
+                            singleVideo.setHas_like(false);
                         }
                     }
 

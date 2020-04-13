@@ -34,9 +34,19 @@ public class SearchApi {
         this.context = context;
     }
 
-    public void get(String query, final HttpHandler.RequestHandler requestHandler) {
+    public void get(HashMap<String, Object> params, final HttpHandler.RequestHandler requestHandler) {
         StringBuilder url = new StringBuilder(PiloApi.SEARCH);
-        url.append("?").append("query").append("=").append(query);
+        if (params != null) {
+            int index = 0;
+            for (Map.Entry<String, Object> item : params.entrySet()) {
+                if (index != 0) {
+                    url.append("&").append(item.getKey()).append("=").append(item.getValue());
+                } else {
+                    url.append("?").append(item.getKey()).append("=").append(item.getValue());
+                }
+                index++;
+            }
+        }
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {

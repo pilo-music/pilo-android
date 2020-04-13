@@ -35,6 +35,7 @@ import app.pilo.android.api.FollowApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.models.Album;
+import app.pilo.android.models.Artist;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleArtist;
 import app.pilo.android.models.Video;
@@ -44,8 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SingleArtistFragment extends BaseFragment {
     private View view;
-    private String slug, name, image;
-    private SingleArtist artist;
+    private SingleArtist singleArtist;
+    private Artist artist;
     private boolean followProcess = false;
     private FollowApi followApi;
 
@@ -101,16 +102,15 @@ public class SingleArtistFragment extends BaseFragment {
     Button btn_single_artist_follow;
 
 
+    public SingleArtistFragment(Artist artist) {
+        this.artist = artist;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_single_artist, container, false);
         ButterKnife.bind(this, view);
-        if (getArguments() != null) {
-            slug = getArguments().getString("slug");
-            name = getArguments().getString("name");
-            image = getArguments().getString("image");
-        }
         followApi = new FollowApi(getActivity());
         setupViews();
         getDataFromServer();
@@ -118,9 +118,9 @@ public class SingleArtistFragment extends BaseFragment {
     }
 
     private void setupViews() {
-        if (image != null && !image.equals("")) {
+        if (artist.getImage() != null && !artist.getImage().equals("")) {
             Glide.with(getActivity())
-                    .load(image)
+                    .load(artist.getImage())
                     .placeholder(R.drawable.ic_artist_placeholder)
                     .error(R.drawable.ic_artist_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -132,14 +132,14 @@ public class SingleArtistFragment extends BaseFragment {
         tv_music_carousel_title.setText(R.string.music_new);
         tv_video_carousel_title.setText(R.string.video_new);
         tv_album_carousel_title.setText(R.string.album_new);
-        tv_artist_name.setText(name);
-        tv_header_title.setText(name);
+        tv_artist_name.setText(artist.getName());
+        tv_header_title.setText(artist.getName());
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
     }
 
     private void getDataFromServer() {
         ArtistApi artistApi = new ArtistApi(getActivity());
-        artistApi.single(slug, new HttpHandler.RequestHandler() {
+        artistApi.single(artist.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
@@ -150,7 +150,7 @@ public class SingleArtistFragment extends BaseFragment {
                     setupVideoViewPager(((SingleArtist) data).getVideos());
                     setupAlbumViewPager(((SingleArtist) data).getAlbums());
                     setupLastVerticalMusicList(((SingleArtist) data).getLast_musics());
-                    artist = (SingleArtist) data;
+                    singleArtist = (SingleArtist) data;
                     setupFollow();
                 } else {
                     new HttpErrorHandler(getActivity(), message);
@@ -166,10 +166,10 @@ public class SingleArtistFragment extends BaseFragment {
     }
 
     private void setupFollow() {
-        if (artist == null)
+        if (singleArtist == null)
             return;
 
-        if (artist.isIs_follow()) {
+        if (singleArtist.isIs_follow()) {
             btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
             btn_single_artist_follow.setText(getString(R.string.follow_on));
         } else {
@@ -182,11 +182,11 @@ public class SingleArtistFragment extends BaseFragment {
         btn_single_artist_follow.setOnClickListener(v -> {
             if (followProcess)
                 return;
-            if (!artist.isIs_follow()) {
+            if (!singleArtist.isIs_follow()) {
                 followProcess = true;
                 btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
                 btn_single_artist_follow.setText(getString(R.string.follow_on));
-                followApi.follow(artist.getArtist().getSlug(), "add", new HttpHandler.RequestHandler() {
+                followApi.follow(artist.getSlug(), "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
@@ -194,7 +194,7 @@ public class SingleArtistFragment extends BaseFragment {
                             btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
                             btn_single_artist_follow.setText(getString(R.string.follow_off));
                         } else {
-                            artist.setIs_follow(true);
+                            singleArtist.setIs_follow(true);
                         }
                     }
 
@@ -210,7 +210,7 @@ public class SingleArtistFragment extends BaseFragment {
                 followProcess = true;
                 btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
                 btn_single_artist_follow.setText(getString(R.string.follow_off));
-                followApi.follow(artist.getArtist().getSlug(), "remove", new HttpHandler.RequestHandler() {
+                followApi.follow(artist.getSlug(), "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
@@ -218,7 +218,7 @@ public class SingleArtistFragment extends BaseFragment {
                             btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
                             btn_single_artist_follow.setText(getString(R.string.follow_on));
                         } else {
-                            artist.setIs_follow(false);
+                            singleArtist.setIs_follow(false);
                         }
                     }
 

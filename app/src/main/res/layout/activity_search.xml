@@ -53,11 +53,11 @@
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-7dp"
         android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:visibility="gone"
+        android:layout_marginTop="-7dp"
         android:layout_marginEnd="@dimen/activity_vertical_margin"
-        android:indeterminateOnly="true" />
+        android:indeterminateOnly="true"
+        android:visibility="gone" />
 
 
     <LinearLayout
@@ -65,22 +65,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <include layout="@layout/artist_vertical_list" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:tabIndicatorColor="@color/colorPrimaryDark"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/colorPrimary"
-            app:tabTextColor="@color/colorDark" />
+        <include layout="@layout/music_vertical_list" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+        <include layout="@layout/album_vertical_list" />
+
+        <include layout="@layout/playlist_vertical_list" />
+
+        <include layout="@layout/video_vertical_list" />
     </LinearLayout>
 
 

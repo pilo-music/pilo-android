@@ -26,6 +26,7 @@ import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.helpers.UserSharedPrefManager;
+import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleAlbum;
 import app.pilo.android.utils.Utils;
@@ -34,12 +35,12 @@ import butterknife.ButterKnife;
 
 public class SingleAlbumFragment extends BaseFragment {
     private View view;
-    private String slug, title, image, artist, artist_slug;
     private UserSharedPrefManager sharedPrefManager;
-    private SingleAlbum album;
     private Utils utils;
     private LikeApi likeApi;
     private boolean likeProcess = false;
+    private SingleAlbum singleAlbum;
+    private Album album;
 
     @BindView(R.id.img_single_album)
     ImageView img_album;
@@ -59,19 +60,16 @@ public class SingleAlbumFragment extends BaseFragment {
     ImageView img_single_album_like;
 
 
+    public SingleAlbumFragment(Album album){
+        this.album = album;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_single_album, container, false);
 
         ButterKnife.bind(this, view);
-        if (getArguments() != null) {
-            slug = getArguments().getString("slug");
-            title = getArguments().getString("title");
-            artist = getArguments().getString("artist");
-            artist_slug = getArguments().getString("artist_slug");
-            image = getArguments().getString("image");
-        }
         utils = new Utils();
         likeApi = new LikeApi(getActivity());
         setupViews();
@@ -81,9 +79,9 @@ public class SingleAlbumFragment extends BaseFragment {
     }
 
     private void setupViews() {
-        if (image != null && !image.equals("")) {
+        if (album.getImage() != null && !album.getImage().equals("")) {
             Glide.with(getActivity())
-                    .load(image)
+                    .load(album.getImage())
                     .placeholder(R.drawable.ic_music_placeholder)
                     .error(R.drawable.ic_music_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -91,15 +89,15 @@ public class SingleAlbumFragment extends BaseFragment {
         } else {
             img_album.setImageResource(R.drawable.ic_music_placeholder);
         }
-        tv_album_name.setText(title);
-        tv_header_title.setText(title);
+        tv_album_name.setText(album.getTitle());
+        tv_header_title.setText(album.getTitle());
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
     }
 
     private void getDataFromServer() {
         AlbumApi albumApi = new AlbumApi(getActivity());
-        albumApi.single(slug, new HttpHandler.RequestHandler() {
+        albumApi.single(album.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
@@ -117,7 +115,7 @@ public class SingleAlbumFragment extends BaseFragment {
 
                     tv_album_artist.setText(((SingleAlbum) data).getAlbum().getArtist().getName());
                     setupMusic(((SingleAlbum) data).getMusics());
-                    album = ((SingleAlbum) data);
+                    singleAlbum = ((SingleAlbum) data);
                     setupLikeButton();
                 } else {
                     new HttpErrorHandler(getActivity(), message);
@@ -132,11 +130,11 @@ public class SingleAlbumFragment extends BaseFragment {
     }
 
     private void setupLikeButton() {
-        if (album == null) {
+        if (singleAlbum == null) {
             return;
         }
 
-        if (album.isHas_like()) {
+        if (singleAlbum.isHas_like()) {
             img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
         } else {
             img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
@@ -147,18 +145,18 @@ public class SingleAlbumFragment extends BaseFragment {
         img_single_album_like.setOnClickListener(v -> {
             if (likeProcess)
                 return;
-            if (!album.isHas_like()) {
+            if (!singleAlbum.isHas_like()) {
                 likeProcess = true;
                 utils.animateHeartButton(img_single_album_like);
                 img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-                likeApi.like(album.getAlbum().getSlug(), "album", "add", new HttpHandler.RequestHandler() {
+                likeApi.like(album.getSlug(), "album", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
                         } else {
-                            album.setHas_like(true);
+                            singleAlbum.setHas_like(true);
                         }
                     }
 
@@ -172,14 +170,14 @@ public class SingleAlbumFragment extends BaseFragment {
             } else {
                 likeProcess = true;
                 img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-                likeApi.like(album.getAlbum().getSlug(), "album", "remove", new HttpHandler.RequestHandler() {
+                likeApi.like(album.getSlug(), "album", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
                         } else {
-                            album.setHas_like(false);
+                            singleAlbum.setHas_like(false);
                         }
                     }
 

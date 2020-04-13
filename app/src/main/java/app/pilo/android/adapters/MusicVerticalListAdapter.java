@@ -60,8 +60,6 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         TextView tv_music_title;
         @BindView(R.id.tv_music_vertical_list_item_artist)
         TextView tv_music_artist;
-        @BindView(R.id.img_music_vertical_list_item_play)
-        ImageView img_music_item_play;
         @BindView(R.id.riv_music_vertical_list_item_image)
         ImageView music_item_image;
 

@@ -12,7 +12,7 @@ import app.pilo.android.models.SearchHistory;
 
 @Dao
 public interface SearchHistoryDao {
-    @Query("SELECT * FROM searchhistory ORDER BY id DESC LIMIT 5")
+    @Query("SELECT * FROM searchhistory ORDER BY id DESC LIMIT 3")
     List<SearchHistory> get();
 
     @Query("SELECT * FROM searchhistory WHERE text = :text LIMIT 1")

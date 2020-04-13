@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layoutDirection="ltr"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        app:cardBackgroundColor="#f9f9f9"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="7dp">
+
+
+            <ImageView
+                android:id="@+id/img_artist_vertical_list_item_more"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:src="@drawable/ic_ellipsis_gray" />
+
+            <ImageView
+                android:id="@+id/img_artist_vertical_list_item_like"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:src="@drawable/ic_like_off" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_artist_vertical_list_item_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/font"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/normal_font_size"
+                    tools:text="خاک" />
+
+                <TextView
+                    android:id="@+id/tv_artist_vertical_list_item_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/font"
+                    android:gravity="start"
+                    android:textColor="@color/colorDark"
+                    android:textSize="@dimen/small_font_size"
+                    tools:text="44 موزیک . 3 آلبوم" />
+
+            </LinearLayout>
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_artist_vertical_list_item_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_artist_placeholder"
+                app:riv_corner_radius_bottom_left="@dimen/_43sdp"
+                app:riv_corner_radius_bottom_right="@dimen/_43sdp"
+                app:riv_corner_radius_top_left="0dp"
+                app:riv_corner_radius_top_right="@dimen/_43sdp"
+                app:riv_mutate_background="true" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#E4E4E4" />
+</LinearLayout>

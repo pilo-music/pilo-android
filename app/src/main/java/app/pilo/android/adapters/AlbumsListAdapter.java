@@ -67,16 +67,7 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.Al
     }
 
     private void fragmentJump(Album album) {
-        Bundle mBundle = new Bundle();
-        mBundle.putString("slug", album.getSlug());
-        mBundle.putString("title", album.getTitle());
-        mBundle.putString("artist", album.getArtist().getName());
-        mBundle.putString("artist_slug", album.getArtist().getName());
-        mBundle.putString("image", album.getImage());
-
-        SingleAlbumFragment fragment = new SingleAlbumFragment();
-        fragment.setArguments(mBundle);
-
+        SingleAlbumFragment fragment = new SingleAlbumFragment(album);
         ((MainActivity) context).pushFragment(fragment);
     }
 
