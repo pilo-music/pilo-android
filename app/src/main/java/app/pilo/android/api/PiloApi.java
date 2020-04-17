@@ -12,7 +12,7 @@ public class PiloApi {
     static final String REGISTER = BASE_URL + "register";
     static final String VERIFY = BASE_URL + "verify";
     static final String ME = BASE_URL + "me";
-    static final String UPDATE_PROFILE = BASE_URL + "me";
+    static final String UPDATE_PROFILE = BASE_URL + "update";
     static final String ALBUM_SINGLE = BASE_URL + "album/";
     static final String ALBUM_GET = BASE_URL + "albums/";
     static final String PLAYLIST_SINGLE = BASE_URL + "playlist/";
@@ -27,8 +27,8 @@ public class PiloApi {
     static final String LIKE_ADD = BASE_URL + "like";
     static final String FOLLOW_GET = BASE_URL + "follows";
     static final String FOLLOW_ADD = BASE_URL + "follow";
+    static final String BOOKMARK_ADD = BASE_URL + "bookmark";
     static final String BOOKMARK_GET = BASE_URL + "bookmarks";
-    static final String BOOKMARK_ADD = BASE_URL + "bookmarks";
     static final String MESSAGE_GET = BASE_URL + "messages";
     static final String MESSAGE_ADD = BASE_URL + "message";
     static final String FORGOT_PASSWORD_CREATE = BASE_URL + "forgot-passport/create";

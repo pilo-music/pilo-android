@@ -260,7 +260,7 @@
             <ImageView
                 android:layout_width="@dimen/_15sdp"
                 android:layout_height="@dimen/_15sdp"
-                android:src="@drawable/ic_bookmark" />
+                android:src="@drawable/ic_bookmark_off" />
 
             <TextView
                 android:layout_width="0dp"

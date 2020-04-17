@@ -15,9 +15,12 @@ import android.widget.TextView;
 import com.android.volley.error.VolleyError;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.LikeListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -40,6 +43,9 @@ public class LikesActivity extends AppCompatActivity {
     SwipeRefreshLayout swipe_refresh_layout;
 
     private Unbinder unbinder;
+    private LikeListAdapter likeListAdapter;
+    private LikeApi likeApi;
+    private List<Like> likes;
     private int page = 1;
 
     @Override
@@ -48,21 +54,48 @@ public class LikesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_likes);
         unbinder = ButterKnife.bind(this);
         tv_header_title.setText(getString(R.string.profile_likes));
+
+        likeApi = new LikeApi(this);
+        likes = new ArrayList<>();
+
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            page = 1;
+            getDataFromServer();
+        });
         getDataFromServer();
+
+        likeListAdapter = new LikeListAdapter(new WeakReference<>(this), likes);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setAdapter(likeListAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(LikesActivity.this, android.R.anim.fade_in)));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
+            @Override
+            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
+                getDataFromServer();
+            }
+        };
+
+        recyclerView.addOnScrollListener(endlessScrollEventListener);
+
     }
 
     private void getDataFromServer() {
-        LikeApi likeApi = new LikeApi(this);
         swipe_refresh_layout.setRefreshing(true);
-        likeApi.get(null, new HttpHandler.RequestHandler() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page", page);
+        params.put("count", 12);
+        likeApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
-                    LikeListAdapter likeListAdapter = new LikeListAdapter(new WeakReference<>(LikesActivity.this), (List<Like>) data);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(LikesActivity.this, RecyclerView.VERTICAL, false));
-                    recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(LikesActivity.this, android.R.anim.fade_in)));
-                    recyclerView.setAdapter(likeListAdapter);
+                    likes.addAll((List<Like>) data);
+                    page++;
+                    likeListAdapter.notifyDataSetChanged();
                 } else {
                     new HttpErrorHandler(LikesActivity.this, message);
                 }

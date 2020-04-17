@@ -83,7 +83,7 @@ public class MessageApi {
         try {
             jsonObject.put("subject", subject);
             jsonObject.put("text", text);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.LIKE_ADD, jsonObject,
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.MESSAGE_ADD, jsonObject,
                     response -> {
                         try {
                             boolean status = response.getBoolean("status");

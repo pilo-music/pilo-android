@@ -117,7 +117,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/font"
             android:gravity="center"
-            android:text="@string/login"
+            android:text="@string/send"
             android:textColor="@android:color/white"
             android:textSize="@dimen/normal_font_size" />
 
