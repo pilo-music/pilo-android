@@ -9,6 +9,7 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="toolbarStyle">@style/widget.Toolbar</item>
         <item name="popupMenuStyle">@style/widget.popupMenu</item>
+        <item name="android:windowAnimationStyle">@style/widget.popupMenu</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="AppTheme">
@@ -17,7 +18,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    
+
+
+    <style name="AnimTransition" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/fade_in</item>
+        <item name="android:activityCloseEnterAnimation">@anim/fade_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
+    </style>
+
     <style name="widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="contentInsetStart">0dp</item>
     </style>
