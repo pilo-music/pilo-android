@@ -9,7 +9,6 @@ public class Message {
     private int sender;
 
     public Message() {
-        this.id = 0;
         this.sender = 0;
         this.subject = "";
         this.text = "";
@@ -17,14 +16,6 @@ public class Message {
         this.created_at = "";
     }
 
-    public Message(int id, int sender, String subject, String text, String type, String created_at) {
-        this.id = id;
-        this.sender = sender;
-        this.subject = subject;
-        this.text = text;
-        this.type = type;
-        this.created_at = created_at;
-    }
 
     public int getId() {
         return id;

@@ -5,16 +5,22 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never"
-        android:scrollbarSize="0dp">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/ll_main_layout"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:overScrollMode="never"
+            android:scrollbarSize="0dp">
+
+            <LinearLayout
+                android:id="@+id/ll_main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

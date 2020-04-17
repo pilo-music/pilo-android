@@ -398,7 +398,7 @@ class JsonParser {
             Follow follow = new Follow();
             follow.setCreated_at(jsonObject.getString("created_at"));
             follow.setArtist(JsonParser.artistParser(jsonObject.getJSONObject("artist")));
-            return  follow;
+            return follow;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -436,14 +436,13 @@ class JsonParser {
 
     static Message messageParser(JSONObject jsonObject) {
         try {
-            return new Message(
-                    jsonObject.getInt("id"),
-                    jsonObject.getInt("sender"),
-                    jsonObject.getString("subject"),
-                    jsonObject.getString("text"),
-                    jsonObject.getString("type"),
-                    jsonObject.getString("created_at")
-            );
+            Message message = new Message();
+            message.setSender(jsonObject.getInt("sender"));
+            message.setSubject(jsonObject.getString("subject"));
+            message.setText(jsonObject.getString("text"));
+            message.setType(jsonObject.getString("type"));
+            message.setCreated_at(jsonObject.getString("created_at"));
+            return message;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

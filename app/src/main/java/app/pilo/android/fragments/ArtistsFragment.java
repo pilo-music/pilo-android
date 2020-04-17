@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.error.VolleyError;
 
@@ -35,8 +36,8 @@ public class ArtistsFragment extends BaseFragment {
     private View view;
     @BindView(R.id.rc_artists)
     RecyclerView rc_artists;
-    @BindView(R.id.progressbar)
-    ProgressBar progressBar;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
     @BindView(R.id.img_header_back)
@@ -88,13 +89,18 @@ public class ArtistsFragment extends BaseFragment {
                 }
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            page = 1;
+            getDataFromServer();
+        });
         getDataFromServer();
 
         return view;
     }
 
     private void getDataFromServer() {
-        progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
@@ -102,9 +108,9 @@ public class ArtistsFragment extends BaseFragment {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (view != null) {
-                    progressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
                     if (status) {
-                        artists.addAll((List<Artist>)data);
+                        artists.addAll((List<Artist>) data);
                         page++;
                         artistsListAdapter.notifyDataSetChanged();
                     } else {
@@ -115,8 +121,8 @@ public class ArtistsFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                if (view != null){
-                    progressBar.setVisibility(View.GONE);
+                if (view != null) {
+                    swipeRefreshLayout.setRefreshing(false);
                     new HttpErrorHandler(getActivity());
                 }
             }

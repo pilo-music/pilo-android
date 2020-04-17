@@ -20,6 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.EndlessScrollEventListener;
@@ -35,8 +37,8 @@ public class MusicsFragment extends BaseFragment {
     private View view;
     @BindView(R.id.rc_musics)
     RecyclerView rc_musics;
-    @BindView(R.id.progressbar)
-    ProgressBar progressBar;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
     @BindView(R.id.img_header_back)
@@ -59,6 +61,13 @@ public class MusicsFragment extends BaseFragment {
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                page = 1;
+                getDataFromServer();
+            }
+        });
         getDataFromServer();
         musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
             @Override
@@ -91,7 +100,7 @@ public class MusicsFragment extends BaseFragment {
     }
 
     private void getDataFromServer() {
-        progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
@@ -99,7 +108,7 @@ public class MusicsFragment extends BaseFragment {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (view != null) {
-                    progressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
                     if (status) {
                         musics.addAll((List<Music>) data);
                         page++;
@@ -113,7 +122,7 @@ public class MusicsFragment extends BaseFragment {
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 if (view != null) {
-                    progressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
                     new HttpErrorHandler(getActivity());
                 }
             }

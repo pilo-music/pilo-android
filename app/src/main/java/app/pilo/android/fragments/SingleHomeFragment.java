@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.error.VolleyError;
 
@@ -69,8 +70,8 @@ public class SingleHomeFragment extends Fragment {
     TextView tv_header_title;
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
-    @BindView(R.id.progressbar)
-    ProgressBar progressBar;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -81,6 +82,10 @@ public class SingleHomeFragment extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getInt("id");
             type = getArguments().getString("type");
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                page = 1;
+                getDataFromServer();
+            });
             getDataFromServer();
         }
 
@@ -160,59 +165,63 @@ public class SingleHomeFragment extends Fragment {
     }
 
     private void getDataFromServer() {
-        progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
         homeApi.single(id, page, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                progressBar.setVisibility(View.GONE);
-                if (status) {
-                    tv_header_title.setText(((Home) data).getName());
-                    switch (type) {
-                        case Home.TYPE_ARTISTS:
-                            artists.addAll((List<Artist>) ((Home) data).getData());
-                            page++;
-                            artistsListAdapter.notifyDataSetChanged();
-                            break;
-                        case Home.TYPE_MUSICS:
-                        case Home.TYPE_MUSIC_GRID:
-                        case Home.TYPE_MUSIC_VERTICAL:
-                        case Home.TYPE_TRENDING:
-                            musics.addAll((List<Music>) ((Home) data).getData());
-                            page++;
-                            musicsListAdapter.notifyDataSetChanged();
-                            break;
-                        case Home.TYPE_ALBUMS:
-                            albums.addAll((List<Album>) ((Home) data).getData());
-                            page++;
-                            albumsListAdapter.notifyDataSetChanged();
-                            break;
-                        case Home.TYPE_PLAYLISTS:
-                        case Home.TYPE_PLAYLIST_GRID:
-                            playlistLists.addAll((List<Playlist>) ((Home) data).getData());
-                            page++;
-                            playlistsAdapter.notifyDataSetChanged();
-                            break;
-                        case Home.TYPE_ALBUM_MUSIC_GRID:
-                            albumMusics.addAll((List<Object>) ((Home) data).getData());
-                            page++;
-                            albumsListAdapter.notifyDataSetChanged();
-                            break;
-                        case Home.TYPE_VIDEOS:
-                            videos.addAll((List<Video>) ((Home) data).getData());
-                            page++;
-                            videosAdapter.notifyDataSetChanged();
-                            break;
-                    }
+                if (view != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (status) {
+                        tv_header_title.setText(((Home) data).getName());
+                        switch (type) {
+                            case Home.TYPE_ARTISTS:
+                                artists.addAll((List<Artist>) ((Home) data).getData());
+                                page++;
+                                artistsListAdapter.notifyDataSetChanged();
+                                break;
+                            case Home.TYPE_MUSICS:
+                            case Home.TYPE_MUSIC_GRID:
+                            case Home.TYPE_MUSIC_VERTICAL:
+                            case Home.TYPE_TRENDING:
+                                musics.addAll((List<Music>) ((Home) data).getData());
+                                page++;
+                                musicsListAdapter.notifyDataSetChanged();
+                                break;
+                            case Home.TYPE_ALBUMS:
+                                albums.addAll((List<Album>) ((Home) data).getData());
+                                page++;
+                                albumsListAdapter.notifyDataSetChanged();
+                                break;
+                            case Home.TYPE_PLAYLISTS:
+                            case Home.TYPE_PLAYLIST_GRID:
+                                playlistLists.addAll((List<Playlist>) ((Home) data).getData());
+                                page++;
+                                playlistsAdapter.notifyDataSetChanged();
+                                break;
+                            case Home.TYPE_ALBUM_MUSIC_GRID:
+                                albumMusics.addAll((List<Object>) ((Home) data).getData());
+                                page++;
+                                albumsListAdapter.notifyDataSetChanged();
+                                break;
+                            case Home.TYPE_VIDEOS:
+                                videos.addAll((List<Video>) ((Home) data).getData());
+                                page++;
+                                videosAdapter.notifyDataSetChanged();
+                                break;
+                        }
 
-                } else {
-                    new HttpErrorHandler(getActivity(), message);
+                    } else {
+                        new HttpErrorHandler(getActivity(), message);
+                    }
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                new HttpErrorHandler(getActivity());
+                if (view != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    new HttpErrorHandler(getActivity());
+                }
             }
         });
     }

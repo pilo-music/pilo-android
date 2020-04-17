@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.error.VolleyError;
 
@@ -35,8 +36,8 @@ public class AlbumsFragment extends BaseFragment {
     private View view;
     @BindView(R.id.rc_albums)
     RecyclerView rc_albums;
-    @BindView(R.id.progressbar)
-    ProgressBar progressBar;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipe_refresh_layout;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
     @BindView(R.id.img_header_back)
@@ -61,6 +62,10 @@ public class AlbumsFragment extends BaseFragment {
         manager = new LinearLayoutManager(getActivity());
         tv_header_title.setText(getString(R.string.album_new));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            page = 1;
+            getDataFromServer();
+        });
         getDataFromServer();
         albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.album_item_full_width);
         rc_albums.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -92,7 +97,7 @@ public class AlbumsFragment extends BaseFragment {
     }
 
     private void getDataFromServer() {
-        progressBar.setVisibility(View.VISIBLE);
+        swipe_refresh_layout.setRefreshing(true);
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
@@ -100,7 +105,7 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (view != null) {
-                    progressBar.setVisibility(View.GONE);
+                    swipe_refresh_layout.setRefreshing(false);
                     if (status) {
                         albums.addAll((List<Album>) data);
                         page++;
@@ -114,7 +119,7 @@ public class AlbumsFragment extends BaseFragment {
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 if (view != null) {
-                    progressBar.setVisibility(View.GONE);
+                    swipe_refresh_layout.setRefreshing(false);
                     new HttpErrorHandler(getActivity());
                 }
             }

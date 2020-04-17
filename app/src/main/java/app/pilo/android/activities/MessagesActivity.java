@@ -49,6 +49,8 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
         unbinder = ButterKnife.bind(this);
         tv_header_title.setText(getString(R.string.messages));
+
+        swipe_refresh_layout.setOnRefreshListener(() -> getDataFromServer());
         getDataFromServer();
     }
 
