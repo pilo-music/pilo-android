@@ -60,7 +60,7 @@
         android:layout_gravity="center"
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_bookmark" />
+        android:src="@drawable/ic_bookmark_on" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -92,6 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/font_light"
+            android:textSize="@dimen/small_font_size"
             android:textColor="@color/colorDark"
             tools:text="3 ماه قبل" />
     </LinearLayout>

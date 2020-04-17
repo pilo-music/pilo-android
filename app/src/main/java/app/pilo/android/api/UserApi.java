@@ -212,7 +212,7 @@ public class UserApi {
                     jsonObject.put(item.getKey(), item.getValue());
                 }
             }
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET, jsonObject,
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.UPDATE_PROFILE, jsonObject,
                     response -> {
                         try {
                             JSONObject data = response.getJSONObject("data");
@@ -247,7 +247,7 @@ public class UserApi {
 
 
     public void me(final HttpHandler.RequestHandler requestHandler) {
-        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.ALBUM_GET, null,
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.ME, null,
                 response -> {
                     try {
                         JSONObject data = response.getJSONObject("data");

@@ -83,7 +83,7 @@ public class BookmarkApi {
             jsonObject.put("slug", slug);
             jsonObject.put("type", type);
             jsonObject.put("action", action);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.ARTIST_GET, jsonObject,
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.BOOKMARK_ADD, jsonObject,
                     response -> {
                         try {
                             boolean status = response.getBoolean("status");

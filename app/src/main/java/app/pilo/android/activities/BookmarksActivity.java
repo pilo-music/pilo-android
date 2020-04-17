@@ -15,10 +15,13 @@ import android.widget.TextView;
 import com.android.volley.error.VolleyError;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.BookmarkListAdapter;
+import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.api.BookmarkApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -39,7 +42,12 @@ public class BookmarksActivity extends AppCompatActivity {
     SwipeRefreshLayout swipe_refresh_layout;
 
     private Unbinder unbinder;
+
+    private BookmarkListAdapter bookmarkListAdapter;
+    private BookmarkApi bookmarkApi;
+    private List<Bookmark> bookmarks;
     private int page = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +55,47 @@ public class BookmarksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bookmarks);
         unbinder = ButterKnife.bind(this);
         tv_header_title.setText(getString(R.string.profile_likes));
+
+        bookmarkApi = new BookmarkApi(this);
+        bookmarks = new ArrayList<>();
+
+
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            page = 1;
+            getDataFromServer();
+        });
         getDataFromServer();
+        bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(this), bookmarks);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(BookmarksActivity.this, RecyclerView.VERTICAL, false);
+        recyclerView.setAdapter(bookmarkListAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(BookmarksActivity.this, android.R.anim.fade_in)));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
+            @Override
+            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
+                getDataFromServer();
+            }
+        };
+
+        recyclerView.addOnScrollListener(endlessScrollEventListener);
     }
 
     private void getDataFromServer() {
-        BookmarkApi bookmarkApi = new BookmarkApi(this);
         swipe_refresh_layout.setRefreshing(true);
-        bookmarkApi.get(null, new HttpHandler.RequestHandler() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page", page);
+        params.put("count", 12);
+        bookmarkApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
-                    BookmarkListAdapter bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(BookmarksActivity.this), (List<Bookmark>) data);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(BookmarksActivity.this, RecyclerView.VERTICAL, false));
-                    recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(BookmarksActivity.this, android.R.anim.fade_in)));
-                    recyclerView.setAdapter(bookmarkListAdapter);
+                    bookmarks.addAll((List<Bookmark>) data);
+                    page++;
+                    bookmarkListAdapter.notifyDataSetChanged();
                 } else {
                     new HttpErrorHandler(BookmarksActivity.this, message);
                 }

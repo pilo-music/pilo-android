@@ -372,16 +372,16 @@ class JsonParser {
 
             switch (jsonObject.getString("type")) {
                 case "music":
-                    bookmark.setMusic(JsonParser.musicParser(jsonObject));
+                    bookmark.setMusic(JsonParser.musicParser(jsonObject.getJSONObject("item")));
                     break;
                 case "video":
-                    bookmark.setVideo(JsonParser.videoJson(jsonObject));
+                    bookmark.setVideo(JsonParser.videoJson(jsonObject.getJSONObject("item")));
                     break;
                 case "album":
-                    bookmark.setAlbum(JsonParser.albumParser(jsonObject));
+                    bookmark.setAlbum(JsonParser.albumParser(jsonObject.getJSONObject("item")));
                     break;
                 case "playlist":
-                    bookmark.setPlaylist(JsonParser.playlistParser(jsonObject));
+                    bookmark.setPlaylist(JsonParser.playlistParser(jsonObject.getJSONObject("item")));
                     break;
                 default:
                     return null;

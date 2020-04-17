@@ -121,23 +121,27 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void sendDataFromServer() {
-        //todo : handle errors
-        if (!et_password.getText().toString().equals("") && !et_password.getText().toString().equals(et_confirm.getText().toString())) {
+
+        if (!et_password.getText().toString().isEmpty() && et_password.getText().toString().length() < 5) {
+            et_password.setError(getString(R.string.password_small_length));
+            return;
+        }
+
+        if (!et_password.getText().toString().equals(et_confirm.getText().toString())) {
             et_confirm.setError(getString(R.string.password_not_match));
             return;
         }
 
-        if (et_password.getText().toString().length() < 5) {
-            et_password.setError(getString(R.string.password_small_length));
-            return;
-        }
+
         progressBar.setVisibility(View.VISIBLE);
         ll_save.setEnabled(false);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("name", et_name.getText().toString());
-        params.put("password", et_password.getText().toString());
-        params.put("password_confirmation", et_confirm.getText().toString());
+        if (!et_password.getText().toString().isEmpty()) {
+            params.put("password", et_password.getText().toString());
+            params.put("password_confirmation", et_confirm.getText().toString());
+        }
         if (!imageToString(bitmap).equals("")) {
             params.put("pic", imageToString(bitmap));
         }
