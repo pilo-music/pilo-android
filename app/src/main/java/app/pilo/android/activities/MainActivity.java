@@ -60,6 +60,7 @@ import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Queue;
+import app.pilo.android.models.User;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
@@ -109,6 +110,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     SeekBar player_progress;
     @BindView(R.id.img_single_music_play)
     ImageView img_single_music_play;
+    @BindView(R.id.img_single_music_next)
+    ImageView img_single_music_next;
+    @BindView(R.id.img_single_music_previous)
+    ImageView img_single_music_previous;
     @BindView(R.id.rc_music_vertical)
     RecyclerView rc_music_vertical;
     @BindView(R.id.tv_single_music_time)
@@ -280,11 +285,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             switch (sessionManager.getRepeatMode()) {
                 //todo handle music end and go to next song
                 case Constant.REPEAT_MODE_NONE: {
-                    //player_next.callOnClick();
+                    img_single_music_next.callOnClick();
                     break;
                 }
                 case Constant.REPEAT_MODE_ALL: {
-                 /*   if (items.size() > 0 &&
+                 /*   if (items.size() > 0 &&todo
                             sessionManager.getActiveMusicSlug() == items.get(items.size() - 1).music_id) {
                         play_music(items.get(0).music_id, true, false);
                     } else {
@@ -293,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                     break;
                 }
                 case Constant.REPEAT_MODE_ONE: {
-                    // play_music(sessionManager.getActiveMusicId(), true, false);
+                     play_music(new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug(), true, false);
                     break;
                 }
             }
@@ -507,6 +512,48 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 }
 
                 is_seeking = false;
+            }
+        });
+        img_single_music_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
+                    playerService.getPlayer().seekTo(0);
+                } else {
+                   /* if (items.size() > 0) {todo
+
+                        int active_index = -1;
+                        for (int i = 0; i < items.size(); i++) {
+                            if (items.get(i).music_id == sessionManager.getActiveMusicId()) {
+                                active_index = i;
+                            }
+                        }
+                        if (active_index != -1 && (active_index - 1) >= 0) {
+                            play_music(items.get(active_index - 1).music_id, true, false);
+                        }
+
+                    }*/
+                }
+            }
+        });
+        img_single_music_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               /* if (items.size() > 0) {todo
+
+                    int active_index = -1;
+                    for (int i = 0; i < items.size(); i++) {
+                        if (items.get(i).music_id == sessionManager.getActiveMusicId()) {
+                            active_index = i;
+                        }
+                    }
+                    if (active_index != -1 && (active_index + 1) < items.size()) {
+                        play_music(items.get(active_index + 1).music_id, true, false);
+                    } else if (items.size() > 0 && sessionManager.getRepeatMode() == AppConfig.REPEAT_MODE_ALL) {
+                        play_music(items.get(0).music_id, true, false);
+                    }
+                }*/
+
             }
         });
         handleIncomingBroadcast(getIntent());
