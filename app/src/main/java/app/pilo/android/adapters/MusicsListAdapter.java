@@ -16,7 +16,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,10 +67,10 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
                 .into(holder.music_item_image);
 
 
-        holder.ll_music_item.setOnClickListener(v ->{
-            if (musics.size() > holder.getAdapterPosition()) {
-                recyclerClickListener.onClick(getPosition(musics.get(holder.getAdapterPosition()).getSlug()));
-            }
+        holder.ll_music_item.setOnClickListener(v -> {
+            ((MainActivity) context).setMusicListItems(musics);
+            ((MainActivity) context).play_music(music.getSlug(), true, false);
+//            recyclerClickListener.onClick(getPosition(musics.get(holder.getAdapterPosition()).getSlug()));
         });
     }
 

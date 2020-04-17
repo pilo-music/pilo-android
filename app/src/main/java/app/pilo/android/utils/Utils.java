@@ -38,14 +38,10 @@ public class Utils {
 
     public static String getMp3UrlForStreaming(Context context, Music musicTable) {
         String quality = new UserSharedPrefManager(context).getStreamQuality();
-        switch (quality) {
-            case "128":
-                return musicTable.getLink128();
-            case "320":
-                return musicTable.getLink320();
-            default:
-                return "";
+        if ("320".equals(quality)) {
+            return musicTable.getLink320();
         }
+        return musicTable.getLink128();
     }
 
     public static Typeface font(Context context) {

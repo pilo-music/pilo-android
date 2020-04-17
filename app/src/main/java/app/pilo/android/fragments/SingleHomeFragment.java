@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,12 +114,14 @@ public class SingleHomeFragment extends Fragment {
                 musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
                     @Override
                     public void onClick(int position) {
+                        Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
                         if (getActivity() == null) {
                             return;
                         }
+                        Log.e("test", "onClick: " + "test");
                         //todo handle item clicks like this
-                        ((MainActivity) getActivity()).setMusicListItems(musics);
-                        ((MainActivity) getActivity()).play_music(musics.get(position).getSlug(), true, false);
+//                        ((MainActivity) getActivity()).setMusicListItems(musics);
+//                        ((MainActivity) getActivity()).play_music(musics.get(position).getSlug(), true, false);
                     }
 
                     @Override

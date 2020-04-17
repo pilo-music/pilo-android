@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -93,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     TextView tv_music_player_collapsed_title;
     @BindView(R.id.tv_music_player_collapsed_artist)
     TextView tv_music_player_collapsed_artist;
+    @BindView(R.id.img_music_player_collapsed_play)
+    ImageView img_music_player_collapsed_play;
 
     // extended music player
     @BindView(R.id.riv_extended_music_player_music)
@@ -103,12 +107,14 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     TextView tv_extended_music_player_artist;
     @BindView(R.id.seekbar_music)
     SeekBar player_progress;
-
-
     @BindView(R.id.img_single_music_play)
     ImageView img_single_music_play;
     @BindView(R.id.rc_music_vertical)
     RecyclerView rc_music_vertical;
+    @BindView(R.id.tv_single_music_time)
+    TextView tv_single_music_time;
+    @BindView(R.id.tv_single_music_duration)
+    TextView tv_single_music_duration;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -122,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @BindArray(R.array.tab_name)
     String[] TABS;
     MusicVerticalListAdapter musicVerticalListAdapter;
+    List<Music> musics;
 
 
     private boolean mReceiversRegistered = false;
@@ -158,18 +165,14 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             return;
         }
         setRepeatAndShuffle();
-        //todo update items below player
+        if (musics.size() == 0) {
 
-      /*
-        if (items.size() == 0) {
-            List<QueueTable> items_from_db = AppController.getInstance().getBoxStore().boxFor(QueueTable.class).query().build().find();
-            for (QueueTable q : items_from_db) {
-                if (q.music.getTarget() != null) {
-                    items.add(q.music.getTarget());
-                }
+            List<Queue> items_from_db = AppDatabase.getInstance(MainActivity.this).queueDao().getAll();
+            for (Queue q : items_from_db) {
+                musics.add(q.music);
             }
-            adapter.notifyDataSetChanged();
-        }*/
+            musicVerticalListAdapter.notifyDataSetChanged();
+        }
         String current_music_slug = playerService.getCurrent_music_slug();
         if (current_music_slug.equals("")) {
             current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
@@ -181,26 +184,32 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             }
 
             if (playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady()) {
-                img_single_music_play.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_pause_icon, null));
+                img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
+                img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
             } else {
-                img_single_music_play.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_play_icon, null));
+                img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_play));
+                img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
             }
-            Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(current_music_slug);
+            Music music = AppDatabase.getInstance(MainActivity.this).queueDao().findById(current_music_slug);
             if (music != null) {
-                if (music.getImage() != null && !music.getImage().equals("")) {
-                    Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()
-                            .placeholder(R.drawable.placeholder_song)).load(music.getImage()).into(riv_music_player_collapsed_image);
-                    //todo set player image
-                    Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()
-                            .placeholder(R.drawable.placeholder_song)).load(music.getImage()).into(riv_music_player_collapsed_image);
-                }
-                tv_extended_music_player_title.setText(Html.fromHtml(music.getTitle()));
-                tv_music_player_collapsed_title.setText(Html.fromHtml(music.getTitle()));
-
-                if (music.getArtist() != null) {
-                    tv_extended_music_player_artist.setText(music.getArtist().getName());
-                    tv_music_player_collapsed_artist.setText(music.getArtist().getName());
-                }
+                tv_music_player_collapsed_title.setText(music.getTitle());
+                tv_extended_music_player_title.setText(music.getTitle());
+                tv_extended_music_player_artist.setText(music.getArtist().getName());
+                tv_music_player_collapsed_artist.setText(music.getArtist().getName());
+                Glide.with(MainActivity.this)
+                        .load(music.getImage())
+                        .placeholder(R.drawable.ic_music_placeholder)
+                        .error(R.drawable.ic_music_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(riv_extended_music_player_music);
+                Glide.with(MainActivity.this)
+                        .load(music.getImage())
+                        .placeholder(R.drawable.ic_music_placeholder)
+                        .error(R.drawable.ic_music_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(riv_music_player_collapsed_image);
+//                if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
+//                    sliding_layout.setPanelState(PanelState.EXPANDED);
 
             }
         } else {
@@ -230,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         if (intent.getIntExtra("progress", -100) != -100) {
             if (player_progress != null && !is_seeking) {
                 player_progress.setMax(intent.getIntExtra("max", 0));
-               /* long elapsed = intent.getIntExtra("progress", 0);
+                long elapsed = intent.getIntExtra("progress", 0);
                 long remaining = player_progress.getMax() - elapsed;
 
                 long minutes_elapsed = (elapsed / 1000) / 60;
@@ -247,16 +256,16 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 if (seconds_elapsed < 10) {
                     elapsed_seconds_string = "0" + seconds_elapsed;
                 }
-                elapsed_time.setText(minutes_elapsed + ":" + elapsed_seconds_string);
-                duration_time.setText("-" + minutes_remaining + ":" + remaining_seconds_string);*/
+                tv_single_music_time.setText(minutes_elapsed + ":" + elapsed_seconds_string);
+                tv_single_music_duration.setText("-" + minutes_remaining + ":" + remaining_seconds_string);
                 player_progress.setProgress(intent.getIntExtra("progress", 0));
             }
         } else if (intent.getBooleanExtra("play", false)) {
-            img_single_music_play.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_pause, null));
-            //   dock_play_icon.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.q_pause, null));
+            img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
         } else if (intent.getBooleanExtra("pause", false)) {
-            img_single_music_play.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_play, null));
-            //  dock_play_icon.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_player_play, null));
+            img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_play));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
             if (playerService != null) {
                 playerService.getPlayer().setPlayWhenReady(false);
             }
@@ -306,10 +315,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         if (musicListItems.size() == 0) {
             return;
         }
-        /*items.clear();todo refresh items below player
-        items.addAll(musicListItems);
-        adapter.notifyDataSetChanged();
-*/
+
+        musics.clear();
+        musics.addAll(musicListItems);
+        musicVerticalListAdapter.notifyDataSetChanged();
+
         saveItems(musicListItems);
     }
 
@@ -317,12 +327,12 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         if (musicListItems.size() == 0) {
             return;
         }
-     /*   items.clear();todo refresh items below player
-        items.addAll(musicListItems);*/
+        musics.clear();
+        musics.addAll(musicListItems);
         Collections.shuffle(musicListItems);
         play_music(musicListItems.get(0).getSlug(), true, false);
         saveItems(musicListItems);
-        //      adapter.notifyDataSetChanged();
+        musicVerticalListAdapter.notifyDataSetChanged();
     }
 
     private void checkActiveMusic() {
@@ -331,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             boolean should_load_related = false;
             play_music(sessionManager.getActiveMusicSlug(), false, should_load_related);
         } else {
-            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+//            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }
     }
 
@@ -359,26 +369,26 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         UserSharedPrefManager sessionManager = new UserSharedPrefManager(MainActivity.this);
         setRepeatAndShuffle();
 
-        if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
-            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
+//        if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
+//            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+//        }
+
+        if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
+            sliding_layout.setPanelState(PanelState.EXPANDED);
 
         if (play_when_ready) {
-            img_single_music_play.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_pause, null));
-          //  dock_play_icon.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.q_pause, null));
+            img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
         } else {
-            img_single_music_play.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_play, null));
-       //     dock_play_icon.setImageDrawable(VectorDrawableCompat.create(getResources(), R.drawable.ic_player_play, null));
+            img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_play));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
         }
 
-        Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(music_slug);
+        Music music = AppDatabase.getInstance(MainActivity.this).queueDao().findById(music_slug);
 
         if (!music.getImage().equals("")) {
-
             Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()
                     .placeholder(R.drawable.placeholder_song)).load(music.getImage()).into(riv_music_player_collapsed_image);
-          //  Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()todo set dock image
-            //  .placeholder(R.drawable.placeholder)).load(music.image_url).into(player_image);
         }
         player_progress.setProgress(0);
 
@@ -405,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
 
         if (should_load_related_items) {
-          //  loadRelatedItems(music.music_id);
+            //  loadRelatedItems(music.music_id);
         }
     }
 
@@ -442,7 +452,9 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 .build();
         switchTab(0);
         setupBottomNavigation();
+        musics = new ArrayList<>();
 
+        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics);
         rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rc_music_vertical.setAdapter(musicVerticalListAdapter);
 
@@ -541,15 +553,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
             sliding_layout.setPanelState(PanelState.EXPANDED);
 
-        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), event.musics);
-        rc_music_vertical.setAdapter(musicVerticalListAdapter);
-
-
-//        MusicsFragment musicsFragment = new MusicsFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("title",getString(R.string.music_new));
-//        musicsFragment.setArguments(bundle);
-//        tv_music_vertical_show_more.setOnClickListener(v -> ((MainActivity) getActivity()).pushFragment(new MusicsFragment()));
     }
 
 

@@ -47,7 +47,7 @@
                 android:src="@drawable/ic_fast_forward_left" />
 
             <ImageView
-                android:id="@+id/img_single_music_play"
+                android:id="@+id/img_music_player_collapsed_play"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
                 android:adjustViewBounds="true"
