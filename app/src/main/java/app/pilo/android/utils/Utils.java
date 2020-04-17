@@ -25,6 +25,7 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.CurrentPlaylistItem;
 import app.pilo.android.models.Music;
@@ -34,6 +35,18 @@ public class Utils {
     private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR = new DecelerateInterpolator();
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
+
+    public static String getMp3UrlForStreaming(Context context, Music musicTable) {
+        String quality = new UserSharedPrefManager(context).getStreamQuality();
+        switch (quality) {
+            case "128":
+                return musicTable.getLink128();
+            case "320":
+                return musicTable.getLink320();
+            default:
+                return "";
+        }
+    }
 
     public static Typeface font(Context context) {
         return Typeface.createFromAsset(context.getAssets(), "font/font.ttf");

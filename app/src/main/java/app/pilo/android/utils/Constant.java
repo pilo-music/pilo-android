@@ -13,6 +13,10 @@ public class Constant implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final int REPEAT_MODE_NONE = 1;
+    public static final int REPEAT_MODE_ALL = 2;
+    public static final int REPEAT_MODE_ONE = 3;
+
 
     public static final String URL_ABOUT_US_LOGO = "images/";
 
