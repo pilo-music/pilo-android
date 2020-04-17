@@ -474,6 +474,41 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         });
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
 
+
+        img_single_music_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (playerService != null && !playerService.getCurrent_music_slug().equals("") && playerService.getPlayer() != null) {
+                    playerService.togglePlay();
+                } else {
+                    String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
+                    if (!current_music_slug.equals("")) {
+                        play_music(current_music_slug, true, false);
+                    }
+                }
+            }
+        });
+
+        player_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                is_seeking = false;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                is_seeking = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (playerService != null) {
+                    playerService.seekTo(seekBar.getProgress());
+                }
+
+                is_seeking = false;
+            }
+        });
         handleIncomingBroadcast(getIntent());
 
     }
