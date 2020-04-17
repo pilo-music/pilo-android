@@ -1,16 +1,22 @@
 package app.pilo.android.helpers;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -25,9 +31,9 @@ import app.pilo.android.adapters.ArtistsListAdapter;
 import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
+import app.pilo.android.adapters.AlbumMusicGridListAdapter;
+import app.pilo.android.adapters.PlaylistsAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
-import app.pilo.android.fragments.AlbumsFragment;
-import app.pilo.android.fragments.ArtistsFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.MusicsFragment;
 import app.pilo.android.fragments.SingleHomeFragment;
@@ -35,6 +41,8 @@ import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.Playlist;
+import app.pilo.android.models.Promotion;
 import app.pilo.android.models.Video;
 
 public class HomeItemHelper {
@@ -70,16 +78,20 @@ public class HomeItemHelper {
                     setupAlbumViewPager(home, inflater, parent);
                     break;
                 case Home.TYPE_PLAYLISTS:
+                    setupPlaylistsViewPager(home, inflater, parent);
                     break;
                 case Home.TYPE_PROMOTION:
+                    setupPromotion(home, inflater, parent);
                     break;
                 case Home.TYPE_ALBUM_MUSIC_GRID:
+                    setupAlbumMusicViewPager(home, inflater, parent);
                     break;
                 case Home.TYPE_MUSIC_GRID:
+                case Home.TYPE_TRENDING:
+                    setupMusicGridViewPager(home, inflater, parent);
                     break;
                 case Home.TYPE_PLAYLIST_GRID:
-                    break;
-                case Home.TYPE_TRENDING:
+                    setupPlaylistsGridViewPager(home, inflater, parent);
                     break;
                 case Home.TYPE_VIDEOS:
                     setupVideoViewPager(home, inflater, parent);
@@ -92,6 +104,118 @@ public class HomeItemHelper {
         }
 
 
+    }
+
+    private void setupPromotion(Home home, LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.promotion_item, parent);
+        RoundedImageView riv_promotion = view.findViewById(R.id.riv_promotion);
+        Glide.with(fragment.getActivity())
+                .load(((Promotion) home.getData()).getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(riv_promotion);
+
+        riv_promotion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(((Promotion) home.getData()).getUrl()));
+                fragment.startActivity(browserIntent);
+            }
+        });
+    }
+
+    private void setupPlaylistsViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.playlist_carousel, parent);
+        RecyclerView rc_playlist_carousel = view.findViewById(R.id.rc_playlist_carousel);
+        TextView tv_playlist_carousel_title = view.findViewById(R.id.tv_playlist_carousel_title);
+        TextView tv_playlist_carousel_show_more = view.findViewById(R.id.tv_playlist_carousel_show_more);
+        ShimmerFrameLayout sfl_playlist = view.findViewById(R.id.sfl_playlist);
+        if (rc_playlist_carousel != null) {
+            sfl_playlist.setVisibility(View.GONE);
+            rc_playlist_carousel.setVisibility(View.VISIBLE);
+            tv_playlist_carousel_title.setText(home.getName());
+            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Playlist>) home.getData()), R.layout.playlist_item_full_width);
+            rc_playlist_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
+            rc_playlist_carousel.setAdapter(playlistsAdapter);
+            tv_playlist_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
+        }
+    }
+
+
+    private void setupPlaylistsGridViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.playlist_grid_list, parent);
+        RecyclerView rc_playlist_grid = view.findViewById(R.id.rc_playlist_grid);
+        TextView tv_playlist_grid_title = view.findViewById(R.id.tv_playlist_grid_title);
+        TextView tv_playlist_grid_show_more = view.findViewById(R.id.tv_playlist_grid_show_more);
+        ShimmerFrameLayout sfl_playlist = view.findViewById(R.id.sfl_playlist);
+        if (rc_playlist_grid != null) {
+            sfl_playlist.setVisibility(View.GONE);
+            tv_playlist_grid_title.setVisibility(View.VISIBLE);
+            tv_playlist_grid_title.setText(home.getName());
+            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Playlist>) home.getData()), R.layout.playlist_item_full_width);
+            rc_playlist_grid.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
+            rc_playlist_grid.setAdapter(playlistsAdapter);
+            tv_playlist_grid_show_more.setOnClickListener(v -> goToSingleHome(home));
+        }
+    }
+
+    private void setupMusicGridViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.music_grid_list, parent);
+        RecyclerView rc_music_grid = view.findViewById(R.id.rc_music_grid);
+        TextView tv_music_grid_title = view.findViewById(R.id.tv_music_grid_title);
+        TextView tv_music_grid_show_more = view.findViewById(R.id.tv_music_grid_show_more);
+        if (rc_music_grid != null) {
+            rc_music_grid.setVisibility(View.VISIBLE);
+            tv_music_grid_title.setText(home.getName());
+            MusicsListAdapter musicsListAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), R.layout.music_item_full_width, new ClickListenerPlayList() {
+                @Override
+                public void onClick(int position) {
+
+                }
+
+                @Override
+                public void onItemZero() {
+
+                }
+            });
+            rc_music_grid.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
+            rc_music_grid.setAdapter(musicsListAdapter);
+            MusicsFragment musicsFragment = new MusicsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("title", home.getName());
+            musicsFragment.setArguments(bundle);
+            tv_music_grid_show_more.setOnClickListener(v -> goToSingleHome(home));
+        }
+    }
+
+    private void setupAlbumMusicViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.album_music_list, parent);
+        RecyclerView rc_album_music = view.findViewById(R.id.rc_album_music);
+        TextView tv_album_music_title = view.findViewById(R.id.tv_album_music_title);
+        TextView tv_album_music_show_more = view.findViewById(R.id.tv_album_music_show_more);
+        if (rc_album_music != null) {
+            rc_album_music.setVisibility(View.VISIBLE);
+            tv_album_music_title.setText(home.getName());
+            AlbumMusicGridListAdapter trendListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Object>) home.getData()), new ClickListenerPlayList() {
+                @Override
+                public void onClick(int position) {
+
+                }
+
+                @Override
+                public void onItemZero() {
+
+                }
+            });
+            rc_album_music.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
+            rc_album_music.setAdapter(trendListAdapter);
+            MusicsFragment musicsFragment = new MusicsFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("title", home.getName());
+            musicsFragment.setArguments(bundle);
+            tv_album_music_show_more.setOnClickListener(v -> goToSingleHome(home));
+        }
     }
 
 

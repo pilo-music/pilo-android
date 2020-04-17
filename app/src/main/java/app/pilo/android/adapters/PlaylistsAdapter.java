@@ -61,7 +61,8 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
         final Playlist playlist = playlists.get(position);
         holder.tv_playlist_title.setText(playlist.getTitle());
-        holder.tv_playlist_artist.setText("");
+        String count = playlist.getMusic_count() + " " + context.getString(R.string.music);
+        holder.tv_playlist_item_count.setText(count);
         Glide.with(context)
                 .load(playlist.getImage())
                 .placeholder(R.drawable.ic_music_placeholder)
@@ -72,14 +73,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
     }
 
     private void fragmentJump(Playlist playlist) {
-        SinglePlaylistFragment mFragment = new SinglePlaylistFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putString("slug", playlist.getSlug());
-        mBundle.putString("title", playlist.getTitle());
-        mBundle.putString("artist", "");
-        mBundle.putString("artist_slug", "");
-        mBundle.putString("image", playlist.getImage());
-        mFragment.setArguments(mBundle);
+        SinglePlaylistFragment mFragment = new SinglePlaylistFragment(playlist);
         ((MainActivity) context).pushFragment(mFragment);
     }
 
@@ -92,8 +86,8 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
     class PlaylistAdapterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_playlist_item_title)
         TextView tv_playlist_title;
-        @BindView(R.id.tv_playlist_item_artist)
-        TextView tv_playlist_artist;
+        @BindView(R.id.tv_playlist_item_count)
+        TextView tv_playlist_item_count;
         @BindView(R.id.img_playlist_item_play)
         ImageView img_playlist_play;
         @BindView(R.id.riv_playlist_item_image)

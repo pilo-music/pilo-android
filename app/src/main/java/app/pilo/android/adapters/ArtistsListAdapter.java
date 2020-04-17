@@ -70,12 +70,7 @@ public class ArtistsListAdapter extends RecyclerView.Adapter<ArtistsListAdapter.
     }
 
     private void fragmentJump(Artist artist) {
-        Bundle mBundle = new Bundle();
-        mBundle.putString("slug", artist.getSlug());
-        mBundle.putString("name", artist.getName());
-        mBundle.putString("image", artist.getImage());
-        SingleArtistFragment fragment = new SingleArtistFragment();
-        fragment.setArguments(mBundle);
+        SingleArtistFragment fragment = new SingleArtistFragment(artist);
         ((MainActivity) context).pushFragment(fragment);
     }
 
@@ -85,7 +80,7 @@ public class ArtistsListAdapter extends RecyclerView.Adapter<ArtistsListAdapter.
         return artists.size();
     }
 
-    class ArtistCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
+    static class ArtistCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_artist_item_name)
         TextView tv_artist_name;
         @BindView(R.id.ll_artist_item)

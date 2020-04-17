@@ -42,7 +42,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
     @Override
     public VideoAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.video_item, viewGroup, false);
-        return new VideosAdapter.VideoAdapterViewHolder(view);
+        return new VideoAdapterViewHolder(view);
     }
 
 
@@ -71,18 +71,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
 
 
     private void fragmentJump(Video video) {
-        SingleVideoFragment mFragment = new SingleVideoFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putString("slug", video.getSlug());
-        mBundle.putString("title", video.getTitle());
-        mBundle.putString("artist", video.getArtist().getName());
-        mBundle.putString("artist_slug", video.getArtist().getSlug());
-        mBundle.putString("image", video.getImage());
-        mBundle.putString("url", video.getVideo480());
-        mFragment.setArguments(mBundle);
-        SingleVideoFragment fragment = new SingleVideoFragment();
-        fragment.setArguments(mBundle);
-        ((MainActivity) context).pushFragment(fragment);
+        SingleVideoFragment mFragment = new SingleVideoFragment(video);
+        ((MainActivity) context).pushFragment(mFragment);
     }
 
     @Override
@@ -91,7 +81,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
     }
 
 
-    class VideoAdapterViewHolder extends RecyclerView.ViewHolder {
+    static class VideoAdapterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.riv_video_item_image)
         RoundedImageView riv_video_item_image;
         @BindView(R.id.tv_video_item_title)

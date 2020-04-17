@@ -56,15 +56,7 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
 
 
     private void fragmentJump(Video video) {
-        Bundle mBundle = new Bundle();
-        mBundle.putString("slug", video.getSlug());
-        mBundle.putString("title", video.getTitle());
-        mBundle.putString("artist", video.getArtist().getName());
-        mBundle.putString("artist_slug", video.getArtist().getName());
-        mBundle.putString("image", video.getImage());
-        mBundle.putString("url", video.getVideo480());
-        SingleVideoFragment fragment = new SingleVideoFragment();
-        fragment.setArguments(mBundle);
+        SingleVideoFragment fragment = new SingleVideoFragment(video);
         ((MainActivity) context).pushFragment(fragment);
     }
 
@@ -74,7 +66,7 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
         return videos.size();
     }
 
-    class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
+    static class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
         private RoundedImageView riv_video_item_image;
         private TextView tv_video_item_title;
         private LinearLayout ll_video_item;

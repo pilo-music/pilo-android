@@ -1,5 +1,6 @@
 package app.pilo.android.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Search {
@@ -8,6 +9,14 @@ public class Search {
     private List<Video> videos;
     private List<Album> albums;
     private List<Playlist> playlists;
+
+    public Search() {
+        musics = new ArrayList<>();
+        artists = new ArrayList<>();
+        videos = new ArrayList<>();
+        albums = new ArrayList<>();
+        playlists = new ArrayList<>();
+    }
 
     public List<Music> getMusics() {
         return musics;

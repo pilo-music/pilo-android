@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.adapters.AlbumMusicGridListAdapter;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistsListAdapter;
 import app.pilo.android.adapters.ClickListenerPlayList;
@@ -52,12 +53,14 @@ public class SingleHomeFragment extends Fragment {
     private VideosAdapter videosAdapter;
     private PlaylistsAdapter playlistsAdapter;
     private ArtistsListAdapter artistsListAdapter;
+    private AlbumMusicGridListAdapter albumMusicGridListAdapter;
 
     private List<Music> musics;
     private List<Artist> artists;
     private List<Album> albums;
     private List<Playlist> playlistLists;
     private List<Video> videos;
+    private List<Object> albumMusics;
 
 
     @BindView(R.id.rc_home)
@@ -86,6 +89,7 @@ public class SingleHomeFragment extends Fragment {
         albums = new ArrayList<>();
         playlistLists = new ArrayList<>();
         videos = new ArrayList<>();
+        albumMusics = new ArrayList<>();
 
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
@@ -122,9 +126,18 @@ public class SingleHomeFragment extends Fragment {
                 rc_home.setAdapter(playlistsAdapter);
                 break;
             case Home.TYPE_ALBUM_MUSIC_GRID:
+                albumMusicGridListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(getActivity()), albumMusics, new ClickListenerPlayList() {
+                    @Override
+                    public void onClick(int position) {
 
+                    }
+
+                    @Override
+                    public void onItemZero() {
+
+                    }
+                });
                 break;
-
             case Home.TYPE_VIDEOS:
                 videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
                 rc_home.setAdapter(videosAdapter);
@@ -148,7 +161,7 @@ public class SingleHomeFragment extends Fragment {
 
     private void getDataFromServer() {
         progressBar.setVisibility(View.VISIBLE);
-        homeApi.single(id, new HttpHandler.RequestHandler() {
+        homeApi.single(id, page, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 progressBar.setVisibility(View.GONE);
@@ -180,9 +193,10 @@ public class SingleHomeFragment extends Fragment {
                             playlistsAdapter.notifyDataSetChanged();
                             break;
                         case Home.TYPE_ALBUM_MUSIC_GRID:
-
+                            albumMusics.addAll((List<Object>) ((Home) data).getData());
+                            page++;
+                            albumsListAdapter.notifyDataSetChanged();
                             break;
-
                         case Home.TYPE_VIDEOS:
                             videos.addAll((List<Video>) ((Home) data).getData());
                             page++;

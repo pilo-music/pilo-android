@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_playlist_carousel_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_weight="3"
+            android:fontFamily="@font/font"
+            android:gravity="start"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/normal_font_size"
+            tools:text="تازه های برگزیده" />
+
+        <TextView
+            android:id="@+id/tv_playlist_carousel_show_more"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_weight="1"
+            android:fontFamily="@font/font"
+            android:gravity="end"
+            android:text="@string/show_more"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/small_font_size" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_playlist_carousel"
+        android:layout_width="match_parent"
+        android:layoutAnimation="@anim/layout_animation"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:paddingEnd="8dp"
+        android:clipToPadding="false"
+        android:paddingStart="8dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:visibility="gone" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/sfl_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        shimmer:duration="800">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/playlist_shimmer" />
+
+            <include layout="@layout/playlist_shimmer" />
+
+            <include layout="@layout/playlist_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</LinearLayout>

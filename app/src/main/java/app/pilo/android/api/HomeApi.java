@@ -30,7 +30,7 @@ public class HomeApi {
         this.context = context;
     }
 
-    public void get(final HttpHandler.RequestHandler requestHandler) {
+    public void     get(final HttpHandler.RequestHandler requestHandler) {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.HOME_GET, null,
                 response -> {
                     try {
@@ -60,9 +60,10 @@ public class HomeApi {
         Volley.newRequestQueue(context).add(request);
     }
 
-    public void single(int id, final HttpHandler.RequestHandler requestHandler) {
+    public void single(int id, int page, final HttpHandler.RequestHandler requestHandler) {
         StringBuilder url = new StringBuilder(PiloApi.HOME_SINGLE);
         url.append("?").append("id").append("=").append(id);
+        url.append("&").append("page").append("=").append(page);
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
