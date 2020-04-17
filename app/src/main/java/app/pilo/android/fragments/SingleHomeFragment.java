@@ -1,6 +1,7 @@
 package app.pilo.android.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumMusicGridListAdapter;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistsListAdapter;
@@ -111,7 +113,12 @@ public class SingleHomeFragment extends Fragment {
                 musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
                     @Override
                     public void onClick(int position) {
-
+                        if (getActivity() == null) {
+                            return;
+                        }
+                        //todo handle item clicks like this
+                        ((MainActivity) getActivity()).setMusicListItems(musics);
+                        ((MainActivity) getActivity()).play_music(musics.get(position).getSlug(), true, false);
                     }
 
                     @Override

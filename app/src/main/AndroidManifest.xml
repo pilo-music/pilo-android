@@ -11,6 +11,8 @@
     <uses-permission android:name="app.somya.com.somya.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
         android:name=".Pilo"
@@ -48,6 +50,23 @@
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activities.MainActivity" />
+
+
+        <service
+            android:name=".services.PlayerService"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="false">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
