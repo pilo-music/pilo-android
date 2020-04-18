@@ -182,7 +182,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/img_single_music_like"
+            android:id="@+id/img_single_music_repeat"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:adjustViewBounds="true"

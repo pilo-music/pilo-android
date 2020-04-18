@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -38,11 +36,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +44,6 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.db.AppDatabase;
-import app.pilo.android.event.MusicEvent;
 import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
@@ -60,7 +52,6 @@ import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Queue;
-import app.pilo.android.models.User;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
@@ -120,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     TextView tv_single_music_time;
     @BindView(R.id.tv_single_music_duration)
     TextView tv_single_music_duration;
+    @BindView(R.id.img_single_music_shuffle)
+    ImageView img_single_music_shuffle;
+    @BindView(R.id.img_single_music_repeat)
+    ImageView img_single_music_repeat;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -134,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     String[] TABS;
     MusicVerticalListAdapter musicVerticalListAdapter;
     List<Music> musics;
+    private UserSharedPrefManager userSharedPrefManager;
 
 
     private boolean mReceiversRegistered = false;
@@ -213,9 +209,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                         .error(R.drawable.ic_music_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(riv_music_player_collapsed_image);
-//                if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
-//                    sliding_layout.setPanelState(PanelState.EXPANDED);
-
             }
         } else {
             checkActiveMusic();
@@ -224,19 +217,17 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
     private void setRepeatAndShuffle() {
         if (active) {
-            UserSharedPrefManager sessionManager = new UserSharedPrefManager(MainActivity.this);
-            switch (sessionManager.getRepeatMode()) {
+            switch (userSharedPrefManager.getRepeatMode()) {
                 case Constant.REPEAT_MODE_NONE: {
-                    //todo update repeat image
-                    //player_repeat.setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.colorLightGray), PorterDuff.Mode.SRC_ATOP);
+                    img_single_music_repeat.setImageDrawable(getDrawable(R.drawable.ic_repeat_off));
                     break;
                 }
-                case Constant.REPEAT_MODE_ALL: {
-                    //todo update repeat image
-                    // player_repeat.setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
+                case Constant.REPEAT_MODE_ONE: {
+                    img_single_music_repeat.setImageDrawable(getDrawable(R.drawable.ic_repeat_on));
                     break;
                 }
             }
+
         }
     }
 
@@ -245,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             if (player_progress != null && !is_seeking) {
                 player_progress.setMax(intent.getIntExtra("max", 0));
                 long elapsed = intent.getIntExtra("progress", 0);
-                long remaining = player_progress.getMax() - elapsed;
+                long remaining = player_progress.getMax();
 
                 long minutes_elapsed = (elapsed / 1000) / 60;
                 long seconds_elapsed = ((elapsed / 1000) % 60);
@@ -281,8 +272,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 finish();
             }
         } else if (intent.getBooleanExtra("ended", false)) {
-            UserSharedPrefManager sessionManager = new UserSharedPrefManager(MainActivity.this);
-            switch (sessionManager.getRepeatMode()) {
+            switch (userSharedPrefManager.getRepeatMode()) {
                 //todo handle music end and go to next song
                 case Constant.REPEAT_MODE_NONE: {
                     img_single_music_next.callOnClick();
@@ -298,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                     break;
                 }
                 case Constant.REPEAT_MODE_ONE: {
-                     play_music(new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug(), true, false);
+                    play_music(new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug(), true, false);
                     break;
                 }
             }
@@ -341,12 +331,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     }
 
     private void checkActiveMusic() {
-        UserSharedPrefManager sessionManager = new UserSharedPrefManager(MainActivity.this);
-        if (!sessionManager.getActiveMusicSlug().equals("")) {
+        if (!userSharedPrefManager.getActiveMusicSlug().equals("")) {
             boolean should_load_related = false;
-            play_music(sessionManager.getActiveMusicSlug(), false, should_load_related);
+            play_music(userSharedPrefManager.getActiveMusicSlug(), false, should_load_related);
         } else {
-//            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }
     }
 
@@ -371,12 +360,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             startPlayerService();
             return;
         }
-        UserSharedPrefManager sessionManager = new UserSharedPrefManager(MainActivity.this);
         setRepeatAndShuffle();
 
-//        if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
-//            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-//        }
+        if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
+            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
 
         if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
             sliding_layout.setPanelState(PanelState.EXPANDED);
@@ -413,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 */
         String url = Utils.getMp3UrlForStreaming(MainActivity.this, music);
         if (!url.equals("") && playerService != null) {
-            sessionManager.setActiveMusicSlug(music_slug);
+            userSharedPrefManager.setActiveMusicSlug(music_slug);
             playerService.prepareExoPlayerFromURL(Uri.parse(url), music_slug, play_when_ready);
         }
         initPlayerUi();
@@ -458,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         switchTab(0);
         setupBottomNavigation();
         musics = new ArrayList<>();
+        userSharedPrefManager = new UserSharedPrefManager(this);
 
         musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics);
         rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -514,47 +503,47 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 is_seeking = false;
             }
         });
-        img_single_music_previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
-                    playerService.getPlayer().seekTo(0);
-                } else {
-                   /* if (items.size() > 0) {todo
-
-                        int active_index = -1;
-                        for (int i = 0; i < items.size(); i++) {
-                            if (items.get(i).music_id == sessionManager.getActiveMusicId()) {
-                                active_index = i;
-                            }
-                        }
-                        if (active_index != -1 && (active_index - 1) >= 0) {
-                            play_music(items.get(active_index - 1).music_id, true, false);
-                        }
-
-                    }*/
-                }
-            }
-        });
-        img_single_music_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               /* if (items.size() > 0) {todo
-
+        img_single_music_previous.setOnClickListener(v -> {
+            if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
+                playerService.getPlayer().seekTo(0);
+            } else {
+                if (musics.size() > 0) {
                     int active_index = -1;
-                    for (int i = 0; i < items.size(); i++) {
-                        if (items.get(i).music_id == sessionManager.getActiveMusicId()) {
+                    for (int i = 0; i < musics.size(); i++) {
+                        if (musics.get(i).getSlug() == userSharedPrefManager.getActiveMusicSlug()) {
                             active_index = i;
                         }
                     }
-                    if (active_index != -1 && (active_index + 1) < items.size()) {
-                        play_music(items.get(active_index + 1).music_id, true, false);
-                    } else if (items.size() > 0 && sessionManager.getRepeatMode() == AppConfig.REPEAT_MODE_ALL) {
-                        play_music(items.get(0).music_id, true, false);
+                    if (active_index != -1 && (active_index - 1) >= 0) {
+                        play_music(musics.get(active_index - 1).getSlug(), true, false);
                     }
-                }*/
 
+                }
             }
+        });
+        img_single_music_next.setOnClickListener(v -> {
+            if (musics.size() > 0) {
+                int active_index = -1;
+                for (int i = 0; i < musics.size(); i++) {
+                    if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                        active_index = i;
+                    }
+                }
+                if (active_index != -1 && (active_index + 1) < musics.size()) {
+                    play_music(musics.get(active_index + 1).getSlug(), true, false);
+                } else if (musics.size() > 0 && userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_ALL) {
+                    play_music(musics.get(0).getSlug(), true, false);
+                }
+            }
+        });
+
+        img_single_music_repeat.setOnClickListener(v -> {
+            if (userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_NONE)
+                userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_ONE);
+            else
+                userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_NONE);
+
+            setRepeatAndShuffle();
         });
         handleIncomingBroadcast(getIntent());
 
@@ -613,30 +602,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     private void switchTab(int position) {
         mNavController.switchTab(position);
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MusicEvent event) {
-        tv_music_player_collapsed_title.setText(event.music.getTitle());
-        tv_extended_music_player_title.setText(event.music.getTitle());
-        tv_extended_music_player_artist.setText(event.music.getArtist().getName());
-        tv_music_player_collapsed_artist.setText(event.music.getArtist().getName());
-        Glide.with(MainActivity.this)
-                .load(event.music.getImage())
-                .placeholder(R.drawable.ic_music_placeholder)
-                .error(R.drawable.ic_music_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(riv_extended_music_player_music);
-        Glide.with(MainActivity.this)
-                .load(event.music.getImage())
-                .placeholder(R.drawable.ic_music_placeholder)
-                .error(R.drawable.ic_music_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(riv_music_player_collapsed_image);
-        if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
-            sliding_layout.setPanelState(PanelState.EXPANDED);
-
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -762,40 +727,15 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         startPlayerService();
 
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
-
-    public void changeImageAnimation(Boolean isPlay) {
-        try {
-//            if (!isPlay) {
-//                rotateAnimation.pause();
-//            } else {
-//                if (!isRotateAnim) {
-//                    isRotateAnim = true;
-//                    if (imageView_pager != null) {
-//                        imageView_pager.setAnimation(null);
-//                    }
-//                    View view_pager = viewpager.findViewWithTag("myview" + Constant.playPos);
-//                    newRotateAnim();
-//                    imageView_pager = view_pager.findViewById(R.id.image);
-//                    imageView_pager.startAnimation(rotateAnimation);
-//                } else {
-//                    rotateAnimation.resume();
-//                }
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
 
 

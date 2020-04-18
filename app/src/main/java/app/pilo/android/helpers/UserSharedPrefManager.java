@@ -60,7 +60,7 @@ public class UserSharedPrefManager {
     }
 
     public int getRepeatMode() {
-        return sharedPreferences.getInt(REPEAT_MODE, Constant.REPEAT_MODE_ALL);
+        return sharedPreferences.getInt(REPEAT_MODE, Constant.REPEAT_MODE_NONE);
     }
 
 }

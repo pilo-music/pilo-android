@@ -3,6 +3,8 @@ package app.pilo.android;
 import android.app.Application;
 import android.content.res.Configuration;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Pilo extends Application {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
@@ -15,7 +17,7 @@ public class Pilo extends Application {
     // Called by the system when the device configuration changes while your component is running.
     // Overriding this method is totally optional!
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 

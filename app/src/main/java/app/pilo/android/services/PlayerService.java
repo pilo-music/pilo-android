@@ -144,6 +144,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     @Override
     public void onCreate() {
         super.onCreate();
+
         init();
         showNotification();
     }
@@ -650,8 +651,8 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         } else {
             play_pause_icon = R.drawable.ic_play_icon;
         }
-        Music music = AppDatabase.getInstance(this).musicDao().findById(current_music_slug);
 
+        Music music = AppDatabase.getInstance(this).queueDao().findById(current_music_slug);
         if (music != null) {
             String artist_name = "";
             if (music.getArtist() != null) {
