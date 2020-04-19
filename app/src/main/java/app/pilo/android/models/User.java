@@ -1,6 +1,7 @@
 package app.pilo.android.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "user")
@@ -16,6 +17,7 @@ public class User {
     private String gender;
     private String pic;
 
+    @Ignore
     public User() {
         this.access_token = "";
         this.name = "";

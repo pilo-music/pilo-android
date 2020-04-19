@@ -27,13 +27,11 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
     private Context context;
     private List<Object> items;
     private List<Object> filteredArrayList;
-    private ClickListenerPlayList recyclerClickListener;
 
-    public AlbumMusicGridListAdapter(WeakReference<Context> context, List<Object> items, ClickListenerPlayList recyclerClickListener) {
+    public AlbumMusicGridListAdapter(WeakReference<Context> context, List<Object> items) {
         this.context = context.get();
         this.items = items;
         this.filteredArrayList = items;
-        this.recyclerClickListener = recyclerClickListener;
     }
 
     @Override
@@ -75,7 +73,7 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
                     .into(viewHolder.album_image);
             viewHolder.ll_album_item.setOnClickListener(v -> {
                 if (items.size() > holder.getAdapterPosition()) {
-                    recyclerClickListener.onClick(getPosition(album.getSlug()));
+//                    recyclerClickListener.onClick(getPosition(album.getSlug()));
                 }
             });
         } else {
@@ -93,7 +91,7 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
 
             viewHolder.ll_music_item.setOnClickListener(v -> {
                 if (items.size() > holder.getAdapterPosition()) {
-                    recyclerClickListener.onClick(getPosition(music.getSlug()));
+//                    recyclerClickListener.onClick(getPosition(music.getSlug()));
                 }
             });
 

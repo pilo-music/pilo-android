@@ -5,29 +5,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.api.HttpErrorHandler;
+import app.pilo.android.api.HttpHandler;
+import app.pilo.android.api.LikeApi;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.models.Music;
+import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVerticalListAdapter.MusicCarouselAdapterViewHolder> {
     private Context context;
     private List<Music> musics;
+    private LikeApi likeApi;
+    private boolean likeProcess = false;
+    private Utils utils;
 
     public MusicVerticalListAdapter(WeakReference<Context> context, List<Music> musics) {
         this.context = context.get();
         this.musics = musics;
+        this.likeApi = new LikeApi(context.get());
+        utils = new Utils();
     }
 
     @NonNull
@@ -48,6 +65,74 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.music_item_image);
+
+        if (music.isHas_like()) {
+            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
+        } else {
+            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
+        }
+
+        holder.ll_music_vertical.setOnClickListener(v -> {
+            EventBus.getDefault().post(new MusicEvent(context, musics,music.getSlug(),true, false));
+//            ((MainActivity) context).setMusicListItems(musics);
+//            ((MainActivity) context).play_music(music.getSlug(), true, false);
+        });
+
+        holder.img_music_vertical_list_item_like.setOnClickListener(v -> {
+            if (likeProcess)
+                return;
+            if (!music.isHas_like()) {
+                likeProcess = true;
+                utils.animateHeartButton(holder.img_music_vertical_list_item_like);
+                holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
+                likeApi.like(music.getSlug(), "music", "add", new HttpHandler.RequestHandler() {
+                    @Override
+                    public void onGetInfo(Object data, String message, boolean status) {
+                        if (!status) {
+                            new HttpErrorHandler((MainActivity) context, message);
+                            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
+                        } else {
+                            music.setHas_like(true);
+                        }
+                    }
+
+                    @Override
+                    public void onGetError(@Nullable VolleyError error) {
+                        new HttpErrorHandler((MainActivity) context);
+                        holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
+                    }
+                });
+                likeProcess = false;
+            } else {
+                likeProcess = true;
+                holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
+                likeApi.like(music.getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
+                    @Override
+                    public void onGetInfo(Object data, String message, boolean status) {
+                        if (!status) {
+                            new HttpErrorHandler((MainActivity) context, message);
+                            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
+                        } else {
+                            music.setHas_like(false);
+                        }
+                    }
+
+                    @Override
+                    public void onGetError(@Nullable VolleyError error) {
+                        new HttpErrorHandler((MainActivity) context);
+                        holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
+                    }
+                });
+                likeProcess = false;
+            }
+        });
+
+        holder.img_music_vertical_list_item_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "more", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -55,13 +140,19 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         return musics.size();
     }
 
-    class MusicCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
+    static class MusicCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_music_vertical_list_item_music)
         TextView tv_music_title;
         @BindView(R.id.tv_music_vertical_list_item_artist)
         TextView tv_music_artist;
         @BindView(R.id.riv_music_vertical_list_item_image)
         ImageView music_item_image;
+        @BindView(R.id.ll_music_vertical)
+        LinearLayout ll_music_vertical;
+        @BindView(R.id.img_music_vertical_list_item_more)
+        ImageView img_music_vertical_list_item_more;
+        @BindView(R.id.img_music_vertical_list_item_like)
+        ImageView img_music_vertical_list_item_like;
 
         MusicCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

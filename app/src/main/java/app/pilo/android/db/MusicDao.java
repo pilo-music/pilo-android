@@ -15,10 +15,10 @@ public interface MusicDao {
     @Query("SELECT * FROM musics")
     List<Music> getAll();
 
-    @Query("SELECT * FROM musics WHERE title LIKE :title LIMIT 1")
+    @Query("SELECT * FROM musics WHERE music_title LIKE :title LIMIT 1")
     Music findByName(String title);
 
-    @Query("SELECT * FROM musics WHERE slug LIKE :slug LIMIT 1")
+    @Query("SELECT * FROM musics WHERE music_slug LIKE :slug LIMIT 1")
     Music findById(String slug);
 
     @Query("DELETE FROM musics")

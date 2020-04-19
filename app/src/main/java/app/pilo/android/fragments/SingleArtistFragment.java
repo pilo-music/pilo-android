@@ -240,17 +240,7 @@ public class SingleArtistFragment extends BaseFragment {
             sfl_music.setVisibility(View.GONE);
             if (musics.size() > 0) {
                 rc_music_carousel.setVisibility(View.VISIBLE);
-                MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, new ClickListenerPlayList() {
-                    @Override
-                    public void onClick(int position) {
-
-                    }
-
-                    @Override
-                    public void onItemZero() {
-
-                    }
-                });
+                MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
                 rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_music_carousel.setAdapter(musicCarouselAdapter);
             } else {

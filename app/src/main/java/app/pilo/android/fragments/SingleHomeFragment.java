@@ -82,22 +82,28 @@ public class SingleHomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_single_home, container, false);
         ButterKnife.bind(this, view);
         homeApi = new HomeApi(getActivity());
-        if (getArguments() != null) {
-            id = getArguments().getInt("id");
-            type = getArguments().getString("type");
-            swipeRefreshLayout.setOnRefreshListener(() -> {
-                page = 1;
-                getDataFromServer();
-            });
-            getDataFromServer();
-        }
-
         musics = new ArrayList<>();
         artists = new ArrayList<>();
         albums = new ArrayList<>();
         playlistLists = new ArrayList<>();
         videos = new ArrayList<>();
         albumMusics = new ArrayList<>();
+        if (getArguments() != null) {
+            id = getArguments().getInt("id");
+            type = getArguments().getString("type");
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                page = 1;
+                musics.clear();
+                artists.clear();
+                albums.clear();
+                playlistLists.clear();
+                videos.clear();
+                albumMusics.clear();
+                getDataFromServer();
+            });
+            getDataFromServer();
+        }
+
 
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
@@ -111,24 +117,7 @@ public class SingleHomeFragment extends Fragment {
             case Home.TYPE_MUSIC_GRID:
             case Home.TYPE_MUSIC_VERTICAL:
             case Home.TYPE_TRENDING:
-                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
-                    @Override
-                    public void onClick(int position) {
-                        Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
-                        if (getActivity() == null) {
-                            return;
-                        }
-                        Log.e("test", "onClick: " + "test");
-                        //todo handle item clicks like this
-//                        ((MainActivity) getActivity()).setMusicListItems(musics);
-//                        ((MainActivity) getActivity()).play_music(musics.get(position).getSlug(), true, false);
-                    }
-
-                    @Override
-                    public void onItemZero() {
-
-                    }
-                });
+                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width);
                 rc_home.setAdapter(musicsListAdapter);
                 break;
             case Home.TYPE_ALBUMS:
@@ -141,19 +130,10 @@ public class SingleHomeFragment extends Fragment {
                 rc_home.setAdapter(playlistsAdapter);
                 break;
             case Home.TYPE_ALBUM_MUSIC_GRID:
-                albumMusicGridListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(getActivity()), albumMusics, new ClickListenerPlayList() {
-                    @Override
-                    public void onClick(int position) {
-
-                    }
-
-                    @Override
-                    public void onItemZero() {
-
-                    }
-                });
+                albumMusicGridListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(getActivity()), albumMusics);
                 break;
             case Home.TYPE_VIDEOS:
+                layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
                 videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
                 rc_home.setAdapter(videosAdapter);
                 break;

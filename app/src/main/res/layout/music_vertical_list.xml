@@ -46,6 +46,5 @@
         android:paddingEnd="8dp"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="@dimen/activity_vertical_margin"/>
 </LinearLayout>

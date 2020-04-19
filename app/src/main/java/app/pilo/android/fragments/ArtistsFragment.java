@@ -25,6 +25,7 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.ArtistsListAdapter;
+import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.api.ArtistApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -46,11 +47,8 @@ public class ArtistsFragment extends BaseFragment {
     private ArtistsListAdapter artistsListAdapter;
     private ArtistApi artistApi;
     private List<Artist> artists;
-    private LinearLayoutManager manager;
 
     private int page = 1;
-    private boolean isScrolling = false;
-    private int currentItems, totalItems, scrollOutItems;
 
 
     @Nullable
@@ -60,38 +58,29 @@ public class ArtistsFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         artistApi = new ArtistApi(getActivity());
         artists = new ArrayList<>();
-        manager = new LinearLayoutManager(getActivity());
         tv_header_title.setText(getString(R.string.artist_best));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
         artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists, R.layout.artist_item_full_width);
-        rc_artists.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_artists.setAdapter(artistsListAdapter);
-        rc_artists.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    isScrolling = true;
-                }
-            }
+        rc_artists.setLayoutManager(layoutManager);
+        rc_artists.setHasFixedSize(true);
+        rc_artists.setNestedScrollingEnabled(false);
 
+        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems = manager.getChildCount();
-                totalItems = manager.getItemCount();
-                scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
-                    isScrolling = false;
-                    getDataFromServer();
-                }
+            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
+                getDataFromServer();
             }
-        });
+        };
+
+        rc_artists.addOnScrollListener(endlessScrollEventListener);
+
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             page = 1;
+            artists.clear();
             getDataFromServer();
         });
         getDataFromServer();

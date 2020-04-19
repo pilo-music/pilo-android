@@ -58,11 +58,6 @@ public class LikesActivity extends AppCompatActivity {
         likeApi = new LikeApi(this);
         likes = new ArrayList<>();
 
-        swipe_refresh_layout.setOnRefreshListener(() -> {
-            page = 1;
-            getDataFromServer();
-        });
-        getDataFromServer();
 
         likeListAdapter = new LikeListAdapter(new WeakReference<>(this), likes);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
@@ -80,6 +75,15 @@ public class LikesActivity extends AppCompatActivity {
         };
 
         recyclerView.addOnScrollListener(endlessScrollEventListener);
+
+
+
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            page = 1;
+            likes.clear();
+            getDataFromServer();
+        });
+        getDataFromServer();
 
     }
 

@@ -17,8 +17,12 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
+import app.pilo.android.event.MusicEvent;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,23 +31,20 @@ import butterknife.ButterKnife;
 public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.MusicCarouselAdapterViewHolder> {
     private Context context;
     private List<Music> musics;
-    private List<Music> filteredArrayList;
     private int viewId = R.layout.music_item;
-    private ClickListenerPlayList recyclerClickListener;
+    private UserSharedPrefManager userSharedPrefManager;
 
-    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, ClickListenerPlayList recyclerClickListener) {
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics) {
         this.context = context.get();
         this.musics = musics;
-        this.filteredArrayList = musics;
-        this.recyclerClickListener = recyclerClickListener;
+        userSharedPrefManager = new UserSharedPrefManager(context.get());
     }
 
-    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId, ClickListenerPlayList recyclerClickListener) {
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId) {
         this.context = context.get();
         this.musics = musics;
         this.viewId = viewId;
-        this.filteredArrayList = musics;
-        this.recyclerClickListener = recyclerClickListener;
+        userSharedPrefManager = new UserSharedPrefManager(context.get());
     }
 
 
@@ -67,23 +68,14 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
                 .into(holder.music_item_image);
 
 
-        holder.ll_music_item.setOnClickListener(v -> {
-            ((MainActivity) context).setMusicListItems(musics);
-            ((MainActivity) context).play_music(music.getSlug(), true, false);
-//            recyclerClickListener.onClick(getPosition(musics.get(holder.getAdapterPosition()).getSlug()));
-        });
-    }
-
-
-    private int getPosition(String id) {
-        int count = 0;
-        for (int i = 0; i < filteredArrayList.size(); i++) {
-            if (id.equals(filteredArrayList.get(i).getSlug())) {
-                count = i;
-                break;
-            }
+        if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
+            holder.img_music_item_play.setImageDrawable(context.getDrawable(R.drawable.ic_circle_pause_black));
         }
-        return count;
+
+
+        holder.ll_music_item.setOnClickListener(v -> {
+            EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));
+        });
     }
 
 
@@ -92,7 +84,7 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
         return musics.size();
     }
 
-    class MusicCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
+    static class MusicCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_music_item_title)
         TextView tv_music_title;
         @BindView(R.id.tv_music_item_artist)

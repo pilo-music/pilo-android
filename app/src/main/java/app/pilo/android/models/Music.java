@@ -1,6 +1,7 @@
 package app.pilo.android.models;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -13,28 +14,32 @@ public class Music {
 
     @PrimaryKey(autoGenerate = true)
     private int uid;
-    @ColumnInfo(name = "slug")
+    @ColumnInfo(name = "music_slug")
     private String slug;
-    @ColumnInfo(name = "title")
+    @ColumnInfo(name = "music_title")
     private String title;
-    @ColumnInfo(name = "image")
+    @ColumnInfo(name = "music_image")
     private String image;
-    @ColumnInfo(name = "thumbnail")
+    @ColumnInfo(name = "music_thumbnail")
     private String thumbnail;
-    @ColumnInfo(name = "link128")
+    @ColumnInfo(name = "music_link128")
     private String link128;
-    @ColumnInfo(name = "link320")
+    @ColumnInfo(name = "music_link320")
     private String link320;
-    @ColumnInfo(name = "lyric")
+    @ColumnInfo(name = "music_lyric")
     private String lyric;
-    @ColumnInfo(name = "like_count")
+    @ColumnInfo(name = "music_like_count")
     private int like_count;
-    @ColumnInfo(name = "play_count")
+    @ColumnInfo(name = "music_play_count")
     private int play_count;
-    @ColumnInfo(name = "created_at")
+    @ColumnInfo(name = "music_created_at")
     private String created_at;
+    @ColumnInfo(name = "music_has_like")
+    private boolean has_like;
+    @ColumnInfo(name = "music_has_bookmark")
+    private boolean has_bookmark;
 
-    @Ignore
+    @Embedded
     private Artist artist;
     @Ignore
     private List<Artist> tags;
@@ -53,9 +58,9 @@ public class Music {
         this.created_at = "";
         this.artist = new Artist();
         this.tags = new ArrayList<>();
+        this.setHas_like(false);
+        this.setHas_bookmark(false);
     }
-
-
 
 
     public int getUid() {
@@ -162,4 +167,19 @@ public class Music {
         this.tags = tags;
     }
 
+    public boolean isHas_like() {
+        return has_like;
+    }
+
+    public void setHas_like(boolean has_like) {
+        this.has_like = has_like;
+    }
+
+    public boolean isHas_bookmark() {
+        return has_bookmark;
+    }
+
+    public void setHas_bookmark(boolean has_bookmark) {
+        this.has_bookmark = has_bookmark;
+    }
 }

@@ -58,7 +58,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:layoutDirection="ltr"
         android:textDirection="ltr"
         app:tabIndicatorHeight="0dp"

@@ -25,6 +25,7 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.AlbumsListAdapter;
+import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -62,36 +63,32 @@ public class AlbumsFragment extends BaseFragment {
         manager = new LinearLayoutManager(getActivity());
         tv_header_title.setText(getString(R.string.album_new));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
+
+
+        albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.album_item_full_width);
+        LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        rc_albums.setAdapter(albumsListAdapter);
+        rc_albums.setLayoutManager(layoutManager);
+        rc_albums.setHasFixedSize(true);
+        rc_albums.setNestedScrollingEnabled(false);
+
+        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
+            @Override
+            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
+                getDataFromServer();
+            }
+        };
+
+        rc_albums.addOnScrollListener(endlessScrollEventListener);
+
+
+
         swipe_refresh_layout.setOnRefreshListener(() -> {
             page = 1;
+            albums.clear();
             getDataFromServer();
         });
         getDataFromServer();
-        albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.album_item_full_width);
-        rc_albums.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        rc_albums.setAdapter(albumsListAdapter);
-        rc_albums.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    isScrolling = true;
-                }
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                currentItems = manager.getChildCount();
-                totalItems = manager.getItemCount();
-                scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
-                    isScrolling = false;
-                    getDataFromServer();
-                }
-            }
-        });
 
         return view;
     }

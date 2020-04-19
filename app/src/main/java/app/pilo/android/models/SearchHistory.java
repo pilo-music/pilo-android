@@ -1,18 +1,22 @@
 package app.pilo.android.models;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class SearchHistory {
+
+    @Ignore
+    public SearchHistory() {
+        this.text = "";
+    }
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     private String text;
 
-    public SearchHistory() {
-        this.text = "";
-    }
 
     public SearchHistory(String text) {
         this.text = text;

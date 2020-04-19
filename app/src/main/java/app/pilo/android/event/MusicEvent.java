@@ -1,8 +1,12 @@
 package app.pilo.android.event;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
@@ -11,21 +15,20 @@ import app.pilo.android.models.SinglePlaylist;
 
 public class MusicEvent {
 
-    public final Music music;
     public final List<Music> musics = new ArrayList<>();
 
-    public MusicEvent(Music music, SinglePlaylist playlist) {
-        this.music = music;
-        musics.addAll(playlist.getMusics());
-    }
+    public MusicEvent(Context context, List<Music> musicListItems, String music_slug, boolean play_when_ready, boolean should_load_related_items) {
 
-    public MusicEvent(Music music, SingleAlbum album) {
-        this.music = music;
-        musics.addAll(album.getMusics());
-    }
+        if (musicListItems.size() == 0) {
+            return;
+        }
 
-    public MusicEvent(Music music, List<Music> items) {
-        this.music = music;
-        musics.addAll(items);
+        musics.clear();
+        musics.addAll(musicListItems);
+
+        AppDatabase.getInstance(context).musicDao().nukeTable();
+        AppDatabase.getInstance(context).musicDao().insertAll(musicListItems);
+
+        ((MainActivity) context).play_music(music_slug, play_when_ready, should_load_related_items);
     }
 }

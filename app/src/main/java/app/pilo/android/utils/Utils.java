@@ -18,16 +18,11 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.db.AppDatabase;
-import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
-import app.pilo.android.models.CurrentPlaylistItem;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 

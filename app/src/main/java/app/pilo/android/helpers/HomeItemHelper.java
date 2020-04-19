@@ -168,17 +168,7 @@ public class HomeItemHelper {
         if (rc_music_grid != null) {
             rc_music_grid.setVisibility(View.VISIBLE);
             tv_music_grid_title.setText(home.getName());
-            MusicsListAdapter musicsListAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), R.layout.music_item_full_width, new ClickListenerPlayList() {
-                @Override
-                public void onClick(int position) {
-
-                }
-
-                @Override
-                public void onItemZero() {
-
-                }
-            });
+            MusicsListAdapter musicsListAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), R.layout.music_item_full_width);
             rc_music_grid.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
             rc_music_grid.setAdapter(musicsListAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();
@@ -197,17 +187,7 @@ public class HomeItemHelper {
         if (rc_album_music != null) {
             rc_album_music.setVisibility(View.VISIBLE);
             tv_album_music_title.setText(home.getName());
-            AlbumMusicGridListAdapter trendListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Object>) home.getData()), new ClickListenerPlayList() {
-                @Override
-                public void onClick(int position) {
-
-                }
-
-                @Override
-                public void onItemZero() {
-
-                }
-            });
+            AlbumMusicGridListAdapter trendListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Object>) home.getData()));
             rc_album_music.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
             rc_album_music.setAdapter(trendListAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();
@@ -229,17 +209,8 @@ public class HomeItemHelper {
             sfl_music.setVisibility(View.GONE);
             rc_music_carousel.setVisibility(View.VISIBLE);
             tv_music_carousel_title.setText(home.getName());
-            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), new ClickListenerPlayList() {
-                @Override
-                public void onClick(int position) {
+            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
 
-                }
-
-                @Override
-                public void onItemZero() {
-
-                }
-            });
             rc_music_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
             rc_music_carousel.setAdapter(musicCarouselAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();

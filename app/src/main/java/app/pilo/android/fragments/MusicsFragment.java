@@ -61,26 +61,7 @@ public class MusicsFragment extends BaseFragment {
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                page = 1;
-                getDataFromServer();
-            }
-        });
-        getDataFromServer();
-        musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width, new ClickListenerPlayList() {
-            @Override
-            public void onClick(int position) {
-
-            }
-
-            @Override
-            public void onItemZero() {
-
-            }
-        });
-
+        musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_musics.setAdapter(musicsListAdapter);
         rc_musics.setLayoutManager(layoutManager);
@@ -95,6 +76,13 @@ public class MusicsFragment extends BaseFragment {
         };
 
         rc_musics.addOnScrollListener(endlessScrollEventListener);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            page = 1;
+            musics.clear();
+            getDataFromServer();
+        });
+        getDataFromServer();
 
         return view;
     }

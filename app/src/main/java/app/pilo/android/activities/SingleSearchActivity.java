@@ -86,17 +86,7 @@ public class SingleSearchActivity extends AppCompatActivity {
                 rc_items.setAdapter(artistsListAdapter);
                 break;
             case "music":
-                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(this), search.getMusics(), R.layout.music_item_full_width, new ClickListenerPlayList() {
-                    @Override
-                    public void onClick(int position) {
-
-                    }
-
-                    @Override
-                    public void onItemZero() {
-
-                    }
-                });
+                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(this), search.getMusics(), R.layout.music_item_full_width);
                 rc_items.setAdapter(musicsListAdapter);
                 break;
             case "album":

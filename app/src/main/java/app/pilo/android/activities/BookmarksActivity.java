@@ -59,12 +59,6 @@ public class BookmarksActivity extends AppCompatActivity {
         bookmarkApi = new BookmarkApi(this);
         bookmarks = new ArrayList<>();
 
-
-        swipe_refresh_layout.setOnRefreshListener(() -> {
-            page = 1;
-            getDataFromServer();
-        });
-        getDataFromServer();
         bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(this), bookmarks);
         LinearLayoutManager layoutManager = new LinearLayoutManager(BookmarksActivity.this, RecyclerView.VERTICAL, false);
         recyclerView.setAdapter(bookmarkListAdapter);
@@ -81,6 +75,13 @@ public class BookmarksActivity extends AppCompatActivity {
         };
 
         recyclerView.addOnScrollListener(endlessScrollEventListener);
+
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            page = 1;
+            bookmarks.clear();
+            getDataFromServer();
+        });
+        getDataFromServer();
     }
 
     private void getDataFromServer() {

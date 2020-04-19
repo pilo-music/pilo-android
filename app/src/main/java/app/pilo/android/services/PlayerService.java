@@ -23,7 +23,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,7 +51,6 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -61,7 +59,6 @@ import app.pilo.android.activities.MainActivity;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.models.Queue;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.Utils;
 
@@ -383,18 +380,18 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     }
 
     private void skipToNext() {
-        List<Queue> current_items = AppDatabase.getInstance(this).queueDao().getAll();
+        List<Music> current_items = AppDatabase.getInstance(this).musicDao().getAll();
 
             int active_index = -1;
             for (int i = 0; i < current_items.size(); i++) {
-                if (current_items.get(i).music.getSlug().equals(sessionManager.getActiveMusicSlug())) {
+                if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
                     active_index = i;
                 }
             }
             if (active_index != -1 && (active_index + 1) < current_items.size()) {
-                playTrack(current_items.get(active_index + 1).music.getSlug());
+                playTrack(current_items.get(active_index + 1).getSlug());
             } else if (current_items.size() > 0 && sessionManager.getRepeatMode() == Constant.REPEAT_MODE_ALL) {
-                playTrack(current_items.get(0).music.getSlug());
+                playTrack(current_items.get(0).getSlug());
             }
 
 
@@ -459,16 +456,16 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         if (exoPlayer != null && ((exoPlayer.getCurrentPosition() * 100) / exoPlayer.getDuration() > 5)) {
             exoPlayer.seekTo(0);
         }else {
-            List<Queue> current_items = AppDatabase.getInstance(this).queueDao().getAll();
+            List<Music> current_items = AppDatabase.getInstance(this).musicDao().getAll();
 
                 int active_index = -1;
                 for (int i = 0; i < current_items.size(); i++) {
-                    if (current_items.get(i).music.getSlug().equals(sessionManager.getActiveMusicSlug())) {
+                    if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
                         active_index = i;
                     }
                 }
                 if ((active_index - 1) >= 0) {
-                    playTrack(current_items.get(active_index - 1).music.getSlug());
+                    playTrack(current_items.get(active_index - 1).getSlug());
                 }
         }
     }
@@ -652,7 +649,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             play_pause_icon = R.drawable.ic_play_icon;
         }
 
-        Music music = AppDatabase.getInstance(this).queueDao().findById(current_music_slug);
+        Music music = AppDatabase.getInstance(this).musicDao().findById(current_music_slug);
         if (music != null) {
             String artist_name = "";
             if (music.getArtist() != null) {

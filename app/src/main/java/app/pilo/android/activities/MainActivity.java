@@ -21,12 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -36,14 +38,22 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
+import app.pilo.android.api.HttpHandler;
+import app.pilo.android.api.MusicApi;
 import app.pilo.android.db.AppDatabase;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
@@ -51,7 +61,6 @@ import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.models.Queue;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
@@ -61,6 +70,7 @@ import app.pilo.android.views.NestedScrollableViewHelper;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MainActivity extends AppCompatActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
@@ -161,17 +171,142 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         }
     };
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        unbinder = ButterKnife.bind(this);
+
+        initTab();
+        fragmentHistory = new FragmentHistory();
+        mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
+                .transactionListener(this)
+                .rootFragmentListener(this, TABS.length)
+                .build();
+        switchTab(0);
+        setupBottomNavigation();
+
+        musics = new ArrayList<>();
+        userSharedPrefManager = new UserSharedPrefManager(this);
+
+        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics);
+        rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        rc_music_vertical.setAdapter(musicVerticalListAdapter);
+
+
+        sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
+        ll_page_header.setAlpha(0);
+        sliding_layout.addPanelSlideListener(new PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                ll_music_player_collapsed.setAlpha(1 - slideOffset);
+                ll_page_header.setAlpha(0 + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+            }
+        });
+        sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
+
+        player_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                is_seeking = false;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                is_seeking = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (playerService != null) {
+                    playerService.seekTo(seekBar.getProgress());
+                }
+
+                is_seeking = false;
+            }
+        });
+        handleIncomingBroadcast(getIntent());
+
+    }
+
+
+    private void setupBottomNavigation() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                fragmentHistory.push(tab.getPosition());
+                switchTab(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                mNavController.clearStack();
+                switchTab(tab.getPosition());
+            }
+        });
+
+    }
+
+
+    private void initTab() {
+        if (tabLayout != null) {
+            for (int i = 0; i < TABS.length; i++) {
+                tabLayout.addTab(tabLayout.newTab());
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null)
+                    tab.setCustomView(getTabView(i));
+            }
+        }
+    }
+
+
+    private View getTabView(int position) {
+        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_item_bottom, null);
+        ImageView icon = view.findViewById(R.id.tab_icon);
+        icon.setImageResource(mTabIconsSelected[position]);
+        return view;
+    }
+
+    private void switchTab(int position) {
+        mNavController.switchTab(position);
+        if (sliding_layout.getPanelState() == PanelState.EXPANDED) {
+            sliding_layout.setPanelState(PanelState.COLLAPSED);
+        }
+    }
+
+    private void updateTabSelection(int currentTab) {
+
+        for (int i = 0; i < TABS.length; i++) {
+            TabLayout.Tab selectedTab = tabLayout.getTabAt(i);
+            if (currentTab != i) {
+                if (selectedTab != null && selectedTab.getCustomView() != null)
+                    selectedTab.getCustomView().setSelected(false);
+            } else {
+                if (selectedTab != null && selectedTab.getCustomView() != null)
+                    selectedTab.getCustomView().setSelected(true);
+            }
+        }
+    }
+
+
     private void initPlayerUi() {
         if (playerService == null) {
             return;
         }
         setRepeatAndShuffle();
         if (musics.size() == 0) {
-
-            List<Queue> items_from_db = AppDatabase.getInstance(MainActivity.this).queueDao().getAll();
-            for (Queue q : items_from_db) {
-                musics.add(q.music);
-            }
+            List<Music> items_from_db = AppDatabase.getInstance(MainActivity.this).musicDao().getAll();
+            musics.addAll(items_from_db);
             musicVerticalListAdapter.notifyDataSetChanged();
         }
         String current_music_slug = playerService.getCurrent_music_slug();
@@ -191,12 +326,13 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_play));
                 img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
             }
-            Music music = AppDatabase.getInstance(MainActivity.this).queueDao().findById(current_music_slug);
+            Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(current_music_slug);
             if (music != null) {
                 tv_music_player_collapsed_title.setText(music.getTitle());
                 tv_extended_music_player_title.setText(music.getTitle());
                 tv_extended_music_player_artist.setText(music.getArtist().getName());
                 tv_music_player_collapsed_artist.setText(music.getArtist().getName());
+
                 Glide.with(MainActivity.this)
                         .load(music.getImage())
                         .placeholder(R.drawable.ic_music_placeholder)
@@ -253,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                     elapsed_seconds_string = "0" + seconds_elapsed;
                 }
                 tv_single_music_time.setText(minutes_elapsed + ":" + elapsed_seconds_string);
-                tv_single_music_duration.setText("-" + minutes_remaining + ":" + remaining_seconds_string);
+                tv_single_music_duration.setText(minutes_remaining + ":" + remaining_seconds_string);
                 player_progress.setProgress(intent.getIntExtra("progress", 0));
             }
         } else if (intent.getBooleanExtra("play", false)) {
@@ -273,7 +409,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             }
         } else if (intent.getBooleanExtra("ended", false)) {
             switch (userSharedPrefManager.getRepeatMode()) {
-                //todo handle music end and go to next song
                 case Constant.REPEAT_MODE_NONE: {
                     img_single_music_next.callOnClick();
                     break;
@@ -295,28 +430,23 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         }
     }
 
-
-    private void saveItems(List<Music> items_to_save) {
-        AppDatabase.getInstance(MainActivity.this).queueDao().nukeTable();
-
-        for (Music m : items_to_save) {
-            Queue q = new Queue();
-            q.music = m;
-            AppDatabase.getInstance(MainActivity.this).queueDao().insert(q);
-        }
-    }
-
-    public void setMusicListItems(List<Music> musicListItems) {
-        if (musicListItems.size() == 0) {
-            return;
-        }
-
-        musics.clear();
-        musics.addAll(musicListItems);
-        musicVerticalListAdapter.notifyDataSetChanged();
-
-        saveItems(musicListItems);
-    }
+//
+//    private void saveItems(List<Music> items_to_save) {
+//        AppDatabase.getInstance(MainActivity.this).musicDao().nukeTable();
+//        AppDatabase.getInstance(MainActivity.this).musicDao().insertAll(items_to_save);
+//    }
+//
+//    public void setMusicListItems(List<Music> musicListItems) {
+//        if (musicListItems.size() == 0) {
+//            return;
+//        }
+//
+//        musics.clear();
+//        musics.addAll(musicListItems);
+//        musicVerticalListAdapter.notifyDataSetChanged();
+//
+//        saveItems(musicListItems);
+//    }
 
     public void shuffleItems(List<Music> musicListItems) {
         if (musicListItems.size() == 0) {
@@ -325,17 +455,35 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         musics.clear();
         musics.addAll(musicListItems);
         Collections.shuffle(musicListItems);
-        play_music(musicListItems.get(0).getSlug(), true, false);
+
+        EventBus.getDefault().post(new MusicEvent(this, musicListItems, musicListItems.get(0).getSlug(), true, false));
+
+/*        play_music(musicListItems.get(0).getSlug(), true, false);
         saveItems(musicListItems);
-        musicVerticalListAdapter.notifyDataSetChanged();
+        musicVerticalListAdapter.notifyDataSetChanged();*/
     }
 
     private void checkActiveMusic() {
         if (!userSharedPrefManager.getActiveMusicSlug().equals("")) {
-            boolean should_load_related = false;
-            play_music(userSharedPrefManager.getActiveMusicSlug(), false, should_load_related);
+            play_music(userSharedPrefManager.getActiveMusicSlug(), false, false);
         } else {
-            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            MusicApi musicApi = new MusicApi(this);
+            musicApi.get(null, new HttpHandler.RequestHandler() {
+                @Override
+                public void onGetInfo(Object data, String message, boolean status) {
+                    if (status) {
+                        List<Music> result = (List<Music>) data;
+                        EventBus.getDefault().post(new MusicEvent(MainActivity.this, result, result.get(0).getSlug(), false, false));
+                    } else {
+                        sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    }
+                }
+
+                @Override
+                public void onGetError(@Nullable VolleyError error) {
+                    sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+            });
         }
     }
 
@@ -366,8 +514,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
 
-        if (sliding_layout.getPanelState() == PanelState.COLLAPSED)
-            sliding_layout.setPanelState(PanelState.EXPANDED);
 
         if (play_when_ready) {
             img_single_music_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
@@ -377,7 +523,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
         }
 
-        Music music = AppDatabase.getInstance(MainActivity.this).queueDao().findById(music_slug);
+        Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(music_slug);
 
         if (!music.getImage().equals("")) {
             Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()
@@ -431,78 +577,31 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        unbinder = ButterKnife.bind(this);
-
-        initTab();
-        fragmentHistory = new FragmentHistory();
-        mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
-                .transactionListener(this)
-                .rootFragmentListener(this, TABS.length)
-                .build();
-        switchTab(0);
-        setupBottomNavigation();
-        musics = new ArrayList<>();
-        userSharedPrefManager = new UserSharedPrefManager(this);
-
-        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics);
-        rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rc_music_vertical.setAdapter(musicVerticalListAdapter);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        musics = event.musics;
+        initPlayerUi();
+        musicVerticalListAdapter.notifyDataSetChanged();
+    }
 
 
-        sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
-        ll_page_header.setAlpha(0);
-        sliding_layout.addPanelSlideListener(new PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                ll_music_player_collapsed.setAlpha(1 - slideOffset);
-                ll_page_header.setAlpha(0 + slideOffset);
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-            }
-        });
-        sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
-
-
-        img_single_music_play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (playerService != null && !playerService.getCurrent_music_slug().equals("") && playerService.getPlayer() != null) {
-                    playerService.togglePlay();
-                } else {
-                    String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
-                    if (!current_music_slug.equals("")) {
-                        play_music(current_music_slug, true, false);
-                    }
+    @OnClick({R.id.img_single_music_play, R.id.img_music_player_collapsed_play})
+    void img_single_music_play() {
+        img_single_music_play.setOnClickListener(v -> {
+            if (playerService != null && !playerService.getCurrent_music_slug().equals("") && playerService.getPlayer() != null) {
+                playerService.togglePlay();
+            } else {
+                String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
+                if (!current_music_slug.equals("")) {
+                    play_music(current_music_slug, true, false);
                 }
             }
         });
 
-        player_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                is_seeking = false;
-            }
+    }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                is_seeking = true;
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (playerService != null) {
-                    playerService.seekTo(seekBar.getProgress());
-                }
-
-                is_seeking = false;
-            }
-        });
+    @OnClick({R.id.img_single_music_previous, R.id.img_music_player_collapsed_prev})
+    void img_single_music_previous() {
         img_single_music_previous.setOnClickListener(v -> {
             if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
                 playerService.getPlayer().seekTo(0);
@@ -510,7 +609,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 if (musics.size() > 0) {
                     int active_index = -1;
                     for (int i = 0; i < musics.size(); i++) {
-                        if (musics.get(i).getSlug() == userSharedPrefManager.getActiveMusicSlug()) {
+                        if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
                             active_index = i;
                         }
                     }
@@ -521,6 +620,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 }
             }
         });
+    }
+
+    @OnClick({R.id.img_single_music_next, R.id.img_music_player_collapsed_next})
+    void img_single_music_next() {
         img_single_music_next.setOnClickListener(v -> {
             if (musics.size() > 0) {
                 int active_index = -1;
@@ -536,7 +639,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 }
             }
         });
+    }
 
+    @OnClick(R.id.img_single_music_repeat)
+    void img_single_music_repeat() {
         img_single_music_repeat.setOnClickListener(v -> {
             if (userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_NONE)
                 userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_ONE);
@@ -545,9 +651,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
             setRepeatAndShuffle();
         });
-        handleIncomingBroadcast(getIntent());
-
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -555,53 +660,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         handleIncomingBroadcast(intent);
     }
 
-
-    private void setupBottomNavigation() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                fragmentHistory.push(tab.getPosition());
-                switchTab(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                mNavController.clearStack();
-                switchTab(tab.getPosition());
-            }
-        });
-
-    }
-
-
-    private void initTab() {
-        if (tabLayout != null) {
-            for (int i = 0; i < TABS.length; i++) {
-                tabLayout.addTab(tabLayout.newTab());
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab != null)
-                    tab.setCustomView(getTabView(i));
-            }
-        }
-    }
-
-
-    private View getTabView(int position) {
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_item_bottom, null);
-        ImageView icon = view.findViewById(R.id.tab_icon);
-        icon.setImageResource(mTabIconsSelected[position]);
-        return view;
-    }
-
-
-    private void switchTab(int position) {
-        mNavController.switchTab(position);
-    }
 
     @Override
     public void onBackPressed() {
@@ -631,21 +689,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         }
     }
 
-
-    private void updateTabSelection(int currentTab) {
-
-        for (int i = 0; i < TABS.length; i++) {
-            TabLayout.Tab selectedTab = tabLayout.getTabAt(i);
-            if (currentTab != i) {
-                if (selectedTab != null && selectedTab.getCustomView() != null)
-                    selectedTab.getCustomView().setSelected(false);
-            } else {
-                if (selectedTab != null && selectedTab.getCustomView() != null)
-                    selectedTab.getCustomView().setSelected(true);
-            }
-        }
-    }
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -665,7 +708,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
-
             case FragNavController.TAB1:
                 return new HomeFragment();
             case FragNavController.TAB2:
@@ -727,6 +769,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         startPlayerService();
 
     }
@@ -734,6 +777,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     @Override
     public void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
 }

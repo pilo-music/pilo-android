@@ -53,6 +53,8 @@ class JsonParser {
             music.setLike_count(jsonObject.getInt("like_count"));
             music.setPlay_count(jsonObject.getInt("play_count"));
             music.setCreated_at(jsonObject.getString("created_at"));
+            music.setHas_like(jsonObject.getBoolean("has_like"));
+            music.setHas_bookmark(jsonObject.getBoolean("has_bookmark"));
             music.setArtist(artist);
             music.setTags(tags);
             return music;

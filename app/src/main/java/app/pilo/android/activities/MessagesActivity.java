@@ -16,9 +16,11 @@ import android.widget.TextView;
 import com.android.volley.error.VolleyError;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.MessageListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -42,30 +44,56 @@ public class MessagesActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
     private int page = 1;
+    private List<Message> messages;
+    private MessageApi messageApi;
+    private MessageListAdapter messageListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         unbinder = ButterKnife.bind(this);
+        messages = new ArrayList<>();
+        messageApi = new MessageApi(this);
         tv_header_title.setText(getString(R.string.messages));
 
-        swipe_refresh_layout.setOnRefreshListener(() -> getDataFromServer());
+        messageListAdapter = new MessageListAdapter(new WeakReference<>(MessagesActivity.this), messages);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        recyclerView.setAdapter(messageListAdapter);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(MessagesActivity.this, android.R.anim.fade_in)));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
+            @Override
+            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
+                getDataFromServer();
+            }
+        };
+
+        recyclerView.addOnScrollListener(endlessScrollEventListener);
+
+
+        swipe_refresh_layout.setOnRefreshListener(() -> {
+            page = 1;
+            messages.clear();
+            getDataFromServer();
+        });
         getDataFromServer();
+
     }
 
     private void getDataFromServer() {
-        MessageApi messageApi = new MessageApi(this);
         swipe_refresh_layout.setRefreshing(true);
         messageApi.get(null, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
-                    MessageListAdapter messageListAdapter = new MessageListAdapter(new WeakReference<>(MessagesActivity.this), (List<Message>) data);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MessagesActivity.this, RecyclerView.VERTICAL, false));
-                    recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(MessagesActivity.this, android.R.anim.fade_in)));
-                    recyclerView.setAdapter(messageListAdapter);
+                    messages.addAll((List<Message>) data);
+                    page++;
+                    messageListAdapter.notifyDataSetChanged();
                 } else {
                     new HttpErrorHandler(MessagesActivity.this, message);
                 }

@@ -64,14 +64,8 @@ public class VideosFragment extends BaseFragment {
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            page = 1;
-            getDataFromServer();
-        });
-        getDataFromServer();
         videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
-
-        LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         rc_videos.setAdapter(videosAdapter);
         rc_videos.setLayoutManager(layoutManager);
         rc_videos.setHasFixedSize(true);
@@ -85,6 +79,12 @@ public class VideosFragment extends BaseFragment {
         };
 
         rc_videos.addOnScrollListener(endlessScrollEventListener);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            page = 1;
+            getDataFromServer();
+        });
+        getDataFromServer();
 
         return view;
     }
