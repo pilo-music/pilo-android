@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,12 +13,17 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.error.VolleyError;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.api.HomeApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.HomeItemHelper;
 import app.pilo.android.models.Home;
 import butterknife.BindView;
@@ -30,6 +36,7 @@ public class HomeFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipe_refresh_layout;
 
+    private HomeItemHelper homeItemHelper;
     private Unbinder unbinder;
 
     @Nullable
@@ -37,7 +44,8 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
-        swipe_refresh_layout.setOnRefreshListener(() -> getHomeApi());
+        swipe_refresh_layout.setOnRefreshListener(this::getHomeApi);
+        homeItemHelper = new HomeItemHelper();
         getHomeApi();
         return view;
     }
@@ -51,7 +59,7 @@ public class HomeFragment extends BaseFragment {
             public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
-                    new HomeItemHelper(HomeFragment.this, (List<Home>) data);
+                    homeItemHelper.init(HomeFragment.this, (List<Home>) data);
                 } else {
                     new HttpErrorHandler(getActivity(), message);
                 }
@@ -64,6 +72,25 @@ public class HomeFragment extends BaseFragment {
             }
         });
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        homeItemHelper.updateAdapters();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
 
     @Override
     public void onDestroy() {

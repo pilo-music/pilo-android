@@ -16,6 +16,10 @@ import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -25,6 +29,7 @@ import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
@@ -41,6 +46,7 @@ public class SingleAlbumFragment extends BaseFragment {
     private boolean likeProcess = false;
     private SingleAlbum singleAlbum;
     private Album album;
+    private MusicVerticalListAdapter musicVerticalListAdapter;
 
     @BindView(R.id.img_single_album)
     ImageView img_album;
@@ -60,7 +66,7 @@ public class SingleAlbumFragment extends BaseFragment {
     ImageView img_single_album_like;
 
 
-    public SingleAlbumFragment(Album album){
+    public SingleAlbumFragment(Album album) {
         this.album = album;
     }
 
@@ -196,9 +202,28 @@ public class SingleAlbumFragment extends BaseFragment {
 
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
-            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
+            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
             rc_album_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_album_musics.setAdapter(musicVerticalListAdapter);
         }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        if (musicVerticalListAdapter != null)
+            musicVerticalListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }

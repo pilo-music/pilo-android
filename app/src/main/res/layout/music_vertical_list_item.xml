@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_music_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:id="@+id/ll_music_vertical"
     android:layoutDirection="ltr"
     android:orientation="vertical">
 
@@ -35,8 +35,8 @@
             <ImageView
                 android:id="@+id/img_music_vertical_list_item_like"
                 android:layout_width="@dimen/_20sdp"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:src="@drawable/ic_like_off" />
 
 
@@ -62,9 +62,9 @@
                     android:id="@+id/tv_music_vertical_list_item_artist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:layout_marginTop="8dp"
                     android:textColor="@color/colorDark"
                     android:textSize="@dimen/small_font_size"
                     tools:text="بهزاد لیتو" />
@@ -78,9 +78,40 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/music_item"
-                android:textSize="@dimen/small_font_size"
                 app:riv_corner_radius="10dp"
                 app:riv_mutate_background="true" />
+
+            <FrameLayout
+                android:id="@+id/fl_music_vertical_list_item_playing"
+                android:layout_width="60dp"
+                android:visibility="gone"
+                android:layout_height="60dp">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/riv_music_vertical_list_item_image2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/music_item"
+                    app:riv_corner_radius="10dp"
+                    app:riv_mutate_background="true" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="#595E5E5E"
+                    android:scaleType="fitCenter"
+                    app:riv_corner_radius="10dp"
+                    app:riv_mutate_background="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_pause_icon" />
+            </FrameLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

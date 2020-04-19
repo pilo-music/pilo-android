@@ -22,6 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.EndlessScrollEventListener;
@@ -29,6 +33,7 @@ import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.MusicApi;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,5 +120,23 @@ public class MusicsFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        musicsListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }

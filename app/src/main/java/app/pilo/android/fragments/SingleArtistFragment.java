@@ -21,6 +21,10 @@ import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -34,6 +38,7 @@ import app.pilo.android.api.ArtistApi;
 import app.pilo.android.api.FollowApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
+import app.pilo.android.event.MusicEvent;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Music;
@@ -49,6 +54,9 @@ public class SingleArtistFragment extends BaseFragment {
     private Artist artist;
     private boolean followProcess = false;
     private FollowApi followApi;
+    private MusicsListAdapter musicCarouselAdapter;
+    private AlbumsListAdapter albumCarouselAdapter;
+    private MusicVerticalListAdapter musicVerticalListAdapter;
 
     @BindView(R.id.tv_single_artist_name)
     TextView tv_artist_name;
@@ -240,7 +248,7 @@ public class SingleArtistFragment extends BaseFragment {
             sfl_music.setVisibility(View.GONE);
             if (musics.size() > 0) {
                 rc_music_carousel.setVisibility(View.VISIBLE);
-                MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
+                musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
                 rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_music_carousel.setAdapter(musicCarouselAdapter);
             } else {
@@ -271,7 +279,7 @@ public class SingleArtistFragment extends BaseFragment {
             sfl_album.setVisibility(View.GONE);
             if (albums.size() > 0) {
                 rc_album_carousel.setVisibility(View.VISIBLE);
-                AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums);
+                albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums);
                 rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_album_carousel.setAdapter(albumCarouselAdapter);
             } else {
@@ -284,7 +292,7 @@ public class SingleArtistFragment extends BaseFragment {
     private void setupLastVerticalMusicList(List<Music> musics) {
         if (rc_music_vertical != null) {
             if (musics.size() > 0) {
-                MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
+                musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
                 rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                 rc_music_vertical.setAdapter(musicVerticalListAdapter);
             } else {
@@ -293,5 +301,31 @@ public class SingleArtistFragment extends BaseFragment {
             }
         }
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        if (musicCarouselAdapter != null)
+            musicCarouselAdapter.notifyDataSetChanged();
+
+        if (albumCarouselAdapter != null)
+            albumCarouselAdapter.notifyDataSetChanged();
+
+        if (musicVerticalListAdapter != null)
+            musicVerticalListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
 
 }
