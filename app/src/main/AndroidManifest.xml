@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="app.pilo.android">
+    package="app.pilo.android" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -22,8 +22,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".activities.SingleSearchActivity"></activity>
+        android:usesCleartextTraffic="true" >
+        <activity android:name=".activities.SettingActivity" >
+        </activity>
+        <activity android:name=".activities.SingleSearchActivity" />
         <activity android:name=".activities.VerifyActivity" />
         <activity android:name=".activities.SearchActivity" />
         <activity android:name=".activities.VideoPlayerActivity" />
@@ -32,7 +34,7 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity android:name=".activities.SplashScreenActivity">
+        <activity android:name=".activities.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,13 +53,11 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activities.MainActivity" />
 
-
         <service
             android:name=".services.PlayerService"
             android:enabled="true"
             android:exported="false"
-            android:stopWithTask="false">
-
+            android:stopWithTask="false" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.browse.MediaBrowserService" />
@@ -66,7 +66,6 @@
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>
