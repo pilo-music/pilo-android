@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
@@ -364,6 +365,11 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 }
             }
 
+            if (userSharedPrefManager.getShuffleMode()) {
+                img_single_music_shuffle.setImageDrawable(getDrawable(R.drawable.ic_shuffle_on));
+            } else {
+                img_single_music_shuffle.setImageDrawable(getDrawable(R.drawable.ic_shuffle_off));
+            }
         }
     }
 
@@ -413,54 +419,12 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                     img_single_music_next.callOnClick();
                     break;
                 }
-                case Constant.REPEAT_MODE_ALL: {
-                 /*   if (items.size() > 0 &&todo
-                            sessionManager.getActiveMusicSlug() == items.get(items.size() - 1).music_id) {
-                        play_music(items.get(0).music_id, true, false);
-                    } else {
-                        player_next.callOnClick();
-                    }*/
-                    break;
-                }
                 case Constant.REPEAT_MODE_ONE: {
                     play_music(new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug(), true, false);
                     break;
                 }
             }
         }
-    }
-
-//
-//    private void saveItems(List<Music> items_to_save) {
-//        AppDatabase.getInstance(MainActivity.this).musicDao().nukeTable();
-//        AppDatabase.getInstance(MainActivity.this).musicDao().insertAll(items_to_save);
-//    }
-//
-//    public void setMusicListItems(List<Music> musicListItems) {
-//        if (musicListItems.size() == 0) {
-//            return;
-//        }
-//
-//        musics.clear();
-//        musics.addAll(musicListItems);
-//        musicVerticalListAdapter.notifyDataSetChanged();
-//
-//        saveItems(musicListItems);
-//    }
-
-    public void shuffleItems(List<Music> musicListItems) {
-        if (musicListItems.size() == 0) {
-            return;
-        }
-        musics.clear();
-        musics.addAll(musicListItems);
-        Collections.shuffle(musicListItems);
-
-        EventBus.getDefault().post(new MusicEvent(this, musicListItems, musicListItems.get(0).getSlug(), true, false));
-
-/*        play_music(musicListItems.get(0).getSlug(), true, false);
-        saveItems(musicListItems);
-        musicVerticalListAdapter.notifyDataSetChanged();*/
     }
 
     private void checkActiveMusic() {
@@ -587,44 +551,21 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
     @OnClick({R.id.img_single_music_play, R.id.img_music_player_collapsed_play})
     void img_single_music_play() {
-        img_single_music_play.setOnClickListener(v -> {
-            if (playerService != null && !playerService.getCurrent_music_slug().equals("") && playerService.getPlayer() != null) {
-                playerService.togglePlay();
-            } else {
-                String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
-                if (!current_music_slug.equals("")) {
-                    play_music(current_music_slug, true, false);
-                }
+        if (playerService != null && !playerService.getCurrent_music_slug().equals("") && playerService.getPlayer() != null) {
+            playerService.togglePlay();
+        } else {
+            String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
+            if (!current_music_slug.equals("")) {
+                play_music(current_music_slug, true, false);
             }
-        });
-
+        }
     }
 
     @OnClick({R.id.img_single_music_previous, R.id.img_music_player_collapsed_prev})
     void img_single_music_previous() {
-        img_single_music_previous.setOnClickListener(v -> {
-            if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
-                playerService.getPlayer().seekTo(0);
-            } else {
-                if (musics.size() > 0) {
-                    int active_index = -1;
-                    for (int i = 0; i < musics.size(); i++) {
-                        if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
-                            active_index = i;
-                        }
-                    }
-                    if (active_index != -1 && (active_index - 1) >= 0) {
-                        play_music(musics.get(active_index - 1).getSlug(), true, false);
-                    }
-
-                }
-            }
-        });
-    }
-
-    @OnClick({R.id.img_single_music_next, R.id.img_music_player_collapsed_next})
-    void img_single_music_next() {
-        img_single_music_next.setOnClickListener(v -> {
+        if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
+            playerService.getPlayer().seekTo(0);
+        } else {
             if (musics.size() > 0) {
                 int active_index = -1;
                 for (int i = 0; i < musics.size(); i++) {
@@ -632,25 +573,56 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                         active_index = i;
                     }
                 }
-                if (active_index != -1 && (active_index + 1) < musics.size()) {
-                    play_music(musics.get(active_index + 1).getSlug(), true, false);
-                } else if (musics.size() > 0 && userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_ALL) {
-                    play_music(musics.get(0).getSlug(), true, false);
+                if (active_index != -1 && (active_index - 1) >= 0) {
+                    play_music(musics.get(active_index - 1).getSlug(), true, false);
+                }
+
+            }
+        }
+    }
+
+    @OnClick({R.id.img_single_music_next, R.id.img_music_player_collapsed_next})
+    void img_single_music_next() {
+        if (musics.size() > 0) {
+            int active_index = -1;
+            for (int i = 0; i < musics.size(); i++) {
+                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                    active_index = i;
                 }
             }
-        });
+
+            if (userSharedPrefManager.getShuffleMode()) {
+                Random random = new Random();
+                active_index = random.nextInt(musics.size());
+            }
+
+
+            if (active_index != -1 && (active_index + 1) < musics.size()) {
+                play_music(musics.get(active_index + 1).getSlug(), true, false);
+            } else if (musics.size() > 0) {
+                play_music(musics.get(0).getSlug(), true, false);
+            }
+        }
     }
 
     @OnClick(R.id.img_single_music_repeat)
     void img_single_music_repeat() {
-        img_single_music_repeat.setOnClickListener(v -> {
-            if (userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_NONE)
-                userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_ONE);
-            else
-                userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_NONE);
+        if (userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_NONE)
+            userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_ONE);
+        else
+            userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_NONE);
 
-            setRepeatAndShuffle();
-        });
+        setRepeatAndShuffle();
+    }
+
+    @OnClick(R.id.img_single_music_shuffle)
+    void img_single_music_shuffle() {
+        if (userSharedPrefManager.getShuffleMode())
+            userSharedPrefManager.setShuffleMode(false);
+        else
+            userSharedPrefManager.setShuffleMode(true);
+
+        setRepeatAndShuffle();
     }
 
 

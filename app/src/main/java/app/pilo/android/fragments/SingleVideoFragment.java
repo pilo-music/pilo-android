@@ -6,19 +6,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.activities.SearchActivity;
 import app.pilo.android.activities.VideoPlayerActivity;
+import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
@@ -48,7 +57,12 @@ public class SingleVideoFragment extends BaseFragment {
     RoundedImageView videoImage;
     @BindView(R.id.img_single_video_like)
     ImageView img_single_video_like;
-
+    @BindView(R.id.tv_video_vertical_title)
+    TextView tv_video_vertical_title;
+    @BindView(R.id.rc_video_vertical)
+    RecyclerView rc_video_vertical;
+    @BindView(R.id.ll_video_vertical)
+    LinearLayout ll_video_vertical;
 
     public SingleVideoFragment(Video video) {
         this.video = video;
@@ -76,7 +90,7 @@ public class SingleVideoFragment extends BaseFragment {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(videoImage);
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
-
+        tv_video_vertical_title.setText(getString(R.string.video_related));
     }
 
     @Override
@@ -103,6 +117,11 @@ public class SingleVideoFragment extends BaseFragment {
                 if (status) {
                     if (data != null) {
                         singleVideo = (SingleVideo) data;
+                        if (singleVideo.getRelated().size() > 0) {
+                            VideoVerticalListAdapter videoVerticalListAdapter = new VideoVerticalListAdapter(new WeakReference<>(getActivity()), singleVideo.getRelated());
+                            rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+                            rc_video_vertical.setAdapter(videoVerticalListAdapter);
+                        }
                         setupLikeButton();
                     }
                 } else {
@@ -178,8 +197,15 @@ public class SingleVideoFragment extends BaseFragment {
                 likeProcess = false;
             }
         });
-
     }
 
+
+    @OnClick(R.id.tv_video_vertical_show_more)
+    void tv_video_vertical_show_more() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("related", true);
+        VideosFragment mFragment = new VideosFragment(params);
+        ((MainActivity) getActivity()).pushFragment(mFragment);
+    }
 
 }

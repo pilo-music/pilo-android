@@ -53,6 +53,15 @@ public class AlbumsFragment extends BaseFragment {
     private AlbumApi albumApi;
     private List<Album> albums;
     private int page = 1;
+    private HashMap<String, Object> params;
+
+    AlbumsFragment() {
+        params = new HashMap<>();
+    }
+
+    AlbumsFragment(HashMap<String, Object> params) {
+        this.params = params;
+    }
 
     @Nullable
     @Override
@@ -82,7 +91,6 @@ public class AlbumsFragment extends BaseFragment {
         rc_albums.addOnScrollListener(endlessScrollEventListener);
 
 
-
         swipe_refresh_layout.setOnRefreshListener(() -> {
             page = 1;
             albums.clear();
@@ -95,7 +103,6 @@ public class AlbumsFragment extends BaseFragment {
 
     private void getDataFromServer() {
         swipe_refresh_layout.setRefreshing(true);
-        HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
         albumApi.get(params, new HttpHandler.RequestHandler() {

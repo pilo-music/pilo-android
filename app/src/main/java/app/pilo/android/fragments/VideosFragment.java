@@ -51,6 +51,17 @@ public class VideosFragment extends BaseFragment {
     private VideoApi videoApi;
     private List<Video> videos;
     private int page = 1;
+    private HashMap<String, Object> params;
+
+
+    VideosFragment() {
+        params = new HashMap<>();
+    }
+
+    VideosFragment(HashMap<String, Object> params) {
+        this.params = params;
+    }
+
 
     @Nullable
     @Override
@@ -91,7 +102,6 @@ public class VideosFragment extends BaseFragment {
 
     private void getDataFromServer() {
         swipeRefreshLayout.setRefreshing(true);
-        HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
         videoApi.get(params, new HttpHandler.RequestHandler() {

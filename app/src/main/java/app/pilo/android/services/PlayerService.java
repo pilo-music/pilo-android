@@ -390,7 +390,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             }
             if (active_index != -1 && (active_index + 1) < current_items.size()) {
                 playTrack(current_items.get(active_index + 1).getSlug());
-            } else if (current_items.size() > 0 && sessionManager.getRepeatMode() == Constant.REPEAT_MODE_ALL) {
+            } else if (current_items.size() > 0) {
                 playTrack(current_items.get(0).getSlug());
             }
 

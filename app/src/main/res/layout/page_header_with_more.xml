@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     app:layout_scrollFlags="scroll|enterAlways"
     android:layoutDirection="ltr"
+    android:id="@+id/toolbar"
     android:layout_height="wrap_content">
 
     <RelativeLayout

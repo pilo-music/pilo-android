@@ -1,11 +1,13 @@
 package app.pilo.android.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,15 +17,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
@@ -37,6 +46,7 @@ import app.pilo.android.models.SingleAlbum;
 import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SingleAlbumFragment extends BaseFragment {
     private View view;
@@ -47,6 +57,7 @@ public class SingleAlbumFragment extends BaseFragment {
     private SingleAlbum singleAlbum;
     private Album album;
     private MusicVerticalListAdapter musicVerticalListAdapter;
+    UserSharedPrefManager userSharedPrefManager;
 
     @BindView(R.id.img_single_album)
     ImageView img_album;
@@ -64,7 +75,16 @@ public class SingleAlbumFragment extends BaseFragment {
     RecyclerView rc_album_musics;
     @BindView(R.id.img_single_album_like)
     ImageView img_single_album_like;
+    @BindView(R.id.fab_single_album_shuffle)
+    FloatingActionButton fab_single_album_shuffle;
 
+
+    @BindView(R.id.rc_album_carousel)
+    RecyclerView rc_album_carousel;
+    @BindView(R.id.tv_album_carousel_title)
+    TextView tv_album_carousel_title;
+    @BindView(R.id.sfl_album)
+    ShimmerFrameLayout sfl_album;
 
     public SingleAlbumFragment(Album album) {
         this.album = album;
@@ -76,6 +96,7 @@ public class SingleAlbumFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_single_album, container, false);
 
         ButterKnife.bind(this, view);
+        userSharedPrefManager = new UserSharedPrefManager(getActivity());
         utils = new Utils();
         likeApi = new LikeApi(getActivity());
         setupViews();
@@ -97,7 +118,16 @@ public class SingleAlbumFragment extends BaseFragment {
         }
         tv_album_name.setText(album.getTitle());
         tv_header_title.setText(album.getTitle());
+        tv_album_carousel_title.setText(getString(R.string.album_related));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
+
+        if (userSharedPrefManager.getShuffleMode()) {
+            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
+            fab_single_album_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
+        } else {
+            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_single_album_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
+        }
 
     }
 
@@ -122,6 +152,15 @@ public class SingleAlbumFragment extends BaseFragment {
                     tv_album_artist.setText(((SingleAlbum) data).getAlbum().getArtist().getName());
                     setupMusic(((SingleAlbum) data).getMusics());
                     singleAlbum = ((SingleAlbum) data);
+
+                    if (rc_album_carousel != null) {
+                        sfl_album.setVisibility(View.GONE);
+                        rc_album_carousel.setVisibility(View.VISIBLE);
+                        AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), singleAlbum.getRelated());
+                        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+                        rc_album_carousel.setAdapter(albumCarouselAdapter);
+                    }
+
                     setupLikeButton();
                 } else {
                     new HttpErrorHandler(getActivity(), message);
@@ -206,6 +245,34 @@ public class SingleAlbumFragment extends BaseFragment {
             rc_album_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_album_musics.setAdapter(musicVerticalListAdapter);
         }
+    }
+
+
+    @OnClick(R.id.fab_single_album_play)
+    void fab_single_album_play() {
+        EventBus.getDefault().post(new MusicEvent(getActivity(), singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true, false));
+    }
+
+    @OnClick(R.id.fab_single_album_shuffle)
+    void fab_single_album_shuffle() {
+        if (userSharedPrefManager.getShuffleMode()) {
+            userSharedPrefManager.setShuffleMode(false);
+            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_single_album_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
+        } else {
+            userSharedPrefManager.setShuffleMode(true);
+            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
+            fab_single_album_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
+        }
+    }
+
+
+    @OnClick(R.id.tv_album_carousel_show_more)
+    void tv_album_carousel_show_more() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("related", true);
+        AlbumsFragment mFragment = new AlbumsFragment(params);
+        ((MainActivity) getActivity()).pushFragment(mFragment);
     }
 
 

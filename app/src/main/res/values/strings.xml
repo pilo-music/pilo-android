@@ -81,7 +81,8 @@
     <string name="video_new">جدیدترین ترین ویدیو ها</string>
     <string name="album_new">جدیدترین ترین آلبوم ها</string>
     <string name="your_playlist">پلی لیست شما</string>
-
+    <string name="video_related">موزیک ویدیو های مرتبط</string>
+    <string name="album_related">آلبوم های مرتبط</string>
     <string name="single_artist_music_count">موزیک</string>
     <string name="single_artist_video_count">موزیک ویدیو</string>
     <string name="single_artist_album_count">آلبوم</string>

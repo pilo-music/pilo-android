@@ -10,6 +10,7 @@ public class UserSharedPrefManager {
     private static final String LOCAL = "local";
     private static final String ACTIVE_MUSIC_SLUG = "active_music_slug";
     private static final String REPEAT_MODE = "repeat_mode";
+    private static final String SHUFFLE_MODE = "shuffle_mode";
     private static final String STREAM_QUALITY = "STREAM_QUALITY";
 
     private SharedPreferences sharedPreferences;
@@ -61,6 +62,17 @@ public class UserSharedPrefManager {
 
     public int getRepeatMode() {
         return sharedPreferences.getInt(REPEAT_MODE, Constant.REPEAT_MODE_NONE);
+    }
+
+    //----------SHUFFLE_MODE-----------------------
+    public void setShuffleMode(boolean shuffleMode) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(SHUFFLE_MODE, shuffleMode);
+        editor.apply();
+    }
+
+    public boolean getShuffleMode() {
+        return sharedPreferences.getBoolean(SHUFFLE_MODE, false);
     }
 
 }

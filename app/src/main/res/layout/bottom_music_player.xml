@@ -39,6 +39,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:clickable="true"
                 android:id="@+id/img_music_player_collapsed_prev"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
@@ -48,6 +49,7 @@
                 android:src="@drawable/ic_fast_forward_left" />
 
             <ImageView
+                android:clickable="true"
                 android:id="@+id/img_music_player_collapsed_play"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
@@ -55,6 +57,7 @@
                 android:src="@drawable/main_play" />
 
             <ImageView
+                android:clickable="true"
                 android:id="@+id/img_music_player_collapsed_next"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"

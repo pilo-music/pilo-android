@@ -53,6 +53,16 @@ public class MusicsFragment extends BaseFragment {
     private MusicApi musicApi;
     private List<Music> musics;
     private int page = 1;
+    private HashMap<String, Object> params;
+
+    public MusicsFragment() {
+        params = new HashMap<>();
+    }
+
+    public MusicsFragment(HashMap<String, Object> params) {
+        this.params = params;
+    }
+
 
     @Nullable
     @Override
@@ -94,7 +104,6 @@ public class MusicsFragment extends BaseFragment {
 
     private void getDataFromServer() {
         swipeRefreshLayout.setRefreshing(true);
-        HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
         musicApi.get(params, new HttpHandler.RequestHandler() {

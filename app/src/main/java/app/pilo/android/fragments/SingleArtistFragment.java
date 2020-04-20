@@ -26,9 +26,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
@@ -46,6 +48,7 @@ import app.pilo.android.models.SingleArtist;
 import app.pilo.android.models.Video;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SingleArtistFragment extends BaseFragment {
@@ -300,6 +303,41 @@ public class SingleArtistFragment extends BaseFragment {
                 tv_music_vertical_title.setVisibility(View.GONE);
             }
         }
+    }
+
+
+    @OnClick(R.id.tv_video_carousel_show_more)
+    void tv_video_carousel_show_more() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("artist", artist.getSlug());
+        VideosFragment mFragment = new VideosFragment(params);
+        ((MainActivity) getActivity()).pushFragment(mFragment);
+    }
+
+    @OnClick(R.id.tv_album_carousel_show_more)
+    void tv_album_carousel_show_more() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("artist", artist.getSlug());
+        AlbumsFragment mFragment = new AlbumsFragment(params);
+        ((MainActivity) getActivity()).pushFragment(mFragment);
+    }
+
+    @OnClick(R.id.tv_music_vertical_show_more)
+    void tv_music_vertical_show_more() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("artist", artist.getSlug());
+        params.put("sort", "best");
+        MusicsFragment mFragment = new MusicsFragment(params);
+        ((MainActivity) getActivity()).pushFragment(mFragment);
+    }
+
+    @OnClick(R.id.tv_music_carousel_show_more)
+    void tv_music_carousel_show_more() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("artist", artist.getSlug());
+        params.put("sort", "latest");
+        MusicsFragment mFragment = new MusicsFragment(params);
+        ((MainActivity) getActivity()).pushFragment(mFragment);
     }
 
 

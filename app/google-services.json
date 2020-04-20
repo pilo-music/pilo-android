@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "8427120984",
+    "firebase_url": "https://pilo-android.firebaseio.com",
+    "project_id": "pilo-android",
+    "storage_bucket": "pilo-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8427120984:android:69fb5a16e62cfd5db69d2d",
+        "android_client_info": {
+          "package_name": "app.pilo.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8427120984-1v45ag4bbpnouuebosijbg9uj21dp5i6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.pilo.android",
+            "certificate_hash": "7d780564dca74d02f2fed2a027992caff58a6b44"
+          }
+        },
+        {
+          "client_id": "8427120984-rueeenjdsvnbtp3g9jlrbp9rok5fu1jp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOS5yghTSsalpEsiBVIZCAbXMzK4SdkS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8427120984-rueeenjdsvnbtp3g9jlrbp9rok5fu1jp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
