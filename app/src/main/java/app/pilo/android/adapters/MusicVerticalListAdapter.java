@@ -32,6 +32,7 @@ import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.utils.Utils;
+import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -79,6 +80,9 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
             holder.music_item_image.setVisibility(View.GONE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.VISIBLE);
+           if (!((MainActivity) context).isPlaying()){
+               holder.img_music_vertical_list_item_icon.setImageDrawable(context.getDrawable(R.drawable.ic_play_icon));
+           }
         }
 
         if (music.isHas_like()) {
@@ -138,11 +142,9 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
             }
         });
 
-        holder.img_music_vertical_list_item_more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "more", Toast.LENGTH_SHORT).show();
-            }
+        holder.ll_music_vertical.setOnLongClickListener(v -> {
+            new MusicActionsDialog(context, music).showDialog();
+            return false;
         });
     }
 
@@ -160,14 +162,14 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         ImageView music_item_image;
         @BindView(R.id.ll_music_vertical)
         LinearLayout ll_music_vertical;
-        @BindView(R.id.img_music_vertical_list_item_more)
-        ImageView img_music_vertical_list_item_more;
         @BindView(R.id.img_music_vertical_list_item_like)
         ImageView img_music_vertical_list_item_like;
         @BindView(R.id.riv_music_vertical_list_item_image2)
         ImageView music_item_image2;
         @BindView(R.id.fl_music_vertical_list_item_playing)
         FrameLayout fl_music_vertical_list_item_playing;
+        @BindView(R.id.img_music_vertical_list_item_icon)
+        ImageView img_music_vertical_list_item_icon;
 
         MusicCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

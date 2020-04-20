@@ -1,18 +1,14 @@
 package app.pilo.android.views;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.activities.SplashScreenActivity;
 
 public class UpdateDialog {
@@ -40,8 +36,13 @@ public class UpdateDialog {
 
     public void showDialog() {
         final Dialog dialog = new Dialog(activity, R.style.DialogTheme);
-        if (version < minVersion)
+        if (version < minVersion) {
+            dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
+        }else{
+            dialog.setCanceledOnTouchOutside(true);
+        }
+
 
         dialog.setContentView(R.layout.update_dialog);
 

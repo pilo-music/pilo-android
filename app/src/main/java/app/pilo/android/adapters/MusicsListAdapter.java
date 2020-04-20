@@ -24,6 +24,7 @@ import app.pilo.android.activities.MainActivity;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
+import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -72,6 +73,10 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
             holder.img_music_item_play.setImageDrawable(context.getDrawable(R.drawable.ic_circle_pause_black));
         }
 
+        holder.ll_music_item.setOnLongClickListener(v -> {
+            new MusicActionsDialog(context, music).showDialog();
+            return false;
+        });
 
         holder.ll_music_item.setOnClickListener(v -> {
             EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));

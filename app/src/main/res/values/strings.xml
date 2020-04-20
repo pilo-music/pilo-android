@@ -14,22 +14,13 @@
     <string name="server_connection_error">مشکلی در ارتباط با سرور رخ داده است</string>
     <string name="server_connection_message">لطفا مجددا تلاش نمایید</string>
 
-    <string name="bottom_nav_home">خانه</string>
-    <string name="bottom_nav_browser">مروگر</string>
-    <string name="bottom_nav_search">جستجو</string>
-    <string name="bottom_nav_profile">پروفایل</string>
-
 
     <string name="results">نتایج</string>
     <string name="music">موزیک</string>
     <string name="musics">موزیک ها</string>
-    <string name="album">آلبوم</string>
     <string name="albums">آلبوم ها</string>
-    <string name="playlist">پلی لیست</string>
     <string name="playlists">پلی لیست ها</string>
-    <string name="video">موزیک ویدیو</string>
     <string name="videos">موزیک ویدیو ها</string>
-    <string name="artist">خواننده</string>
     <string name="artists">خواننده ها</string>
     <string name="login">ورود</string>
     <string name="email">ایمیل</string>
@@ -47,10 +38,6 @@
     <string name="email_not_valid">ایمیل وارد شده صحیح نمی باشد</string>
     <string name="password_small_length">پسور باید حداقل 5 حرف داشته باشد</string>
     <string name="password_not_match">رمزهای عبور یکسان نمیباشند</string>
-    <string name="artist_page">صفحه خواننده</string>
-    <string name="bookmark">بوک مارک</string>
-    <string name="music_lyric">متن موزیک</string>
-    <string name="report_bug">گزارش خطا</string>
     <string name="follower">دنبال کننده</string>
     <string name="following">دنبال شونده</string>
     <string name="save_edits">ذخیره تغییرات</string>
@@ -73,20 +60,15 @@
 
 
     <string name="show_more">نمایش همه</string>
-    <string name="new_best">جدیدترین های برگزیده</string>
     <string name="music_new">جدیدترین ترین موزیک ها</string>
-    <string name="music_best">برترین موزیک ها</string>
-    <string name="music_related">موزیک های مرتبط</string>
     <string name="artist_best">خوانندگان برگزیده</string>
     <string name="video_new">جدیدترین ترین ویدیو ها</string>
     <string name="album_new">جدیدترین ترین آلبوم ها</string>
-    <string name="your_playlist">پلی لیست شما</string>
     <string name="video_related">موزیک ویدیو های مرتبط</string>
     <string name="album_related">آلبوم های مرتبط</string>
     <string name="single_artist_music_count">موزیک</string>
     <string name="single_artist_video_count">موزیک ویدیو</string>
     <string name="single_artist_album_count">آلبوم</string>
-    <string name="single_artist_playlist_count">پلی لیست</string>
 
     <string name="search_search_hint">جستجو در موزیک  ، خواننده ، آلبوم , …</string>
     <string name="speech_not_supported">جستجو صوتی پشتیبانی نمیشود</string>
@@ -98,5 +80,8 @@
     <string name="profile_support">تماس با پشتیبانی</string>
     <string name="profile_settings">تنظیمات</string>
 
-    <string name="error_playing_track">مشکلی در پخش موزیک رخ داده است</string>
+    <string name="go_to_artist">پروفایل خواننده</string>
+    <string name="share">اشتراک گذاری</string>
+    <string name="add_to_playlist">اضافه کردن به پلی لیست</string>
+    <string name="download">دانلود</string>
 </resources>

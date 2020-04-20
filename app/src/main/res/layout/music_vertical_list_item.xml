@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:layoutDirection="ltr"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
@@ -26,19 +26,48 @@
             android:padding="7dp">
 
 
-            <ImageView
-                android:id="@+id/img_music_vertical_list_item_more"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:src="@drawable/ic_ellipsis_gray" />
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_music_vertical_list_item_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/music_item"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true" />
 
-            <ImageView
-                android:id="@+id/img_music_vertical_list_item_like"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_like_off" />
+            <FrameLayout
+                android:id="@+id/fl_music_vertical_list_item_playing"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:visibility="gone">
 
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/riv_music_vertical_list_item_image2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/music_item"
+                    app:riv_corner_radius="10dp"
+                    app:riv_mutate_background="true" />
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:adjustViewBounds="true"
+                    android:background="#595E5E5E"
+                    android:scaleType="fitCenter"
+                    app:riv_corner_radius="10dp"
+                    app:riv_mutate_background="true" />
+
+                <ImageView
+                    android:id="@+id/img_music_vertical_list_item_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_pause_icon" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -71,47 +100,12 @@
 
             </LinearLayout>
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/riv_music_vertical_list_item_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/music_item"
-                app:riv_corner_radius="10dp"
-                app:riv_mutate_background="true" />
 
-            <FrameLayout
-                android:id="@+id/fl_music_vertical_list_item_playing"
-                android:layout_width="60dp"
-                android:visibility="gone"
-                android:layout_height="60dp">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/riv_music_vertical_list_item_image2"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/music_item"
-                    app:riv_corner_radius="10dp"
-                    app:riv_mutate_background="true" />
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:adjustViewBounds="true"
-                    android:background="#595E5E5E"
-                    android:scaleType="fitCenter"
-                    app:riv_corner_radius="10dp"
-                    app:riv_mutate_background="true" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_pause_icon" />
-            </FrameLayout>
+            <ImageView
+                android:id="@+id/img_music_vertical_list_item_like"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_like_off" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

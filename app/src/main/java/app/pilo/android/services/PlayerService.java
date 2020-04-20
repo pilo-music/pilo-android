@@ -708,7 +708,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     .addAction(R.drawable.ic_previous, "", ppreviousIntent)
                     .addAction(play_pause_icon, "", pplayIntent)
                     .addAction(R.drawable.ic_next, "", nextPIntent)
-                    .addAction(R.drawable.close, "", pcloseIntent);
+                    .addAction(R.drawable.ic_close, "", pcloseIntent);
 
             if (Build.VERSION.SDK_INT >= 26) {
                 startForeground(NOTIF_ID, mNotificationBuilder.build());
