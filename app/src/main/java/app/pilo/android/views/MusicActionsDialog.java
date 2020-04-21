@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
@@ -76,8 +77,10 @@ public class MusicActionsDialog {
         findViews();
         setupViews();
 
+        setupDownload();
         setupLike();
         setupBookmark();
+        setupDownload();
 
         dialog.show();
     }
@@ -213,22 +216,7 @@ public class MusicActionsDialog {
         });
     }
 
-
-    private void setupViews() {
-
-        if (new MusicDownloader(context, music).checkExists(music)) {
-            ll_music_actions_download.setEnabled(false);
-            ll_music_actions_download.setBackgroundColor(Color.parseColor("#f9f9f9"));
-            img_music_actions_download.setImageDrawable(context.getDrawable(R.drawable.ic_checkmark));
-        }
-
-
-        ll_music_actions_go_to_artist.setOnClickListener(v -> {
-            SingleArtistFragment singleArtistFragment = new SingleArtistFragment(music.getArtist());
-            ((MainActivity) context).pushFragment(singleArtistFragment);
-            dialog.dismiss();
-        });
-
+    private void setupDownload(){
         ll_music_actions_download.setOnClickListener(v -> new MusicDownloader(context, music).download(new MusicDownloader.iDownload() {
             @Override
             public void onStartOrResumeListener() {
@@ -273,6 +261,24 @@ public class MusicActionsDialog {
                 img_music_actions_download.setImageDrawable(context.getDrawable(R.drawable.ic_checkmark));
             }
         }));
+    }
+
+    private void setupViews() {
+
+        if (new MusicDownloader(context, music).checkExists(music)) {
+            ll_music_actions_download.setEnabled(false);
+            ll_music_actions_download.setBackgroundColor(Color.parseColor("#f9f9f9"));
+            img_music_actions_download.setImageDrawable(context.getDrawable(R.drawable.ic_checkmark));
+        }
+
+
+        ll_music_actions_go_to_artist.setOnClickListener(v -> {
+            SingleArtistFragment singleArtistFragment = new SingleArtistFragment(music.getArtist());
+            ((MainActivity) context).pushFragment(singleArtistFragment);
+            dialog.dismiss();
+        });
+
+
 
         Glide.with(context)
                 .load(music.getImage())
@@ -283,6 +289,12 @@ public class MusicActionsDialog {
 
         tv_music_actions_music.setText(music.getTitle());
         tv_music_actions_artist.setText(music.getArtist().getName());
+
+        ll_music_actions_share.setOnClickListener(v -> ShareCompat.IntentBuilder.from(((MainActivity) context))
+                .setType("text/plain")
+                .setChooserTitle(music.getTitle())
+                .setText(music.getShare_url())
+                .startChooser());
 
     }
 
