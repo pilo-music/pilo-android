@@ -52,6 +52,7 @@ class JsonParser {
             music.setLyric(jsonObject.getString("lyric"));
             music.setLike_count(jsonObject.getInt("like_count"));
             music.setPlay_count(jsonObject.getInt("play_count"));
+            music.setShare_url(jsonObject.getString("share_url"));
             music.setCreated_at(jsonObject.getString("created_at"));
             music.setHas_like(jsonObject.getBoolean("has_like"));
             music.setHas_bookmark(jsonObject.getBoolean("has_bookmark"));
@@ -103,6 +104,7 @@ class JsonParser {
             album.setMusic_count(jsonObject.getInt("music_count"));
             album.setLike_count(jsonObject.getInt("like_count"));
             album.setPlay_count(jsonObject.getInt("play_count"));
+            album.setShare_url(jsonObject.getString("share_url"));
             album.setCreated_at(jsonObject.getString("created_at"));
             album.setArtist(artist);
             return album;
@@ -165,6 +167,7 @@ class JsonParser {
             artist.setVideo_count(jsonObject.getInt("video_count"));
             artist.setFollowers_count(jsonObject.getInt("followers_count"));
             artist.setPlaylist_count(jsonObject.getInt("playlist_count"));
+            artist.setShare_url(jsonObject.getString("share_url"));
             artist.setCreated_at(jsonObject.getString("created_at"));
             return artist;
         } catch (JSONException e) {
@@ -271,6 +274,7 @@ class JsonParser {
             video.setLike_count(jsonObject.getInt("like_count"));
             video.setPlay_count(jsonObject.getInt("play_count"));
             video.setArtist(artist);
+            video.setShare_url(jsonObject.getString("share_url"));
             video.setCreated_at(jsonObject.getString("created_at"));
             return video;
         } catch (JSONException e) {
@@ -318,6 +322,7 @@ class JsonParser {
             playlist.setMusic_count(jsonObject.getInt("music_count"));
             playlist.setLike_count(jsonObject.getInt("like_count"));
             playlist.setPlay_count(jsonObject.getInt("play_count"));
+            playlist.setShare_url(jsonObject.getString("share_url"));
             playlist.setCreated_at(jsonObject.getString("created_at"));
             return playlist;
         } catch (JSONException e) {

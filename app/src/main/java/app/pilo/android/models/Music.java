@@ -32,6 +32,8 @@ public class Music {
     private int like_count;
     @ColumnInfo(name = "music_play_count")
     private int play_count;
+    @ColumnInfo(name = "music_share_url")
+    private String share_url;
     @ColumnInfo(name = "music_created_at")
     private String created_at;
     @ColumnInfo(name = "music_has_like")
@@ -55,6 +57,7 @@ public class Music {
         this.lyric = "";
         this.like_count = 0;
         this.play_count = 0;
+        this.share_url = "";
         this.created_at = "";
         this.artist = new Artist();
         this.tags = new ArrayList<>();
@@ -181,5 +184,13 @@ public class Music {
 
     public void setHas_bookmark(boolean has_bookmark) {
         this.has_bookmark = has_bookmark;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
     }
 }

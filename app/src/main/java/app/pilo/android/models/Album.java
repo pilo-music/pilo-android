@@ -9,6 +9,7 @@ public class Album {
     private int music_count;
     private int like_count;
     private int play_count;
+    private String share_url;
     private String created_at;
     private Artist artist;
 
@@ -20,6 +21,7 @@ public class Album {
         this.music_count = 0;
         this.like_count = 0;
         this.play_count = 0;
+        this.share_url = "";
         this.created_at = "";
         this.artist = new Artist();
     }
@@ -95,5 +97,13 @@ public class Album {
 
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
     }
 }

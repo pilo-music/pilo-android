@@ -11,6 +11,7 @@ public class Video {
     private int like_count;
     private int play_count;
     private Artist artist;
+    private String share_url;
     private String created_at;
 
     public Video() {
@@ -24,6 +25,7 @@ public class Video {
         this.like_count = 0;
         this.play_count = 0;
         this.artist = new Artist();
+        this.share_url = "";
         this.created_at = "";
     }
 
@@ -113,5 +115,13 @@ public class Video {
 
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
     }
 }

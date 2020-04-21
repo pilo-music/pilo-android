@@ -10,6 +10,7 @@ public class Artist {
     private int video_count;
     private int playlist_count;
     private int followers_count;
+    private String share_url;
     private String created_at;
 
     public Artist() {
@@ -22,6 +23,7 @@ public class Artist {
         this.video_count = 0;
         this.playlist_count = 0;
         this.followers_count = 0;
+        this.share_url = "";
         this.created_at = "";
     }
 
@@ -104,5 +106,13 @@ public class Artist {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
     }
 }
