@@ -12,6 +12,7 @@ public class UserSharedPrefManager {
     private static final String REPEAT_MODE = "repeat_mode";
     private static final String SHUFFLE_MODE = "shuffle_mode";
     private static final String STREAM_QUALITY = "STREAM_QUALITY";
+    private static final String DOWNLOAD_QUALITY = "STREAM_QUALITY";
 
     private SharedPreferences sharedPreferences;
 
@@ -51,6 +52,17 @@ public class UserSharedPrefManager {
 
     public String getStreamQuality() {
         return sharedPreferences.getString(STREAM_QUALITY, "320");
+    }
+
+    //----------DOWNLOAD_QUALITY  -----------------------
+    public void setDownloadQuality(String downloadQuality) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(DOWNLOAD_QUALITY, downloadQuality);
+        editor.apply();
+    }
+
+    public String getDownloadQuality() {
+        return sharedPreferences.getString(DOWNLOAD_QUALITY, "320");
     }
 
     //----------REPEAT_MODE-----------------------

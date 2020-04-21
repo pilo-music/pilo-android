@@ -34,9 +34,14 @@ public class Utils {
     public static String getMp3UrlForStreaming(Context context, Music musicTable) {
         String quality = new UserSharedPrefManager(context).getStreamQuality();
         if ("320".equals(quality)) {
-            return musicTable.getLink320();
+            if (!musicTable.getLink320().equals(""))
+                return musicTable.getLink320();
+            return musicTable.getLink128();
         }
-        return musicTable.getLink128();
+
+        if (!musicTable.getLink128().equals(""))
+            return musicTable.getLink128();
+        return musicTable.getLink320();
     }
 
     public static Typeface font(Context context) {
@@ -49,7 +54,7 @@ public class Utils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static void setStatusColor(Context context,Window window) {
+    public static void setStatusColor(Context context, Window window) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(context.getResources().getColor(R.color.colorPrimaryDark));
@@ -84,55 +89,6 @@ public class Utils {
 
         height = point.y;
         return height;
-    }
-
-    public static void addToPlaylist(Context context, Music music, Playlist playlist) {
-//        for (Music item : playlist.getMusics()) {
-//            CurrentPlaylistItem playlistItem = new CurrentPlaylistItem(item.getSlug(), item.getSlug(), item.getTitle(), item.getImage(), item.getLink128(), item.get(), item.getHas_bookmark(), item.getArtist_id(), item.getArtist_name(), item.getArtist_slug(), false);
-//            AppDatabase.getInstance(context).currentPlaylistItem().insert(playlistItem);
-//        }
-//
-//        CurrentPlaylistItem currentPlaylistItem = AppDatabase.getInstance(context).currentPlaylistItem().findById(music.getId());
-//        if (currentPlaylistItem != null) {
-//            currentPlaylistItem.setIs_playing(true);
-//            AppDatabase.getInstance(context).currentPlaylistItem().update(currentPlaylistItem);
-//        }
-//
-//        EventBus.getDefault().post(new MusicEvent(music,playlist));
-
-    }
-
-    public static void addToPlaylist(Context context, Music music, Album album) {
-//        AppDatabase.getInstance(context).currentPlaylistItem().nukeTable();
-//        for (Music item : album.getMusics()) {
-//            CurrentPlaylistItem playlistItem = new CurrentPlaylistItem(item.getId(), item.getSlug(), item.getTitle(), item.getImage(), item.getUrl(), item.getHas_like(), item.getHas_bookmark(), item.getArtist_id(), item.getArtist_name(), item.getArtist_slug(), false);
-//            AppDatabase.getInstance(context).currentPlaylistItem().insert(playlistItem);
-//        }
-//
-//        CurrentPlaylistItem currentPlaylistItem = AppDatabase.getInstance(context).currentPlaylistItem().findById(music.getId());
-//        if (currentPlaylistItem != null) {
-//            currentPlaylistItem.setIs_playing(true);
-//            AppDatabase.getInstance(context).currentPlaylistItem().update(currentPlaylistItem);
-//        }
-//
-//        EventBus.getDefault().post(new MusicEvent(music,album));
-    }
-
-
-    public static void addToPlaylist(Context context, Music music, List<Music> musics) {
-//        AppDatabase.getInstance(context).currentPlaylistItem().nukeTable();
-//        for (Music item : musics) {
-//            CurrentPlaylistItem playlistItem = new CurrentPlaylistItem(item.getId(), item.getSlug(), item.getTitle(), item.getImage(), item.getUrl(), item.getHas_like(), item.getHas_bookmark(), item.getArtist_id(), item.getArtist_name(), item.getArtist_slug(), false);
-//            AppDatabase.getInstance(context).currentPlaylistItem().insert(playlistItem);
-//        }
-//
-//        CurrentPlaylistItem currentPlaylistItem = AppDatabase.getInstance(context).currentPlaylistItem().findById(music.getId());
-//        if (currentPlaylistItem != null) {
-//            currentPlaylistItem.setIs_playing(true);
-//            AppDatabase.getInstance(context).currentPlaylistItem().update(currentPlaylistItem);
-//        }
-//
-//        EventBus.getDefault().post(new MusicEvent(music,musics));
     }
 
     public void animateHeartButton(final View v) {

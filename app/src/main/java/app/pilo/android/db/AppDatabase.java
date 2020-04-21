@@ -6,11 +6,13 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.PlayHistory;
 import app.pilo.android.models.SearchHistory;
 import app.pilo.android.models.User;
 
-@Database(entities = {Music.class, User.class, SearchHistory.class}, version = 1, exportSchema = false)
+@Database(entities = {Music.class, User.class, SearchHistory.class, Download.class, PlayHistory.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
@@ -33,5 +35,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
 
     public abstract SearchHistoryDao searchHistoryDao();
+
+    public abstract DownloadDao downloadDao();
+
+    public abstract PlayHistoryDao playHistoryDao();
 
 }
