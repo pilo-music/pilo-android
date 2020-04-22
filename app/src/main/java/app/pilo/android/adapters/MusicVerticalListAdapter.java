@@ -1,14 +1,16 @@
 package app.pilo.android.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -36,20 +39,22 @@ import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVerticalListAdapter.MusicCarouselAdapterViewHolder> {
+public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVerticalListAdapter.MusicCarouselAdapterViewHolder> implements ItemTouchHelperAdapter {
     private Context context;
     private List<Music> musics;
     private LikeApi likeApi;
     private boolean likeProcess = false;
     private Utils utils;
     private UserSharedPrefManager userSharedPrefManager;
+    private final OnStartDragListener mDragStartListener;
 
-    public MusicVerticalListAdapter(WeakReference<Context> context, List<Music> musics) {
+    public MusicVerticalListAdapter(WeakReference<Context> context, List<Music> musics, OnStartDragListener dragListner) {
         this.context = context.get();
         this.musics = musics;
         this.likeApi = new LikeApi(context.get());
         utils = new Utils();
         userSharedPrefManager = new UserSharedPrefManager(context.get());
+        mDragStartListener = dragListner;
     }
 
     @NonNull
@@ -59,6 +64,7 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         return new MusicCarouselAdapterViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull MusicCarouselAdapterViewHolder holder, final int position) {
         final Music music = musics.get(position);
@@ -80,9 +86,9 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
             holder.music_item_image.setVisibility(View.GONE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.VISIBLE);
-           if (!((MainActivity) context).isPlaying()){
-               holder.img_music_vertical_list_item_icon.setImageDrawable(context.getDrawable(R.drawable.ic_play_icon));
-           }
+            if (!((MainActivity) context).isPlaying()) {
+                holder.img_music_vertical_list_item_icon.setImageDrawable(context.getDrawable(R.drawable.ic_play_icon));
+            }
         }
 
         if (music.isHas_like()) {
@@ -146,14 +152,25 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
             new MusicActionsDialog(context, music).showDialog();
             return false;
         });
+
+        holder.img_music_vertical_list_item_move.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                mDragStartListener.onStartDrag(holder);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), false, false));
+            }
+            return false;
+        });
+
     }
+
 
     @Override
     public int getItemCount() {
         return musics.size();
     }
 
-    static class MusicCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class MusicCarouselAdapterViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
         @BindView(R.id.tv_music_vertical_list_item_music)
         TextView tv_music_title;
         @BindView(R.id.tv_music_vertical_list_item_artist)
@@ -170,10 +187,46 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         FrameLayout fl_music_vertical_list_item_playing;
         @BindView(R.id.img_music_vertical_list_item_icon)
         ImageView img_music_vertical_list_item_icon;
+        @BindView(R.id.img_music_vertical_list_item_move)
+        ImageView img_music_vertical_list_item_move;
 
         MusicCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
+        }
     }
+
+    public void onItemDismiss(int position) {
+        musics.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < musics.size() && toPosition < musics.size()) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(musics, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(musics, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+        }
+        return true;
+    }
+
+
 }

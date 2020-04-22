@@ -51,6 +51,7 @@ import java.util.Random;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
+import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.db.AppDatabase;
@@ -191,7 +192,13 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         musics = new ArrayList<>();
         userSharedPrefManager = new UserSharedPrefManager(this);
 
-        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics);
+        //todo
+        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
+            @Override
+            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+
+            }
+        });
         rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rc_music_vertical.setAdapter(musicVerticalListAdapter);
 

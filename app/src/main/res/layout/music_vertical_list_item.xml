@@ -109,6 +109,13 @@
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:src="@drawable/ic_like_off" />
+
+            <ImageView
+                android:id="@+id/img_music_vertical_list_item_move"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:src="@drawable/ic_menu" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,15 +26,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
+import app.pilo.android.adapters.EditItemTouchHelperCallback;
+import app.pilo.android.adapters.ItemAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
+import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -57,7 +59,9 @@ public class SingleAlbumFragment extends BaseFragment {
     private SingleAlbum singleAlbum;
     private Album album;
     private MusicVerticalListAdapter musicVerticalListAdapter;
-    UserSharedPrefManager userSharedPrefManager;
+    private UserSharedPrefManager userSharedPrefManager;
+    private ItemTouchHelper itemTouchHelper;
+
 
     @BindView(R.id.img_single_album)
     ImageView img_album;
@@ -241,12 +245,22 @@ public class SingleAlbumFragment extends BaseFragment {
 
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
-            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
+            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics, new OnStartDragListener() {
+                @Override
+                public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+                    itemTouchHelper.startDrag(viewHolder);
+                }
+            });
+
+            ItemTouchHelper.Callback callback = new EditItemTouchHelperCallback(musicVerticalListAdapter);
+            itemTouchHelper = new ItemTouchHelper(callback);
+            itemTouchHelper.attachToRecyclerView(rc_album_musics);
+
+
             rc_album_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_album_musics.setAdapter(musicVerticalListAdapter);
         }
     }
-
 
     @OnClick(R.id.fab_single_album_play)
     void fab_single_album_play() {
@@ -280,6 +294,7 @@ public class SingleAlbumFragment extends BaseFragment {
     public void onMessageEvent(MusicEvent event) {
         if (musicVerticalListAdapter != null)
             musicVerticalListAdapter.notifyDataSetChanged();
+
     }
 
     @Override

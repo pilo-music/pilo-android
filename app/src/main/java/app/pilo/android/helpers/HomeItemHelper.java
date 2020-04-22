@@ -34,6 +34,7 @@ import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.AlbumMusicGridListAdapter;
+import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.adapters.PlaylistsAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.fragments.HomeFragment;
@@ -290,7 +291,13 @@ public class HomeItemHelper {
         TextView tv_music_vertical_show_more = view.findViewById(R.id.tv_music_vertical_show_more);
         if (rc_music_vertical != null) {
             tv_music_vertical_title.setText(home.getName());
-            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
+            //todo
+            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), new OnStartDragListener() {
+                @Override
+                public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+
+                }
+            });
             rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
             tv_music_vertical_show_more.setOnClickListener(v -> goToSingleHome(home));
