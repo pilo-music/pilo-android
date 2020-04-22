@@ -30,7 +30,6 @@ import app.pilo.android.R;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistVerticalListAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
-import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.adapters.PlaylistVerticalListAdapter;
 import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
@@ -215,13 +214,7 @@ public class SearchActivity extends AppCompatActivity {
 
                     if (search.getMusics().size() > 0) {
                         ll_music_vertical.setVisibility(View.VISIBLE);
-                        //todo
-                        MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getMusics(), new OnStartDragListener() {
-                            @Override
-                            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-
-                            }
-                        });
+                        MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getMusics());
                         rc_music_vertical.setLayoutManager(new LinearLayoutManager(SearchActivity.this, RecyclerView.VERTICAL, false));
                         rc_music_vertical.setAdapter(musicVerticalListAdapter);
                     } else {

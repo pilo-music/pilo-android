@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +51,8 @@ import java.util.Queue;
 import java.util.Random;
 
 import app.pilo.android.R;
+import app.pilo.android.adapters.EditItemTouchHelperCallback;
+import app.pilo.android.adapters.MusicDraggableVerticalListAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.api.HttpHandler;
@@ -139,9 +142,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             R.drawable.bottom_tab_profile};
     @BindArray(R.array.tab_name)
     String[] TABS;
-    MusicVerticalListAdapter musicVerticalListAdapter;
+    MusicDraggableVerticalListAdapter musicVerticalListAdapter;
     List<Music> musics;
     private UserSharedPrefManager userSharedPrefManager;
+    private ItemTouchHelper itemTouchHelper;
 
 
     private boolean mReceiversRegistered = false;
@@ -193,15 +197,19 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         userSharedPrefManager = new UserSharedPrefManager(this);
 
         //todo
-        musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
+        musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-
+                itemTouchHelper.startDrag(viewHolder);
             }
         });
+        ItemTouchHelper.Callback callback = new EditItemTouchHelperCallback(musicVerticalListAdapter);
+        itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(rc_music_vertical);
+
+
         rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rc_music_vertical.setAdapter(musicVerticalListAdapter);
-
 
         sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
@@ -529,6 +537,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         }
     }
 
+    public void play_music(String music_slug, boolean play_when_ready, boolean should_load_related_items, boolean just_update_playlist) {
+        initPlayerUi();
+    }
+
     public boolean isPlaying() {
         if (playerService != null && playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady()) {
             return true;
@@ -563,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         } else {
             String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
             if (!current_music_slug.equals("")) {
-                play_music(current_music_slug, true, false);
+                EventBus.getDefault().post(new MusicEvent(this, musics, current_music_slug, true, false));
             }
         }
     }
@@ -581,9 +593,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                     }
                 }
                 if (active_index != -1 && (active_index - 1) >= 0) {
-                    play_music(musics.get(active_index - 1).getSlug(), true, false);
+                    EventBus.getDefault().post(new MusicEvent(this, musics, musics.get(active_index - 1).getSlug(), true, true));
                 }
-
             }
         }
     }
@@ -605,9 +616,9 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
 
 
             if (active_index != -1 && (active_index + 1) < musics.size()) {
-                play_music(musics.get(active_index + 1).getSlug(), true, false);
+                EventBus.getDefault().post(new MusicEvent(this, musics, musics.get(active_index + 1).getSlug(), true, true));
             } else if (musics.size() > 0) {
-                play_music(musics.get(0).getSlug(), true, false);
+                EventBus.getDefault().post(new MusicEvent(this, musics, musics.get(0).getSlug(), true, true));
             }
         }
     }

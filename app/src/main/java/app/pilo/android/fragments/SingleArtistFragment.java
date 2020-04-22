@@ -296,13 +296,7 @@ public class SingleArtistFragment extends BaseFragment {
     private void setupLastVerticalMusicList(List<Music> musics) {
         if (rc_music_vertical != null) {
             if (musics.size() > 0) {
-                //todo
-                musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics, new OnStartDragListener() {
-                    @Override
-                    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-
-                    }
-                });
+                musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
                 rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                 rc_music_vertical.setAdapter(musicVerticalListAdapter);
             } else {

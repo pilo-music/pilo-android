@@ -291,13 +291,7 @@ public class HomeItemHelper {
         TextView tv_music_vertical_show_more = view.findViewById(R.id.tv_music_vertical_show_more);
         if (rc_music_vertical != null) {
             tv_music_vertical_title.setText(home.getName());
-            //todo
-            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), new OnStartDragListener() {
-                @Override
-                public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-
-                }
-            });
+            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
             rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
             tv_music_vertical_show_more.setOnClickListener(v -> goToSingleHome(home));

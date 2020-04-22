@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class EditItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private final MusicVerticalListAdapter mAdapter;
+    private final MusicDraggableVerticalListAdapter mAdapter;
 
-    public EditItemTouchHelperCallback(MusicVerticalListAdapter adapter) {
+    public EditItemTouchHelperCallback(MusicDraggableVerticalListAdapter adapter) {
         mAdapter = adapter;
     }
 

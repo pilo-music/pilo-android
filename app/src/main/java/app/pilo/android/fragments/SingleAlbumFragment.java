@@ -245,18 +245,7 @@ public class SingleAlbumFragment extends BaseFragment {
 
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
-            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics, new OnStartDragListener() {
-                @Override
-                public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                    itemTouchHelper.startDrag(viewHolder);
-                }
-            });
-
-            ItemTouchHelper.Callback callback = new EditItemTouchHelperCallback(musicVerticalListAdapter);
-            itemTouchHelper = new ItemTouchHelper(callback);
-            itemTouchHelper.attachToRecyclerView(rc_album_musics);
-
-
+            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
             rc_album_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_album_musics.setAdapter(musicVerticalListAdapter);
         }
