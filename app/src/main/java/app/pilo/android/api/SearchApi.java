@@ -1,6 +1,7 @@
 package app.pilo.android.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -47,6 +48,7 @@ public class SearchApi {
                 index++;
             }
         }
+        Log.e("TAG", "get: " + url.toString());
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
@@ -84,6 +86,10 @@ public class SearchApi {
         List<Video> videos = new ArrayList<>();
         List<Music> musics = new ArrayList<>();
         List<Playlist> playlists = new ArrayList<>();
+
+        if (data.has("recommend")) {
+            search.setRecommend(data.getString("recommend"));
+        }
 
         // parse best musics
         if (data.has("musics")) {

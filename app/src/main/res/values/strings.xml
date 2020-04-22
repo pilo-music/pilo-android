@@ -57,6 +57,7 @@
     <string name="operation_done">عملیات با موفقیت انجام شد</string>
     <string name="follow_on">دنبال شده</string>
     <string name="follow_off">دنبال کردن</string>
+    <string name="did_you_mean">منظورتان این بود : </string>
 
 
     <string name="show_more">نمایش همه</string>

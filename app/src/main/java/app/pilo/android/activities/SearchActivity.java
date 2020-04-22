@@ -53,6 +53,10 @@ public class SearchActivity extends AppCompatActivity {
     ImageView img_search_close;
     @BindView(R.id.progress)
     ProgressBar progressBar;
+    @BindView(R.id.tv_search_recommend)
+    TextView tv_search_recommend;
+    @BindView(R.id.ll_search_recommend)
+    LinearLayout ll_search_recommend;
 
     @BindView(R.id.ll_artist_vertical)
     LinearLayout ll_artist_vertical;
@@ -192,6 +196,13 @@ public class SearchActivity extends AppCompatActivity {
                     query = text;
                     progressBar.setVisibility(View.INVISIBLE);
                     Search search = (Search) data;
+
+                    if (!search.getRecommend().isEmpty()) {
+                        ll_search_recommend.setVisibility(View.VISIBLE);
+                        tv_search_recommend.setText(search.getRecommend());
+                    }
+
+
                     if (search.getArtists().size() > 0) {
                         ll_artist_vertical.setVisibility(View.VISIBLE);
                         ArtistVerticalListAdapter artistVerticalListAdapter = new ArtistVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getArtists());
@@ -255,6 +266,12 @@ public class SearchActivity extends AppCompatActivity {
         SearchHistoryRepo.getInstance(this).insert(searchHistory);
     }
 
+
+    @OnClick(R.id.ll_search_recommend)
+    void ll_search_recommend() {
+        et_search.setText(tv_search_recommend.getText().toString());
+        search(tv_search_recommend.getText().toString());
+    }
 
     @OnClick(R.id.tv_artist_vertical_show_more)
     void artistShowMore() {

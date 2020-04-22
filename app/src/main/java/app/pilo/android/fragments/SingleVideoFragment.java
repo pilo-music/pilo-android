@@ -203,7 +203,7 @@ public class SingleVideoFragment extends BaseFragment {
     @OnClick(R.id.tv_video_vertical_show_more)
     void tv_video_vertical_show_more() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("related", true);
+        params.put("related", video.getSlug());
         VideosFragment mFragment = new VideosFragment(params);
         ((MainActivity) getActivity()).pushFragment(mFragment);
     }

@@ -270,7 +270,7 @@ public class SingleAlbumFragment extends BaseFragment {
     @OnClick(R.id.tv_album_carousel_show_more)
     void tv_album_carousel_show_more() {
         HashMap<String, Object> params = new HashMap<>();
-        params.put("related", true);
+        params.put("related", album.getSlug());
         AlbumsFragment mFragment = new AlbumsFragment(params);
         ((MainActivity) getActivity()).pushFragment(mFragment);
     }
