@@ -61,6 +61,7 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
     @Override
     public void onBindViewHolder(@NonNull MusicCarouselAdapterViewHolder holder, final int position) {
         final Music music = musics.get(position);
+
         holder.tv_music_title.setText(music.getTitle());
         holder.tv_music_artist.setText(music.getArtist().getName());
         Glide.with(context)
@@ -79,7 +80,7 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
             holder.music_item_image.setVisibility(View.GONE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.VISIBLE);
-            if (!((MainActivity) context).isPlaying()){
+            if (!((MainActivity) context).isPlaying()) {
                 holder.img_music_vertical_list_item_icon.setImageDrawable(context.getDrawable(R.drawable.ic_play_icon));
             }
         }

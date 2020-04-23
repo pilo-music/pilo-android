@@ -55,6 +55,7 @@
         android:paddingEnd="@dimen/activity_vertical_margin">
 
         <ImageView
+            android:id="@+id/img_extended_music_player_share"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
             android:layout_weight="1"
@@ -62,6 +63,7 @@
             android:src="@drawable/ic_share" />
 
         <ImageView
+            android:id="@+id/img_extended_music_player_add_to_playlist"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
             android:layout_weight="1"
@@ -69,6 +71,7 @@
             android:src="@drawable/ic_add_to_playlist" />
 
         <ImageView
+            android:id="@+id/img_extended_music_player_like"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
             android:layout_weight="1"
@@ -76,6 +79,7 @@
             android:src="@drawable/ic_like_off" />
 
         <ImageView
+            android:id="@+id/img_extended_music_player_download"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
             android:layout_gravity="center"
@@ -83,13 +87,32 @@
             android:adjustViewBounds="true"
             android:src="@drawable/ic_download" />
 
+
+        <com.github.abdularis.buttonprogress.DownloadButtonProgress
+            android:id="@+id/download_progress_extended_music_player"
+            android:layout_width="28.0dip"
+            android:layout_height="28.0dip"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:currentProgress="20"
+            app:determinateBackgroundDrawable="@drawable/download_determinate_drawable"
+            app:finishBackgroundDrawable="@drawable/download_idle_drawable"
+            app:idleBackgroundDrawable="@drawable/download_idle_drawable"
+            app:idleIconDrawable="@drawable/ic_download"
+            app:indeterminateBackgroundDrawable="@drawable/download_idle_drawable"
+            app:maxProgress="100"
+            app:progressDeterminateColor="@color/colorPrimary"
+            app:progressIndeterminateColor="@color/colorPrimary"
+            app:progressWidth="2.0dip"
+            app:state="DETERMINATE" />
+
         <ImageView
-            android:id="@+id/img_player_context_menu"
+            android:id="@+id/img_extended_music_player_go_to_artist"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_ellipsis_gray" />
+            android:src="@drawable/ic_person_black_24dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -103,7 +126,7 @@
         android:paddingEnd="@dimen/activity_vertical_margin">
 
         <TextView
-            android:id="@+id/tv_single_music_time"
+            android:id="@+id/tv_extended_music_player_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00" />
@@ -121,7 +144,7 @@
             android:thumb="@drawable/thumb" />
 
         <TextView
-            android:id="@+id/tv_single_music_duration"
+            android:id="@+id/tv_extended_music_player_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="05:00" />
@@ -141,7 +164,7 @@
         android:paddingEnd="@dimen/activity_vertical_margin">
 
         <ImageView
-            android:id="@+id/img_single_music_shuffle"
+            android:id="@+id/img_extended_music_player_shuffle"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
 
@@ -155,7 +178,7 @@
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/img_single_music_previous"
+                android:id="@+id/img_extended_music_player_previous"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
@@ -163,7 +186,7 @@
                 android:src="@drawable/ic_previous" />
 
             <ImageView
-                android:id="@+id/img_single_music_play"
+                android:id="@+id/img_extended_music_player_play"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
                 android:background="@drawable/play_shadow"
@@ -173,7 +196,7 @@
                 android:src="@drawable/ic_play" />
 
             <ImageView
-                android:id="@+id/img_single_music_next"
+                android:id="@+id/img_extended_music_player_next"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -182,7 +205,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/img_single_music_repeat"
+            android:id="@+id/img_extended_music_player_repeat"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:adjustViewBounds="true"

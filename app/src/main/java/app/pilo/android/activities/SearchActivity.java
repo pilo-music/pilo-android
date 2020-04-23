@@ -175,7 +175,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
                 return false;
             } catch (Exception e) {
-                Log.e("search", "initSearchView: " + e.getMessage());
+                e.printStackTrace();
                 return false;
             }
         });
@@ -200,6 +200,9 @@ public class SearchActivity extends AppCompatActivity {
                     if (!search.getRecommend().isEmpty()) {
                         ll_search_recommend.setVisibility(View.VISIBLE);
                         tv_search_recommend.setText(search.getRecommend());
+                    }else{
+                        ll_search_recommend.setVisibility(View.GONE);
+                        tv_search_recommend.setText("");
                     }
 
 

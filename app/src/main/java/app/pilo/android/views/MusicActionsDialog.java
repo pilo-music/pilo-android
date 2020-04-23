@@ -30,6 +30,7 @@ import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.fragments.SingleArtistFragment;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleArtist;
 import app.pilo.android.utils.MusicDownloader;
@@ -58,6 +59,7 @@ public class MusicActionsDialog {
     private LinearLayout ll_music_actions_share;
     private ImageView img_music_actions_download;
     private DownloadButtonProgress downloadprogress_music_actions;
+    private UserSharedPrefManager userSharedPrefManager;
 
     public MusicActionsDialog(Context context, Music music) {
         this.context = context;
@@ -73,7 +75,7 @@ public class MusicActionsDialog {
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
         this.dialog = dialog;
-
+        userSharedPrefManager = new UserSharedPrefManager(context);
         findViews();
         setupViews();
 
@@ -216,8 +218,8 @@ public class MusicActionsDialog {
         });
     }
 
-    private void setupDownload(){
-        ll_music_actions_download.setOnClickListener(v -> new MusicDownloader(context, music).download(new MusicDownloader.iDownload() {
+    private void setupDownload() {
+        ll_music_actions_download.setOnClickListener(v -> MusicDownloader.download(context, music, new MusicDownloader.iDownload() {
             @Override
             public void onStartOrResumeListener() {
                 img_music_actions_download.setVisibility(View.GONE);
@@ -265,7 +267,7 @@ public class MusicActionsDialog {
 
     private void setupViews() {
 
-        if (new MusicDownloader(context, music).checkExists(music)) {
+        if (MusicDownloader.checkExists(context, music, userSharedPrefManager.getDownloadQuality())) {
             ll_music_actions_download.setEnabled(false);
             ll_music_actions_download.setBackgroundColor(Color.parseColor("#f9f9f9"));
             img_music_actions_download.setImageDrawable(context.getDrawable(R.drawable.ic_checkmark));
@@ -278,6 +280,13 @@ public class MusicActionsDialog {
             dialog.dismiss();
         });
 
+        ll_music_actions_add_to_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                new AddToPlaylistDialog().show();
+            }
+        });
 
 
         Glide.with(context)

@@ -61,7 +61,7 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
     @NonNull
     @Override
     public MusicCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.music_vertical_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.music_draggable_vertical_list_item, viewGroup, false);
         return new MusicCarouselAdapterViewHolder(view);
     }
 

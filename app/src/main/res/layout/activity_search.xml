@@ -85,7 +85,7 @@
             android:layout_weight="1"
             android:textStyle="italic"
             android:fontFamily="@font/font_bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorError"
             android:textSize="@dimen/small_font_size"
             tools:text="بهنام بانی" />
     </LinearLayout>

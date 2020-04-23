@@ -28,21 +28,15 @@ import app.pilo.android.models.Music;
 
 public class MusicDownloader {
 
-    private Music music;
-    private Context context;
-
-    public MusicDownloader(Context context, Music music) {
-        this.music = music;
-        this.context = context;
-    }
-
-    public void download(iDownload iDownload) {
-        if (checkExists(music))
-            return;
+    public static void download(Context context, Music music, iDownload iDownload) {
 
         String url = Utils.getMp3UrlForStreaming(context, music);
         String downloadQuality = new UserSharedPrefManager(context).getDownloadQuality();
         Download download = new Download();
+
+
+        if (checkExists(context, music, downloadQuality))
+            return;
 
         File file = context.getExternalFilesDir(null);
         String path = file.getPath();
@@ -83,17 +77,20 @@ public class MusicDownloader {
                 });
     }
 
-    public boolean checkExists(Music music) {
+    public static boolean checkExists(Context context, Music music, String quality) {
 
         Download download = AppDatabase.getInstance(context).downloadDao().findById(music.getSlug());
         if (download == null)
             return false;
 
-
-        if (download.getPath320() != null && !download.getPath320().isEmpty())
-            return new File(download.getPath320()).exists();
-        else
+        if (quality.equals("320")) {
+            if (download.getPath320() != null && !download.getPath320().isEmpty())
+                return new File(download.getPath320()).exists();
+        } else {
             return new File(download.getPath128()).exists();
+        }
+
+        return false;
     }
 
 
