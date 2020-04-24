@@ -60,7 +60,9 @@ import app.pilo.android.adapters.EditItemTouchHelperCallback;
 import app.pilo.android.adapters.MusicDraggableVerticalListAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.OnStartDragListener;
+import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
+import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
@@ -141,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     ImageView img_extended_music_player_download;
     @BindView(R.id.download_progress_extended_music_player)
     DownloadButtonProgress download_progress_extended_music_player;
+    @BindView(R.id.img_extended_music_player_like)
+    ImageView img_extended_music_player_like;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -163,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     private PlayerService playerService;
     private final Handler mHandler = new Handler();
     private boolean active = false;
+    private boolean likeProcess = false;
+    private LikeApi likeApi;
+    private Utils utils;
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -203,9 +210,10 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         switchTab(0);
         setupBottomNavigation();
         musics = new ArrayList<>();
+        likeApi = new LikeApi(this);
+        utils = new Utils();
         userSharedPrefManager = new UserSharedPrefManager(this);
 
-        //todo
         musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
             @Override
             public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
@@ -375,6 +383,12 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 if (MusicDownloader.checkExists(this, music, userSharedPrefManager.getDownloadQuality())) {
                     img_extended_music_player_download.setEnabled(false);
                     img_extended_music_player_download.setImageDrawable(getDrawable(R.drawable.ic_checkmark));
+                }
+
+                if (music.isHas_like()) {
+                    img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_on));
+                } else {
+                    img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
                 }
             }
 
@@ -739,6 +753,63 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         }
     }
 
+    @OnClick(R.id.img_extended_music_player_like)
+    void img_extended_music_player_like() {
+        if (sliding_layout.getPanelState() != PanelState.HIDDEN) {
+            for (int i = 0; i < musics.size(); i++) {
+                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                    if (likeProcess)
+                        return;
+                    if (!musics.get(i).isHas_like()) {
+                        likeProcess = true;
+                        utils.animateHeartButton(img_extended_music_player_like);
+                        img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_on));
+                        int finalI = i;
+                        likeApi.like(musics.get(i).getSlug(), "music", "add", new HttpHandler.RequestHandler() {
+                            @Override
+                            public void onGetInfo(Object data, String message, boolean status) {
+                                if (!status) {
+                                    new HttpErrorHandler(MainActivity.this, message);
+                                    img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
+                                } else {
+                                    musics.get(finalI).setHas_like(true);
+                                }
+                            }
+
+                            @Override
+                            public void onGetError(@Nullable VolleyError error) {
+                                new HttpErrorHandler(MainActivity.this);
+                                img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
+                            }
+                        });
+                        likeProcess = false;
+                    } else {
+                        likeProcess = true;
+                        img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
+                        int finalI1 = i;
+                        likeApi.like(musics.get(i).getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
+                            @Override
+                            public void onGetInfo(Object data, String message, boolean status) {
+                                if (!status) {
+                                    new HttpErrorHandler(MainActivity.this, message);
+                                    img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_on));
+                                } else {
+                                    musics.get(finalI1).setHas_like(false);
+                                }
+                            }
+
+                            @Override
+                            public void onGetError(@Nullable VolleyError error) {
+                                new HttpErrorHandler(MainActivity.this);
+                                img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_on));
+                            }
+                        });
+                        likeProcess = false;
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

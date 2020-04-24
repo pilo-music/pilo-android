@@ -1,15 +1,11 @@
-package app.pilo.android.activities;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+package app.pilo.android.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
@@ -19,51 +15,52 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import app.pilo.android.R;
+import app.pilo.android.adapters.BookmarkListAdapter;
 import app.pilo.android.adapters.EndlessScrollEventListener;
-import app.pilo.android.adapters.LikeListAdapter;
+import app.pilo.android.api.BookmarkApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.LikeApi;
-import app.pilo.android.models.Like;
+import app.pilo.android.models.Bookmark;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-public class LikesActivity extends AppCompatActivity {
-
-    @BindView(R.id.rc_likes)
+public class BookmarksFragment extends Fragment {
+    @BindView(R.id.rc_bookmarks)
     RecyclerView recyclerView;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
-    @BindView(R.id.img_header_back)
-    ImageView img_header_back;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipe_refresh_layout;
 
-    private Unbinder unbinder;
-    private LikeListAdapter likeListAdapter;
-    private LikeApi likeApi;
-    private List<Like> likes;
+    private BookmarkListAdapter bookmarkListAdapter;
+    private BookmarkApi bookmarkApi;
+    private List<Bookmark> bookmarks;
     private int page = 1;
 
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_likes);
-        unbinder = ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+        ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.profile_likes));
 
-        likeApi = new LikeApi(this);
-        likes = new ArrayList<>();
+        bookmarkApi = new BookmarkApi(getActivity());
+        bookmarks = new ArrayList<>();
 
-
-        likeListAdapter = new LikeListAdapter(new WeakReference<>(this), likes);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        recyclerView.setAdapter(likeListAdapter);
+        bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(getActivity()), bookmarks);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        recyclerView.setAdapter(bookmarkListAdapter);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(LikesActivity.this, android.R.anim.fade_in)));
+        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -76,15 +73,14 @@ public class LikesActivity extends AppCompatActivity {
 
         recyclerView.addOnScrollListener(endlessScrollEventListener);
 
-
-
         swipe_refresh_layout.setOnRefreshListener(() -> {
             page = 1;
-            likes.clear();
+            bookmarks.clear();
             getDataFromServer();
         });
         getDataFromServer();
 
+        return view;
     }
 
     private void getDataFromServer() {
@@ -92,36 +88,29 @@ public class LikesActivity extends AppCompatActivity {
         HashMap<String, Object> params = new HashMap<>();
         params.put("page", page);
         params.put("count", 12);
-        likeApi.get(params, new HttpHandler.RequestHandler() {
+        bookmarkApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
-                    likes.addAll((List<Like>) data);
+                    bookmarks.addAll((List<Bookmark>) data);
                     page++;
-                    likeListAdapter.notifyDataSetChanged();
+                    bookmarkListAdapter.notifyDataSetChanged();
                 } else {
-                    new HttpErrorHandler(LikesActivity.this, message);
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 swipe_refresh_layout.setRefreshing(false);
-                new HttpErrorHandler(LikesActivity.this);
+                new HttpErrorHandler(getActivity());
             }
         });
     }
 
     @OnClick(R.id.img_header_back)
     void back() {
-        finish();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
+        getActivity().onBackPressed();
     }
 }

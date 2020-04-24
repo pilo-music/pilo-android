@@ -13,12 +13,9 @@ import androidx.cardview.widget.CardView;
 import com.android.volley.error.VolleyError;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.BookmarksActivity;
-import app.pilo.android.activities.ContactUsActivity;
 import app.pilo.android.activities.EditProfileActivity;
-import app.pilo.android.activities.LikesActivity;
 import app.pilo.android.activities.LoginActivity;
-import app.pilo.android.activities.MessagesActivity;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.db.AppDatabase;
@@ -63,9 +60,15 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
+
+    @OnClick(R.id.ll_profile_downloads)
+    void downloads() {
+
+    }
+
     @OnClick(R.id.img_profile_messages)
     void messages() {
-        startActivity(new Intent(getActivity(), MessagesActivity.class));
+        ((MainActivity) getActivity()).pushFragment(new MessagesFragment());
     }
 
     @OnClick(R.id.btn_profile_edit)
@@ -75,17 +78,17 @@ public class ProfileFragment extends BaseFragment {
 
     @OnClick(R.id.ll_profile_bookmarks)
     void bookmarks() {
-        startActivity(new Intent(getActivity(), BookmarksActivity.class));
+        ((MainActivity) getActivity()).pushFragment(new BookmarksFragment());
     }
 
     @OnClick(R.id.ll_profile_contact_us)
     void contactUs() {
-        startActivity(new Intent(getActivity(), ContactUsActivity.class));
+        ((MainActivity) getActivity()).pushFragment(new ContactUsFragment());
     }
 
     @OnClick(R.id.ll_profile_likes)
     void likes() {
-        startActivity(new Intent(getActivity(), LikesActivity.class));
+        ((MainActivity) getActivity()).pushFragment(new LikesFragment());
     }
 
     @OnClick(R.id.btn_profile_login)

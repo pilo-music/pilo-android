@@ -1,10 +1,9 @@
-package app.pilo.android.activities;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+package app.pilo.android.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,6 +13,9 @@ import android.widget.TextView;
 import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -22,14 +24,11 @@ import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-public class ContactUsActivity extends AppCompatActivity {
+public class ContactUsFragment extends Fragment {
 
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
-    @BindView(R.id.img_header_back)
-    ImageView img_header_back;
     @BindView(R.id.et_contact_subject)
     EditText et_subject;
     @BindView(R.id.et_contact_text)
@@ -39,13 +38,11 @@ public class ContactUsActivity extends AppCompatActivity {
     @BindView(R.id.progress_bar_contact)
     ProgressBar progressBar;
 
-    private Unbinder unbinder;
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_us);
-        unbinder = ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_contact_us, container, false);
+        ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.profile_support));
         ll_send.setOnClickListener(v -> {
             if (et_subject.getText().toString().length() == 0) {
@@ -59,22 +56,22 @@ public class ContactUsActivity extends AppCompatActivity {
 
             ll_send.setEnabled(false);
             progressBar.setVisibility(View.VISIBLE);
-            MessageApi messageApi = new MessageApi(this);
+            MessageApi messageApi = new MessageApi(getActivity());
             messageApi.message(et_subject.getText().toString(), et_text.getText().toString(), new HttpHandler.RequestHandler() {
                 @Override
                 public void onGetInfo(Object data, String message, boolean status) {
                     ll_send.setEnabled(true);
                     progressBar.setVisibility(View.GONE);
                     if (status) {
-                        Alerter.create(ContactUsActivity.this)
+                        Alerter.create(getActivity())
                                 .setTitle(R.string.operation_done)
-                                .setTextTypeface(Utils.font(ContactUsActivity.this))
-                                .setTitleTypeface(Utils.font(ContactUsActivity.this))
-                                .setButtonTypeface(Utils.font(ContactUsActivity.this))
+                                .setTextTypeface(Utils.font(getActivity()))
+                                .setTitleTypeface(Utils.font(getActivity()))
+                                .setButtonTypeface(Utils.font(getActivity()))
                                 .setBackgroundColorRes(R.color.colorGreen)
                                 .show();
                     } else {
-                        new HttpErrorHandler(ContactUsActivity.this, message);
+                        new HttpErrorHandler(getActivity(), message);
                     }
                 }
 
@@ -82,22 +79,19 @@ public class ContactUsActivity extends AppCompatActivity {
                 public void onGetError(@Nullable VolleyError error) {
                     ll_send.setEnabled(true);
                     progressBar.setVisibility(View.GONE);
-                    new HttpErrorHandler(ContactUsActivity.this);
+                    new HttpErrorHandler(getActivity());
                 }
             });
         });
+
+        return view;
     }
 
 
     @OnClick(R.id.img_header_back)
     void back() {
-        finish();
+        getActivity().onBackPressed();
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
 }

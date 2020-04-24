@@ -42,10 +42,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ForgotPasswordActivity" />
-        <activity android:name=".activities.MessagesActivity" />
-        <activity android:name=".activities.BookmarksActivity" />
-        <activity android:name=".activities.LikesActivity" />
-        <activity android:name=".activities.ContactUsActivity" />
         <activity android:name=".activities.EditProfileActivity" />
         <activity android:name=".activities.RegisterActivity" />
         <activity

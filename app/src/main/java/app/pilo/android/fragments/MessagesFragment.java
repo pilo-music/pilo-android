@@ -1,13 +1,9 @@
-package app.pilo.android.activities;
+package app.pilo.android.fragments;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
@@ -19,7 +15,14 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.MessageListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
@@ -31,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MessagesActivity extends AppCompatActivity {
+public class MessagesFragment extends Fragment {
 
     @BindView(R.id.rc_messages)
     RecyclerView recyclerView;
@@ -48,20 +51,20 @@ public class MessagesActivity extends AppCompatActivity {
     private MessageApi messageApi;
     private MessageListAdapter messageListAdapter;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
-        unbinder = ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_messages, container, false);
+        ButterKnife.bind(this, view);
         messages = new ArrayList<>();
-        messageApi = new MessageApi(this);
+        messageApi = new MessageApi(getContext());
         tv_header_title.setText(getString(R.string.messages));
 
-        messageListAdapter = new MessageListAdapter(new WeakReference<>(MessagesActivity.this), messages);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        messageListAdapter = new MessageListAdapter(new WeakReference<>(getActivity()), messages);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         recyclerView.setAdapter(messageListAdapter);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(MessagesActivity.this, android.R.anim.fade_in)));
+        recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -82,7 +85,9 @@ public class MessagesActivity extends AppCompatActivity {
         });
         getDataFromServer();
 
+        return view;
     }
+
 
     private void getDataFromServer() {
         swipe_refresh_layout.setRefreshing(true);
@@ -95,14 +100,14 @@ public class MessagesActivity extends AppCompatActivity {
                     page++;
                     messageListAdapter.notifyDataSetChanged();
                 } else {
-                    new HttpErrorHandler(MessagesActivity.this, message);
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 swipe_refresh_layout.setRefreshing(false);
-                new HttpErrorHandler(MessagesActivity.this);
+                new HttpErrorHandler(getActivity());
             }
         });
     }
@@ -110,17 +115,12 @@ public class MessagesActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab_messages_add)
     void addMessage() {
-        startActivity(new Intent(MessagesActivity.this, ContactUsActivity.class));
+        ((MainActivity) getActivity()).pushFragment(new ContactUsFragment());
+
     }
 
     @OnClick(R.id.img_header_back)
     void back() {
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
+        getActivity().onBackPressed();
     }
 }
