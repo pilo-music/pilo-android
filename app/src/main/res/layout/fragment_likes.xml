@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context=".activities.BookmarksActivity">
+    android:background="@android:color/white">
 
     <include layout="@layout/page_header" />
 

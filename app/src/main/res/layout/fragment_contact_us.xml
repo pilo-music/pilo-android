@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white"
-    tools:context=".activities.EditProfileActivity">
+    android:background="@android:color/white">
 
     <include layout="@layout/page_header" />
 
