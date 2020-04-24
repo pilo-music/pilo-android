@@ -106,8 +106,8 @@
 
             <ImageView
                 android:id="@+id/img_music_vertical_list_item_like"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
                 android:src="@drawable/ic_like_off" />
 
         </LinearLayout>

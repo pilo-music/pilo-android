@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/activity_vertical_margin"
+    android:paddingTop="8dp"
+    android:id="@+id/ll_download"
+    android:paddingEnd="@dimen/activity_vertical_margin"
+    android:paddingBottom="8dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/riv_download"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_gravity="center"
+        app:riv_corner_radius="5dp"
+        tools:src="@drawable/music_item" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_download_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/font"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/normal_font_size"
+            tools:text="خاک" />
+
+        <TextView
+            android:id="@+id/tv_download_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/font"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/small_font_size"
+            tools:text="خاک" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_download_like"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_like_off" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_weight="0.3"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tv_download_quality"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.8"
+            android:background="@drawable/dark_round_box_background"
+            android:fontFamily="@font/font"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="3dp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/small_font_size"
+            tools:text="320" />
+    </LinearLayout>
+
+</LinearLayout>
