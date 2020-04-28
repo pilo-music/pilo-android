@@ -362,6 +362,10 @@ class JsonParser {
                 user.setPhone(userJsonObject.getString("phone"));
                 user.setGender(userJsonObject.getString("gender"));
                 user.setPic(userJsonObject.getString("pic"));
+                user.setGlobal_notification(userJsonObject.getBoolean("global_notification"));
+                user.setMusic_notification(userJsonObject.getBoolean("music_notification"));
+                user.setAlbum_notification(userJsonObject.getBoolean("album_notification"));
+                user.setVideo_notification(userJsonObject.getBoolean("video_notification"));
             }
             return user;
         } catch (JSONException e) {

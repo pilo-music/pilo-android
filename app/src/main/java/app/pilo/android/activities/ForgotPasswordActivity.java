@@ -147,7 +147,18 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             .show();
 
                     if (((User) data).getAccess_token() != null) {
-                        User user = new User(((User) data).getAccess_token(), ((User) data).getName(), ((User) data).getEmail(), ((User) data).getPhone(), ((User) data).getBirth(), ((User) data).getGender(), ((User) data).getPic());
+                        User user = new User();
+                        user.setAccess_token(((User) data).getAccess_token());
+                        user.setEmail(((User) data).getEmail());
+                        user.setPhone(((User) data).getPhone());
+                        user.setBirth(((User) data).getBirth());
+                        user.setGender(((User) data).getGender());
+                        user.setPic(((User) data).getPic());
+                        user.setGlobal_notification(((User) data).isGlobal_notification());
+                        user.setMusic_notification(((User) data).isMusic_notification());
+                        user.setAlbum_notification(((User) data).isAlbum_notification());
+                        user.setVideo_notification(((User) data).isVideo_notification());
+
                         UserRepo.getInstance(ForgotPasswordActivity.this).insert(user);
                         startActivity(new Intent(ForgotPasswordActivity.this, MainActivity.class));
                         finishAffinity();

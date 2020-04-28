@@ -39,11 +39,11 @@ public class UserRepo {
     }
 
     public void update(User user) {
-        AsyncTask.execute(() -> userDao.insert(user));
+        AsyncTask.execute(() -> userDao.update(user));
     }
 
     public void delete(User user) {
-        AsyncTask.execute(() -> userDao.insert(user));
+        AsyncTask.execute(() -> userDao.delete(user));
     }
 
 

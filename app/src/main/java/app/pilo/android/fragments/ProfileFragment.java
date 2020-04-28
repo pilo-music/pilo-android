@@ -63,7 +63,7 @@ public class ProfileFragment extends BaseFragment {
 
     @OnClick(R.id.ll_profile_downloads)
     void downloads() {
-
+        ((MainActivity) getActivity()).pushFragment(new DownloadsFragment());
     }
 
     @OnClick(R.id.img_profile_messages)
@@ -95,6 +95,11 @@ public class ProfileFragment extends BaseFragment {
     void login() {
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
+    }
+
+    @OnClick(R.id.ll_profile_settings)
+    void settings(){
+        ((MainActivity) getActivity()).pushFragment(new SettingsFragment());
     }
 
 }

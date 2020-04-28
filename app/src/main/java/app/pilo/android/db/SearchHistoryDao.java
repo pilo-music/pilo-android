@@ -26,4 +26,7 @@ public interface SearchHistoryDao {
 
     @Delete
     void delete(SearchHistory searchHistory);
+
+    @Query("DELETE FROM searchhistory")
+    void deleteAll();
 }

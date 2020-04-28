@@ -280,12 +280,9 @@ public class MusicActionsDialog {
             dialog.dismiss();
         });
 
-        ll_music_actions_add_to_playlist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                new AddToPlaylistDialog().show();
-            }
+        ll_music_actions_add_to_playlist.setOnClickListener(v -> {
+            dialog.dismiss();
+            new AddToPlaylistDialog().show();
         });
 
 

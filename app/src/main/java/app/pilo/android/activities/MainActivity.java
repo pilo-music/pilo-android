@@ -383,6 +383,9 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 if (MusicDownloader.checkExists(this, music, userSharedPrefManager.getDownloadQuality())) {
                     img_extended_music_player_download.setEnabled(false);
                     img_extended_music_player_download.setImageDrawable(getDrawable(R.drawable.ic_checkmark));
+                }else{
+                    img_extended_music_player_download.setEnabled(true);
+                    img_extended_music_player_download.setImageDrawable(getDrawable(R.drawable.ic_download));
                 }
 
                 if (music.isHas_like()) {

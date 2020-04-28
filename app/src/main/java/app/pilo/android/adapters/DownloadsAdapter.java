@@ -27,6 +27,7 @@ import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
@@ -43,14 +44,13 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     private LikeApi likeApi;
     private boolean likeProcess = false;
     private Utils utils;
-    private UserSharedPrefManager userSharedPrefManager;
 
     public DownloadsAdapter(WeakReference<Context> context, List<Download> downloads) {
         this.context = context.get();
         this.downloads = downloads;
         this.likeApi = new LikeApi(context.get());
+        musics = new ArrayList<>();
         utils = new Utils();
-        userSharedPrefManager = new UserSharedPrefManager(context.get());
 
         for (int i = 0; i < downloads.size(); i++) {
             musics.add(downloads.get(i).getMusic());
@@ -68,7 +68,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     public void onBindViewHolder(@NonNull DownlandsAdapterViewHolder holder, final int position) {
         final Music music = downloads.get(position).getMusic();
         final Download downland = downloads.get(position);
-        String quality = "";
+        String quality;
         if (downland.getPath320() != null && !downland.getPath320().isEmpty()) {
             quality = "320";
         } else {
@@ -109,6 +109,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                             holder.img_download_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
                         } else {
                             music.setHas_like(true);
+                            downland.setMusic(music);
+                            AppDatabase.getInstance(context).downloadDao().update(downland);
                         }
                     }
 
@@ -130,6 +132,8 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                             holder.img_download_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
                         } else {
                             music.setHas_like(false);
+                            downland.setMusic(music);
+                            AppDatabase.getInstance(context).downloadDao().update(downland);
                         }
                     }
 

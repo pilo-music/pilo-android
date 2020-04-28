@@ -1,0 +1,152 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_round_box_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/font"
+            android:text="@string/audio_download_quality"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
+
+        <ImageView
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center"
+            android:src="@drawable/ic_pilo_logo" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:background="#D0D0D0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/font"
+            android:text="@string/stream_quality"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
+
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rd_stream_quality_128"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:text="128"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rd_stream_quality_320"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:text="320"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size" />
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/colorPrimary"
+            android:fontFamily="@font/font"
+            android:text="@string/download_quality"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
+
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rd_download_quality_128"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:text="128"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rd_download_quality_320"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_vertical_margin"
+                android:buttonTint="@color/colorPrimaryDark"
+                android:text="320"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size" />
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackgroundBorderless"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <Button
+            android:id="@+id/btn_success"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:background="@drawable/green_round_box_background"
+            android:fontFamily="@font/font"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/save_edits"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/normal_font_size" />
+    </LinearLayout>
+
+</LinearLayout>

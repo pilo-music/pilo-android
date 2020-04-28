@@ -57,7 +57,7 @@
         android:padding="@dimen/activity_vertical_margin">
 
         <Button
-            android:id="@+id/btn_update"
+            android:id="@+id/btn_success"
             android:layout_width="0dp"
             android:layout_height="@dimen/button_height"
             android:layout_marginStart="8dp"
@@ -71,9 +71,9 @@
             android:textSize="@dimen/normal_font_size" />
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_fail"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@null"
@@ -82,6 +82,7 @@
             android:text="@string/update_later"
             android:textColor="@color/colorDark"
             android:textSize="@dimen/normal_font_size" />
+
 
     </LinearLayout>
 

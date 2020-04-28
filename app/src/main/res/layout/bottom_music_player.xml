@@ -107,7 +107,7 @@
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/music_item"
+                android:src="@drawable/ic_music_placeholder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -9,6 +9,10 @@
 
     <string name="app_name">Pilo</string>
     <string name="exit_message">"برای خروج دوباره دکمه بازگشت را فشار دهید</string>
+    <string name="exit_dialog_title">خروج از حساب کاربری</string>
+    <string name="exit_dialog_body">آیا میخواهید از حساب خود خارج شوید؟</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
     <string name="try_again">تلاش مجدد</string>
 
     <string name="server_connection_error">مشکلی در ارتباط با سرور رخ داده است</string>
@@ -58,6 +62,8 @@
     <string name="follow_on">دنبال شده</string>
     <string name="follow_off">دنبال کردن</string>
     <string name="did_you_mean">منظورتان این بود : </string>
+    <string name="play">پخش</string>
+    <string name="options">گزینه ها</string>
 
 
     <string name="show_more">نمایش همه</string>
@@ -86,4 +92,24 @@
     <string name="add_to_playlist">اضافه کردن به پلی لیست</string>
     <string name="download">دانلود</string>
     <string name="downloads">دانلود ها</string>
+
+    <string name="audio_download_quality">کیفیت پخش و دانلود موزیک</string>
+    <string name="stream_quality">کیفیت پخش موزیک</string>
+    <string name="download_quality">کیفیت دانلود موزیک</string>
+    <string name="notifications">اعلان ها</string>
+    <string name="global_notification">اعلان های عمومی</string>
+    <string name="new_music_notification">اعلان موزیک جدید</string>
+    <string name="new_album_notification">اعلان آلبوم جدید</string>
+    <string name="new_video_notification">اعلان ویدیو جدید</string>
+
+
+    <string name="clear_search_history">پاک کردن تاریخچه جستجو</string>
+    <string name="clear_search_history_body">آیا میخواهید تاریخچه جستجو را پاک کنید</string>
+    <string name="clear_music_history">پاک کردن تاریخچه پخش</string>
+    <string name="clear_music_history_body">آیا میخواهید تاریخچه پخش را پاک کنید</string>
+    <string name="clear_downloads">پاک کردن دانلود ها</string>
+    <string name="follow_us">ما را دنبال کنید</string>
+    <string name="instagram">اینستاگرام</string>
+    <string name="telegram">تلگرام</string>
+    <string name="logout">خروج</string>
 </resources>

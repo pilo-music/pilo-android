@@ -65,9 +65,13 @@ public class HomeItemHelper {
                 continue;
 
 
+            if (fragment == null || fragment.getView() == null)
+                continue;
+
+
             LayoutInflater inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             ViewGroup parent = fragment.getView().findViewById(R.id.ll_main_layout);
-            if (inflater == null)
+            if (inflater == null || parent == null)
                 continue;
 
             switch (home.getType()) {

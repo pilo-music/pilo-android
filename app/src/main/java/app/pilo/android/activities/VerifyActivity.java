@@ -91,7 +91,17 @@ public class VerifyActivity extends AppCompatActivity {
 
     private void doLogin(User data) {
         if (data.getAccess_token() != null) {
-            User user = new User(data.getAccess_token(), data.getName(), data.getEmail(), data.getPhone(), data.getBirth(), data.getGender(), data.getPic());
+            User user = new User();
+            user.setAccess_token(data.getAccess_token());
+            user.setEmail(data.getEmail());
+            user.setPhone(data.getPhone());
+            user.setBirth(data.getBirth());
+            user.setGender(data.getGender());
+            user.setPic(data.getPic());
+            user.setGlobal_notification(data.isGlobal_notification());
+            user.setMusic_notification(data.isMusic_notification());
+            user.setAlbum_notification(data.isAlbum_notification());
+            user.setVideo_notification(data.isVideo_notification());
             UserRepo.getInstance(this).insert(user);
             startActivity(new Intent(VerifyActivity.this, MainActivity.class));
             finishAffinity();

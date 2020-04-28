@@ -12,7 +12,7 @@ import app.pilo.android.models.Download;
 
 @Dao
 public interface DownloadDao {
-    @Query("SELECT * FROM downloads ORDER BY uid DESC LIMIT :count offset :page")
+    @Query("SELECT * FROM downloads ORDER BY anInt DESC LIMIT :count offset :page")
     List<Download> get(int page, int count);
 
     @Query("SELECT * FROM downloads WHERE music_slug LIKE :slug LIMIT 1")

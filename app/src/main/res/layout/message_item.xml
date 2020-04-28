@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
+        android:textDirection="locale"
         android:fontFamily="@font/font"
         android:gravity="start"
         android:textColor="@color/colorDark"

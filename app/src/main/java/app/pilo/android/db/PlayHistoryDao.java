@@ -25,4 +25,7 @@ public interface PlayHistoryDao {
 
     @Delete
     void delete(PlayHistory playHistory);
+
+    @Query("DELETE FROM play_histories")
+    void deleteAll();
 }

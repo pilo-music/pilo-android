@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.DownloadsAdapter;
 import app.pilo.android.adapters.EndlessScrollEventListener;
@@ -36,7 +37,7 @@ import butterknife.OnClick;
 
 public class DownloadsFragment extends Fragment {
 
-    @BindView(R.id.rc_bookmarks)
+    @BindView(R.id.rc_downloads)
     RecyclerView recyclerView;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
@@ -54,7 +55,7 @@ public class DownloadsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_downloads, container, false);
         ButterKnife.bind(this, view);
-        tv_header_title.setText(getString(R.string.profile_likes));
+        tv_header_title.setText(getString(R.string.downloads));
         downloads = new ArrayList<>();
 
         downloadsAdapter = new DownloadsAdapter(new WeakReference<>(getActivity()), downloads);
@@ -73,7 +74,7 @@ public class DownloadsFragment extends Fragment {
         };
 
         recyclerView.addOnScrollListener(endlessScrollEventListener);
-
+        enableSwipeToDeleteAndUndo();
 
         swipe_refresh_layout.setOnRefreshListener(() -> {
             page = 1;
@@ -88,15 +89,13 @@ public class DownloadsFragment extends Fragment {
     private void getDataFromDb() {
         swipe_refresh_layout.setRefreshing(true);
         List<Download> data = AppDatabase.getInstance(getActivity()).downloadDao().get(page, 15);
-        for (int i = 0; i < data.size(); i++) {
-            if (!MusicDownloader.checkExists(getActivity(), downloads.get(i).getMusic(), downloads.get(i).getPath320()) && !MusicDownloader.checkExists(getActivity(), downloads.get(i).getMusic(), downloads.get(i).getPath320())) {
-                data.remove(data.get(i));
-            }
+        if (data.size() > 0) {
+            downloads.addAll(data);
+            page++;
+            downloadsAdapter.notifyDataSetChanged();
         }
 
-        downloads.addAll(data);
-        page++;
-        downloadsAdapter.notifyDataSetChanged();
+        swipe_refresh_layout.setRefreshing(false);
     }
 
 

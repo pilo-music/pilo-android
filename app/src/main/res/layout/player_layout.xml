@@ -14,7 +14,7 @@
         android:layout_height="@dimen/_180sdp"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:src="@drawable/music_item"
+        android:src="@drawable/ic_music_placeholder"
         app:riv_corner_radius="10dp" />
 
 
