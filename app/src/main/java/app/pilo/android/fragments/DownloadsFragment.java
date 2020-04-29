@@ -59,7 +59,7 @@ public class DownloadsFragment extends BaseFragment {
         downloads = new ArrayList<>();
 
         downloadsAdapter = new DownloadsAdapter(new WeakReference<>(getActivity()), downloads);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
         recyclerView.setAdapter(downloadsAdapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));

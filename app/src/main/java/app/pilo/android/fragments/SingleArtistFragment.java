@@ -253,7 +253,7 @@ public class SingleArtistFragment extends BaseFragment {
             if (musics.size() > 0) {
                 rc_music_carousel.setVisibility(View.VISIBLE);
                 musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics);
-                rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+                rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, true));
                 rc_music_carousel.setAdapter(musicCarouselAdapter);
             } else {
                 tv_music_carousel_show_more.setVisibility(View.GONE);
@@ -284,7 +284,7 @@ public class SingleArtistFragment extends BaseFragment {
             if (albums.size() > 0) {
                 rc_album_carousel.setVisibility(View.VISIBLE);
                 albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums);
-                rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+                rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, true));
                 rc_album_carousel.setAdapter(albumCarouselAdapter);
             } else {
                 tv_album_carousel_show_more.setVisibility(View.GONE);
@@ -297,7 +297,7 @@ public class SingleArtistFragment extends BaseFragment {
         if (rc_music_vertical != null) {
             if (musics.size() > 0) {
                 musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-                rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+                rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
                 rc_music_vertical.setAdapter(musicVerticalListAdapter);
             } else {
                 tv_music_vertical_show_more.setVisibility(View.GONE);

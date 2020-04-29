@@ -56,7 +56,7 @@ public class BookmarksFragment extends BaseFragment {
         bookmarks = new ArrayList<>();
 
         bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(getActivity()), bookmarks);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
         recyclerView.setAdapter(bookmarkListAdapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));

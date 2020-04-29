@@ -61,7 +61,7 @@ public class MessagesFragment extends BaseFragment {
         tv_header_title.setText(getString(R.string.messages));
 
         messageListAdapter = new MessageListAdapter(new WeakReference<>(getActivity()), messages);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
         recyclerView.setAdapter(messageListAdapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));

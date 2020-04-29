@@ -31,8 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class HomeFragment extends BaseFragment {
-    @BindView(R.id.cl_fragment_home)
-    CoordinatorLayout cl_view;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipe_refresh_layout;
 

@@ -23,7 +23,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-                android:id="@+id/img_single_album"
+                android:id="@+id/img_single_playlist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -110,7 +110,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_single_album_name"
+                        android:id="@+id/tv_single_playlist_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/activity_vertical_margin2x"
@@ -120,7 +120,7 @@
                         tools:text="یه ون تونی" />
 
                     <TextView
-                        android:id="@+id/tv_single_album_artist"
+                        android:id="@+id/tv_single_playlist_artist"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/activity_vertical_margin2x"
@@ -144,7 +144,7 @@
                         android:paddingTop="5dp">
 
                         <ImageView
-                            android:id="@+id/img_single_album_like"
+                            android:id="@+id/img_single_playlist_like"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_marginEnd="@dimen/activity_vertical_margin"
@@ -160,7 +160,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tv_single_album_count"
+                        android:id="@+id/tv_single_playlist_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -174,7 +174,7 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rc_single_album"
+                android:id="@+id/rc_single_playlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -182,14 +182,13 @@
                 android:overScrollMode="never" />
 
 
-            <include layout="@layout/album_carousel" />
+            <include layout="@layout/playlist_carousel" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_single_album_play"
+        android:id="@+id/fab_single_playlist_play"
         android:layout_width="wrap_content"
-        android:foreground="?selectableItemBackgroundBorderless"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorPrimary"
@@ -199,8 +198,7 @@
         app:layout_anchorGravity="bottom|right" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:foreground="?selectableItemBackgroundBorderless"
-        android:id="@+id/fab_single_album_shuffle"
+        android:id="@+id/fab_single_playlist_shuffle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="90dp"

@@ -161,7 +161,7 @@ public class SingleAlbumFragment extends BaseFragment {
                         sfl_album.setVisibility(View.GONE);
                         rc_album_carousel.setVisibility(View.VISIBLE);
                         AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), singleAlbum.getRelated());
-                        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+                        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, true));
                         rc_album_carousel.setAdapter(albumCarouselAdapter);
                     }
 

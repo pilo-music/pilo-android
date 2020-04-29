@@ -57,7 +57,7 @@ public class LikesFragment extends Fragment {
 
 
         likeListAdapter = new LikeListAdapter(new WeakReference<>(getActivity()), likes);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
         recyclerView.setAdapter(likeListAdapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));

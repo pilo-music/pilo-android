@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_180sdp"
+    android:layout_height="@dimen/_260sdp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="@dimen/_260sdp"
+        android:src="@drawable/for_you_item"
+        app:riv_corner_radius="5dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_single_album_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:foreground="?selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_play_icon"
+        app:borderWidth="0dp"
+        app:layout_anchor="@id/appBar"
+        app:layout_anchorGravity="bottom|right" />
+
+</FrameLayout>

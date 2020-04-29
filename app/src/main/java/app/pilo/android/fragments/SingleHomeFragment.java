@@ -139,7 +139,7 @@ public class SingleHomeFragment extends BaseFragment {
                 rc_home.setAdapter(albumMusicGridListAdapter);
                 break;
             case Home.TYPE_VIDEOS:
-                layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+                layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
                 videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
                 rc_home.setAdapter(videosAdapter);
                 break;

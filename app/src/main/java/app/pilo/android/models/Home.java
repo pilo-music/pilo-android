@@ -12,6 +12,7 @@ public class Home {
     public final static String TYPE_TRENDING = "trending";
     public final static String TYPE_VIDEOS = "videos";
     public final static String TYPE_MUSIC_VERTICAL = "music_vertical";
+    public final static String TYPE_FOR_YOU = "for_you";
 
     private int id;
     private String type;

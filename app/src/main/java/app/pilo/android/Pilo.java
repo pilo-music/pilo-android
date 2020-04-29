@@ -9,6 +9,8 @@ import com.facebook.stetho.Stetho;
 
 import org.jetbrains.annotations.NotNull;
 
+import app.pilo.android.helpers.LocalHelper;
+
 
 public class Pilo extends Application {
     // Called when the application is starting, before any other application objects have been created.
@@ -22,6 +24,8 @@ public class Pilo extends Application {
                 .setDatabaseEnabled(true)
                 .build();
         PRDownloader.initialize(getApplicationContext(), config);
+
+        LocalHelper.updateResources(this, "fa");
         // Required initialization logic here!`
     }
 
