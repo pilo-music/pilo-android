@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.fragments.SinglePlaylistFragment;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Playlist;
 import butterknife.BindView;
@@ -50,6 +53,12 @@ public class PlaylistVerticalListAdapter extends RecyclerView.Adapter<PlaylistVe
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.playlist_item_image);
+
+
+        holder.ll_playlist_vertical.setOnClickListener(v -> {
+            SinglePlaylistFragment fragment = new SinglePlaylistFragment(playlist);
+            ((MainActivity) context).pushFragment(fragment);
+        });
     }
 
     @Override
@@ -64,6 +73,8 @@ public class PlaylistVerticalListAdapter extends RecyclerView.Adapter<PlaylistVe
         TextView tv_playlist_count;
         @BindView(R.id.riv_playlist_vertical_list_item_image)
         ImageView playlist_item_image;
+        @BindView(R.id.ll_playlist_vertical)
+        LinearLayout ll_playlist_vertical;
 
         PlaylistCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

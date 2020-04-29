@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
+import com.facebook.stetho.Stetho;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public class Pilo extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Stetho.initializeWithDefaults(this);
         // Enabling database for resume support even after the application is killed:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)

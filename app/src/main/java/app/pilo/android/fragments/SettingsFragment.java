@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.File;
+import java.util.List;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.SplashScreenActivity;
 import app.pilo.android.db.AppDatabase;
-import app.pilo.android.models.User;
-import app.pilo.android.repositories.UserRepo;
+import app.pilo.android.models.Download;
 import app.pilo.android.views.CustomDialog;
 import app.pilo.android.views.NotificationsSettingDialog;
 import app.pilo.android.views.QualitySettingDialog;
@@ -24,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseFragment {
 
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
@@ -43,8 +45,7 @@ public class SettingsFragment extends Fragment {
         new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
             @Override
             public void onSuccessClick(Dialog dialog) {
-                User user = UserRepo.getInstance(getActivity()).get();
-                UserRepo.getInstance(getActivity()).delete(user);
+                AppDatabase.NukeAllTables(getActivity());
                 getActivity().startActivity(new Intent(getActivity(), SplashScreenActivity.class));
                 getActivity().finishAffinity();
             }
@@ -70,9 +71,23 @@ public class SettingsFragment extends Fragment {
 
     @OnClick(R.id.tv_settings_clear_downloads)
     void tv_settings_clear_downloads() {
-        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
+        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no),true ,new CustomDialog.onClient() {
             @Override
             public void onSuccessClick(Dialog dialog) {
+                List<Download> downloads = AppDatabase.getInstance(getActivity()).downloadDao().get(1, 100000);
+                for (int i = 0; i < downloads.size(); i++) {
+                    File file320 = new File(downloads.get(i).getPath320());
+                    if (file320.exists())
+                        file320.delete();
+
+                    File file128 = new File(downloads.get(i).getPath128());
+                    if (file128.exists())
+                        file128.delete();
+
+                    AppDatabase.getInstance(getContext()).downloadDao().delete(downloads.get(i));
+                }
+
+                dialog.dismiss();
             }
 
             @Override
@@ -103,7 +118,7 @@ public class SettingsFragment extends Fragment {
         new CustomDialog(getActivity(), getString(R.string.clear_search_history), getString(R.string.clear_search_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
             @Override
             public void onSuccessClick(Dialog dialog) {
-                AppDatabase.getInstance(getContext()).searchHistoryDao().deleteAll();
+                AppDatabase.getInstance(getContext()).searchHistoryDao().nukeTable();
                 dialog.dismiss();
             }
 

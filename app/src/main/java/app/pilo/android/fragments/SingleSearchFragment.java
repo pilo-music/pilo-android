@@ -1,29 +1,26 @@
-package app.pilo.android.activities;
+package app.pilo.android.fragments;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
 import com.android.volley.error.VolleyError;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistsListAdapter;
-import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.PlaylistsAdapter;
@@ -31,17 +28,12 @@ import app.pilo.android.adapters.VideosAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.SearchApi;
-import app.pilo.android.models.Album;
-import app.pilo.android.models.Artist;
-import app.pilo.android.models.Music;
-import app.pilo.android.models.Playlist;
 import app.pilo.android.models.Search;
-import app.pilo.android.models.Video;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SingleSearchActivity extends AppCompatActivity {
+public class SingleSearchFragment extends BaseFragment {
 
     private String query, type;
     private int page = 1;
@@ -61,44 +53,47 @@ public class SingleSearchActivity extends AppCompatActivity {
     @BindView(R.id.rc_items)
     RecyclerView rc_items;
 
+
+    public SingleSearchFragment(String query, String type) {
+        this.query = query;
+        this.type = type;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_search);
-        ButterKnife.bind(this);
-        query = getIntent().getExtras().getString("query");
-        type = getIntent().getExtras().getString("type");
-        searchApi = new SearchApi(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_single_search, container, false);
+        ButterKnife.bind(this, view);
+        searchApi = new SearchApi(getActivity());
         search = new Search();
 
         if (query == null || query.isEmpty() || type == null || type.isEmpty()) {
-            startActivity(new Intent(SingleSearchActivity.this, SearchActivity.class));
-            finish();
+            getActivity().onBackPressed();
         }
 
         tv_header_title.setText(getString(R.string.results) + " : " + query);
 
         getDataFromServer();
-        LinearLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         switch (type) {
             case "artist":
-                artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(this), search.getArtists(), R.layout.artist_item_full_width);
+                artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), search.getArtists(), R.layout.artist_item_full_width);
                 rc_items.setAdapter(artistsListAdapter);
                 break;
             case "music":
-                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(this), search.getMusics(), R.layout.music_item_full_width);
+                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), search.getMusics(), R.layout.music_item_full_width);
                 rc_items.setAdapter(musicsListAdapter);
                 break;
             case "album":
-                albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(this), search.getAlbums(), R.layout.album_item_full_width);
+                albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), search.getAlbums(), R.layout.album_item_full_width);
                 rc_items.setAdapter(albumsListAdapter);
                 break;
             case "playlist":
-                playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(this), search.getPlaylists(), R.layout.playlist_item_full_width);
+                playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), search.getPlaylists(), R.layout.playlist_item_full_width);
                 rc_items.setAdapter(playlistsAdapter);
                 break;
             case "video":
-                videosAdapter = new VideosAdapter(new WeakReference<>(this), search.getVideos());
+                videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), search.getVideos());
                 rc_items.setAdapter(videosAdapter);
                 break;
         }
@@ -116,6 +111,7 @@ public class SingleSearchActivity extends AppCompatActivity {
 
         rc_items.addOnScrollListener(endlessScrollEventListener);
 
+        return view;
     }
 
     private void getDataFromServer() {
@@ -155,20 +151,20 @@ public class SingleSearchActivity extends AppCompatActivity {
                     }
                     page++;
                 } else {
-                    new HttpErrorHandler(SingleSearchActivity.this, message);
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 progressBar.setVisibility(View.VISIBLE);
-                new HttpErrorHandler(SingleSearchActivity.this);
+                new HttpErrorHandler(getActivity());
             }
         });
     }
 
     @OnClick(R.id.img_header_back)
     void back() {
-        finish();
+        getActivity().onBackPressed();
     }
 }

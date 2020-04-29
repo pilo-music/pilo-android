@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,8 +18,9 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.models.Artist;
-import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -50,6 +52,17 @@ public class ArtistVerticalListAdapter extends RecyclerView.Adapter<ArtistVertic
                 .error(R.drawable.ic_music_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.artist_item_image);
+
+        holder.ll_artist_vertical.setOnClickListener(v -> {
+            SingleArtistFragment fragment = new SingleArtistFragment(artist);
+
+            if (context instanceof MainActivity)
+                ((MainActivity) context).pushFragment(fragment);
+            else{
+                MainActivity activity = new MainActivity();
+                activity.pushFragment(fragment);
+            }
+        });
     }
 
     @Override
@@ -64,6 +77,8 @@ public class ArtistVerticalListAdapter extends RecyclerView.Adapter<ArtistVertic
         TextView tv_artist_info;
         @BindView(R.id.riv_artist_vertical_list_item_image)
         ImageView artist_item_image;
+        @BindView(R.id.ll_artist_vertical)
+        LinearLayout ll_artist_vertical;
 
         ArtistCarouselAdapterViewHolder(@NonNull View itemView) {
             super(itemView);

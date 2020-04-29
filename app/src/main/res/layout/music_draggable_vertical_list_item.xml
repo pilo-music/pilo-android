@@ -64,12 +64,13 @@
                     app:riv_corner_radius="10dp"
                     app:riv_mutate_background="true" />
 
-                <ImageView
-                    android:id="@+id/img_music_vertical_list_item_icon"
+                <com.github.ybq.android.spinkit.SpinKitView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_pause_icon" />
+                    app:SpinKit_Style="Pulse"
+                    app:SpinKit_Color="@color/colorPrimary" />
+
             </FrameLayout>
 
             <LinearLayout

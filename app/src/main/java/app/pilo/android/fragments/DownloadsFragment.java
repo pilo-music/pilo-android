@@ -35,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DownloadsFragment extends Fragment {
+public class DownloadsFragment extends BaseFragment {
 
     @BindView(R.id.rc_downloads)
     RecyclerView recyclerView;

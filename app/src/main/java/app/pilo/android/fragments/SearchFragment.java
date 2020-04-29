@@ -1,19 +1,21 @@
 package app.pilo.android.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.lang.ref.WeakReference;
+
 import app.pilo.android.R;
-import app.pilo.android.activities.SearchActivity;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.SearchHistoryAdapter;
 import app.pilo.android.repositories.SearchHistoryRepo;
 import butterknife.BindView;
@@ -28,20 +30,25 @@ public class SearchFragment extends BaseFragment {
     @BindView(R.id.rc_history)
     RecyclerView rc_history;
 
-    private View view;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
 
 
-        ll_search.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchActivity.class)));
-        et_search.setOnClickListener(v -> startActivity(new Intent(getActivity(), SearchActivity.class)));
+        ll_search.setOnClickListener(v -> {
+            SearchResultFragment searchResultFragment = new SearchResultFragment(null);
+            ((MainActivity) getActivity()).pushFragment(searchResultFragment);
+        });
+        et_search.setOnClickListener(v -> {
+            SearchResultFragment searchResultFragment = new SearchResultFragment(null);
+            ((MainActivity) getActivity()).pushFragment(searchResultFragment);
+        });
         et_search.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus){
-                startActivity(new Intent(getActivity(), SearchActivity.class));
+            if (hasFocus) {
+                SearchResultFragment searchResultFragment = new SearchResultFragment(null);
+                ((MainActivity) getActivity()).pushFragment(searchResultFragment);
             }
         });
 

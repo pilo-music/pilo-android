@@ -12,11 +12,11 @@ import app.pilo.android.models.SearchHistory;
 
 @Dao
 public interface SearchHistoryDao {
-    @Query("SELECT * FROM searchhistory ORDER BY id DESC LIMIT 3")
+    @Query("SELECT * FROM search_histories ORDER BY id DESC LIMIT 3")
     List<SearchHistory> get();
 
-    @Query("SELECT * FROM searchhistory WHERE text = :text LIMIT 1")
-    SearchHistory search(String text);
+    @Query("SELECT * FROM search_histories WHERE text = :text LIMIT 1")
+    List<SearchHistory> search(String text);
 
     @Insert
     void insert(SearchHistory searchHistory);
@@ -27,6 +27,6 @@ public interface SearchHistoryDao {
     @Delete
     void delete(SearchHistory searchHistory);
 
-    @Query("DELETE FROM searchhistory")
-    void deleteAll();
+    @Query("DELETE FROM search_histories")
+    void nukeTable();
 }

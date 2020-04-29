@@ -28,6 +28,10 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static void NukeAllTables(Context context) {
         AppDatabase.getInstance(context).musicDao().nukeTable();
+        AppDatabase.getInstance(context).userDao().nukeTable();
+        AppDatabase.getInstance(context).searchHistoryDao().nukeTable();
+        AppDatabase.getInstance(context).playHistoryDao().nukeTable();
+        AppDatabase.getInstance(context).downloadDao().nukeTable();
     }
 
     public abstract MusicDao musicDao();

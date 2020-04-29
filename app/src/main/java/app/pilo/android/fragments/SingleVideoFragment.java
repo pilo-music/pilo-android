@@ -25,7 +25,6 @@ import java.util.HashMap;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
-import app.pilo.android.activities.SearchActivity;
 import app.pilo.android.activities.VideoPlayerActivity;
 import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.api.HttpErrorHandler;

@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import app.pilo.android.R;
@@ -18,6 +20,7 @@ public class CustomDialog {
     private boolean showSuccess = true;
     private boolean showFail = true;
     private boolean cancelable = true;
+    private boolean showProgress = false;
     private onClient onClient;
     private Context context;
 
@@ -26,10 +29,14 @@ public class CustomDialog {
     TextView tv_title;
     @BindView(R.id.tv_description)
     TextView tv_description;
-    @BindView(R.id.btn_success)
-    Button btn_success;
+    @BindView(R.id.tv_success)
+    TextView tv_success;
+    @BindView(R.id.ll_success)
+    LinearLayout ll_success;
     @BindView(R.id.btn_fail)
     Button btn_fail;
+    @BindView(R.id.progress_bar)
+    ProgressBar progress_bar;
 
 
     public CustomDialog(Context context, String title, String body, String successButton, String failButton, onClient onClient) {
@@ -41,6 +48,15 @@ public class CustomDialog {
         this.context = context;
     }
 
+    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showProgress, onClient onClient) {
+        this.title = title;
+        this.body = body;
+        this.successButton = successButton;
+        this.failButton = failButton;
+        this.onClient = onClient;
+        this.context = context;
+        this.showProgress = showProgress;
+    }
 
     public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showSuccess, boolean showFail, boolean cancelable, onClient onClient) {
         this.title = title;
@@ -52,6 +68,19 @@ public class CustomDialog {
         this.cancelable = cancelable;
         this.onClient = onClient;
         this.context = context;
+    }
+
+    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showSuccess, boolean showFail, boolean cancelable, boolean showProgress, onClient onClient) {
+        this.title = title;
+        this.body = body;
+        this.successButton = successButton;
+        this.failButton = failButton;
+        this.showSuccess = showSuccess;
+        this.showFail = showFail;
+        this.cancelable = cancelable;
+        this.onClient = onClient;
+        this.context = context;
+        this.showProgress = showProgress;
     }
 
 
@@ -67,14 +96,19 @@ public class CustomDialog {
         if (!showFail)
             btn_fail.setVisibility(View.GONE);
         if (!showSuccess)
-            btn_success.setVisibility(View.GONE);
+            ll_success.setVisibility(View.GONE);
+
 
         tv_title.setText(title);
         tv_description.setText(body);
-        btn_success.setText(successButton);
+        tv_success.setText(successButton);
         btn_fail.setText(failButton);
 
-        btn_success.setOnClickListener(v -> onClient.onSuccessClick(dialog));
+        ll_success.setOnClickListener(v -> {
+            ll_success.setEnabled(false);
+            progress_bar.setVisibility(View.VISIBLE);
+            onClient.onSuccessClick(dialog);
+        });
         btn_fail.setOnClickListener(v -> onClient.onFailClick(dialog));
         dialog.show();
     }

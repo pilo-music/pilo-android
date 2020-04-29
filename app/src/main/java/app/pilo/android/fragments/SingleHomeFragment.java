@@ -51,7 +51,7 @@ import app.pilo.android.models.Video;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SingleHomeFragment extends Fragment {
+public class SingleHomeFragment extends BaseFragment {
     private View view;
     private HomeApi homeApi;
     private int id;
@@ -136,6 +136,7 @@ public class SingleHomeFragment extends Fragment {
                 break;
             case Home.TYPE_ALBUM_MUSIC_GRID:
                 albumMusicGridListAdapter = new AlbumMusicGridListAdapter(new WeakReference<>(getActivity()), albumMusics);
+                rc_home.setAdapter(albumMusicGridListAdapter);
                 break;
             case Home.TYPE_VIDEOS:
                 layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
@@ -196,7 +197,7 @@ public class SingleHomeFragment extends Fragment {
                             case Home.TYPE_ALBUM_MUSIC_GRID:
                                 albumMusics.addAll((List<Object>) ((Home) data).getData());
                                 page++;
-                                albumsListAdapter.notifyDataSetChanged();
+                                albumMusicGridListAdapter.notifyDataSetChanged();
                                 break;
                             case Home.TYPE_VIDEOS:
                                 videos.addAll((List<Video>) ((Home) data).getData());

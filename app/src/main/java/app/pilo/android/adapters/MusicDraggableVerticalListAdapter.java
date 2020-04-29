@@ -87,15 +87,9 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
         if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
             holder.music_item_image.setVisibility(View.GONE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.VISIBLE);
-            if (!((MainActivity) context).isPlaying()) {
-                holder.img_music_vertical_list_item_icon.setImageDrawable(context.getDrawable(R.drawable.ic_play_icon));
-            }
         } else {
             holder.music_item_image.setVisibility(View.VISIBLE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.GONE);
-            if (!((MainActivity) context).isPlaying()) {
-                holder.img_music_vertical_list_item_icon.setImageDrawable(context.getDrawable(R.drawable.ic_pause_icon));
-            }
         }
 
         if (music.isHas_like()) {
@@ -191,8 +185,6 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
         ImageView music_item_image2;
         @BindView(R.id.fl_music_vertical_list_item_playing)
         FrameLayout fl_music_vertical_list_item_playing;
-        @BindView(R.id.img_music_vertical_list_item_icon)
-        ImageView img_music_vertical_list_item_icon;
         @BindView(R.id.img_music_vertical_list_item_move)
         ImageView img_music_vertical_list_item_move;
 

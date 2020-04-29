@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MessagesFragment extends Fragment {
+public class MessagesFragment extends BaseFragment {
 
     @BindView(R.id.rc_messages)
     RecyclerView recyclerView;

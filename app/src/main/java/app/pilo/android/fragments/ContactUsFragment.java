@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContactUsFragment extends Fragment {
+public class ContactUsFragment extends BaseFragment {
 
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;

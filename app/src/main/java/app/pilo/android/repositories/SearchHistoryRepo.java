@@ -23,7 +23,7 @@ public class SearchHistoryRepo {
         return instance;
     }
 
-    public SearchHistoryRepo(Context context) {
+    private SearchHistoryRepo(Context context) {
         AppDatabase database = AppDatabase.getInstance(context);
         searchHistoryDao = database.searchHistoryDao();
     }
@@ -39,9 +39,11 @@ public class SearchHistoryRepo {
     }
 
     public void insert(SearchHistory searchHistory) {
-        SearchHistory result = searchHistoryDao.search(searchHistory.getText());
-        if (result != null) {
-            searchHistoryDao.delete(searchHistory);
+        List<SearchHistory> result = searchHistoryDao.search(searchHistory.getText());
+        if (result.size() > 0) {
+            for (int i = 0; i < result.size(); i++) {
+                searchHistoryDao.delete(result.get(i));
+            }
         }
         AsyncTask.execute(() -> searchHistoryDao.insert(searchHistory));
     }

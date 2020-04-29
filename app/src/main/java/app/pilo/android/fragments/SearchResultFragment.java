@@ -1,17 +1,15 @@
-package app.pilo.android.activities;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package app.pilo.android.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +18,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.error.VolleyError;
 
 import java.lang.ref.WeakReference;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistVerticalListAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
@@ -43,8 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SearchActivity extends AppCompatActivity {
-
+public class SearchResultFragment extends BaseFragment {
     @BindView(R.id.et_search)
     EditText et_search;
     @BindView(R.id.img_search_voice)
@@ -101,14 +104,20 @@ public class SearchActivity extends AppCompatActivity {
     private String query = "";
 
 
+    public SearchResultFragment(String text){
+       if (text != null && !text.isEmpty()){
+           query = text;
+       }
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        ButterKnife.bind(this);
-        userSharedPrefManager = new UserSharedPrefManager(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search_result, container, false);
+        ButterKnife.bind(this, view);
+        userSharedPrefManager = new UserSharedPrefManager(getActivity());
         et_search.requestFocus();
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         tv_album_vertical_title.setText(getString(R.string.albums));
         ll_album_vertical.setVisibility(View.GONE);
@@ -128,10 +137,10 @@ public class SearchActivity extends AppCompatActivity {
 
         initSearchView();
 
-        String text = getIntent().getStringExtra("text");
-        if (text != null && text.length() > 0) {
-            this.et_search.setText(text);
-            search(text);
+        if (!query.isEmpty())
+        {
+            et_search.setText(query);
+            search(query);
         }
 
         img_search_close.setOnClickListener(v -> {
@@ -139,8 +148,9 @@ public class SearchActivity extends AppCompatActivity {
             img_search_close.setVisibility(View.GONE);
         });
         img_search_voice.setOnClickListener(v -> promptSpeechInput());
-    }
 
+        return view;
+    }
 
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -155,36 +165,52 @@ public class SearchActivity extends AppCompatActivity {
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
-            Toast.makeText(this, R.string.speech_not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.speech_not_supported, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void initSearchView() {
-        et_search.setOnKeyListener((v, keyCode, event) -> {
-            try {
-                if (et_search.getText().toString().length() > 0) {
+        et_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (et_search.getText().toString().length() > 3) {
                     img_search_close.setVisibility(View.VISIBLE);
                     search(et_search.getText().toString());
                 } else {
                     img_search_close.setVisibility(View.GONE);
                 }
-                if (keyCode == KeyEvent.KEYCODE_SEARCH
-                        || keyCode == KeyEvent.KEYCODE_ENTER) {
-                    //execute our method for searching
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (et_search.getText().toString().length() > 3) {
+                    img_search_close.setVisibility(View.VISIBLE);
                     search(et_search.getText().toString());
+                } else {
+                    img_search_close.setVisibility(View.GONE);
                 }
-                return false;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (et_search.getText().toString().length() > 3) {
+                    img_search_close.setVisibility(View.VISIBLE);
+                    search(et_search.getText().toString());
+
+                    SearchHistory searchHistory = new SearchHistory(query);
+                    SearchHistoryRepo.getInstance(getActivity()).insert(searchHistory);
+                } else {
+                    img_search_close.setVisibility(View.GONE);
+                }
             }
         });
+
     }
 
 
     private void search(String text) {
         progressBar.setVisibility(View.VISIBLE);
-        SearchApi searchApi = new SearchApi(this);
+        SearchApi searchApi = new SearchApi(getActivity());
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("query", text);
@@ -208,8 +234,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     if (search.getArtists().size() > 0) {
                         ll_artist_vertical.setVisibility(View.VISIBLE);
-                        ArtistVerticalListAdapter artistVerticalListAdapter = new ArtistVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getArtists());
-                        rc_artist_vertical.setLayoutManager(new LinearLayoutManager(SearchActivity.this, RecyclerView.VERTICAL, false));
+                        ArtistVerticalListAdapter artistVerticalListAdapter = new ArtistVerticalListAdapter(new WeakReference<>(getActivity()), search.getArtists());
+                        rc_artist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_artist_vertical.setAdapter(artistVerticalListAdapter);
                     } else {
                         ll_artist_vertical.setVisibility(View.GONE);
@@ -217,8 +243,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     if (search.getMusics().size() > 0) {
                         ll_music_vertical.setVisibility(View.VISIBLE);
-                        MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getMusics());
-                        rc_music_vertical.setLayoutManager(new LinearLayoutManager(SearchActivity.this, RecyclerView.VERTICAL, false));
+                        MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), search.getMusics());
+                        rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_music_vertical.setAdapter(musicVerticalListAdapter);
                     } else {
                         ll_music_vertical.setVisibility(View.GONE);
@@ -227,8 +253,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     if (search.getAlbums().size() > 0) {
                         ll_album_vertical.setVisibility(View.VISIBLE);
-                        AlbumsListAdapter albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(SearchActivity.this), search.getAlbums());
-                        rc_album_vertical.setLayoutManager(new LinearLayoutManager(SearchActivity.this, RecyclerView.VERTICAL, false));
+                        AlbumsListAdapter albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), search.getAlbums());
+                        rc_album_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_album_vertical.setAdapter(albumsListAdapter);
                     } else {
                         ll_album_vertical.setVisibility(View.GONE);
@@ -236,8 +262,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     if (search.getPlaylists().size() > 0) {
                         ll_playlist_vertical.setVisibility(View.VISIBLE);
-                        PlaylistVerticalListAdapter playlistVerticalListAdapter = new PlaylistVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getPlaylists());
-                        rc_playlist_vertical.setLayoutManager(new LinearLayoutManager(SearchActivity.this, RecyclerView.VERTICAL, false));
+                        PlaylistVerticalListAdapter playlistVerticalListAdapter = new PlaylistVerticalListAdapter(new WeakReference<>(getActivity()), search.getPlaylists());
+                        rc_playlist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_playlist_vertical.setAdapter(playlistVerticalListAdapter);
                     } else {
                         ll_playlist_vertical.setVisibility(View.GONE);
@@ -245,8 +271,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     if (search.getVideos().size() > 0) {
                         ll_video_vertical.setVisibility(View.VISIBLE);
-                        VideoVerticalListAdapter videoVerticalListAdapter = new VideoVerticalListAdapter(new WeakReference<>(SearchActivity.this), search.getVideos());
-                        rc_video_vertical.setLayoutManager(new LinearLayoutManager(SearchActivity.this, RecyclerView.VERTICAL, false));
+                        VideoVerticalListAdapter videoVerticalListAdapter = new VideoVerticalListAdapter(new WeakReference<>(getActivity()), search.getVideos());
+                        rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_video_vertical.setAdapter(videoVerticalListAdapter);
                     } else {
                         ll_video_vertical.setVisibility(View.GONE);
@@ -254,19 +280,16 @@ public class SearchActivity extends AppCompatActivity {
 
 
                 } else {
-                    new HttpErrorHandler(SearchActivity.this, message);
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
                 progressBar.setVisibility(View.INVISIBLE);
-                new HttpErrorHandler(SearchActivity.this);
+                new HttpErrorHandler(getActivity());
             }
         });
-
-        SearchHistory searchHistory = new SearchHistory(text);
-        SearchHistoryRepo.getInstance(this).insert(searchHistory);
     }
 
 
@@ -303,10 +326,9 @@ public class SearchActivity extends AppCompatActivity {
 
 
     private void goToSingle(String type) {
-        Intent intent = new Intent(SearchActivity.this, SingleSearchActivity.class);
-        intent.putExtra("query", query);
-        intent.putExtra("type", type);
-        startActivity(intent);
+
+        SingleSearchFragment singleSearchFragment = new SingleSearchFragment(query,type);
+        ((MainActivity) getActivity()).pushFragment(singleSearchFragment);
     }
 
     /**
@@ -316,7 +338,7 @@ public class SearchActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_SPEECH_INPUT) {
-            if (resultCode == RESULT_OK && data != null) {
+            if (resultCode == getActivity().RESULT_OK && data != null) {
                 ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 et_search.setText(result.get(0));
                 search(result.get(0));

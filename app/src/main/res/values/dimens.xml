@@ -6,7 +6,7 @@
     <dimen name="normal_font_size">@dimen/_11ssp</dimen>
     <dimen name="small_font_size">@dimen/_9ssp</dimen>
     <dimen name="box_height">@dimen/_38sdp</dimen>
-    <dimen name="button_height">@dimen/_45sdp</dimen>
+    <dimen name="button_height">@dimen/_40sdp</dimen>
 
 
 
