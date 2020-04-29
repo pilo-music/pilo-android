@@ -32,12 +32,10 @@ import butterknife.ButterKnife;
 public class ForYouListAdapter extends RecyclerView.Adapter<ForYouListAdapter.ForYouAdapterViewHolder> {
     private Context context;
     private List<ForYou> forYous;
-    private UserSharedPrefManager userSharedPrefManager;
 
     public ForYouListAdapter(WeakReference<Context> context, List<ForYou> forYous) {
         this.context = context.get();
         this.forYous = forYous;
-        userSharedPrefManager = new UserSharedPrefManager(context.get());
     }
 
 
