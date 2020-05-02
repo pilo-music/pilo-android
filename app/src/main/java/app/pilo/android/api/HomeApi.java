@@ -98,7 +98,7 @@ public class HomeApi {
         List<Home> homes = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             Home home = new Home();
-            Object data = new Object();
+            Object data;
             switch (jsonArray.getJSONObject(i).getString("type")) {
                 case Home.TYPE_ARTISTS:
                     List<Artist> artists = new ArrayList<>();

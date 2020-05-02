@@ -13,6 +13,9 @@ public class Home {
     public final static String TYPE_VIDEOS = "videos";
     public final static String TYPE_MUSIC_VERTICAL = "music_vertical";
     public final static String TYPE_FOR_YOU = "for_you";
+    public final static String TYPE_PLAY_HISTORY = "play_history";
+    public final static String TYPE_MUSIC_FOLLOWS = "music_follows";
+    public final static String TYPE_BROWSE_DOCK = "browse_dock";
 
     private int id;
     private String type;

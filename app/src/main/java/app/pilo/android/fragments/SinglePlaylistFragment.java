@@ -42,7 +42,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SinglePlaylistFragment extends BaseFragment {
-    private View view;
     private UserSharedPrefManager sharedPrefManager;
     private Utils utils;
     private LikeApi likeApi;
@@ -53,19 +52,17 @@ public class SinglePlaylistFragment extends BaseFragment {
     private UserSharedPrefManager userSharedPrefManager;
 
     @BindView(R.id.img_single_playlist)
-    ImageView img_playlist;
+    ImageView img_single_playlist;
     @BindView(R.id.tv_single_playlist_name)
-    TextView tv_playlist_name;
+    TextView tv_single_playlist_name;
     @BindView(R.id.tv_single_playlist_count)
-    TextView tv_playlist_count;
+    TextView tv_single_playlist_count;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
-    @BindView(R.id.tv_single_playlist_artist)
-    TextView tv_playlist_artist;
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
     @BindView(R.id.rc_single_playlist)
-    RecyclerView rc_playlist_musics;
+    RecyclerView rc_single_playlist;
     @BindView(R.id.img_single_playlist_like)
     ImageView img_single_playlist_like;
     @BindView(R.id.fab_single_playlist_shuffle)
@@ -79,7 +76,7 @@ public class SinglePlaylistFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_single_playlist, container, false);
+        View view = inflater.inflate(R.layout.fragment_single_playlist, container, false);
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(getActivity());
         utils = new Utils();
@@ -97,11 +94,11 @@ public class SinglePlaylistFragment extends BaseFragment {
                     .placeholder(R.drawable.ic_music_placeholder)
                     .error(R.drawable.ic_music_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(img_playlist);
+                    .into(img_single_playlist);
         } else {
-            img_playlist.setImageResource(R.drawable.ic_music_placeholder);
+            img_single_playlist.setImageResource(R.drawable.ic_music_placeholder);
         }
-        tv_playlist_name.setText(playlist.getTitle());
+        tv_single_playlist_name.setText(playlist.getTitle());
         tv_header_title.setText(playlist.getTitle());
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
@@ -122,14 +119,13 @@ public class SinglePlaylistFragment extends BaseFragment {
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
                     if (((SinglePlaylist) data).getMusics() != null) {
-                        tv_playlist_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
+                        tv_single_playlist_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
                     } else {
-                        tv_playlist_count.setText("0" + " " + getActivity().getString(R.string.music));
+                        tv_single_playlist_count.setText("0" + " " + getActivity().getString(R.string.music));
                     }
 
                     if (sharedPrefManager.getLocal().equals("fa")) {
-                        tv_playlist_artist.setTextDirection(View.TEXT_DIRECTION_RTL);
-                        tv_playlist_name.setTextDirection(View.TEXT_DIRECTION_RTL);
+                        tv_single_playlist_count.setTextDirection(View.TEXT_DIRECTION_RTL);
                     }
 
                     setupMusic(((SinglePlaylist) data).getMusics());
@@ -216,8 +212,8 @@ public class SinglePlaylistFragment extends BaseFragment {
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
             musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-            rc_playlist_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
-            rc_playlist_musics.setAdapter(musicVerticalListAdapter);
+            rc_single_playlist.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+            rc_single_playlist.setAdapter(musicVerticalListAdapter);
         }
     }
 
@@ -238,7 +234,6 @@ public class SinglePlaylistFragment extends BaseFragment {
             fab_single_playlist_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
         }
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

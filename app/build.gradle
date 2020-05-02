@@ -7,7 +7,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "app.pilo.android"
         minSdkVersion 21

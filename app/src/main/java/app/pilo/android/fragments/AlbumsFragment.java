@@ -55,11 +55,11 @@ public class AlbumsFragment extends BaseFragment {
     private int page = 1;
     private HashMap<String, Object> params;
 
-    AlbumsFragment() {
+    public AlbumsFragment() {
         params = new HashMap<>();
     }
 
-    AlbumsFragment(HashMap<String, Object> params) {
+    public AlbumsFragment(HashMap<String, Object> params) {
         this.params = params;
     }
 

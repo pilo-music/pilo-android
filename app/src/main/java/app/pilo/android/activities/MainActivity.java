@@ -66,6 +66,7 @@ import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
+import app.pilo.android.fragments.AddToPlaylistFragment;
 import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
@@ -383,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 if (MusicDownloader.checkExists(this, music, userSharedPrefManager.getDownloadQuality())) {
                     img_extended_music_player_download.setEnabled(false);
                     img_extended_music_player_download.setImageDrawable(getDrawable(R.drawable.ic_checkmark));
-                }else{
+                } else {
                     img_extended_music_player_download.setEnabled(true);
                     img_extended_music_player_download.setImageDrawable(getDrawable(R.drawable.ic_download));
                 }
@@ -672,6 +673,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
             for (int i = 0; i < musics.size(); i++) {
                 if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
                     pushFragment(new SingleArtistFragment(musics.get(i).getArtist()));
+                    sliding_layout.setPanelState(PanelState.COLLAPSED);
                 }
             }
         }
@@ -697,7 +699,8 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         if (sliding_layout.getPanelState() != PanelState.HIDDEN) {
             for (int i = 0; i < musics.size(); i++) {
                 if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
-                    new AddToPlaylistDialog().show();
+                    pushFragment(new AddToPlaylistFragment(musics.get(i)));
+                    sliding_layout.setPanelState(PanelState.COLLAPSED);
                 }
             }
         }

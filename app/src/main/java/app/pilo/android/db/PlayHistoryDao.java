@@ -11,8 +11,8 @@ import app.pilo.android.models.PlayHistory;
 
 @Dao
 public interface PlayHistoryDao {
-    @Query("SELECT * FROM play_histories")
-    List<PlayHistory> getAll();
+    @Query("SELECT * FROM play_histories ORDER BY anInt DESC LIMIT :count offset :page")
+    List<PlayHistory> get(int page, int count);
 
     @Query("DELETE FROM play_histories")
     void nukeTable();

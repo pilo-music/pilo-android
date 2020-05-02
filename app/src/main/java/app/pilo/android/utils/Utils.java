@@ -61,6 +61,8 @@ public class Utils {
         }
     }
 
+
+
     public static int getScreenWidth(Context context) {
         int columnWidth;
         WindowManager wm = (WindowManager) context

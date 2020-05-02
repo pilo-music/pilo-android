@@ -54,11 +54,11 @@ public class VideosFragment extends BaseFragment {
     private HashMap<String, Object> params;
 
 
-    VideosFragment() {
+    public VideosFragment() {
         params = new HashMap<>();
     }
 
-    VideosFragment(HashMap<String, Object> params) {
+    public VideosFragment(HashMap<String, Object> params) {
         this.params = params;
     }
 

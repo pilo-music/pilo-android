@@ -47,12 +47,22 @@ public class PlaylistVerticalListAdapter extends RecyclerView.Adapter<PlaylistVe
         holder.tv_playlist_title.setText(playlist.getTitle());
         String count = playlist.getMusic_count() + " " + context.getString(R.string.music);
         holder.tv_playlist_count.setText(count);
-        Glide.with(context)
-                .load(playlist.getImage())
-                .placeholder(R.drawable.ic_music_placeholder)
-                .error(R.drawable.ic_music_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.playlist_item_image);
+
+        if (!playlist.getImage().isEmpty()) {
+            Glide.with(context)
+                    .load(playlist.getImage())
+                    .placeholder(R.drawable.ic_music_placeholder)
+                    .error(R.drawable.ic_music_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.playlist_item_image);
+        } else {
+            Glide.with(context)
+                    .load(playlist.getImage_one())
+                    .placeholder(R.drawable.ic_music_placeholder)
+                    .error(R.drawable.ic_music_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.playlist_item_image);
+        }
 
 
         holder.ll_playlist_vertical.setOnClickListener(v -> {

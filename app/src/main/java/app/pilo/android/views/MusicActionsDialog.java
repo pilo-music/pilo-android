@@ -29,6 +29,7 @@ import app.pilo.android.api.BookmarkApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.fragments.AddToPlaylistFragment;
 import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
@@ -282,7 +283,8 @@ public class MusicActionsDialog {
 
         ll_music_actions_add_to_playlist.setOnClickListener(v -> {
             dialog.dismiss();
-            new AddToPlaylistDialog().show();
+            AddToPlaylistFragment addToPlaylistFragment = new AddToPlaylistFragment(music);
+            ((MainActivity) context).pushFragment(addToPlaylistFragment);
         });
 
 

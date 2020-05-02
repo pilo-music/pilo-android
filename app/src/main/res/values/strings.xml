@@ -64,7 +64,8 @@
     <string name="did_you_mean">منظورتان این بود : </string>
     <string name="play">پخش</string>
     <string name="options">گزینه ها</string>
-
+    <string name="play_list_name">نام پلی لیست</string>
+    <string name="play_list_create">ایجاد پلی لیست</string>
 
     <string name="show_more">نمایش همه</string>
     <string name="music_new">جدیدترین ترین موزیک ها</string>

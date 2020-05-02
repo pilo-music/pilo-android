@@ -36,7 +36,7 @@
                 android:layout_height="60dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/music_item"
+                tools:src="@drawable/music_item"
                 app:riv_corner_radius="10dp"
                 app:riv_mutate_background="true" />
 
@@ -53,7 +53,7 @@
                     android:layout_height="60dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/music_item"
+                    tools:src="@drawable/music_item"
                     app:riv_corner_radius="10dp"
                     app:riv_mutate_background="true" />
 

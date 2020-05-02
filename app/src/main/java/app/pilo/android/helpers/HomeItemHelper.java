@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,7 @@ import com.smarteist.autoimageslider.SliderView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -39,14 +41,18 @@ import app.pilo.android.adapters.AlbumMusicGridListAdapter;
 import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.adapters.PlaylistsAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
+import app.pilo.android.db.AppDatabase;
+import app.pilo.android.fragments.AlbumsFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.MusicsFragment;
 import app.pilo.android.fragments.SingleHomeFragment;
+import app.pilo.android.fragments.VideosFragment;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.PlayHistory;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.Promotion;
 import app.pilo.android.models.Video;
@@ -112,8 +118,66 @@ public class HomeItemHelper {
                 case Home.TYPE_FOR_YOU:
                     setupForYou(home, inflater, parent);
                     break;
+                case Home.TYPE_PLAY_HISTORY:
+                    setupPlayHistory(home, inflater, parent);
+                    break;
+                case Home.TYPE_BROWSE_DOCK:
+                    setupBrowseDock(inflater, parent);
+                    break;
             }
 
+        }
+    }
+
+    private void setupBrowseDock(LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.browse_dock, parent);
+        LinearLayout ll_browse_dock_musics = view.findViewById(R.id.ll_browse_dock_musics);
+        LinearLayout ll_browse_dock_albums = view.findViewById(R.id.ll_browse_dock_albums);
+        LinearLayout ll_browse_dock_videos = view.findViewById(R.id.ll_browse_dock_videos);
+
+        if (ll_browse_dock_musics != null) {
+            ll_browse_dock_albums.setOnClickListener(v -> {
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("sort", "latest");
+                AlbumsFragment albumsFragment = new AlbumsFragment(params);
+                ((MainActivity) fragment.getActivity()).pushFragment(albumsFragment);
+            });
+
+            ll_browse_dock_musics.setOnClickListener(v -> {
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("sort", "latest");
+                MusicsFragment musicsFragment = new MusicsFragment(params);
+                ((MainActivity) fragment.getActivity()).pushFragment(musicsFragment);
+            });
+
+            ll_browse_dock_videos.setOnClickListener(v -> {
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("sort", "latest");
+                VideosFragment videosFragment = new VideosFragment(params);
+                ((MainActivity) fragment.getActivity()).pushFragment(videosFragment);
+            });
+
+        }
+    }
+
+    private void setupPlayHistory(Home home, LayoutInflater inflater, ViewGroup parent) {
+        View view = inflater.inflate(R.layout.for_you_carousel, parent);
+        RecyclerView rc_music_vertical = view.findViewById(R.id.rc_music_vertical);
+        TextView tv_music_vertical_title = view.findViewById(R.id.tv_music_vertical_title);
+        TextView tv_music_vertical_show_more = view.findViewById(R.id.tv_music_vertical_show_more);
+        if (rc_music_vertical != null) {
+            tv_music_vertical_title.setText(home.getName());
+            tv_music_vertical_show_more.setVisibility(View.GONE);
+            List<PlayHistory> playHistories = AppDatabase.getInstance(fragment.getActivity()).playHistoryDao().get(1, 9);
+            List<Music> musics = new ArrayList<>();
+            for (PlayHistory item : playHistories) {
+                musics.add(item.getMusic());
+            }
+
+            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), musics);
+            rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, true));
+            rc_music_vertical.setAdapter(musicVerticalListAdapter);
+            adapters.add(new WeakReference<>(musicVerticalListAdapter));
         }
     }
 
@@ -330,7 +394,6 @@ public class HomeItemHelper {
         bundle.putString("type", home.getType());
         singleHomeFragment.setArguments(bundle);
         ((MainActivity) fragment.getActivity()).pushFragment(singleHomeFragment);
-
     }
 
 

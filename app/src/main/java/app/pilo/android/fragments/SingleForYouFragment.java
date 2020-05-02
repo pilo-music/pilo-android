@@ -35,7 +35,6 @@ import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Music;
-import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SinglePlaylist;
 import app.pilo.android.utils.Utils;
 import butterknife.BindView;
@@ -43,34 +42,26 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SingleForYouFragment extends BaseFragment {
-    private View view;
     private UserSharedPrefManager sharedPrefManager;
-    private Utils utils;
-    private LikeApi likeApi;
-    private boolean likeProcess = false;
     private SinglePlaylist singlePlaylist;
     private ForYou forYou;
     private MusicVerticalListAdapter musicVerticalListAdapter;
     private UserSharedPrefManager userSharedPrefManager;
 
-    @BindView(R.id.img_single_playlist)
-    ImageView img_playlist;
-    @BindView(R.id.tv_single_playlist_name)
-    TextView tv_playlist_name;
-    @BindView(R.id.tv_single_playlist_count)
-    TextView tv_playlist_count;
+    @BindView(R.id.img_for_you)
+    ImageView img_for_you;
+    @BindView(R.id.tv_for_you_name)
+    TextView tv_for_you_name;
+    @BindView(R.id.tv_for_you_count)
+    TextView tv_for_you_count;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
-    @BindView(R.id.tv_single_playlist_artist)
-    TextView tv_playlist_artist;
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
-    @BindView(R.id.rc_single_playlist)
-    RecyclerView rc_playlist_musics;
-    @BindView(R.id.img_single_playlist_like)
-    ImageView img_single_playlist_like;
-    @BindView(R.id.fab_single_playlist_shuffle)
-    FloatingActionButton fab_single_playlist_shuffle;
+    @BindView(R.id.rc_for_you)
+    RecyclerView rc_for_you;
+    @BindView(R.id.fab_for_you_shuffle)
+    FloatingActionButton fab_for_you_shuffle;
 
 
     public SingleForYouFragment(ForYou forYou) {
@@ -80,11 +71,9 @@ public class SingleForYouFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_single_playlist, container, false);
+        View view = inflater.inflate(R.layout.fragment_for_you, container, false);
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(getActivity());
-        utils = new Utils();
-        likeApi = new LikeApi(getActivity());
         setupViews();
         sharedPrefManager = new UserSharedPrefManager(getActivity());
         getDataFromServer();
@@ -92,51 +81,49 @@ public class SingleForYouFragment extends BaseFragment {
     }
 
     private void setupViews() {
-        if (playlist.getImage() != null && !playlist.getImage().equals("")) {
+        if (forYou.getImage() != null && !forYou.getImage().equals("")) {
             Glide.with(getActivity())
-                    .load(playlist.getImage())
+                    .load(forYou.getImage())
                     .placeholder(R.drawable.ic_music_placeholder)
                     .error(R.drawable.ic_music_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(img_playlist);
+                    .into(img_for_you);
         } else {
-            img_playlist.setImageResource(R.drawable.ic_music_placeholder);
+            img_for_you.setImageResource(R.drawable.ic_music_placeholder);
         }
-        tv_playlist_name.setText(playlist.getTitle());
-        tv_header_title.setText(playlist.getTitle());
+        tv_for_you_name.setText(forYou.getTitle());
+        tv_header_title.setText(forYou.getTitle());
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
         if (userSharedPrefManager.getShuffleMode()) {
-            fab_single_playlist_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
-            fab_single_playlist_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
+            fab_for_you_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
+            fab_for_you_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
         } else {
-            fab_single_playlist_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
-            fab_single_playlist_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
+            fab_for_you_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_for_you_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
         }
 
     }
 
     private void getDataFromServer() {
         PlaylistApi playlistApi = new PlaylistApi(getActivity());
-        playlistApi.single(playlist.getSlug(), new HttpHandler.RequestHandler() {
+        playlistApi.single(forYou.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
                     if (((SinglePlaylist) data).getMusics() != null) {
-                        tv_playlist_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
+                        tv_for_you_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
                     } else {
-                        tv_playlist_count.setText("0" + " " + getActivity().getString(R.string.music));
+                        tv_for_you_count.setText("0" + " " + getActivity().getString(R.string.music));
                     }
 
                     if (sharedPrefManager.getLocal().equals("fa")) {
-                        tv_playlist_artist.setTextDirection(View.TEXT_DIRECTION_RTL);
-                        tv_playlist_name.setTextDirection(View.TEXT_DIRECTION_RTL);
+                        tv_for_you_name.setTextDirection(View.TEXT_DIRECTION_RTL);
                     }
 
                     setupMusic(((SinglePlaylist) data).getMusics());
                     singlePlaylist = ((SinglePlaylist) data);
 
-                    setupLikeButton();
                 } else {
                     new HttpErrorHandler(getActivity(), message);
                 }
@@ -149,94 +136,29 @@ public class SingleForYouFragment extends BaseFragment {
         });
     }
 
-    private void setupLikeButton() {
-        if (singlePlaylist == null) {
-            return;
-        }
-
-        if (singlePlaylist.isHas_like()) {
-            img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-        } else {
-            img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-        }
-        img_single_playlist_like.setVisibility(View.VISIBLE);
-
-
-        img_single_playlist_like.setOnClickListener(v -> {
-            if (likeProcess)
-                return;
-            if (!singlePlaylist.isHas_like()) {
-                likeProcess = true;
-                utils.animateHeartButton(img_single_playlist_like);
-                img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-                likeApi.like(playlist.getSlug(), "playlist", "add", new HttpHandler.RequestHandler() {
-                    @Override
-                    public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler(getActivity(), message);
-                            img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-                        } else {
-                            singlePlaylist.setHas_like(true);
-                        }
-                    }
-
-                    @Override
-                    public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler(getActivity());
-                        img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-                    }
-                });
-                likeProcess = false;
-            } else {
-                likeProcess = true;
-                img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-                likeApi.like(playlist.getSlug(), "playlist", "remove", new HttpHandler.RequestHandler() {
-                    @Override
-                    public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler(getActivity(), message);
-                            img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-                        } else {
-                            singlePlaylist.setHas_like(false);
-                        }
-                    }
-
-                    @Override
-                    public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler(getActivity());
-                        img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-                    }
-                });
-                likeProcess = false;
-            }
-        });
-
-    }
-
-
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
             musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-            rc_playlist_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
-            rc_playlist_musics.setAdapter(musicVerticalListAdapter);
+            rc_for_you.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+            rc_for_you.setAdapter(musicVerticalListAdapter);
         }
     }
 
-    @OnClick(R.id.fab_single_playlist_play)
-    void fab_single_playlist_play() {
+    @OnClick(R.id.fab_for_you_play)
+    void fab_for_you_play() {
         EventBus.getDefault().post(new MusicEvent(getActivity(), singlePlaylist.getMusics(), singlePlaylist.getMusics().get(0).getSlug(), true, false));
     }
 
-    @OnClick(R.id.fab_single_playlist_shuffle)
-    void fab_single_playlist_shuffle() {
+    @OnClick(R.id.fab_for_you_shuffle)
+    void fab_for_you_shuffle() {
         if (userSharedPrefManager.getShuffleMode()) {
             userSharedPrefManager.setShuffleMode(false);
-            fab_single_playlist_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
-            fab_single_playlist_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
+            fab_for_you_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_for_you_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
         } else {
             userSharedPrefManager.setShuffleMode(true);
-            fab_single_playlist_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
-            fab_single_playlist_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
+            fab_for_you_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
+            fab_for_you_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
         }
     }
 
