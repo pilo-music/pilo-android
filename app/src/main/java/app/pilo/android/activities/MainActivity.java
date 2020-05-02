@@ -64,6 +64,7 @@ import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.MusicApi;
+import app.pilo.android.api.PlayHistoryApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.fragments.AddToPlaylistFragment;
@@ -76,6 +77,7 @@ import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.PlayHistory;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     private boolean likeProcess = false;
     private LikeApi likeApi;
     private Utils utils;
+    private PlayHistoryApi playHistoryApi;
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -201,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
-
         initTab();
         fragmentHistory = new FragmentHistory();
         mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
@@ -213,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
         musics = new ArrayList<>();
         likeApi = new LikeApi(this);
         utils = new Utils();
+        playHistoryApi = new PlayHistoryApi(this);
         userSharedPrefManager = new UserSharedPrefManager(this);
 
         musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
@@ -394,6 +397,9 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
                 } else {
                     img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
                 }
+
+                // add play history
+                addMusicToHistory(music);
             }
 
         } else {
@@ -941,6 +947,17 @@ public class MainActivity extends AppCompatActivity implements BaseFragment.Frag
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    private void addMusicToHistory(Music music) {
+        PlayHistory playHistory = AppDatabase.getInstance(this).playHistoryDao().search(music.getSlug());
+        if (playHistory != null) {
+            AppDatabase.getInstance(this).playHistoryDao().delete(playHistory);
+        }
+        playHistory = new PlayHistory();
+        playHistory.setMusic(music);
+        AppDatabase.getInstance(this).playHistoryDao().insert(playHistory);
+        playHistoryApi.add(music.getSlug(), "music");
     }
 
 }

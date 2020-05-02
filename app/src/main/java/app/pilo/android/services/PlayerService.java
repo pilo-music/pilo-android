@@ -24,10 +24,12 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.Html;
 import android.view.KeyEvent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
@@ -51,6 +53,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -58,8 +61,10 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
+import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
 import app.pilo.android.utils.Constant;
+import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
 
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
@@ -72,6 +77,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private boolean mReceiversRegistered = false;
     private AudioManager mAudioManager;
     private static final int NOTIF_ID = 32432;
+    private UserSharedPrefManager userSharedPrefManager;
 
     private BroadcastReceiver button_reciever = new BroadcastReceiver() {
         @Override
@@ -89,10 +95,10 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
                         break;
                 }
-            }else if (intent != null && intent.getAction() != null){
+            } else if (intent != null && intent.getAction() != null) {
                 if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                     final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-                    switch(state) {
+                    switch (state) {
                         case BluetoothAdapter.STATE_OFF:
                             if (exoPlayer != null && exoPlayer.getPlayWhenReady() && !isInitialStickyBroadcast()) {
                                 togglePlay();
@@ -111,7 +117,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                             break;
                     }
 
-                }else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
+                } else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
                     if (exoPlayer != null && exoPlayer.getPlayWhenReady() && !isInitialStickyBroadcast()) {
                         togglePlay();
                     }
@@ -141,7 +147,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     @Override
     public void onCreate() {
         super.onCreate();
-
+        userSharedPrefManager = new UserSharedPrefManager(this);
         init();
         showNotification();
     }
@@ -240,14 +246,14 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                 }
                 stopForeground(true);
                 stopSelf();
-            }else {
+            } else {
                 showNotification();
             }
         }
 
-        try{
+        try {
             MediaButtonReceiver.handleIntent(mMediaSession, intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -382,17 +388,17 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private void skipToNext() {
         List<Music> current_items = AppDatabase.getInstance(this).musicDao().getAll();
 
-            int active_index = -1;
-            for (int i = 0; i < current_items.size(); i++) {
-                if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
-                    active_index = i;
-                }
+        int active_index = -1;
+        for (int i = 0; i < current_items.size(); i++) {
+            if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
+                active_index = i;
             }
-            if (active_index != -1 && (active_index + 1) < current_items.size()) {
-                playTrack(current_items.get(active_index + 1).getSlug());
-            } else if (current_items.size() > 0) {
-                playTrack(current_items.get(0).getSlug());
-            }
+        }
+        if (active_index != -1 && (active_index + 1) < current_items.size()) {
+            playTrack(current_items.get(active_index + 1).getSlug());
+        } else if (current_items.size() > 0) {
+            playTrack(current_items.get(0).getSlug());
+        }
 
 
     }
@@ -413,36 +419,26 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         }
 
 // -------------       For playing from file if downloaded
-    /*
-      QueryBuilder<DownloadTable> builder = downloadTableBox.query();
-
-     QueryBuilder<DownloadTable> builder = downloadTableBox.query();
-        builder.link(DownloadTable_.music).equal(MusicTable_.music_id, music_id);
-        DownloadTable download_table = builder.build().findFirst();
-        File musicFile = null;
-        if (download_table != null) {
-            File music_folder = func.findMusicFolder(PlayerService.this, music_id, download_table.quality);
-            if (music_folder.isDirectory()) {
-                musicFile = new File(music_folder, download_table.music.music_id + ".mp3");
-            }
-        }
-        if (musicFile != null && musicFile.exists()) {
-            Uri uri = Uri.fromFile(musicFile);
-            sessionManager.setActiveMusicId(music_id);
-            prepareExoPlayerFromURL(uri, music_id, true);
+        Download downloaded = AppDatabase.getInstance(this).downloadDao().findById(music_slug);
+        if (downloaded != null && MusicDownloader.checkExists(this, musicTable, userSharedPrefManager.getStreamQuality())) {
+            String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath128() : downloaded.getPath128();
+            File file = new File(downloadedFile);
+            Uri uri = Uri.fromFile(file);
+            userSharedPrefManager.setActiveMusicSlug(music_slug);
+            prepareExoPlayerFromURL(uri, music_slug, true);
         } else {
-            String url = func.getMp3UrlForStreaming(musicTable);
+            String url = Utils.getMp3UrlForStreaming(this, musicTable);
             if (!url.equals("")) {
-                sessionManager.setActiveMusicId(music_id);
-                prepareExoPlayerFromURL(Uri.parse(url), music_id, true);
+                userSharedPrefManager.setActiveMusicSlug(music_slug);
+                prepareExoPlayerFromURL(Uri.parse(url), music_slug, true);
             }
-        }*/
-
-        String url = Utils.getMp3UrlForStreaming(this, musicTable);
-        if (!url.equals("")) {
-            sessionManager.setActiveMusicSlug(music_slug);
-            prepareExoPlayerFromURL(Uri.parse(url), music_slug, true);
         }
+
+//        String url = Utils.getMp3UrlForStreaming(this, musicTable);
+//        if (!url.equals("")) {
+//            sessionManager.setActiveMusicSlug(music_slug);
+//            prepareExoPlayerFromURL(Uri.parse(url), music_slug, true);
+//        }
         Intent intent = new Intent();
         intent.setAction(CUSTOM_PLAYER_INTENT);
         intent.putExtra("notify", true);
@@ -455,18 +451,18 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private void skipToPrevious() {
         if (exoPlayer != null && ((exoPlayer.getCurrentPosition() * 100) / exoPlayer.getDuration() > 5)) {
             exoPlayer.seekTo(0);
-        }else {
+        } else {
             List<Music> current_items = AppDatabase.getInstance(this).musicDao().getAll();
 
-                int active_index = -1;
-                for (int i = 0; i < current_items.size(); i++) {
-                    if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
-                        active_index = i;
-                    }
+            int active_index = -1;
+            for (int i = 0; i < current_items.size(); i++) {
+                if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
+                    active_index = i;
                 }
-                if ((active_index - 1) >= 0) {
-                    playTrack(current_items.get(active_index - 1).getSlug());
-                }
+            }
+            if ((active_index - 1) >= 0) {
+                playTrack(current_items.get(active_index - 1).getSlug());
+            }
         }
     }
 
@@ -765,5 +761,5 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         mMediaSession.setPlaybackState(mStateBuilder.build());
 
     }
-    }
+}
 

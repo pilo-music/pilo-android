@@ -14,6 +14,9 @@ public interface PlayHistoryDao {
     @Query("SELECT * FROM play_histories ORDER BY anInt DESC LIMIT :count offset :page")
     List<PlayHistory> get(int page, int count);
 
+    @Query("SELECT * FROM play_histories WHERE music_slug = :slug LIMIT 1")
+    PlayHistory search(String slug);
+
     @Query("DELETE FROM play_histories")
     void nukeTable();
 

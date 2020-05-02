@@ -30,6 +30,7 @@ import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.api.PlayHistoryApi;
 import app.pilo.android.api.VideoApi;
 import app.pilo.android.models.SingleVideo;
 import app.pilo.android.models.Video;
@@ -101,6 +102,8 @@ public class SingleVideoFragment extends BaseFragment {
     @OnClick(R.id.fl_single_video)
     void playVideo() {
         if (!video.getVideo480().equals("")) {
+            PlayHistoryApi playHistoryApi = new PlayHistoryApi(getActivity());
+            playHistoryApi.add(video.getSlug(), "video");
             Intent mIntent = new Intent(getActivity(), VideoPlayerActivity.class);
             mIntent.putExtra("url", video.getVideo480());
             startActivity(mIntent);

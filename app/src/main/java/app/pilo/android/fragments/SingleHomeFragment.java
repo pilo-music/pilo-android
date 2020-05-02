@@ -1,18 +1,14 @@
 package app.pilo.android.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,11 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumMusicGridListAdapter;
 import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistsListAdapter;
-import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.PlaylistsAdapter;
@@ -162,7 +156,7 @@ public class SingleHomeFragment extends BaseFragment {
 
     private void getDataFromServer() {
         swipeRefreshLayout.setRefreshing(true);
-        homeApi.single(id, page, new HttpHandler.RequestHandler() {
+        homeApi.singleHome(id, page, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (view != null) {

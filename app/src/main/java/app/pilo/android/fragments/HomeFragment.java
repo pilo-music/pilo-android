@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.error.VolleyError;
@@ -52,7 +50,7 @@ public class HomeFragment extends BaseFragment {
     private void getHomeApi() {
         HomeApi homeApi = new HomeApi(getActivity());
         swipe_refresh_layout.setRefreshing(true);
-        homeApi.get(new HttpHandler.RequestHandler() {
+        homeApi.getHome(new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 swipe_refresh_layout.setRefreshing(false);

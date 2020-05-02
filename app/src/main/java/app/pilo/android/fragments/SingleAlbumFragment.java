@@ -40,6 +40,7 @@ import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.api.PlayHistoryApi;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
@@ -253,6 +254,8 @@ public class SingleAlbumFragment extends BaseFragment {
 
     @OnClick(R.id.fab_single_album_play)
     void fab_single_album_play() {
+        PlayHistoryApi playHistoryApi = new PlayHistoryApi(getActivity());
+        playHistoryApi.add(album.getSlug(), "album");
         EventBus.getDefault().post(new MusicEvent(getActivity(), singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true, false));
     }
 

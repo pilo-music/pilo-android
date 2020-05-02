@@ -6,7 +6,8 @@ public class PiloApi {
     static final String VERSION = BASE_URL + "version";
     static final String HOME_GET = BASE_URL + "homes";
     static final String HOME_SINGLE = BASE_URL + "home";
-    static final String BROWSER_GET = BASE_URL + "browser/get";
+    static final String BROWSER_GET = BASE_URL + "browses";
+    static final String BROWSER_SINGLE = BASE_URL + "browse";
     static final String SEARCH = BASE_URL + "search/";
     static final String LOGIN = BASE_URL + "login";
     static final String REGISTER = BASE_URL + "register";
@@ -37,6 +38,7 @@ public class PiloApi {
     static final String MESSAGE_ADD = BASE_URL + "message";
     static final String FORGOT_PASSWORD_CREATE = BASE_URL + "forgot-passport/create";
     static final String FORGOT_PASSWORD = BASE_URL + "forgot-passport/reset";
+    static final String PLAY_HISTORY = BASE_URL + "play-history";
     static final String CONTACTUS = BASE_URL + "message/add";
 
 }

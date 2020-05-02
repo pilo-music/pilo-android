@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.error.VolleyError;
@@ -16,7 +15,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -25,9 +23,7 @@ import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.HomeItemHelper;
-import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Home;
-import app.pilo.android.models.Music;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -52,40 +48,26 @@ public class BrowserFragment extends BaseFragment {
 
 
     private void getHomeApi() {
-//        HomeApi homeApi = new HomeApi(getActivity());
-//        swipe_refresh_layout.setRefreshing(true);
-//        homeApi.get(new HttpHandler.RequestHandler() {
-//            @Override
-//            public void onGetInfo(Object data, String message, boolean status) {
-//                swipe_refresh_layout.setRefreshing(false);
-//                if (status) {
-//                    homeItemHelper.init(BrowserFragment.this, (List<Home>) data);
-//                } else {
-//                    new HttpErrorHandler(getActivity(), message);
-//                }
-//            }
-//
-//            @Override
-//            public void onGetError(@Nullable VolleyError error) {
-//                swipe_refresh_layout.setRefreshing(false);
-//                new HttpErrorHandler(getActivity());
-//            }
-//        });
+        HomeApi homeApi = new HomeApi(getActivity());
+        swipe_refresh_layout.setRefreshing(true);
+        homeApi.getBrowse(new HttpHandler.RequestHandler() {
+            @Override
+            public void onGetInfo(Object data, String message, boolean status) {
+                swipe_refresh_layout.setRefreshing(false);
+                if (status) {
+                    homeItemHelper.init(BrowserFragment.this, (List<Home>) data);
+                } else {
+                    new HttpErrorHandler(getActivity(), message);
+                }
+            }
 
-        List<Home> browses = new ArrayList<>();
-        Home browse = new Home();
-        browse.setType(Home.TYPE_FOR_YOU);
-        browse.setId(1);
-        browse.setName("test");
-        List<ForYou> data = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            ForYou forYou = new ForYou();
-            data.add(forYou);
-        }
-        browse.setData(data);
-        browses.add(browse);
+            @Override
+            public void onGetError(@Nullable VolleyError error) {
+                swipe_refresh_layout.setRefreshing(false);
+                new HttpErrorHandler(getActivity());
+            }
+        });
 
-        homeItemHelper.init(BrowserFragment.this, browses);
 
         swipe_refresh_layout.setRefreshing(false);
     }
