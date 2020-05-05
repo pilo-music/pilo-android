@@ -1,5 +1,6 @@
 package app.pilo.android.fragments;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SinglePlaylist;
 import app.pilo.android.utils.Utils;
+import app.pilo.android.views.EditPlaylistDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -67,7 +69,8 @@ public class SinglePlaylistFragment extends BaseFragment {
     ImageView img_single_playlist_like;
     @BindView(R.id.fab_single_playlist_shuffle)
     FloatingActionButton fab_single_playlist_shuffle;
-
+    @BindView(R.id.img_header_more)
+    ImageView img_header_more;
 
     public SinglePlaylistFragment(Playlist playlist) {
         this.playlist = playlist;
@@ -95,6 +98,13 @@ public class SinglePlaylistFragment extends BaseFragment {
                     .error(R.drawable.ic_music_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(img_single_playlist);
+        } else if (playlist.getImage_one() != null && !playlist.getImage_one().equals("")) {
+            Glide.with(getActivity())
+                    .load(playlist.getImage_one())
+                    .placeholder(R.drawable.ic_music_placeholder)
+                    .error(R.drawable.ic_music_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(img_single_playlist);
         } else {
             img_single_playlist.setImageResource(R.drawable.ic_music_placeholder);
         }
@@ -114,7 +124,7 @@ public class SinglePlaylistFragment extends BaseFragment {
 
     private void getDataFromServer() {
         PlaylistApi playlistApi = new PlaylistApi(getActivity());
-        playlistApi.single(playlist.getSlug(), new HttpHandler.RequestHandler() {
+        playlistApi.single(playlist.getSlug(), playlist.getUser().getEmail().equals(""), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
@@ -147,6 +157,11 @@ public class SinglePlaylistFragment extends BaseFragment {
     private void setupLikeButton() {
         if (singlePlaylist == null) {
             return;
+        }
+
+        if (singlePlaylist.getPlaylist().getUser().getEmail().equals("")) {
+            img_single_playlist_like.setVisibility(View.GONE);
+            img_header_back.setVisibility(View.GONE);
         }
 
         if (singlePlaylist.isHas_like()) {
@@ -235,6 +250,25 @@ public class SinglePlaylistFragment extends BaseFragment {
         }
     }
 
+
+    @OnClick(R.id.img_header_more)
+    void img_header_more() {
+        new EditPlaylistDialog(getActivity(), playlist, new EditPlaylistDialog.onClick() {
+            @Override
+            public void onEdit(Dialog dialog, Playlist newPlaylist) {
+                tv_single_playlist_name.setText(newPlaylist.getTitle());
+                tv_header_title.setText(newPlaylist.getTitle());
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onDelete(Dialog dialog1, Dialog dialog, Playlist playlist) {
+                dialog1.dismiss();
+                dialog.dismiss();
+                getActivity().onBackPressed();
+            }
+        }).show();
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {

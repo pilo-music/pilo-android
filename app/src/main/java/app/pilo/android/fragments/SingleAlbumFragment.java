@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,10 +31,7 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
-import app.pilo.android.adapters.EditItemTouchHelperCallback;
-import app.pilo.android.adapters.ItemAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
-import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.api.AlbumApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;

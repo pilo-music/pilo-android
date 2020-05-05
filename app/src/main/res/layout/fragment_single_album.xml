@@ -68,17 +68,6 @@
                         android:textColor="@color/colorDark"
                         android:textSize="@dimen/normal_font_size"
                         tools:text="پیام ها" />
-
-                    <ImageView
-                        android:id="@+id/img_header_more"
-                        android:layout_width="20dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/activity_vertical_margin"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/ic_ellipsis" />
                 </RelativeLayout>
             </androidx.appcompat.widget.Toolbar>
 

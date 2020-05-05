@@ -52,11 +52,6 @@ public class ArtistsListAdapter extends RecyclerView.Adapter<ArtistsListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ArtistCarouselAdapterViewHolder holder, final int position) {
         final Artist artist = artists.get(position);
-        if (viewId == R.layout.artist_item_full_width) {
-            int width = holder.artist_image.getWidth();
-            holder.artist_image.getLayoutParams().height = width;
-            holder.artist_image.requestLayout();
-        }
         holder.tv_artist_name.setText(artist.getName());
         holder.ll_artist_item.setOnClickListener(v -> fragmentJump(artist));
         if (!artist.getImage().equals("") && !artist.getImage().equals("null") && !artist.getImage().equals(" ")) {

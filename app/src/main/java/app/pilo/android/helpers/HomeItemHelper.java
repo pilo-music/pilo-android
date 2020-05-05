@@ -45,6 +45,7 @@ import app.pilo.android.db.AppDatabase;
 import app.pilo.android.fragments.AlbumsFragment;
 import app.pilo.android.fragments.HomeFragment;
 import app.pilo.android.fragments.MusicsFragment;
+import app.pilo.android.fragments.SingleBrowseFragment;
 import app.pilo.android.fragments.SingleHomeFragment;
 import app.pilo.android.fragments.VideosFragment;
 import app.pilo.android.models.Album;
@@ -67,6 +68,13 @@ public class HomeItemHelper {
 
     public void init(Fragment fragment, List<Home> homes) {
         this.fragment = fragment;
+        adapters.clear();
+        if (fragment == null || fragment.getView() == null)
+            return;
+
+        LayoutInflater inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ViewGroup parent = fragment.getView().findViewById(R.id.ll_main_layout);
+        parent.removeAllViews();
 
         for (int i = 0; i < homes.size(); i++) {
             Home home = homes.get(i);
@@ -74,12 +82,6 @@ public class HomeItemHelper {
                 continue;
 
 
-            if (fragment == null || fragment.getView() == null)
-                continue;
-
-
-            LayoutInflater inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ViewGroup parent = fragment.getView().findViewById(R.id.ll_main_layout);
             if (inflater == null || parent == null)
                 continue;
 
@@ -161,14 +163,17 @@ public class HomeItemHelper {
     }
 
     private void setupPlayHistory(Home home, LayoutInflater inflater, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.for_you_carousel, parent);
+        List<PlayHistory> playHistories = AppDatabase.getInstance(fragment.getActivity()).playHistoryDao().get(1, 9);
+        if (playHistories.size() == 0)
+            return;
+        View view = inflater.inflate(R.layout.music_vertical_list, parent);
         RecyclerView rc_music_vertical = view.findViewById(R.id.rc_music_vertical);
         TextView tv_music_vertical_title = view.findViewById(R.id.tv_music_vertical_title);
         TextView tv_music_vertical_show_more = view.findViewById(R.id.tv_music_vertical_show_more);
         if (rc_music_vertical != null) {
             tv_music_vertical_title.setText(home.getName());
             tv_music_vertical_show_more.setVisibility(View.GONE);
-            List<PlayHistory> playHistories = AppDatabase.getInstance(fragment.getActivity()).playHistoryDao().get(1, 9);
+
             List<Music> musics = new ArrayList<>();
             for (PlayHistory item : playHistories) {
                 musics.add(item.getMusic());
@@ -182,6 +187,8 @@ public class HomeItemHelper {
     }
 
     private void setupForYou(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<ForYou>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.for_you_carousel, parent);
         RecyclerView rc_for_you_carousel = view.findViewById(R.id.rc_for_you_carousel);
         if (rc_for_you_carousel != null) {
@@ -213,6 +220,9 @@ public class HomeItemHelper {
     }
 
     private void setupPlaylistsViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Playlist>) home.getData()).size() == 0) {
+            return;
+        }
         View view = inflater.inflate(R.layout.playlist_carousel, parent);
         RecyclerView rc_playlist_carousel = view.findViewById(R.id.rc_playlist_carousel);
         TextView tv_playlist_carousel_title = view.findViewById(R.id.tv_playlist_carousel_title);
@@ -222,7 +232,7 @@ public class HomeItemHelper {
             sfl_playlist.setVisibility(View.GONE);
             rc_playlist_carousel.setVisibility(View.VISIBLE);
             tv_playlist_carousel_title.setText(home.getName());
-            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Playlist>) home.getData()), R.layout.playlist_item_full_width);
+            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Playlist>) home.getData()));
             rc_playlist_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, true));
             rc_playlist_carousel.setAdapter(playlistsAdapter);
             tv_playlist_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
@@ -232,6 +242,8 @@ public class HomeItemHelper {
 
 
     private void setupPlaylistsGridViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Playlist>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.playlist_grid_list, parent);
         RecyclerView rc_playlist_grid = view.findViewById(R.id.rc_playlist_grid);
         TextView tv_playlist_grid_title = view.findViewById(R.id.tv_playlist_grid_title);
@@ -241,15 +253,17 @@ public class HomeItemHelper {
             sfl_playlist.setVisibility(View.GONE);
             tv_playlist_grid_title.setVisibility(View.VISIBLE);
             tv_playlist_grid_title.setText(home.getName());
-            PlaylistsAdapter playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Playlist>) home.getData()), R.layout.playlist_item_full_width);
+            PlaylistsAdapter playlistsAdapterGrid = new PlaylistsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Playlist>) home.getData()), R.layout.playlist_item_full_width);
             rc_playlist_grid.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
-            rc_playlist_grid.setAdapter(playlistsAdapter);
+            rc_playlist_grid.setAdapter(playlistsAdapterGrid);
             tv_playlist_grid_show_more.setOnClickListener(v -> goToSingleHome(home));
-            adapters.add(new WeakReference<>(playlistsAdapter));
+            adapters.add(new WeakReference<>(playlistsAdapterGrid));
         }
     }
 
     private void setupMusicGridViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Music>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.music_grid_list, parent);
         RecyclerView rc_music_grid = view.findViewById(R.id.rc_music_grid);
         TextView tv_music_grid_title = view.findViewById(R.id.tv_music_grid_title);
@@ -270,6 +284,8 @@ public class HomeItemHelper {
     }
 
     private void setupAlbumMusicViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Object>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.album_music_list, parent);
         RecyclerView rc_album_music = view.findViewById(R.id.rc_album_music);
         TextView tv_album_music_title = view.findViewById(R.id.tv_album_music_title);
@@ -291,6 +307,8 @@ public class HomeItemHelper {
 
 
     private void setupMusicsCarousel(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Music>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.music_carousel, parent);
         RecyclerView rc_music_carousel = view.findViewById(R.id.rc_music_carousel);
         TextView tv_music_carousel_title = view.findViewById(R.id.tv_music_carousel_title);
@@ -315,6 +333,8 @@ public class HomeItemHelper {
     }
 
     private void setupArtistCarousel(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Artist>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.artist_carousel, parent);
         RecyclerView rc_artist_carousel = view.findViewById(R.id.rc_artist_carousel);
         TextView tv_artist_carousel_title = view.findViewById(R.id.tv_artist_carousel_title);
@@ -335,6 +355,8 @@ public class HomeItemHelper {
 
 
     private void setupVideoViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Video>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.video_carousel, parent);
         SliderView sliderView = view.findViewById(R.id.imageSlider);
         TextView tv_video_carousel_title = view.findViewById(R.id.tv_video_carousel_title);
@@ -353,6 +375,8 @@ public class HomeItemHelper {
     }
 
     private void setupAlbumViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Album>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.album_carousel, parent);
         RecyclerView rc_album_carousel = view.findViewById(R.id.rc_album_carousel);
         TextView tv_album_carousel_title = view.findViewById(R.id.tv_album_carousel_title);
@@ -372,6 +396,8 @@ public class HomeItemHelper {
     }
 
     private void setupLastVerticalMusicList(Home home, LayoutInflater inflater, ViewGroup parent) {
+        if (((List<Music>) home.getData()).size() == 0)
+            return;
         View view = inflater.inflate(R.layout.music_vertical_list, parent);
         RecyclerView rc_music_vertical = view.findViewById(R.id.rc_music_vertical);
         TextView tv_music_vertical_title = view.findViewById(R.id.tv_music_vertical_title);
@@ -388,12 +414,22 @@ public class HomeItemHelper {
 
 
     private void goToSingleHome(Home home) {
-        SingleHomeFragment singleHomeFragment = new SingleHomeFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", home.getId());
-        bundle.putString("type", home.getType());
-        singleHomeFragment.setArguments(bundle);
-        ((MainActivity) fragment.getActivity()).pushFragment(singleHomeFragment);
+        if (fragment instanceof HomeFragment){
+            SingleHomeFragment fragment1 = new SingleHomeFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", home.getId());
+            bundle.putString("type", home.getType());
+            fragment1.setArguments(bundle);
+            ((MainActivity) fragment.getActivity()).pushFragment(fragment1);
+        }else{
+            SingleBrowseFragment fragment1 = new SingleBrowseFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", home.getId());
+            bundle.putString("type", home.getType());
+            fragment1.setArguments(bundle);
+            ((MainActivity) fragment.getActivity()).pushFragment(fragment1);
+        }
+
     }
 
 

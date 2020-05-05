@@ -72,11 +72,12 @@ public class MusicActionsDialog {
 
     public void showDialog() {
         final Dialog dialog = new Dialog(context, R.style.DialogTheme);
+        this.dialog = dialog;
         dialog.setContentView(R.layout.music_actions_dialog);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
-        this.dialog = dialog;
         userSharedPrefManager = new UserSharedPrefManager(context);
+
         findViews();
         setupViews();
 

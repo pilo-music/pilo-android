@@ -106,34 +106,34 @@ public class SingleForYouFragment extends BaseFragment {
     }
 
     private void getDataFromServer() {
-        PlaylistApi playlistApi = new PlaylistApi(getActivity());
-        playlistApi.single(forYou.getSlug(), new HttpHandler.RequestHandler() {
-            @Override
-            public void onGetInfo(Object data, String message, boolean status) {
-                if (status) {
-                    if (((SinglePlaylist) data).getMusics() != null) {
-                        tv_for_you_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
-                    } else {
-                        tv_for_you_count.setText("0" + " " + getActivity().getString(R.string.music));
-                    }
-
-                    if (sharedPrefManager.getLocal().equals("fa")) {
-                        tv_for_you_name.setTextDirection(View.TEXT_DIRECTION_RTL);
-                    }
-
-                    setupMusic(((SinglePlaylist) data).getMusics());
-                    singlePlaylist = ((SinglePlaylist) data);
-
-                } else {
-                    new HttpErrorHandler(getActivity(), message);
-                }
-            }
-
-            @Override
-            public void onGetError(@Nullable VolleyError error) {
-                new HttpErrorHandler(getActivity());
-            }
-        });
+//        PlaylistApi playlistApi = new PlaylistApi(getActivity());
+//        playlistApi.single(forYou.getSlug(), new HttpHandler.RequestHandler() {
+//            @Override
+//            public void onGetInfo(Object data, String message, boolean status) {
+//                if (status) {
+//                    if (((SinglePlaylist) data).getMusics() != null) {
+//                        tv_for_you_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
+//                    } else {
+//                        tv_for_you_count.setText("0" + " " + getActivity().getString(R.string.music));
+//                    }
+//
+//                    if (sharedPrefManager.getLocal().equals("fa")) {
+//                        tv_for_you_name.setTextDirection(View.TEXT_DIRECTION_RTL);
+//                    }
+//
+//                    setupMusic(((SinglePlaylist) data).getMusics());
+//                    singlePlaylist = ((SinglePlaylist) data);
+//
+//                } else {
+//                    new HttpErrorHandler(getActivity(), message);
+//                }
+//            }
+//
+//            @Override
+//            public void onGetError(@Nullable VolleyError error) {
+//                new HttpErrorHandler(getActivity());
+//            }
+//        });
     }
 
     private void setupMusic(List<Music> musics) {

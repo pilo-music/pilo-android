@@ -54,7 +54,6 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.Al
     @Override
     public void onBindViewHolder(@NonNull AlbumListAdapterViewHolder holder, final int position) {
         final Album album = albums.get(position);
-
         holder.tv_album_title.setText(album.getTitle());
         holder.tv_album_artist.setText(album.getArtist().getName());
         Glide.with(context)

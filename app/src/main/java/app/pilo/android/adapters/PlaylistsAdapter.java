@@ -53,18 +53,10 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistAdapterViewHolder holder, final int position) {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(16, 16, 16, 16);
-        holder.ll_playlist_item.setLayoutParams(params);
-
         final Playlist playlist = playlists.get(position);
         holder.tv_playlist_title.setText(playlist.getTitle());
         String count = playlist.getMusic_count() + " " + context.getString(R.string.music);
         holder.tv_playlist_item_count.setText(count);
-
 
         if (!playlist.getImage().isEmpty()) {
             Glide.with(context)
@@ -134,8 +126,6 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
         TextView tv_playlist_title;
         @BindView(R.id.tv_playlist_item_count)
         TextView tv_playlist_item_count;
-        @BindView(R.id.img_playlist_item_play)
-        ImageView img_playlist_play;
         @BindView(R.id.ll_playlist_item)
         LinearLayout ll_playlist_item;
         @BindView(R.id.riv_playlist_item_image)

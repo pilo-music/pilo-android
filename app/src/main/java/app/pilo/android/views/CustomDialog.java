@@ -106,6 +106,7 @@ public class CustomDialog {
 
         ll_success.setOnClickListener(v -> {
             ll_success.setEnabled(false);
+            tv_success.setVisibility(View.VISIBLE);
             progress_bar.setVisibility(View.VISIBLE);
             onClient.onSuccessClick(dialog);
         });

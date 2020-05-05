@@ -14,10 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
+import app.pilo.android.event.MusicEvent;
+import app.pilo.android.fragments.SingleAlbumFragment;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Music;
 import butterknife.BindView;
@@ -72,9 +78,8 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(viewHolder.album_image);
             viewHolder.ll_album_item.setOnClickListener(v -> {
-                if (items.size() > holder.getAdapterPosition()) {
-//                    recyclerClickListener.onClick(getPosition(album.getSlug()));
-                }
+                SingleAlbumFragment fragment = new SingleAlbumFragment(album);
+                ((MainActivity) context).pushFragment(fragment);
             });
         } else {
             MusicAdapterViewHolder viewHolder = (MusicAdapterViewHolder) holder;
@@ -90,31 +95,17 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
 
 
             viewHolder.ll_music_item.setOnClickListener(v -> {
-                if (items.size() > holder.getAdapterPosition()) {
-//                    recyclerClickListener.onClick(getPosition(music.getSlug()));
+                List<Music> musics = new ArrayList<>();
+                for (Object item : items) {
+                    if (item instanceof Music)
+                        musics.add(music);
                 }
+
+                EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));
             });
 
         }
 
-    }
-
-    private int getPosition(String id) {
-        int count = 0;
-        for (int i = 0; i < filteredArrayList.size(); i++) {
-            String slug;
-            if (filteredArrayList.get(i) instanceof Album) {
-                slug = ((Album) filteredArrayList.get(i)).getSlug();
-            } else {
-                slug = ((Music) filteredArrayList.get(i)).getSlug();
-            }
-
-            if (id.equals(slug)) {
-                count = i;
-                break;
-            }
-        }
-        return count;
     }
 
 

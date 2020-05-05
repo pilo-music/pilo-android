@@ -60,6 +60,39 @@ public class HomeApi {
         Volley.newRequestQueue(context).add(request);
     }
 
+    public void singleBrowse(int id, int page, final HttpHandler.RequestHandler requestHandler) {
+        StringBuilder url = new StringBuilder(PiloApi.BROWSER_SINGLE);
+        url.append("?").append("id").append("=").append(id);
+        url.append("&").append("page").append("=").append(page);
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
+                response -> {
+                    try {
+                        JSONObject data = response.getJSONObject("data");
+                        boolean status = response.getBoolean("status");
+                        String message = response.getString("message");
+                        if (status) {
+                            requestHandler.onGetInfo(parsSingleHomeApiData(data), message, status);
+                        } else
+                            requestHandler.onGetInfo(null, message, status);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        requestHandler.onGetError(null);
+                    }
+                }, requestHandler::onGetError) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Accept", "application/json");
+                params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                return params;
+            }
+        };
+        request.setShouldCache(false);
+        request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(context).add(request);
+    }
+
 
     public void getHome(final HttpHandler.RequestHandler requestHandler) {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.HOME_GET, null,
@@ -218,7 +251,12 @@ public class HomeApi {
                     }
                     data = videos;
                     break;
-
+                case Home.TYPE_BROWSE_DOCK:
+                case Home.TYPE_MUSIC_FOLLOWS:
+                case Home.TYPE_FOR_YOU:
+                case Home.TYPE_PLAY_HISTORY:
+                    data = new Object();
+                    break;
                 default:
                     data = null;
                     break;
@@ -321,7 +359,7 @@ public class HomeApi {
             case Home.TYPE_MUSIC_FOLLOWS:
             case Home.TYPE_FOR_YOU:
             case Home.TYPE_PLAY_HISTORY:
-                data = new Home();
+                data = new Object();
                 break;
             default:
                 data = null;

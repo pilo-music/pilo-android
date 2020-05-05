@@ -324,6 +324,12 @@ class JsonParser {
             playlist.setPlay_count(jsonObject.getInt("play_count"));
             playlist.setShare_url(jsonObject.getString("share_url"));
             playlist.setCreated_at(jsonObject.getString("created_at"));
+
+            if (!jsonObject.get("user").equals("")) {
+                playlist.setUser(JsonParser.userParser(jsonObject.getJSONObject("user")));
+            }else{
+                playlist.setUser(new User());
+            }
             return playlist;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -367,6 +373,20 @@ class JsonParser {
                 user.setAlbum_notification(userJsonObject.getBoolean("album_notification"));
                 user.setVideo_notification(userJsonObject.getBoolean("video_notification"));
             }
+
+            if (!jsonObject.isNull("email")){
+                user.setName(jsonObject.getString("name"));
+                user.setEmail(jsonObject.getString("email"));
+                user.setPhone(jsonObject.getString("phone"));
+                user.setPhone(jsonObject.getString("phone"));
+                user.setGender(jsonObject.getString("gender"));
+                user.setPic(jsonObject.getString("pic"));
+                user.setGlobal_notification(jsonObject.getBoolean("global_notification"));
+                user.setMusic_notification(jsonObject.getBoolean("music_notification"));
+                user.setAlbum_notification(jsonObject.getBoolean("album_notification"));
+                user.setVideo_notification(jsonObject.getBoolean("video_notification"));
+            }
+
             return user;
         } catch (JSONException e) {
             e.printStackTrace();

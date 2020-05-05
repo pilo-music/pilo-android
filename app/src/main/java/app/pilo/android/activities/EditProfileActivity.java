@@ -23,6 +23,8 @@ import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tapadoo.alerter.Alerter;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -36,6 +38,7 @@ import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
+import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
 import app.pilo.android.utils.Utils;
@@ -61,6 +64,8 @@ public class EditProfileActivity extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
+    @BindView(R.id.tv_save)
+    TextView tv_save;
 
     private User user;
     private UserApi userApi;
@@ -98,6 +103,8 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
+                    user.setName(((User) data).getName());
+                    user.setPic(((User) data).getPic());
                     et_name.setText(((User) data).getName());
                     if (!user.getPic().equals("")) {
                         Glide.with(EditProfileActivity.this)
@@ -134,6 +141,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
         progressBar.setVisibility(View.VISIBLE);
+        tv_save.setVisibility(View.GONE);
         ll_save.setEnabled(false);
 
         HashMap<String, Object> params = new HashMap<>();
@@ -149,7 +157,12 @@ public class EditProfileActivity extends AppCompatActivity {
         userApi.update(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                progressBar.setVisibility(View.GONE);
+                tv_save.setVisibility(View.VISIBLE);
+                ll_save.setEnabled(true);
                 if (status) {
+                    User newUser = (User) data;
+                    UserRepo.getInstance(EditProfileActivity.this).update(newUser);
                     Alerter.create(EditProfileActivity.this)
                             .setTitle(message)
                             .setTextTypeface(Utils.font(EditProfileActivity.this))
@@ -164,6 +177,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                progressBar.setVisibility(View.GONE);
+                tv_save.setVisibility(View.VISIBLE);
+                ll_save.setEnabled(true);
                 new HttpErrorHandler(EditProfileActivity.this);
             }
         });

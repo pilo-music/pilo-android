@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.greenrobot.eventbus.EventBus;
 
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;

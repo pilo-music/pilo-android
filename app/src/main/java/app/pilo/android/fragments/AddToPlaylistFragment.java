@@ -55,7 +55,8 @@ public class AddToPlaylistFragment extends BaseFragment {
     ProgressBar progress_bar_add_to_playlist_loading;
     @BindView(R.id.ll_add_to_playlist_container)
     LinearLayout ll_add_to_playlist_container;
-
+    @BindView(R.id.tv_add_to_playlist)
+    TextView tv_add_to_playlist;
 
     public AddToPlaylistFragment(Music music) {
         this.music = music;
@@ -116,10 +117,12 @@ public class AddToPlaylistFragment extends BaseFragment {
             }
 
             progress_bar_add_to_playlist.setVisibility(View.VISIBLE);
+            tv_add_to_playlist.setVisibility(View.GONE);
             playlistApi.add(et_add_to_playlist_name.getText().toString(), music, new HttpHandler.RequestHandler() {
                 @Override
                 public void onGetInfo(Object data, String message, boolean status) {
                     progress_bar_add_to_playlist.setVisibility(View.GONE);
+                    tv_add_to_playlist.setVisibility(View.VISIBLE);
                     if (status) {
                         Alerter.create(getActivity())
                                 .setTitle(message)
@@ -137,6 +140,7 @@ public class AddToPlaylistFragment extends BaseFragment {
                 @Override
                 public void onGetError(@Nullable VolleyError error) {
                     progress_bar_add_to_playlist.setVisibility(View.GONE);
+                    tv_add_to_playlist.setVisibility(View.VISIBLE);
                     new HttpErrorHandler(getActivity());
                 }
             });

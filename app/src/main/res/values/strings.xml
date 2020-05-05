@@ -56,6 +56,7 @@
     <string name="filed_required">وارد کردن این فیلد الزامی است</string>
     <string name="update">اپدیت کن</string>
     <string name="update_later">الان نه</string>
+    <string name="close">بستن</string>
     <string name="verify_account">تایید حساب کاربری</string>
     <string name="forgot_password">رمزعبور خود را فراموش کرده اید ؟</string>
     <string name="operation_done">عملیات با موفقیت انجام شد</string>
@@ -66,6 +67,9 @@
     <string name="options">گزینه ها</string>
     <string name="play_list_name">نام پلی لیست</string>
     <string name="play_list_create">ایجاد پلی لیست</string>
+    <string name="play_list_update">ویرایش پلی لیست</string>
+    <string name="play_list_delete">حدف پلی لیست</string>
+    <string name="play_list_delete_body">آیا میخواهید پلی لیست را پاک کنید</string>
 
     <string name="show_more">نمایش همه</string>
     <string name="music_new">جدیدترین ترین موزیک ها</string>

@@ -49,14 +49,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
     @Override
     public void onBindViewHolder(VideosAdapter.VideoAdapterViewHolder viewHolder, int position) {
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(16, 16, 16, 16);
-        viewHolder.ll_video_item.setLayoutParams(params);
-
-
         Video video = videos.get(position);
 
         viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist().getName());

@@ -81,9 +81,12 @@ public class PlaylistApi {
         Volley.newRequestQueue(context).add(request);
     }
 
-    public void single(String slug, final HttpHandler.RequestHandler requestHandler) {
+    public void single(String slug, boolean user, final HttpHandler.RequestHandler requestHandler) {
         StringBuilder url = new StringBuilder(PiloApi.PLAYLIST_SINGLE);
         url.append("?").append("slug").append("=").append(slug);
+        if (user) {
+            url.append("&").append("user").append("=").append(1);
+        }
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
@@ -152,12 +155,71 @@ public class PlaylistApi {
         }
     }
 
-    public void edit() {
+    public void edit(String slug, String title, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("slug", slug);
+            jsonObject.put("title", title);
+            jsonObject.put("image_remove", false);
 
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.PLAYLIST_EDIT, jsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                    return params;
+                }
+            };
+            request.setShouldCache(false);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void delete() {
-
+    public void delete(String slug, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("slug", slug);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.PLAYLIST_DELETE, jsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                    return params;
+                }
+            };
+            request.setShouldCache(false);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void musics(String slug, Music music, String action, final HttpHandler.RequestHandler requestHandler) {

@@ -25,27 +25,30 @@ public class PlayHistoryApi {
 
 
     public void add(String slug, String type) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("slug", slug);
-            jsonObject.put("type", type);
-            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.PLAY_HISTORY, jsonObject,
-                    response -> {
-                    }, null) {
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Accept", "application/json");
-                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
-                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
-                    return params;
-                }
-            };
-            request.setShouldCache(false);
-            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            Volley.newRequestQueue(context).add(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (slug.equals("")) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("slug", slug);
+                jsonObject.put("type", type);
+                final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.PLAY_HISTORY, jsonObject,
+                        response -> {
+                        }, null) {
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("Accept", "application/json");
+                        params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                        params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                        return params;
+                    }
+                };
+                request.setShouldCache(false);
+                request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                Volley.newRequestQueue(context).add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 }

@@ -146,6 +146,7 @@
                             android:inputType="textPassword"
                             android:lines="1"
                             android:maxLines="1"
+                            android:textAlignment="viewStart"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:textColor="@color/colorDark"
@@ -181,6 +182,7 @@
                             android:lines="1"
                             android:maxLines="1"
                             android:paddingStart="8dp"
+                            android:textAlignment="viewStart"
                             android:paddingEnd="8dp"
                             android:textColor="@color/colorDark"
                             android:textSize="@dimen/normal_font_size" />
@@ -206,12 +208,13 @@
         android:textSize="@dimen/normal_font_size">
 
         <TextView
+            android:id="@+id/tv_save"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/font"
             android:gravity="center"
-            android:text="@string/login"
+            android:text="@string/save_edits"
             android:textColor="@android:color/white"
             android:textSize="@dimen/normal_font_size" />
 
@@ -224,4 +227,10 @@
             android:padding="8dp"
             android:visibility="invisible" />
     </LinearLayout>
+    <com.theartofdev.edmodo.cropper.CropImageView
+        android:id="@+id/CropImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:scaleType="fitCenter"/>
 </LinearLayout>

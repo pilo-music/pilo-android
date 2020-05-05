@@ -72,16 +72,6 @@
                 tools:src="@drawable/ic_music_placeholder" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/img_playlist_item_play"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_circle_play_black" />
-
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_label"
             android:layout_width="wrap_content"

@@ -16,6 +16,7 @@ public class Playlist {
     private int play_count;
     private String share_url;
     private String created_at;
+    private User user;
 
     public Playlist(){
         this.slug = "";
@@ -30,6 +31,7 @@ public class Playlist {
         this.play_count = 0;
         this.share_url = "";
         this.created_at = "";
+        this.user = new User();
     }
 
     public String getSlug() {
@@ -126,5 +128,13 @@ public class Playlist {
 
     public void setShare_url(String share_url) {
         this.share_url = share_url;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
