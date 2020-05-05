@@ -26,7 +26,7 @@ import com.android.volley.error.VolleyError;
 
 import java.util.Map;
 
-public class VerifyActivity extends AppCompatActivity {
+public class VerifyActivity extends BaseActivity {
 
     @BindView(R.id.et_code)
     EditText et_code;

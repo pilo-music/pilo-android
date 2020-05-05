@@ -23,8 +23,6 @@ import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tapadoo.alerter.Alerter;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -231,11 +229,13 @@ public class EditProfileActivity extends AppCompatActivity {
         try {
             if (bitmap == null)
                 return "";
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 150, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
             byte[] imageBytes = outputStream.toByteArray();
             return Base64.encodeToString(imageBytes, Base64.DEFAULT);
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }

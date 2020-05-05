@@ -86,7 +86,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MainActivity extends AppCompatActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
+public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
     // main activity
     @BindView(R.id.tabs)

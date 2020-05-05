@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
     @BindView(R.id.et_register_name)
     EditText et_name;
     @BindView(R.id.et_register_email)

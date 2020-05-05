@@ -24,7 +24,7 @@ import com.android.volley.error.VolleyError;
 
 import java.util.Map;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends BaseActivity {
     @BindView(R.id.cpb_splash)
     CircularProgressBar cpb_splash;
     @BindView(R.id.ll_try_again)
@@ -83,8 +83,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     public void checkForLogin() {
-        LocalHelper.updateResources(this, "fa");
-
         String token = UserRepo.getInstance(this).get().getAccess_token();
         if (token != null && !token.equals(""))
             startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));

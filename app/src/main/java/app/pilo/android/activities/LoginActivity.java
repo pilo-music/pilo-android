@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.et_login_email)
     EditText et_email;

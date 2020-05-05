@@ -44,6 +44,12 @@
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity android:name=".activities.MainActivity" />
 
         <service

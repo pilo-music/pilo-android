@@ -13,7 +13,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 
-class VideoPlayerActivity : Activity() {
+class VideoPlayerActivity : BaseActivity() {
 
     private lateinit var player: SimpleExoPlayer
     private lateinit var mediaDataSourceFactory: DataSource.Factory

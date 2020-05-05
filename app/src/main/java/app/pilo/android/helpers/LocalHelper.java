@@ -1,17 +1,12 @@
 package app.pilo.android.helpers;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
-import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
 public class LocalHelper {
 
-    @TargetApi(Build.VERSION_CODES.N)
     public static Context updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);

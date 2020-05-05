@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends BaseActivity {
     @BindView(R.id.et_forgot_password_email)
     EditText et_email;
     @BindView(R.id.progress_bar_forgot_password_create)
