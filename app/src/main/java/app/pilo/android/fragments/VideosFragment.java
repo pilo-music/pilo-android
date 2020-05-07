@@ -76,7 +76,7 @@ public class VideosFragment extends BaseFragment {
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
         videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         rc_videos.setAdapter(videosAdapter);
         rc_videos.setLayoutManager(layoutManager);
         rc_videos.setHasFixedSize(true);

@@ -133,7 +133,7 @@ public class SingleBrowseFragment extends BaseFragment {
                 rc_browse.setAdapter(albumMusicGridListAdapter);
                 break;
             case Home.TYPE_VIDEOS:
-                layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
+                layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
                 videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
                 rc_browse.setAdapter(videosAdapter);
                 break;

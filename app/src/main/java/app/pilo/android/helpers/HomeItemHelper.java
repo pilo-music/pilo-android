@@ -142,6 +142,9 @@ public class HomeItemHelper {
                 HashMap<String, Object> params = new HashMap<>();
                 params.put("sort", "latest");
                 AlbumsFragment albumsFragment = new AlbumsFragment(params);
+                Bundle bundle = new Bundle();
+                bundle.putString("title", fragment.getString(R.string.albums));
+                albumsFragment.setArguments(bundle);
                 ((MainActivity) fragment.getActivity()).pushFragment(albumsFragment);
             });
 
@@ -149,6 +152,9 @@ public class HomeItemHelper {
                 HashMap<String, Object> params = new HashMap<>();
                 params.put("sort", "latest");
                 MusicsFragment musicsFragment = new MusicsFragment(params);
+                Bundle bundle = new Bundle();
+                bundle.putString("title", fragment.getString(R.string.musics));
+                musicsFragment.setArguments(bundle);
                 ((MainActivity) fragment.getActivity()).pushFragment(musicsFragment);
             });
 
@@ -156,6 +162,9 @@ public class HomeItemHelper {
                 HashMap<String, Object> params = new HashMap<>();
                 params.put("sort", "latest");
                 VideosFragment videosFragment = new VideosFragment(params);
+                Bundle bundle = new Bundle();
+                bundle.putString("title", fragment.getString(R.string.videos));
+                videosFragment.setArguments(bundle);
                 ((MainActivity) fragment.getActivity()).pushFragment(videosFragment);
             });
 
@@ -180,7 +189,7 @@ public class HomeItemHelper {
             }
 
             MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), musics);
-            rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, true));
+            rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
             adapters.add(new WeakReference<>(musicVerticalListAdapter));
         }
@@ -405,7 +414,7 @@ public class HomeItemHelper {
         if (rc_music_vertical != null) {
             tv_music_vertical_title.setText(home.getName());
             MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
-            rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, true));
+            rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
             tv_music_vertical_show_more.setOnClickListener(v -> goToSingleHome(home));
             adapters.add(new WeakReference<>(musicVerticalListAdapter));
@@ -414,14 +423,14 @@ public class HomeItemHelper {
 
 
     private void goToSingleHome(Home home) {
-        if (fragment instanceof HomeFragment){
+        if (fragment instanceof HomeFragment) {
             SingleHomeFragment fragment1 = new SingleHomeFragment();
             Bundle bundle = new Bundle();
             bundle.putInt("id", home.getId());
             bundle.putString("type", home.getType());
             fragment1.setArguments(bundle);
             ((MainActivity) fragment.getActivity()).pushFragment(fragment1);
-        }else{
+        } else {
             SingleBrowseFragment fragment1 = new SingleBrowseFragment();
             Bundle bundle = new Bundle();
             bundle.putInt("id", home.getId());

@@ -39,16 +39,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ForgotPasswordActivity" />
-        <activity android:name=".activities.EditProfileActivity" />
+        <activity android:name=".activities.EditProfileActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name=".activities.RegisterActivity" />
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity android:name=".activities.MainActivity" />
 

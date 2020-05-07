@@ -139,7 +139,7 @@ public class SingleForYouFragment extends BaseFragment {
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
             musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-            rc_for_you.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+            rc_for_you.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_for_you.setAdapter(musicVerticalListAdapter);
         }
     }

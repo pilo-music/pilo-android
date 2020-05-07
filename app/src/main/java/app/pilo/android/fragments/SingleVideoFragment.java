@@ -121,7 +121,7 @@ public class SingleVideoFragment extends BaseFragment {
                         singleVideo = (SingleVideo) data;
                         if (singleVideo.getRelated().size() > 0) {
                             VideoVerticalListAdapter videoVerticalListAdapter = new VideoVerticalListAdapter(new WeakReference<>(getActivity()), singleVideo.getRelated());
-                            rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                            rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                             rc_video_vertical.setAdapter(videoVerticalListAdapter);
                         }
                         setupLikeButton();

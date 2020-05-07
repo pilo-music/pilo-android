@@ -227,7 +227,7 @@ public class SinglePlaylistFragment extends BaseFragment {
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
             musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-            rc_single_playlist.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+            rc_single_playlist.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
             rc_single_playlist.setAdapter(musicVerticalListAdapter);
         }
     }

@@ -32,10 +32,8 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.AlbumsListAdapter;
-import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
-import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.api.ArtistApi;
 import app.pilo.android.api.FollowApi;
@@ -297,7 +295,7 @@ public class SingleArtistFragment extends BaseFragment {
         if (rc_music_vertical != null) {
             if (musics.size() > 0) {
                 musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-                rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                 rc_music_vertical.setAdapter(musicVerticalListAdapter);
             } else {
                 tv_music_vertical_show_more.setVisibility(View.GONE);
