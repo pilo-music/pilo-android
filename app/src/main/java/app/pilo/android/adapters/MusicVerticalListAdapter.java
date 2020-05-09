@@ -36,8 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVerticalListAdapter.MusicCarouselAdapterViewHolder> {
-    private Context context;
-    private List<Music> musics;
+    protected Context context;
+    protected List<Music> musics;
     private LikeApi likeApi;
     private boolean likeProcess = false;
     private Utils utils;

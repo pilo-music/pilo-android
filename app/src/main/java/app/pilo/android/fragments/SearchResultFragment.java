@@ -35,6 +35,11 @@ import app.pilo.android.adapters.AlbumsListAdapter;
 import app.pilo.android.adapters.ArtistVerticalListAdapter;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.PlaylistVerticalListAdapter;
+import app.pilo.android.adapters.SearchAlbumsAdapter;
+import app.pilo.android.adapters.SearchArtistsAdapter;
+import app.pilo.android.adapters.SearchMusicsAdapter;
+import app.pilo.android.adapters.SearchPlaylistsAdapter;
+import app.pilo.android.adapters.SearchVideosAdapter;
 import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -104,10 +109,10 @@ public class SearchResultFragment extends BaseFragment {
     private String query = "";
 
 
-    public SearchResultFragment(String text){
-       if (text != null && !text.isEmpty()){
-           query = text;
-       }
+    public SearchResultFragment(String text) {
+        if (text != null && !text.isEmpty()) {
+            query = text;
+        }
     }
 
     @Nullable
@@ -137,8 +142,7 @@ public class SearchResultFragment extends BaseFragment {
 
         initSearchView();
 
-        if (!query.isEmpty())
-        {
+        if (!query.isEmpty()) {
             et_search.setText(query);
             search(query);
         }
@@ -196,12 +200,24 @@ public class SearchResultFragment extends BaseFragment {
                 if (et_search.getText().toString().length() > 3) {
                     img_search_close.setVisibility(View.VISIBLE);
                     search(et_search.getText().toString());
-
-                    SearchHistory searchHistory = new SearchHistory(query);
-                    SearchHistoryRepo.getInstance(getActivity()).insert(searchHistory);
                 } else {
                     img_search_close.setVisibility(View.GONE);
                 }
+            }
+        });
+
+
+        et_search.setOnKeyListener((v, keyCode, event) -> {
+            try {
+                if (keyCode == KeyEvent.KEYCODE_SEARCH
+                        || keyCode == KeyEvent.KEYCODE_ENTER) {
+                    //execute our method for searching
+                    search(et_search.getText().toString());
+                }
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
         });
 
@@ -226,7 +242,7 @@ public class SearchResultFragment extends BaseFragment {
                     if (!search.getRecommend().isEmpty()) {
                         ll_search_recommend.setVisibility(View.VISIBLE);
                         tv_search_recommend.setText(search.getRecommend());
-                    }else{
+                    } else {
                         ll_search_recommend.setVisibility(View.GONE);
                         tv_search_recommend.setText("");
                     }
@@ -234,7 +250,7 @@ public class SearchResultFragment extends BaseFragment {
 
                     if (search.getArtists().size() > 0) {
                         ll_artist_vertical.setVisibility(View.VISIBLE);
-                        ArtistVerticalListAdapter artistVerticalListAdapter = new ArtistVerticalListAdapter(new WeakReference<>(getActivity()), search.getArtists());
+                        SearchArtistsAdapter artistVerticalListAdapter = new SearchArtistsAdapter(new WeakReference<>(getActivity()), search.getArtists(), search.getId());
                         rc_artist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
                         rc_artist_vertical.setAdapter(artistVerticalListAdapter);
                     } else {
@@ -243,7 +259,7 @@ public class SearchResultFragment extends BaseFragment {
 
                     if (search.getMusics().size() > 0) {
                         ll_music_vertical.setVisibility(View.VISIBLE);
-                        MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), search.getMusics());
+                        SearchMusicsAdapter musicVerticalListAdapter = new SearchMusicsAdapter(new WeakReference<>(getActivity()), search.getMusics(), search.getId());
                         rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
                         rc_music_vertical.setAdapter(musicVerticalListAdapter);
                     } else {
@@ -253,7 +269,7 @@ public class SearchResultFragment extends BaseFragment {
 
                     if (search.getAlbums().size() > 0) {
                         ll_album_vertical.setVisibility(View.VISIBLE);
-                        AlbumsListAdapter albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), search.getAlbums());
+                        SearchAlbumsAdapter albumsListAdapter = new SearchAlbumsAdapter(new WeakReference<>(getActivity()), search.getAlbums(), search.getId());
                         rc_album_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
                         rc_album_vertical.setAdapter(albumsListAdapter);
                     } else {
@@ -262,7 +278,7 @@ public class SearchResultFragment extends BaseFragment {
 
                     if (search.getPlaylists().size() > 0) {
                         ll_playlist_vertical.setVisibility(View.VISIBLE);
-                        PlaylistVerticalListAdapter playlistVerticalListAdapter = new PlaylistVerticalListAdapter(new WeakReference<>(getActivity()), search.getPlaylists());
+                        SearchPlaylistsAdapter playlistVerticalListAdapter = new SearchPlaylistsAdapter(new WeakReference<>(getActivity()), search.getPlaylists(), search.getId());
                         rc_playlist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
                         rc_playlist_vertical.setAdapter(playlistVerticalListAdapter);
                     } else {
@@ -271,7 +287,7 @@ public class SearchResultFragment extends BaseFragment {
 
                     if (search.getVideos().size() > 0) {
                         ll_video_vertical.setVisibility(View.VISIBLE);
-                        VideoVerticalListAdapter videoVerticalListAdapter = new VideoVerticalListAdapter(new WeakReference<>(getActivity()), search.getVideos());
+                        SearchVideosAdapter videoVerticalListAdapter = new SearchVideosAdapter(new WeakReference<>(getActivity()), search.getVideos(), search.getId());
                         rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
                         rc_video_vertical.setAdapter(videoVerticalListAdapter);
                     } else {
@@ -290,6 +306,9 @@ public class SearchResultFragment extends BaseFragment {
                 new HttpErrorHandler(getActivity());
             }
         });
+
+        SearchHistory searchHistory = new SearchHistory(text);
+        SearchHistoryRepo.getInstance(getActivity()).insert(searchHistory);
     }
 
 
@@ -327,7 +346,7 @@ public class SearchResultFragment extends BaseFragment {
 
     private void goToSingle(String type) {
 
-        SingleSearchFragment singleSearchFragment = new SingleSearchFragment(query,type);
+        SingleSearchFragment singleSearchFragment = new SingleSearchFragment(query, type);
         ((MainActivity) getActivity()).pushFragment(singleSearchFragment);
     }
 

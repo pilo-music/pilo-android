@@ -25,8 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class VideoVerticalListAdapter extends RecyclerView.Adapter<VideoVerticalListAdapter.videoCarouselAdapterViewHolder> {
-    private Context context;
-    private List<Video> videos;
+    protected Context context;
+    protected List<Video> videos;
 
     public VideoVerticalListAdapter(WeakReference<Context> context, List<Video> videos) {
         this.context = context.get();

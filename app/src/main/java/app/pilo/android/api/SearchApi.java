@@ -48,7 +48,6 @@ public class SearchApi {
                 index++;
             }
         }
-        Log.e("TAG", "get: " + url.toString());
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
@@ -79,6 +78,40 @@ public class SearchApi {
         Volley.newRequestQueue(context).add(request);
     }
 
+    public void search(int id, String clickable_slug, String clickable_type, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+            jsonObject.put("clickable_slug", clickable_slug);
+            jsonObject.put("clickable_type", clickable_type);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.SEARCH_CLICK, jsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    params.put("Authorization", "Bearer " + UserRepo.getInstance(context).get().getAccess_token());
+                    return params;
+                }
+            };
+            request.setShouldCache(false);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Search parsSearchApiData(JSONObject data) throws JSONException {
         Search search = new Search();
         List<Album> albums = new ArrayList<>();
@@ -86,6 +119,8 @@ public class SearchApi {
         List<Video> videos = new ArrayList<>();
         List<Music> musics = new ArrayList<>();
         List<Playlist> playlists = new ArrayList<>();
+
+        search.setId(data.getInt("id"));
 
         if (data.has("recommend")) {
             search.setRecommend(data.getString("recommend"));

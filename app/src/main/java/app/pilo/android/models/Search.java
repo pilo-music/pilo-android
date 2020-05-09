@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Search {
+    private int id;
     private String recommend;
     private List<Music> musics;
     private List<Artist> artists;
@@ -66,5 +67,13 @@ public class Search {
 
     public void setRecommend(String recommend) {
         this.recommend = recommend;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

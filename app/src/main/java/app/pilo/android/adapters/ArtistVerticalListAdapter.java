@@ -25,8 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ArtistVerticalListAdapter extends RecyclerView.Adapter<ArtistVerticalListAdapter.ArtistCarouselAdapterViewHolder> {
-    private Context context;
-    private List<Artist> artists;
+    protected Context context;
+    protected List<Artist> artists;
 
     public ArtistVerticalListAdapter(WeakReference<Context> context, List<Artist> artists) {
         this.context = context.get();
@@ -55,7 +55,6 @@ public class ArtistVerticalListAdapter extends RecyclerView.Adapter<ArtistVertic
 
         holder.ll_artist_vertical.setOnClickListener(v -> {
             SingleArtistFragment fragment = new SingleArtistFragment(artist);
-
             if (context instanceof MainActivity)
                 ((MainActivity) context).pushFragment(fragment);
             else{

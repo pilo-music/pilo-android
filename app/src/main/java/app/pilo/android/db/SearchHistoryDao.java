@@ -15,7 +15,7 @@ public interface SearchHistoryDao {
     @Query("SELECT * FROM search_histories ORDER BY id DESC LIMIT 3")
     List<SearchHistory> get();
 
-    @Query("SELECT * FROM search_histories WHERE text = :text LIMIT 1")
+    @Query("SELECT * FROM search_histories WHERE text = :text")
     List<SearchHistory> search(String text);
 
     @Insert

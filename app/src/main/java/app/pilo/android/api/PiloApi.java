@@ -9,6 +9,7 @@ public class PiloApi {
     static final String BROWSER_GET = BASE_URL + "browses";
     static final String BROWSER_SINGLE = BASE_URL + "browse";
     static final String SEARCH = BASE_URL + "search/";
+    static final String SEARCH_CLICK = BASE_URL + "search/click";
     static final String LOGIN = BASE_URL + "login";
     static final String REGISTER = BASE_URL + "register";
     static final String VERIFY = BASE_URL + "verify";

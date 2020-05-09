@@ -26,8 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PlaylistVerticalListAdapter extends RecyclerView.Adapter<PlaylistVerticalListAdapter.PlaylistCarouselAdapterViewHolder> {
-    private Context context;
-    private List<Playlist> playlists;
+    protected Context context;
+    protected List<Playlist> playlists;
 
     public PlaylistVerticalListAdapter(WeakReference<Context> context, List<Playlist> playlists) {
         this.context = context.get();
