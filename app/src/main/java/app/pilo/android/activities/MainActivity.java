@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -97,6 +96,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     LinearLayout ll_music_player_collapsed;
     @BindView(R.id.list)
     NestedScrollView nestedScrollView;
+    @BindView(R.id.ll_main_layout)
+    LinearLayout ll_main_layout;
+//    @BindView(R.id.statusbar)
+//    View statusbar;
 
     // page header
     @BindView(R.id.ll_page_header)
@@ -198,6 +201,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
+        setupStatusBar();
         initTab();
         fragmentHistory = new FragmentHistory();
         mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
@@ -228,15 +232,21 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
         sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
+        tabLayout.setVisibility(View.VISIBLE);
         sliding_layout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 ll_music_player_collapsed.setAlpha(1 - slideOffset);
                 ll_page_header.setAlpha(0 + slideOffset);
+
             }
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                if (newState == PanelState.EXPANDED)
+                    tabLayout.setVisibility(View.GONE);
+                else
+                    tabLayout.setVisibility(View.VISIBLE);
             }
         });
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
@@ -263,6 +273,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         });
         handleIncomingBroadcast(getIntent());
 
+    }
+
+    public void setupStatusBar() {
+        ll_main_layout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
 
@@ -357,6 +371,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play));
                 img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
             }
+
             Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(current_music_slug);
             if (music != null) {
                 tv_music_player_collapsed_title.setText(music.getTitle());
@@ -953,6 +968,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         AppDatabase.getInstance(this).playHistoryDao().insert(playHistory);
         playHistoryApi.add(music.getSlug(), "music");
     }
+
 
 }
 

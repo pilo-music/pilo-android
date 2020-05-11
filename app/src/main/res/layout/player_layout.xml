@@ -167,9 +167,9 @@
             android:id="@+id/img_extended_music_player_shuffle"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-
             android:adjustViewBounds="true"
             android:src="@drawable/ic_shuffle_off" />
+
 
         <LinearLayout
             android:layout_width="0dp"
@@ -179,28 +179,31 @@
 
             <ImageView
                 android:id="@+id/img_extended_music_player_previous"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:adjustViewBounds="true"
+                android:background="@drawable/ripple_oval"
+                android:padding="@dimen/_13sdp"
                 android:src="@drawable/ic_previous" />
 
             <ImageView
                 android:id="@+id/img_extended_music_player_play"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_50sdp"
-                android:background="@drawable/play_shadow"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_marginRight="@dimen/activity_vertical_margin"
                 android:adjustViewBounds="true"
+                android:background="@drawable/ripple_oval"
+                android:elevation="3dp"
                 android:src="@drawable/ic_play" />
 
             <ImageView
                 android:id="@+id/img_extended_music_player_next"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:adjustViewBounds="true"
+                android:background="@drawable/ripple_oval"
+                android:padding="@dimen/_13sdp"
                 android:src="@drawable/ic_next" />
         </LinearLayout>
 

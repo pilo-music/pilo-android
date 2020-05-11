@@ -9,6 +9,7 @@
     <color name="colorShimmer">#E2E2E2</color>
     <color name="colorGreen">#35c374</color>
     <color name="colorError">#e20c2a</color>
+    <color name="colorTransparent">#00FFFFFF</color>
 
 
     <integer-array name="splash_colors">
