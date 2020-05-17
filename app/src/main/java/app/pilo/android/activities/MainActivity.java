@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -561,7 +562,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
         Download downloaded = AppDatabase.getInstance(this).downloadDao().findById(music_slug);
         if (downloaded != null && MusicDownloader.checkExists(this, music, userSharedPrefManager.getStreamQuality())) {
-            String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath128() : downloaded.getPath128();
+            String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath320() : downloaded.getPath128();
             File file = new File(downloadedFile);
             Uri uri = Uri.fromFile(file);
             userSharedPrefManager.setActiveMusicSlug(music_slug);

@@ -74,7 +74,7 @@ public class SettingsFragment extends BaseFragment {
         new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no),true ,new CustomDialog.onClient() {
             @Override
             public void onSuccessClick(Dialog dialog) {
-                List<Download> downloads = AppDatabase.getInstance(getActivity()).downloadDao().get(1, 100000);
+                List<Download> downloads = AppDatabase.getInstance(getActivity()).downloadDao().get();
                 for (int i = 0; i < downloads.size(); i++) {
                     File file320 = new File(downloads.get(i).getPath320());
                     if (file320.exists())

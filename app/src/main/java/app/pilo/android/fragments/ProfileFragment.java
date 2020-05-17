@@ -22,6 +22,7 @@ import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.db.AppDatabase;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,12 +35,23 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.tv_profile_email)
     TextView tv_profile_email;
 
+    User user =  new User();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-        tv_profile_email.setText(AppDatabase.getInstance(getContext()).userDao().get().getName());
+        user = AppDatabase.getInstance(getContext()).userDao().get();
+        tv_profile_email.setText(user.getName());
+        if (user.getPic() != ""){
+            Glide.with(getActivity())
+                    .load(user.getPic())
+                    .placeholder(R.drawable.ic_user)
+                    .error(R.drawable.ic_user)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(civ_profile_user);
+        }
         checkUserLogin();
         return view;
     }

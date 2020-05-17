@@ -59,7 +59,7 @@ public class DownloadsFragment extends BaseFragment {
         downloads = new ArrayList<>();
 
         downloadsAdapter = new DownloadsAdapter(new WeakReference<>(getActivity()), downloads);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         recyclerView.setAdapter(downloadsAdapter);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setLayoutAnimation(new LayoutAnimationController(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in)));
@@ -88,7 +88,7 @@ public class DownloadsFragment extends BaseFragment {
 
     private void getDataFromDb() {
         swipe_refresh_layout.setRefreshing(true);
-        List<Download> data = AppDatabase.getInstance(getActivity()).downloadDao().get(page, 15);
+        List<Download> data = AppDatabase.getInstance(getActivity()).downloadDao().get();
         if (data.size() > 0) {
             downloads.addAll(data);
             page++;
