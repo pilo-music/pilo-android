@@ -94,7 +94,7 @@
                 android:paddingBottom="3dp"
                 android:text="PLAYLIST"
                 android:textColor="@android:color/white"
-                android:textSize="10sp" />
+                android:textSize="@dimen/extra_small_font_size" />
         </androidx.cardview.widget.CardView>
     </FrameLayout>
 

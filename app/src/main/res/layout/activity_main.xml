@@ -2,17 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ll_main_layout"
     android:background="@android:color/white"
     android:orientation="vertical">
-<!--    <View-->
-<!--        android:id="@+id/statusbar"-->
-<!--        android:background="@color/colorPrimaryDark"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="20dp">-->
-<!--    </View>-->
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
@@ -29,10 +23,10 @@
         sothree:umanoShadowHeight="0dp">
 
         <FrameLayout
-            android:paddingTop="20dp"
             android:id="@+id/framelayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="20dp"
             android:paddingBottom="70dp" />
 
         <LinearLayout
@@ -40,19 +34,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#E4E4E4" />
+
             <include layout="@layout/bottom_music_player" />
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/list"
-                android:scrollbars="none"
-                android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:overScrollMode="never"
+                android:scrollbars="none">
 
                 <include layout="@layout/player_layout" />
 
@@ -60,17 +56,26 @@
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <View
+    <LinearLayout
+        android:id="@+id/ll_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#E4E4E4" />
+        android:layout_height="71dp"
+        android:background="@color/colorTransparent"
+        android:orientation="vertical">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layoutDirection="ltr"
-        android:textDirection="ltr"
-        app:tabIndicatorHeight="0dp"
-        app:tabRippleColor="@null" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E4E4E4" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@android:color/white"
+            android:layoutDirection="ltr"
+            android:textDirection="ltr"
+            app:tabIndicatorHeight="0dp"
+            app:tabRippleColor="@null" />
+    </LinearLayout>
 </LinearLayout>

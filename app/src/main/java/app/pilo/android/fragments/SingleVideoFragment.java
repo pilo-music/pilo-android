@@ -49,8 +49,6 @@ public class SingleVideoFragment extends BaseFragment {
 
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
-    @BindView(R.id.img_header_more)
-    ImageView img_header_more;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
     @BindView(R.id.riv_single_video_image)

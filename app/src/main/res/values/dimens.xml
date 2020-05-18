@@ -5,6 +5,7 @@
     <dimen name="large_font_size">@dimen/_15ssp</dimen>
     <dimen name="normal_font_size">@dimen/_11ssp</dimen>
     <dimen name="small_font_size">@dimen/_9ssp</dimen>
+    <dimen name="extra_small_font_size">@dimen/_5ssp</dimen>
     <dimen name="box_height">@dimen/_38sdp</dimen>
     <dimen name="button_height">@dimen/_40sdp</dimen>
 

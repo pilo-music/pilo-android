@@ -14,6 +14,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -35,6 +37,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.downloader.Progress;
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -74,6 +77,7 @@ import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.PlayHistory;
 import app.pilo.android.services.PlayerService;
+import app.pilo.android.utils.AnimateTest;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
 import app.pilo.android.utils.MusicDownloader;
@@ -99,8 +103,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     NestedScrollView nestedScrollView;
     @BindView(R.id.ll_main_layout)
     LinearLayout ll_main_layout;
-//    @BindView(R.id.statusbar)
-//    View statusbar;
+    @BindView(R.id.ll_tab_layout)
+    LinearLayout ll_tab_layout;
 
     // page header
     @BindView(R.id.ll_page_header)
@@ -115,7 +119,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     @BindView(R.id.tv_music_player_collapsed_artist)
     TextView tv_music_player_collapsed_artist;
     @BindView(R.id.img_music_player_collapsed_play)
-    ImageView img_music_player_collapsed_play;
+    FloatingActionButton img_music_player_collapsed_play;
 
     // extended music player
     @BindView(R.id.riv_extended_music_player_music)
@@ -127,7 +131,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     @BindView(R.id.seekbar_music)
     SeekBar player_progress;
     @BindView(R.id.img_extended_music_player_play)
-    ImageView img_extended_music_player_play;
+    FloatingActionButton img_extended_music_player_play;
     @BindView(R.id.img_extended_music_player_next)
     ImageView img_extended_music_player_next;
     @BindView(R.id.rc_music_vertical)
@@ -146,6 +150,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     DownloadButtonProgress download_progress_extended_music_player;
     @BindView(R.id.img_extended_music_player_like)
     ImageView img_extended_music_player_like;
+    @BindView(R.id.tv_music_vertical_show_more)
+    TextView tv_music_vertical_show_more;
+    @BindView(R.id.tv_music_vertical_title)
+    TextView tv_music_vertical_title;
 
     private boolean doubleBackToExitPressedOnce = false;
     private Unbinder unbinder;
@@ -171,6 +179,12 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private boolean likeProcess = false;
     private LikeApi likeApi;
     private Utils utils;
+    AnimateTest animateTest = new AnimateTest();
+
+    Animation slide_up;
+
+    Animation slide_bottom;
+
     private PlayHistoryApi playHistoryApi;
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -216,6 +230,13 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         utils = new Utils();
         playHistoryApi = new PlayHistoryApi(this);
         userSharedPrefManager = new UserSharedPrefManager(this);
+        slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_up);
+        slide_bottom = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_bottom);
+        tv_music_vertical_show_more.setVisibility(View.GONE);
+        tv_music_vertical_title.setVisibility(View.GONE);
+
 
         musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
             @Override
@@ -233,21 +254,25 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
         sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
-        tabLayout.setVisibility(View.VISIBLE);
+
+
         sliding_layout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 ll_music_player_collapsed.setAlpha(1 - slideOffset);
+//                ll_tab_layout.setAlpha(1 - slideOffset);
                 ll_page_header.setAlpha(0 + slideOffset);
-
             }
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                if (newState == PanelState.EXPANDED)
-                    tabLayout.setVisibility(View.GONE);
-                else
-                    tabLayout.setVisibility(View.VISIBLE);
+                if (newState == PanelState.COLLAPSED) {
+                    ll_tab_layout.setVisibility(View.VISIBLE);
+                    ll_tab_layout.startAnimation(slide_up);
+                } else if (newState == PanelState.EXPANDED) {
+                    ll_tab_layout.setVisibility(View.GONE);
+                    ll_tab_layout.startAnimation(slide_bottom);
+                }
             }
         });
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
@@ -617,6 +642,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 EventBus.getDefault().post(new MusicEvent(this, musics, current_music_slug, true, false));
             }
         }
+        animateTest.showBonceAnimation(img_extended_music_player_play);
     }
 
     @OnClick({R.id.img_extended_music_player_previous, R.id.img_music_player_collapsed_prev})
