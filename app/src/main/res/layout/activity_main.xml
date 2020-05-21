@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:gravity="bottom"
         sothree:umanoDragView="@id/dragView"
         sothree:umanoInitialState="collapsed"
         sothree:umanoOverlay="true"
-        sothree:umanoPanelHeight="70dp"
+        sothree:umanoPanelHeight="135dp"
         sothree:umanoParallaxOffset="100dp"
         sothree:umanoScrollableView="@id/list"
         sothree:umanoShadowHeight="0dp">
@@ -27,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="20dp"
-            android:paddingBottom="70dp" />
+            android:paddingBottom="135dp" />
 
         <LinearLayout
             android:id="@+id/dragView"
@@ -59,7 +57,8 @@
     <LinearLayout
         android:id="@+id/ll_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="71dp"
+        android:layout_height="@dimen/tabbar_height"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorTransparent"
         android:orientation="vertical">
 
@@ -71,11 +70,11 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="@dimen/tabbar_height"
             android:background="@android:color/white"
             android:layoutDirection="ltr"
             android:textDirection="ltr"
             app:tabIndicatorHeight="0dp"
             app:tabRippleColor="@null" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

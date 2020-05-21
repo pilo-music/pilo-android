@@ -9,15 +9,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <!--music info-->
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/riv_extended_music_player_music"
-            android:layout_width="@dimen/_180sdp"
-            android:layout_height="@dimen/_180sdp"
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="@dimen/_250sdp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_music_placeholder"
@@ -53,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin2x"
             android:gravity="center"
             android:layoutDirection="ltr"
             android:orientation="horizontal"
@@ -78,9 +77,10 @@
 
             <ImageView
                 android:id="@+id/img_extended_music_player_like"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_weight="1"
+                android:padding="@dimen/_3sdp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_like_off" />
 
@@ -118,14 +118,14 @@
                 android:layout_height="@dimen/_15sdp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_person_black_24dp" />
+                android:src="@drawable/ic_person" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin2x"
             android:layoutDirection="ltr"
             android:orientation="horizontal"
             android:paddingStart="@dimen/activity_vertical_margin"
@@ -133,8 +133,12 @@
 
             <TextView
                 android:id="@+id/tv_extended_music_player_time"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/font"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/small_font_size"
                 android:text="00:00" />
 
 
@@ -151,9 +155,13 @@
 
             <TextView
                 android:id="@+id/tv_extended_music_player_duration"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:text="05:00" />
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/small_font_size"
+                android:gravity="center"
+                android:fontFamily="@font/font"
+                android:text="00:00" />
         </LinearLayout>
 
         <!--music control-->
@@ -196,14 +204,11 @@
                     android:id="@+id/img_extended_music_player_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_margin="@dimen/activity_vertical_margin"
                     android:src="@drawable/ic_play_icon"
                     app:backgroundTint="@color/colorPrimary"
-                    app:fabCustomSize="64dp"
-                    app:maxImageSize="50dp"
+                    app:fabCustomSize="60dp"
+                    app:maxImageSize="20dp"
                     app:rippleColor="@color/colorPrimary" />
 
                 <ImageView

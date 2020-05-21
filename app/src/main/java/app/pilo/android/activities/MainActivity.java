@@ -11,13 +11,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     @BindView(R.id.list)
     NestedScrollView nestedScrollView;
     @BindView(R.id.ll_main_layout)
-    LinearLayout ll_main_layout;
+    RelativeLayout ll_main_layout;
     @BindView(R.id.ll_tab_layout)
     LinearLayout ll_tab_layout;
 
@@ -210,7 +210,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -255,23 +254,26 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
 
-
+        float tablayout_bottom_margin_collapsed = getResources().getDimension(R.dimen.tabbar_height);
         sliding_layout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 ll_music_player_collapsed.setAlpha(1 - slideOffset);
 //                ll_tab_layout.setAlpha(1 - slideOffset);
                 ll_page_header.setAlpha(0 + slideOffset);
+
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_tab_layout.getLayoutParams();
+                params.bottomMargin = (int) (-slideOffset * tablayout_bottom_margin_collapsed);
+                ll_tab_layout.setLayoutParams(params);
+
             }
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                if (newState == PanelState.COLLAPSED) {
-                    ll_tab_layout.setVisibility(View.VISIBLE);
-                    ll_tab_layout.startAnimation(slide_up);
-                } else if (newState == PanelState.EXPANDED) {
-                    ll_tab_layout.setVisibility(View.GONE);
-                    ll_tab_layout.startAnimation(slide_bottom);
+                if (newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_tab_layout.getLayoutParams();
+                    params.bottomMargin = 0;
+                    ll_tab_layout.setLayoutParams(params);
                 }
             }
         });
@@ -391,11 +393,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
 
             if (playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady()) {
-                img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
-                img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
+                img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
+                img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
             } else {
-                img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play));
-                img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
+                img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
+                img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             }
 
             Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(current_music_slug);
@@ -489,11 +491,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 player_progress.setProgress(intent.getIntExtra("progress", 0));
             }
         } else if (intent.getBooleanExtra("play", false)) {
-            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
-            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
+            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
         } else if (intent.getBooleanExtra("pause", false)) {
-            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play));
-            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
+            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             if (playerService != null) {
                 playerService.getPlayer().setPlayWhenReady(false);
             }
@@ -570,11 +572,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
 
         if (play_when_ready) {
-            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
-            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause));
+            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
         } else {
-            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play));
-            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play));
+            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
+            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
         }
 
         Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(music_slug);
@@ -868,30 +870,35 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @Override
     public void onBackPressed() {
-        if (!mNavController.isRootFragment()) {
-            mNavController.popFragment();
-        } else {
-            if (fragmentHistory.isEmpty()) {
-                if (doubleBackToExitPressedOnce) {
-                    super.onBackPressed();
-                    finish();
-                } else {
-                    this.doubleBackToExitPressedOnce = true;
-                    Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show();
-                    new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
-                }
+        if (sliding_layout.getPanelState() == PanelState.EXPANDED   ){
+            sliding_layout.setPanelState(PanelState.COLLAPSED);
+        }else{
+            if (!mNavController.isRootFragment()) {
+                mNavController.popFragment();
             } else {
-                if (fragmentHistory.getStackSize() > 1) {
-                    int position = fragmentHistory.popPrevious();
-                    switchTab(position);
-                    updateTabSelection(position);
+                if (fragmentHistory.isEmpty()) {
+                    if (doubleBackToExitPressedOnce) {
+                        super.onBackPressed();
+                        finish();
+                    } else {
+                        this.doubleBackToExitPressedOnce = true;
+                        Toast.makeText(this, R.string.exit_message, Toast.LENGTH_SHORT).show();
+                        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+                    }
                 } else {
-                    switchTab(0);
-                    updateTabSelection(0);
-                    fragmentHistory.emptyStack();
+                    if (fragmentHistory.getStackSize() > 1) {
+                        int position = fragmentHistory.popPrevious();
+                        switchTab(position);
+                        updateTabSelection(position);
+                    } else {
+                        switchTab(0);
+                        updateTabSelection(0);
+                        fragmentHistory.emptyStack();
+                    }
                 }
             }
         }
+
     }
 
     @Override

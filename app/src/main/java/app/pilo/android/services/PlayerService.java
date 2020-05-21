@@ -640,9 +640,9 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         int play_pause_icon = 0;
 
         if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
-            play_pause_icon = R.drawable.ic_pause_icon;
+            play_pause_icon = R.drawable.ic_pause_notification;
         } else {
-            play_pause_icon = R.drawable.ic_play_icon;
+            play_pause_icon = R.drawable.ic_play_notification;
         }
 
         Music music = AppDatabase.getInstance(this).musicDao().findById(current_music_slug);
@@ -659,10 +659,10 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     .setContentIntent(pendingIntent)
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
                     .setOngoing(true)
-                    .addAction(R.drawable.ic_previous, "", ppreviousIntent)
+                    .addAction(R.drawable.ic_previous_notification, "", ppreviousIntent)
                     .addAction(play_pause_icon, "", pplayIntent)
-                    .addAction(R.drawable.ic_next, "", nextPIntent)
-                    .addAction(R.drawable.ic_close, "", pcloseIntent);
+                    .addAction(R.drawable.ic_next_norification, "", nextPIntent)
+                    .addAction(R.drawable.ic_close_notification, "", pcloseIntent);
 
 
             if (Build.VERSION.SDK_INT >= 26) {
@@ -701,9 +701,9 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     .setContentIntent(pendingIntent)
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
                     .setOngoing(true)
-                    .addAction(R.drawable.ic_previous, "", ppreviousIntent)
+                    .addAction(R.drawable.ic_previous_notification, "", ppreviousIntent)
                     .addAction(play_pause_icon, "", pplayIntent)
-                    .addAction(R.drawable.ic_next, "", nextPIntent)
+                    .addAction(R.drawable.ic_next_norification, "", nextPIntent)
                     .addAction(R.drawable.ic_close, "", pcloseIntent);
 
             if (Build.VERSION.SDK_INT >= 26) {

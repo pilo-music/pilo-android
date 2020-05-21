@@ -207,7 +207,7 @@ class JsonParser {
 //        // parse videos
         JSONArray videosJsonArray = data.getJSONArray("videos");
         if (videosJsonArray.length() > 0) {
-            for (int i = 0; i < albumJsonArray.length(); i++) {
+            for (int i = 0; i < videosJsonArray.length(); i++) {
                 Video video = JsonParser.videoJson(videosJsonArray.getJSONObject(i));
                 if (video != null)
                     videos.add(video);

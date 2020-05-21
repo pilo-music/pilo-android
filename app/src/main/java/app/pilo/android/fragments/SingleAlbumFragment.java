@@ -1,5 +1,6 @@
 package app.pilo.android.fragments;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -78,6 +79,8 @@ public class SingleAlbumFragment extends BaseFragment {
     ImageView img_single_album_like;
     @BindView(R.id.fab_single_album_shuffle)
     FloatingActionButton fab_single_album_shuffle;
+    @BindView(R.id.fab_single_album_play)
+    FloatingActionButton fab_single_album_play;
 
 
     @BindView(R.id.rc_album_carousel)
@@ -253,18 +256,19 @@ public class SingleAlbumFragment extends BaseFragment {
         PlayHistoryApi playHistoryApi = new PlayHistoryApi(getActivity());
         playHistoryApi.add(album.getSlug(), "album");
         EventBus.getDefault().post(new MusicEvent(getActivity(), singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true, false));
+
     }
 
     @OnClick(R.id.fab_single_album_shuffle)
     void fab_single_album_shuffle() {
         if (userSharedPrefManager.getShuffleMode()) {
             userSharedPrefManager.setShuffleMode(false);
-            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_single_album_shuffle.setImageDrawable(getResources().getDrawable(R.drawable.ic_shuffle_icon));
             fab_single_album_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
         } else {
             userSharedPrefManager.setShuffleMode(true);
-            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
-            fab_single_album_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
+            fab_single_album_shuffle.setImageDrawable(getResources().getDrawable(R.drawable.ic_shuffle_icon_primery));
+            fab_single_album_shuffle.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryLight)));
         }
     }
 

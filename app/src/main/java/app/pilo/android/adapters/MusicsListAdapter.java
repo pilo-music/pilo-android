@@ -72,6 +72,12 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
             holder.img_music_item_play.setImageDrawable(context.getDrawable(R.drawable.ic_circle_pause_black));
         }
 
+//        if (music.isHas_like()) {
+//            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
+//        } else {
+//            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
+//        }
+
         holder.ll_music_item.setOnLongClickListener(v -> {
             new MusicActionsDialog(context, music).showDialog();
             return false;

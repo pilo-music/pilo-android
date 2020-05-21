@@ -124,7 +124,7 @@ public class SinglePlaylistFragment extends BaseFragment {
 
     private void getDataFromServer() {
         PlaylistApi playlistApi = new PlaylistApi(getActivity());
-        playlistApi.single(playlist.getSlug(), playlist.getUser().getEmail().equals(""), new HttpHandler.RequestHandler() {
+        playlistApi.single(playlist.getSlug(), !playlist.getUser().getEmail().equals(""), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {

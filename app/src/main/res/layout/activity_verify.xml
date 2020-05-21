@@ -73,7 +73,7 @@
                         <ImageView
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
-                            android:src="@drawable/ic__ionicons_svg_md_person" />
+                            android:src="@drawable/ic_person" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

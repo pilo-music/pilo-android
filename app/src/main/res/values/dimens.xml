@@ -8,6 +8,7 @@
     <dimen name="extra_small_font_size">@dimen/_5ssp</dimen>
     <dimen name="box_height">@dimen/_38sdp</dimen>
     <dimen name="button_height">@dimen/_40sdp</dimen>
+    <dimen name="tabbar_height">@dimen/_50sdp</dimen>
 
 
 

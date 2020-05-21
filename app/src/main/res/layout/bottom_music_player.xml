@@ -40,8 +40,8 @@
 
             <ImageView
                 android:id="@+id/img_music_player_collapsed_prev"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_marginRight="8dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/ripple_oval"
@@ -56,15 +56,15 @@
                 android:src="@drawable/ic_play_icon"
                 app:backgroundTint="@color/colorPrimary"
                 app:fabCustomSize="44dp"
-                app:maxImageSize="30dp"
+                app:maxImageSize="15dp"
                 app:elevation="2dp"
                 app:rippleColor="@color/colorPrimary" />
 
 
             <ImageView
                 android:id="@+id/img_music_player_collapsed_next"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_marginLeft="8dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/ripple_oval"
