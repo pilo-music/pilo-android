@@ -11,10 +11,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.view.LayoutInflater;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,8 +36,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.downloader.Progress;
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
@@ -84,7 +83,6 @@ import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
 import app.pilo.android.views.FragNavController;
 import app.pilo.android.views.NestedScrollableViewHelper;
-import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -93,16 +91,16 @@ import butterknife.Unbinder;
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
     // main activity
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottom_navigation;
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout sliding_layout;
     @BindView(R.id.ll_music_player_collapsed)
     LinearLayout ll_music_player_collapsed;
     @BindView(R.id.list)
     NestedScrollView nestedScrollView;
-    @BindView(R.id.ll_main_layout)
-    RelativeLayout ll_main_layout;
+    @BindView(R.id.rl_main_layout)
+    RelativeLayout rl_main_layout;
     @BindView(R.id.ll_tab_layout)
     LinearLayout ll_tab_layout;
 
@@ -159,15 +157,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private Unbinder unbinder;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
-    private int[] mTabIconsSelected = {
-            R.drawable.bottom_tab_home,
-            R.drawable.bottom_tab_browser,
-            R.drawable.bottom_tab_search,
-            R.drawable.bottom_tab_profile};
-    @BindArray(R.array.tab_name)
-    String[] TABS;
-    MusicDraggableVerticalListAdapter musicVerticalListAdapter;
-    List<Music> musics;
+    private MusicDraggableVerticalListAdapter musicVerticalListAdapter;
+    private List<Music> musics;
     private UserSharedPrefManager userSharedPrefManager;
     private ItemTouchHelper itemTouchHelper;
 
@@ -179,13 +170,15 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private boolean likeProcess = false;
     private LikeApi likeApi;
     private Utils utils;
-    AnimateTest animateTest = new AnimateTest();
-
-    Animation slide_up;
-
-    Animation slide_bottom;
-
+    private AnimateTest animateTest = new AnimateTest();
     private PlayHistoryApi playHistoryApi;
+
+    private List<Integer> bottomNavigationTabs;
+    private HomeFragment homeFragment;
+    private BrowserFragment browserFragment;
+    private SearchFragment searchFragment;
+    private ProfileFragment profileFragment;
+
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -216,23 +209,19 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
         setupStatusBar();
-        initTab();
+        setupBottomNavigation();
         fragmentHistory = new FragmentHistory();
         mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
                 .transactionListener(this)
-                .rootFragmentListener(this, TABS.length)
+                .rootFragmentListener(this, bottomNavigationTabs.size())
                 .build();
         switchTab(0);
-        setupBottomNavigation();
         musics = new ArrayList<>();
         likeApi = new LikeApi(this);
         utils = new Utils();
         playHistoryApi = new PlayHistoryApi(this);
         userSharedPrefManager = new UserSharedPrefManager(this);
-        slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.slide_up);
-        slide_bottom = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.slide_bottom);
+
         tv_music_vertical_show_more.setVisibility(View.GONE);
         tv_music_vertical_title.setVisibility(View.GONE);
 
@@ -304,51 +293,63 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     public void setupStatusBar() {
-        ll_main_layout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        rl_main_layout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     }
 
 
     private void setupBottomNavigation() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                fragmentHistory.push(tab.getPosition());
-                switchTab(tab.getPosition());
-            }
+        bottomNavigationTabs = new ArrayList<>();
+        bottomNavigationTabs.add(R.id.bottom_home);
+        bottomNavigationTabs.add(R.id.bottom_browser);
+        bottomNavigationTabs.add(R.id.bottom_search);
+        bottomNavigationTabs.add(R.id.bottom_profile);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+        homeFragment = new HomeFragment();
+        browserFragment = new BrowserFragment();
+        searchFragment = new SearchFragment();
+        profileFragment = new ProfileFragment();
 
-            }
-
+        bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                mNavController.clearStack();
-                switchTab(tab.getPosition());
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.bottom_home:
+                        fragmentHistory.push(0);
+                        switchTab(0);
+                        return true;
+                    case R.id.bottom_browser:
+                        fragmentHistory.push(1);
+                        switchTab(1);
+                        return true;
+                    case R.id.bottom_search:
+                        fragmentHistory.push(2);
+                        switchTab(2);
+                        return true;
+                    case R.id.bottom_profile:
+                        fragmentHistory.push(3);
+                        switchTab(3);
+                        return true;
+                }
+                return false;
             }
         });
 
-    }
-
-
-    private void initTab() {
-        if (tabLayout != null) {
-            for (int i = 0; i < TABS.length; i++) {
-                tabLayout.addTab(tabLayout.newTab());
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab != null)
-                    tab.setCustomView(getTabView(i));
+        bottom_navigation.setOnNavigationItemReselectedListener(item -> {
+            mNavController.clearStack();
+            switch (item.getItemId()) {
+                case R.id.bottom_home:
+                    switchTab(0);
+                case R.id.bottom_browser:
+                    switchTab(1);
+                case R.id.bottom_search:
+                    switchTab(2);
+                case R.id.bottom_profile:
+                    switchTab(3);
             }
-        }
+
+        });
     }
 
-
-    private View getTabView(int position) {
-        View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_item_bottom, null);
-        ImageView icon = view.findViewById(R.id.tab_icon);
-        icon.setImageResource(mTabIconsSelected[position]);
-        return view;
-    }
 
     private void switchTab(int position) {
         mNavController.switchTab(position);
@@ -356,21 +357,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             sliding_layout.setPanelState(PanelState.COLLAPSED);
         }
     }
-
-    private void updateTabSelection(int currentTab) {
-
-        for (int i = 0; i < TABS.length; i++) {
-            TabLayout.Tab selectedTab = tabLayout.getTabAt(i);
-            if (currentTab != i) {
-                if (selectedTab != null && selectedTab.getCustomView() != null)
-                    selectedTab.getCustomView().setSelected(false);
-            } else {
-                if (selectedTab != null && selectedTab.getCustomView() != null)
-                    selectedTab.getCustomView().setSelected(true);
-            }
-        }
-    }
-
 
     private void initPlayerUi() {
         if (playerService == null) {
@@ -870,9 +856,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @Override
     public void onBackPressed() {
-        if (sliding_layout.getPanelState() == PanelState.EXPANDED   ){
+        if (sliding_layout.getPanelState() == PanelState.EXPANDED) {
             sliding_layout.setPanelState(PanelState.COLLAPSED);
-        }else{
+        } else {
             if (!mNavController.isRootFragment()) {
                 mNavController.popFragment();
             } else {
@@ -889,10 +875,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     if (fragmentHistory.getStackSize() > 1) {
                         int position = fragmentHistory.popPrevious();
                         switchTab(position);
-                        updateTabSelection(position);
+                        bottom_navigation.setSelectedItemId(bottomNavigationTabs.get(position));
                     } else {
                         switchTab(0);
-                        updateTabSelection(0);
+                        bottom_navigation.setSelectedItemId(bottomNavigationTabs.get(0));
                         fragmentHistory.emptyStack();
                     }
                 }
