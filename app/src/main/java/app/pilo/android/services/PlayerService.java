@@ -661,7 +661,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     .setOngoing(true)
                     .addAction(R.drawable.ic_previous_notification, "", ppreviousIntent)
                     .addAction(play_pause_icon, "", pplayIntent)
-                    .addAction(R.drawable.ic_next_norification, "", nextPIntent)
+                    .addAction(R.drawable.ic_next_notification, "", nextPIntent)
                     .addAction(R.drawable.ic_close_notification, "", pcloseIntent);
 
 
@@ -703,7 +703,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     .setOngoing(true)
                     .addAction(R.drawable.ic_previous_notification, "", ppreviousIntent)
                     .addAction(play_pause_icon, "", pplayIntent)
-                    .addAction(R.drawable.ic_next_norification, "", nextPIntent)
+                    .addAction(R.drawable.ic_next_notification, "", nextPIntent)
                     .addAction(R.drawable.ic_close, "", pcloseIntent);
 
             if (Build.VERSION.SDK_INT >= 26) {
