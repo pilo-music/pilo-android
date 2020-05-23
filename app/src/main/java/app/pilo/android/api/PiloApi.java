@@ -2,7 +2,7 @@ package app.pilo.android.api;
 
 public class PiloApi {
 
-    private static final String BASE_URL = "http://new.pilo.app/api/v1/";
+    private static final String BASE_URL = "https://new.pilo.app/api/v1/";
     static final String VERSION = BASE_URL + "version";
     static final String HOME_GET = BASE_URL + "homes";
     static final String HOME_SINGLE = BASE_URL + "home";

@@ -16,6 +16,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -84,10 +85,15 @@ public class SplashScreenActivity extends BaseActivity {
 
     public void checkForLogin() {
         String token = UserRepo.getInstance(this).get().getAccess_token();
-        if (token != null && !token.equals(""))
-            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-        else
-            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
-        finish();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            if (token != null && !token.equals(""))
+                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+            else
+                startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+            finish();
+        }, 1000);
+
     }
 }

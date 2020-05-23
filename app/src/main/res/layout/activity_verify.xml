@@ -71,8 +71,8 @@
                         android:gravity="center">
 
                         <ImageView
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_20sdp"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
                             android:src="@drawable/ic_person" />
                     </LinearLayout>
                 </LinearLayout>
@@ -120,8 +120,8 @@
                         android:gravity="center">
 
                         <ImageView
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_20sdp"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
                             android:src="@drawable/ic_md_mail" />
                     </LinearLayout>
                 </LinearLayout>
