@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -49,21 +51,19 @@ public class ForYouListAdapter extends RecyclerView.Adapter<ForYouListAdapter.Fo
     @Override
     public void onBindViewHolder(@NonNull ForYouAdapterViewHolder holder, final int position) {
         final ForYou forYou = forYous.get(position);
-//        Glide.with(context)
-//                .load(music.getImage())
-//                .placeholder(R.drawable.ic_music_placeholder)
-//                .error(R.drawable.ic_music_placeholder)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .into(holder.music_item_image);
+        Glide.with(context)
+                .load(forYou.getImage())
+                .placeholder(R.drawable.ic_music_placeholder)
+                .error(R.drawable.ic_music_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.riv_for_you_carousel);
 
-
-//        if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
-//            holder.img_music_item_play.setImageDrawable(context.getDrawable(R.drawable.ic_circle_pause_black));
-//        }
-//
-//        holder.ll_music_item.setOnClickListener(v -> {
-//            EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));
-//        });
+        holder.riv_for_you_carousel.setOnClickListener(v -> {
+            EventBus.getDefault().post(new MusicEvent(context, forYou.getMusics(), forYou.getMusics().get(0).getSlug(), true, false));
+        });
+        holder.fab_for_you_carousel_play.setOnClickListener(v -> {
+            EventBus.getDefault().post(new MusicEvent(context, forYou.getMusics(), forYou.getMusics().get(0).getSlug(), true, false));
+        });
     }
 
 
@@ -73,6 +73,10 @@ public class ForYouListAdapter extends RecyclerView.Adapter<ForYouListAdapter.Fo
     }
 
     static class ForYouAdapterViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.riv_for_you_carousel)
+        RoundedImageView riv_for_you_carousel;
+        @BindView(R.id.fab_for_you_carousel_play)
+        FloatingActionButton fab_for_you_carousel_play;
 
         ForYouAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
