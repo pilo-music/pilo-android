@@ -48,7 +48,6 @@ public class DownloadsFragment extends BaseFragment {
 
     private DownloadsAdapter downloadsAdapter;
     private List<Download> downloads;
-    private int page = 1;
 
     @Nullable
     @Override
@@ -66,18 +65,9 @@ public class DownloadsFragment extends BaseFragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        EndlessScrollEventListener endlessScrollEventListener = new EndlessScrollEventListener(layoutManager) {
-            @Override
-            public void onLoadMore(int pageNum, RecyclerView recyclerView) {
-                getDataFromDb();
-            }
-        };
-
-        recyclerView.addOnScrollListener(endlessScrollEventListener);
         enableSwipeToDeleteAndUndo();
 
         swipe_refresh_layout.setOnRefreshListener(() -> {
-            page = 1;
             downloads.clear();
             getDataFromDb();
         });
@@ -89,12 +79,8 @@ public class DownloadsFragment extends BaseFragment {
     private void getDataFromDb() {
         swipe_refresh_layout.setRefreshing(true);
         List<Download> data = AppDatabase.getInstance(getActivity()).downloadDao().get();
-        if (data.size() > 0) {
-            downloads.addAll(data);
-            page++;
-            downloadsAdapter.notifyDataSetChanged();
-        }
-
+        downloads.addAll(data);
+        downloadsAdapter.notifyDataSetChanged();
         swipe_refresh_layout.setRefreshing(false);
     }
 

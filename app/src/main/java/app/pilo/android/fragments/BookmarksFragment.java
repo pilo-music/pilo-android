@@ -50,7 +50,7 @@ public class BookmarksFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         ButterKnife.bind(this, view);
-        tv_header_title.setText(getString(R.string.profile_likes));
+        tv_header_title.setText(getString(R.string.profile_bookmarks));
 
         bookmarkApi = new BookmarkApi(getActivity());
         bookmarks = new ArrayList<>();

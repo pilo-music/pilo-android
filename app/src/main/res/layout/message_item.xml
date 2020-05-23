@@ -18,12 +18,13 @@
         <TextView
             android:id="@+id/tv_message_subject"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:fontFamily="@font/font"
             android:gravity="start"
             android:textColor="@color/colorPrimaryDark"
+            android:textDirection="locale"
             android:textSize="@dimen/normal_font_size"
             tools:text="موضوع پیام" />
 
@@ -31,8 +32,8 @@
             android:id="@+id/tv_message_created_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
             android:layout_gravity="center"
+            android:ellipsize="end"
             android:fontFamily="@font/font"
             android:gravity="start"
             android:maxLines="1"
@@ -47,10 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:textDirection="locale"
         android:fontFamily="@font/font"
         android:gravity="start"
         android:textColor="@color/colorDark"
+        android:textDirection="locale"
         android:textSize="@dimen/small_font_size"
         tools:text="متن پیام" />
 
@@ -58,16 +59,16 @@
         android:id="@+id/tv_message_sender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/font"
-        tools:background="@drawable/primary_light_round_box_background"
         android:gravity="center"
         android:paddingStart="@dimen/activity_vertical_margin"
         android:paddingTop="5dp"
-        android:layout_marginTop="8dp"
         android:paddingEnd="@dimen/activity_vertical_margin"
         android:paddingBottom="5dp"
-        android:layout_gravity="end"
         android:textColor="@color/colorDark"
         android:textSize="@dimen/small_font_size"
+        tools:background="@drawable/primary_light_round_box_background"
         tools:text="ادمین" />
 </LinearLayout>
