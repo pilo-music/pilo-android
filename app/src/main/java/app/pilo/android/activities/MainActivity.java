@@ -334,12 +334,16 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             switch (item.getItemId()) {
                 case R.id.bottom_home:
                     switchTab(0);
+                    break;
                 case R.id.bottom_browser:
                     switchTab(1);
+                    break;
                 case R.id.bottom_search:
                     switchTab(2);
+                    break;
                 case R.id.bottom_profile:
                     switchTab(3);
+                    break;
             }
 
         });

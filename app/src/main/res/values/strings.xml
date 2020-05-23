@@ -18,6 +18,10 @@
     <string name="server_connection_error">مشکلی در ارتباط با سرور رخ داده است</string>
     <string name="server_connection_message">لطفا مجددا تلاش نمایید</string>
 
+    <string name="bottom_navigation_home">خانه</string>
+    <string name="bottom_navigation_browser">داشبورد</string>
+    <string name="bottom_navigation_search">جستجو</string>
+    <string name="bottom_navigation_profile">پروفایل</string>
 
     <string name="results">نتایج</string>
     <string name="music">موزیک</string>
