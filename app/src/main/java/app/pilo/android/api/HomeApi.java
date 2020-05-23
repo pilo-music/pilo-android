@@ -17,6 +17,7 @@ import java.util.Map;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
+import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
@@ -253,9 +254,20 @@ public class HomeApi {
                     break;
                 case Home.TYPE_BROWSE_DOCK:
                 case Home.TYPE_MUSIC_FOLLOWS:
-                case Home.TYPE_FOR_YOU:
                 case Home.TYPE_PLAY_HISTORY:
                     data = new Object();
+                    break;
+                case Home.TYPE_FOR_YOU:
+                    List<ForYou> forYous = new ArrayList<>();
+                    JSONArray forYousData = jsonArray.getJSONObject(i).getJSONArray("data");
+                    if (forYousData.length() > 0) {
+                        for (int j = 0; j < forYousData.length(); j++) {
+                            ForYou forYou = JsonParser.forYouParser(forYousData.getJSONObject(j));
+                            if (forYou != null)
+                                forYous.add(forYou);
+                        }
+                    }
+                    data = forYous;
                     break;
                 default:
                     data = null;

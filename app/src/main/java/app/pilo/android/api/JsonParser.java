@@ -13,6 +13,7 @@ import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
 import app.pilo.android.models.Bookmark;
 import app.pilo.android.models.Follow;
+import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Like;
 import app.pilo.android.models.Message;
 import app.pilo.android.models.Music;
@@ -259,6 +260,31 @@ class JsonParser {
         return singleVideo;
     }
 
+    static ForYou forYouParser(JSONObject data){
+        try {
+            ForYou forYou = new ForYou();
+            forYou.setTitle(data.getString("title"));
+            forYou.setImage(data.getString("image"));
+            forYou.setMusic_count(data.getInt("music_count"));
+
+            List<Music> musics = new ArrayList<>();
+            JSONArray musicsJsonArray = data.getJSONArray("musics");
+            if (musicsJsonArray.length() > 0) {
+                for (int i = 0; i < musicsJsonArray.length(); i++) {
+                    Music music = JsonParser.musicParser(musicsJsonArray.getJSONObject(i));
+                    if (music != null)
+                        musics.add(music);
+                }
+            }
+
+            forYou.setMusics(musics);
+            return forYou;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     static Video videoJson(JSONObject jsonObject) {
         try {
@@ -308,7 +334,6 @@ class JsonParser {
         }
     }
 
-
     static Playlist playlistParser(JSONObject jsonObject) {
         try {
             Playlist playlist = new Playlist();
@@ -336,7 +361,6 @@ class JsonParser {
             return null;
         }
     }
-
 
     static Promotion promotionParser(JSONObject jsonObject) {
         Promotion promotion = new Promotion();
@@ -393,7 +417,6 @@ class JsonParser {
             return null;
         }
     }
-
 
     static Bookmark bookmarkParser(JSONObject jsonObject) {
         try {
