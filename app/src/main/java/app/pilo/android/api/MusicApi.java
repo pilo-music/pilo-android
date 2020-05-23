@@ -46,10 +46,10 @@ public class MusicApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONArray data = response.getJSONArray("data");
                             List<Music> musics = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
                                 Music music = JsonParser.musicParser(data.getJSONObject(i));
@@ -84,10 +84,10 @@ public class MusicApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             SingleMusic singleMusic = JsonParser.singleMusicParser(data);
                             requestHandler.onGetInfo(singleMusic, message, status);
                         } else

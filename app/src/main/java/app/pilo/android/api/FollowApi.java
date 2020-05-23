@@ -46,10 +46,10 @@ public class FollowApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONArray data = response.getJSONArray("data");
                             List<Follow> follows = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
                                 Follow follow = JsonParser.followParser(data.getJSONObject(i));

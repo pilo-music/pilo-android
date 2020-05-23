@@ -46,10 +46,10 @@ public class AlbumApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONArray data = response.getJSONArray("data");
                             List<Album> albums = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
                                 Album album = JsonParser.albumParser(data.getJSONObject(i));
@@ -85,10 +85,10 @@ public class AlbumApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             SingleAlbum singleAlbum = JsonParser.singleAlbumParser(data);
                             requestHandler.onGetInfo(singleAlbum, message, status);
                         } else

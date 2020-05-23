@@ -35,10 +35,10 @@ public class HomeApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.BROWSER_GET, null,
                 response -> {
                     try {
-                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONArray data = response.getJSONArray("data");
                             requestHandler.onGetInfo(parsHomeApiData(data), message, status);
                         } else
                             requestHandler.onGetInfo(null, message, status);
@@ -68,10 +68,10 @@ public class HomeApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             requestHandler.onGetInfo(parsSingleHomeApiData(data), message, status);
                         } else
                             requestHandler.onGetInfo(null, message, status);
@@ -99,10 +99,10 @@ public class HomeApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, PiloApi.HOME_GET, null,
                 response -> {
                     try {
-                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONArray data = response.getJSONArray("data");
                             requestHandler.onGetInfo(parsHomeApiData(data), message, status);
                         } else
                             requestHandler.onGetInfo(null, message, status);
@@ -132,10 +132,10 @@ public class HomeApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             requestHandler.onGetInfo(parsSingleHomeApiData(data), message, status);
                         } else
                             requestHandler.onGetInfo(null, message, status);

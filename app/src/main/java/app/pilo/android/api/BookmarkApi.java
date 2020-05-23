@@ -45,10 +45,10 @@ public class BookmarkApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONArray data = response.getJSONArray("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONArray data = response.getJSONArray("data");
                             List<Bookmark> bookmarks = new ArrayList<>();
                             for (int i = 0; i < data.length(); i++) {
                                 Bookmark bookmark = JsonParser.bookmarkParser(data.getJSONObject(i));

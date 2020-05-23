@@ -30,9 +30,9 @@ public class VersionApi {
                     try {
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
-                        JSONObject data = response.getJSONObject("data");
                         Map<String, Object> version = new HashMap<>();
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             version.put("version", data.getInt("version"));
                             version.put("min_version", data.getInt("min_version"));
                             version.put("update_title", data.getString("update_title"));

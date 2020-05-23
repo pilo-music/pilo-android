@@ -51,10 +51,10 @@ public class SearchApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url.toString(), null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             Search search = parsSearchApiData(data);
                             requestHandler.onGetInfo(search, message, status);
                         } else

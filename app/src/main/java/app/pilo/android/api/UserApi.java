@@ -37,9 +37,9 @@ public class UserApi {
                         try {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
-                            JSONObject data = response.getJSONObject("data");
-                            Map<String, Object> user = new HashMap<>();
                             if (status) {
+                                JSONObject data = response.getJSONObject("data");
+                                Map<String, Object> user = new HashMap<>();
                                 if (data.getString("status").equals("login")) {
                                     user.put("user", JsonParser.userParser(data));
                                 }
@@ -113,8 +113,8 @@ public class UserApi {
                         try {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
-                            JSONObject data = response.getJSONObject("data");
                             if (status) {
+                                JSONObject data = response.getJSONObject("data");
                                 User user = JsonParser.userParser(data);
                                 requestHandler.onGetInfo(user, message, status);
                             } else {
@@ -184,8 +184,8 @@ public class UserApi {
                         try {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
-                            JSONObject data = response.getJSONObject("data");
                             if (status) {
+                                JSONObject data = response.getJSONObject("data");
                                 User user = JsonParser.userParser(data);
                                 requestHandler.onGetInfo(user, message, status);
                             } else {
@@ -215,10 +215,10 @@ public class UserApi {
             final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.UPDATE_PROFILE, jsonObject,
                     response -> {
                         try {
-                            JSONObject data = response.getJSONObject("data");
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
                             if (status) {
+                                JSONObject data = response.getJSONObject("data");
                                 User user = JsonParser.userParser(data);
                                 requestHandler.onGetInfo(user, message, status);
                             } else
@@ -250,10 +250,10 @@ public class UserApi {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.ME, null,
                 response -> {
                     try {
-                        JSONObject data = response.getJSONObject("data");
                         boolean status = response.getBoolean("status");
                         String message = response.getString("message");
                         if (status) {
+                            JSONObject data = response.getJSONObject("data");
                             User user = JsonParser.userParser(data);
                             requestHandler.onGetInfo(user, message, status);
                         } else
