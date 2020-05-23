@@ -85,33 +85,43 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_like_off" />
 
-            <ImageView
-                android:id="@+id/img_extended_music_player_download"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_download" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img_extended_music_player_download"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    tools:visibility="gone"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ic_download" />
 
 
-            <com.github.abdularis.buttonprogress.DownloadButtonProgress
-                android:id="@+id/download_progress_extended_music_player"
-                android:layout_width="28.0dip"
-                android:layout_height="28.0dip"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:currentProgress="20"
-                app:determinateBackgroundDrawable="@drawable/download_determinate_drawable"
-                app:finishBackgroundDrawable="@drawable/download_idle_drawable"
-                app:idleBackgroundDrawable="@drawable/download_idle_drawable"
-                app:idleIconDrawable="@drawable/ic_download"
-                app:indeterminateBackgroundDrawable="@drawable/download_idle_drawable"
-                app:maxProgress="100"
-                app:progressDeterminateColor="@color/colorPrimary"
-                app:progressIndeterminateColor="@color/colorPrimary"
-                app:progressWidth="2.0dip"
-                app:state="DETERMINATE" />
+                <com.github.abdularis.buttonprogress.DownloadButtonProgress
+                    android:id="@+id/download_progress_extended_music_player"
+                    android:layout_width="@dimen/_22sdp"
+                    android:layout_height="@dimen/_22sdp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:cancelIconDrawable="@drawable/ic_close"
+                    app:currentProgress="20"
+                    app:determinateBackgroundDrawable="@drawable/download_determinate_drawable"
+                    app:finishBackgroundDrawable="@drawable/download_idle_drawable"
+                    app:idleBackgroundDrawable="@drawable/download_idle_drawable"
+                    app:idleIconDrawable="@drawable/ic_download"
+                    app:indeterminateBackgroundDrawable="@drawable/download_idle_drawable"
+                    app:maxProgress="100"
+                    app:progressDeterminateColor="@color/colorPrimary"
+                    app:progressIndeterminateColor="@color/colorPrimary"
+                    app:progressWidth="2.0dip"
+                    app:state="DETERMINATE" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/img_extended_music_player_go_to_artist"

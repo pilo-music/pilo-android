@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -174,10 +175,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private PlayHistoryApi playHistoryApi;
 
     private List<Integer> bottomNavigationTabs;
-    private HomeFragment homeFragment;
-    private BrowserFragment browserFragment;
-    private SearchFragment searchFragment;
-    private ProfileFragment profileFragment;
 
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -248,7 +245,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 ll_music_player_collapsed.setAlpha(1 - slideOffset);
-//                ll_tab_layout.setAlpha(1 - slideOffset);
                 ll_page_header.setAlpha(0 + slideOffset);
 
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_tab_layout.getLayoutParams();
@@ -304,10 +300,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         bottomNavigationTabs.add(R.id.bottom_search);
         bottomNavigationTabs.add(R.id.bottom_profile);
 
-        homeFragment = new HomeFragment();
-        browserFragment = new BrowserFragment();
-        searchFragment = new SearchFragment();
-        profileFragment = new ProfileFragment();
+        for (int i = 0; i < bottom_navigation.getMenu().size(); i++) {
+            TooltipCompat.setTooltipText(bottom_navigation.findViewById(bottom_navigation.getMenu().getItem(i).getItemId()), null);
+        }
 
         bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

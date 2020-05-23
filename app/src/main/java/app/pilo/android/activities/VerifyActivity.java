@@ -50,6 +50,8 @@ public class VerifyActivity extends BaseActivity {
             finishAffinity();
         }
 
+        et_email.setText(email);
+
         ll_verify.setOnClickListener(v -> {
             String email = et_email.getText().toString().trim();
             String code = et_code.getText().toString().trim();
