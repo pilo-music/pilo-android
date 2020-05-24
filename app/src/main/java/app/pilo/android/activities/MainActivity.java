@@ -54,10 +54,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import androidx.viewpager2.widget.ViewPager2;
 import app.pilo.android.R;
 import app.pilo.android.adapters.EditItemTouchHelperCallback;
 import app.pilo.android.adapters.MusicDraggableVerticalListAdapter;
 import app.pilo.android.adapters.OnStartDragListener;
+import app.pilo.android.adapters.PlayerViewPagerAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
@@ -121,8 +123,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     FloatingActionButton img_music_player_collapsed_play;
 
     // extended music player
-    @BindView(R.id.riv_extended_music_player_music)
-    RoundedImageView riv_extended_music_player_music;
     @BindView(R.id.tv_extended_music_player_title)
     TextView tv_extended_music_player_title;
     @BindView(R.id.tv_extended_music_player_artist)
@@ -153,8 +153,11 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     TextView tv_music_vertical_show_more;
     @BindView(R.id.tv_music_vertical_title)
     TextView tv_music_vertical_title;
+    @BindView(R.id.view_pager_extended_music_player)
+    ViewPager2 view_pager_extended_music_player;
 
     private boolean doubleBackToExitPressedOnce = false;
+    private boolean firstMusicListLoad = true;
     private Unbinder unbinder;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
@@ -173,6 +176,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private Utils utils;
     private AnimateTest animateTest = new AnimateTest();
     private PlayHistoryApi playHistoryApi;
+    private PlayerViewPagerAdapter playerViewPagerAdapter;
 
     private List<Integer> bottomNavigationTabs;
 
@@ -218,7 +222,13 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         utils = new Utils();
         playHistoryApi = new PlayHistoryApi(this);
         userSharedPrefManager = new UserSharedPrefManager(this);
+        setupMusicVerticalList();
+        setupSlidingUpPanel();
+        handleIncomingBroadcast(getIntent());
+        setupPlayerViewPager();
+    }
 
+    private void setupMusicVerticalList() {
         tv_music_vertical_show_more.setVisibility(View.GONE);
         tv_music_vertical_title.setVisibility(View.GONE);
 
@@ -237,6 +247,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rc_music_vertical.setAdapter(musicVerticalListAdapter);
 
+    }
+
+    private void setupSlidingUpPanel() {
         sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
         ll_page_header.setAlpha(0);
 
@@ -284,7 +297,35 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 is_seeking = false;
             }
         });
-        handleIncomingBroadcast(getIntent());
+    }
+
+    private void setupPlayerViewPager() {
+
+        playerViewPagerAdapter = new PlayerViewPagerAdapter(this, musics);
+        view_pager_extended_music_player.setAdapter(playerViewPagerAdapter);
+
+        view_pager_extended_music_player.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                final Handler handler = new Handler();
+                if (!firstMusicListLoad) {
+                    handler.postDelayed(() -> EventBus.getDefault().post(new MusicEvent(MainActivity.this, musics, musics.get(position).getSlug(), true, false)), 300);
+                }
+                firstMusicListLoad = false;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
+
 
     }
 
@@ -304,29 +345,26 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             TooltipCompat.setTooltipText(bottom_navigation.findViewById(bottom_navigation.getMenu().getItem(i).getItemId()), null);
         }
 
-        bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.bottom_home:
-                        fragmentHistory.push(0);
-                        switchTab(0);
-                        return true;
-                    case R.id.bottom_browser:
-                        fragmentHistory.push(1);
-                        switchTab(1);
-                        return true;
-                    case R.id.bottom_search:
-                        fragmentHistory.push(2);
-                        switchTab(2);
-                        return true;
-                    case R.id.bottom_profile:
-                        fragmentHistory.push(3);
-                        switchTab(3);
-                        return true;
-                }
-                return false;
+        bottom_navigation.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.bottom_home:
+                    fragmentHistory.push(0);
+                    switchTab(0);
+                    return true;
+                case R.id.bottom_browser:
+                    fragmentHistory.push(1);
+                    switchTab(1);
+                    return true;
+                case R.id.bottom_search:
+                    fragmentHistory.push(2);
+                    switchTab(2);
+                    return true;
+                case R.id.bottom_profile:
+                    fragmentHistory.push(3);
+                    switchTab(3);
+                    return true;
             }
+            return false;
         });
 
         bottom_navigation.setOnNavigationItemReselectedListener(item -> {
@@ -366,6 +404,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             List<Music> items_from_db = AppDatabase.getInstance(MainActivity.this).musicDao().getAll();
             musics.addAll(items_from_db);
             musicVerticalListAdapter.notifyDataSetChanged();
+            playerViewPagerAdapter.notifyDataSetChanged();
         }
         String current_music_slug = playerService.getCurrent_music_slug();
         if (current_music_slug.equals("")) {
@@ -397,12 +436,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                         .placeholder(R.drawable.ic_music_placeholder)
                         .error(R.drawable.ic_music_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(riv_extended_music_player_music);
-                Glide.with(MainActivity.this)
-                        .load(music.getImage())
-                        .placeholder(R.drawable.ic_music_placeholder)
-                        .error(R.drawable.ic_music_placeholder)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(riv_music_player_collapsed_image);
 
 
@@ -418,6 +451,12 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_on));
                 } else {
                     img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
+                }
+
+
+                for (int i = 0; i < musics.size(); i++) {
+                    if (musics.get(i).getSlug() == current_music_slug)
+                        view_pager_extended_music_player.setCurrentItem(i, true);
                 }
 
                 // add play history
