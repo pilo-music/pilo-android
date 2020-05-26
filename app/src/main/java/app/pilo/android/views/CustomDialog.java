@@ -1,18 +1,25 @@
 package app.pilo.android.views;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import app.pilo.android.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CustomDialog {
+public class CustomDialog extends BottomSheetDialogFragment {
     private String title;
     private String body;
     private String successButton;
@@ -23,6 +30,8 @@ public class CustomDialog {
     private boolean showProgress = false;
     private onClient onClient;
     private Context context;
+
+    public final static String TAG = "CustomDialog";
 
 
     @BindView(R.id.tv_title)
@@ -84,14 +93,12 @@ public class CustomDialog {
     }
 
 
-    public void show() {
-        final Dialog dialog = new Dialog(context, R.style.DialogTheme);
-        if (!cancelable) {
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-        }
-        dialog.setContentView(R.layout.custom_dialog);
-        ButterKnife.bind(this, dialog);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.custom_dialog, container, false);
+        this.setCancelable(cancelable);
+        ButterKnife.bind(this, view);
 
         if (!showFail)
             btn_fail.setVisibility(View.GONE);
@@ -108,15 +115,16 @@ public class CustomDialog {
             ll_success.setEnabled(false);
             tv_success.setVisibility(View.GONE);
             progress_bar.setVisibility(View.VISIBLE);
-            onClient.onSuccessClick(dialog);
+            onClient.onSuccessClick(this);
         });
-        btn_fail.setOnClickListener(v -> onClient.onFailClick(dialog));
-        dialog.show();
+        btn_fail.setOnClickListener(v -> onClient.onFailClick(this));
+
+        return view;
     }
 
     public interface onClient {
-        void onSuccessClick(Dialog dialog);
+        void onSuccessClick(BottomSheetDialogFragment dialog);
 
-        void onFailClick(Dialog dialog);
+        void onFailClick(BottomSheetDialogFragment dialog);
     }
 }

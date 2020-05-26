@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.android.volley.error.VolleyError;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.tapadoo.alerter.Alerter;
 
 import app.pilo.android.R;
@@ -102,7 +103,7 @@ public class EditPlaylistDialog {
     void ll_edit_playlist_delete() {
         new CustomDialog(context, context.getString(R.string.play_list_delete), context.getString(R.string.play_list_delete_body), context.getString(R.string.yes), context.getString(R.string.no), new CustomDialog.onClient() {
             @Override
-            public void onSuccessClick(Dialog dialog1) {
+            public void onSuccessClick(BottomSheetDialogFragment dialog1) {
                 playlistApi.delete(playlist.getSlug(), new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
@@ -120,16 +121,20 @@ public class EditPlaylistDialog {
             }
 
             @Override
-            public void onFailClick(Dialog dialog1) {
+            public void onFailClick(BottomSheetDialogFragment dialog1) {
                 dialog1.dismiss();
             }
-        }).show();
+        }).show(((MainActivity)(context)).getSupportFragmentManager(), CustomDialog.TAG);
     }
 
 
     public interface onClick {
         void onEdit(Dialog dialog, Playlist playlist);
 
+        void onEdit(BottomSheetDialogFragment dialog, Playlist playlist);
+
         void onDelete(Dialog dialog1, Dialog dialog, Playlist playlist);
+
+        void onDelete(BottomSheetDialogFragment dialog1, Dialog dialog, Playlist playlist);
     }
 }

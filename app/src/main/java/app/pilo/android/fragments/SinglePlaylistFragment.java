@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -262,7 +263,21 @@ public class SinglePlaylistFragment extends BaseFragment {
             }
 
             @Override
+            public void onEdit(BottomSheetDialogFragment dialog, Playlist playlist) {
+                tv_single_playlist_name.setText(playlist.getTitle());
+                tv_header_title.setText(playlist.getTitle());
+                dialog.dismiss();
+            }
+
+            @Override
             public void onDelete(Dialog dialog1, Dialog dialog, Playlist playlist) {
+                dialog1.dismiss();
+                dialog.dismiss();
+                getActivity().onBackPressed();
+            }
+
+            @Override
+            public void onDelete(BottomSheetDialogFragment dialog1, Dialog dialog, Playlist playlist) {
                 dialog1.dismiss();
                 dialog.dismiss();
                 getActivity().onBackPressed();

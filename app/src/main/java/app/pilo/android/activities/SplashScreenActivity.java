@@ -2,6 +2,7 @@ package app.pilo.android.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import app.pilo.android.BuildConfig;
 import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
@@ -73,14 +74,14 @@ public class SplashScreenActivity extends BaseActivity {
                 cpb_splash.setVisibility(View.GONE);
                 ll_try_again.setVisibility(View.VISIBLE);
                 new HttpErrorHandler(SplashScreenActivity.this);
-                Log.e("error", "onGetError: "+error.getMessage() );
+                Log.e("error", "onGetError: " + error.getMessage());
             }
         });
 
     }
 
     private void showUpdateDialog(int version, int minVersion, String title, String update_description, String update_link) {
-        new UpdateDialog(this, title, update_description, update_link, version, minVersion).showDialog();
+        new UpdateDialog(this, title, update_description, update_link, version, minVersion).show(getSupportFragmentManager(), UpdateDialog.TAG);
     }
 
     public void checkForLogin() {

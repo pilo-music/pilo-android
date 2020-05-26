@@ -3,24 +3,23 @@ package app.pilo.android.views;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.view.MotionEvent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
-
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import app.pilo.android.R;
@@ -33,11 +32,12 @@ import app.pilo.android.fragments.AddToPlaylistFragment;
 import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.models.SingleArtist;
 import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class MusicActionsDialog {
+public class MusicActionsDialog extends BottomSheetDialogFragment {
 
     private Music music;
     private Context context;
@@ -46,21 +46,36 @@ public class MusicActionsDialog {
     private boolean likeProcess = false;
     private boolean bookmarkProcess = false;
     private Utils utils;
-    private Dialog dialog;
 
+    public final static String TAG = "MusicActionsDialog";
 
-    private RoundedImageView riv_music_actions_image;
-    private TextView tv_music_actions_music;
-    private TextView tv_music_actions_artist;
-    private ImageView img_music_actions_like;
-    private ImageView img_music_actions_bookmark;
-    private LinearLayout ll_music_actions_go_to_artist;
-    private LinearLayout ll_music_actions_add_to_playlist;
-    private LinearLayout ll_music_actions_download;
-    private LinearLayout ll_music_actions_share;
-    private ImageView img_music_actions_download;
-    private DownloadButtonProgress downloadprogress_music_actions;
     private UserSharedPrefManager userSharedPrefManager;
+
+
+    @BindView(R.id.riv_music_actions_image)
+    RoundedImageView riv_music_actions_image;
+    @BindView(R.id.tv_music_actions_music)
+    TextView tv_music_actions_music;
+    @BindView(R.id.tv_music_actions_artist)
+    TextView tv_music_actions_artist;
+    @BindView(R.id.img_music_actions_like)
+    ImageView img_music_actions_like;
+    @BindView(R.id.img_music_actions_bookmark)
+    ImageView img_music_actions_bookmark;
+    @BindView(R.id.ll_music_actions_go_to_artist)
+    LinearLayout ll_music_actions_go_to_artist;
+    @BindView(R.id.ll_music_actions_add_to_playlist)
+    LinearLayout ll_music_actions_add_to_playlist;
+    @BindView(R.id.ll_music_actions_download)
+    LinearLayout ll_music_actions_download;
+    @BindView(R.id.ll_music_actions_share)
+    LinearLayout ll_music_actions_share;
+    @BindView(R.id.img_music_actions_download)
+    ImageView img_music_actions_download;
+    @BindView(R.id.downloadprogress_music_actions)
+    DownloadButtonProgress downloadprogress_music_actions;
+
+
 
     public MusicActionsDialog(Context context, Music music) {
         this.context = context;
@@ -70,38 +85,21 @@ public class MusicActionsDialog {
         utils = new Utils();
     }
 
-    public void showDialog() {
-        final Dialog dialog = new Dialog(context, R.style.DialogTheme);
-        this.dialog = dialog;
-        dialog.setContentView(R.layout.music_actions_dialog);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.music_actions_dialog, container, false);
+        ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(context);
 
-        findViews();
         setupViews();
-
         setupDownload();
         setupLike();
         setupBookmark();
         setupDownload();
 
-        dialog.show();
-    }
-
-
-    private void findViews() {
-        riv_music_actions_image = dialog.findViewById(R.id.riv_music_actions_image);
-        tv_music_actions_music = dialog.findViewById(R.id.tv_music_actions_music);
-        tv_music_actions_artist = dialog.findViewById(R.id.tv_music_actions_artist);
-        img_music_actions_like = dialog.findViewById(R.id.img_music_actions_like);
-        img_music_actions_bookmark = dialog.findViewById(R.id.img_music_actions_bookmark);
-        ll_music_actions_go_to_artist = dialog.findViewById(R.id.ll_music_actions_go_to_artist);
-        ll_music_actions_add_to_playlist = dialog.findViewById(R.id.ll_music_actions_add_to_playlist);
-        ll_music_actions_download = dialog.findViewById(R.id.ll_music_actions_download);
-        ll_music_actions_share = dialog.findViewById(R.id.ll_music_actions_share);
-        downloadprogress_music_actions = dialog.findViewById(R.id.downloadprogress_music_actions);
-        img_music_actions_download = dialog.findViewById(R.id.img_music_actions_download);
+        return  view;
     }
 
     private void setupBookmark() {
@@ -279,11 +277,11 @@ public class MusicActionsDialog {
         ll_music_actions_go_to_artist.setOnClickListener(v -> {
             SingleArtistFragment singleArtistFragment = new SingleArtistFragment(music.getArtist());
             ((MainActivity) context).pushFragment(singleArtistFragment);
-            dialog.dismiss();
+            this.dismiss();
         });
 
         ll_music_actions_add_to_playlist.setOnClickListener(v -> {
-            dialog.dismiss();
+            this.dismiss();
             AddToPlaylistFragment addToPlaylistFragment = new AddToPlaylistFragment(music);
             ((MainActivity) context).pushFragment(addToPlaylistFragment);
         });

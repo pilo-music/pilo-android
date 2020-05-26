@@ -150,7 +150,7 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
         });
 
         holder.ll_music_vertical.setOnLongClickListener(v -> {
-            new MusicActionsDialog(context, music).showDialog();
+            new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG);
             return false;
         });
 

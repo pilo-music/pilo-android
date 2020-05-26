@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.greenrobot.eventbus.EventBus;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
@@ -79,7 +80,7 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
 //        }
 
         holder.ll_music_item.setOnLongClickListener(v -> {
-            new MusicActionsDialog(context, music).showDialog();
+            new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG);
             return false;
         });
 

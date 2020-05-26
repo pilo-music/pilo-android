@@ -1,17 +1,25 @@
 package app.pilo.android.views;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.SplashScreenActivity;
+import butterknife.BindView;
 
-public class UpdateDialog {
+public class UpdateDialog extends BottomSheetDialogFragment {
 
     private Activity activity;
     private String title;
@@ -20,10 +28,16 @@ public class UpdateDialog {
     private int version;
     private int minVersion;
 
-    private TextView tvTitle;
-    private TextView tvDescription;
-    private Button btnCancel;
-    private Button btnUpdate;
+    public final static String TAG = "UpdateDialog";
+
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_description)
+    TextView tvDescription;
+    @BindView(R.id.btn_update)
+    Button btnCancel;
+    @BindView(R.id.btn_cancel)
+    Button btnUpdate;
 
     public UpdateDialog(Activity activity, String title, String description, String link, int version, int minVersion) {
         this.activity = activity;
@@ -34,21 +48,12 @@ public class UpdateDialog {
         this.minVersion = minVersion;
     }
 
-    public void showDialog() {
-        final Dialog dialog = new Dialog(activity, R.style.DialogTheme);
-        if (version < minVersion) {
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-        }else{
-            dialog.setCanceledOnTouchOutside(true);
-        }
 
-
-        dialog.setContentView(R.layout.update_dialog);
-
-        tvTitle = dialog.findViewById(R.id.tv_title);
-        tvDescription = dialog.findViewById(R.id.tv_description);
-
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.update_dialog, container, false);
+        this.setCancelable(version < minVersion);
 
         tvTitle.setText(title);
         tvDescription.setText(description);
@@ -57,21 +62,15 @@ public class UpdateDialog {
             btnCancel.setVisibility(View.GONE);
         }
 
-        btnCancel = dialog.findViewById(R.id.btn_cancel);
-        btnUpdate = dialog.findViewById(R.id.btn_update);
-
-
         btnUpdate.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
             activity.startActivity(browserIntent);
         });
 
         btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
+            this.dismiss();
             ((SplashScreenActivity) activity).checkForLogin();
         });
-
-        dialog.show();
-
+        return view;
     }
 }

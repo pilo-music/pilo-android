@@ -1,16 +1,14 @@
 package app.pilo.android.fragments;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
 import java.util.List;
@@ -44,17 +42,17 @@ public class SettingsFragment extends BaseFragment {
     void ll_settings_logout() {
         new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
             @Override
-            public void onSuccessClick(Dialog dialog) {
+            public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 AppDatabase.NukeAllTables(getActivity());
                 getActivity().startActivity(new Intent(getActivity(), SplashScreenActivity.class));
                 getActivity().finishAffinity();
             }
 
             @Override
-            public void onFailClick(Dialog dialog) {
+            public void onFailClick(BottomSheetDialogFragment dialog) {
                 dialog.dismiss();
             }
-        }).show();
+        }).show(getActivity().getSupportFragmentManager(), CustomDialog.TAG);
     }
 
     @OnClick(R.id.tv_settings_telegram)
@@ -71,9 +69,9 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.tv_settings_clear_downloads)
     void tv_settings_clear_downloads() {
-        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no),true ,new CustomDialog.onClient() {
+        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), true, new CustomDialog.onClient() {
             @Override
-            public void onSuccessClick(Dialog dialog) {
+            public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 List<Download> downloads = AppDatabase.getInstance(getActivity()).downloadDao().get();
                 for (int i = 0; i < downloads.size(); i++) {
                     File file320 = new File(downloads.get(i).getPath320());
@@ -91,42 +89,42 @@ public class SettingsFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailClick(Dialog dialog) {
+            public void onFailClick(BottomSheetDialogFragment dialog) {
                 dialog.dismiss();
             }
-        }).show();
+        }).show(getActivity().getSupportFragmentManager(), CustomDialog.TAG);
     }
 
     @OnClick(R.id.tv_settings_clear_music_history)
     void tv_settings_clear_music_history() {
         new CustomDialog(getActivity(), getString(R.string.clear_music_history), getString(R.string.clear_music_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
             @Override
-            public void onSuccessClick(Dialog dialog) {
+            public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 AppDatabase.getInstance(getContext()).playHistoryDao().deleteAll();
                 dialog.dismiss();
             }
 
             @Override
-            public void onFailClick(Dialog dialog) {
+            public void onFailClick(BottomSheetDialogFragment dialog) {
                 dialog.dismiss();
             }
-        }).show();
+        }).show(getActivity().getSupportFragmentManager(), CustomDialog.TAG);
     }
 
     @OnClick(R.id.tv_settings_clear_search_history)
     void tv_settings_clear_search_history() {
         new CustomDialog(getActivity(), getString(R.string.clear_search_history), getString(R.string.clear_search_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
             @Override
-            public void onSuccessClick(Dialog dialog) {
+            public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 AppDatabase.getInstance(getContext()).searchHistoryDao().nukeTable();
                 dialog.dismiss();
             }
 
             @Override
-            public void onFailClick(Dialog dialog) {
+            public void onFailClick(BottomSheetDialogFragment dialog) {
                 dialog.dismiss();
             }
-        }).show();
+        }).show(getActivity().getSupportFragmentManager(), CustomDialog.TAG);
     }
 
     @OnClick(R.id.tv_settings_notifications)
@@ -137,7 +135,7 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.tv_settings_quality)
     void tv_settings_quality() {
-        new QualitySettingDialog(getActivity()).show();
+        new QualitySettingDialog(getActivity()).show(getActivity().getSupportFragmentManager(), QualitySettingDialog.TAG);
     }
 
     @OnClick(R.id.img_header_back)
