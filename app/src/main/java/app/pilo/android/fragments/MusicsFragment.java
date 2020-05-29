@@ -108,21 +108,23 @@ public class MusicsFragment extends BaseFragment {
         musicApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                if (view != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    if (status) {
-                        musics.addAll((List<Music>) data);
-                        page++;
-                        musicsListAdapter.notifyDataSetChanged();
-                    } else {
-                        new HttpErrorHandler(getActivity(), message);
-                    }
+                if (!checkView()) {
+                    return;
                 }
+                swipeRefreshLayout.setRefreshing(false);
+                if (status) {
+                    musics.addAll((List<Music>) data);
+                    page++;
+                    musicsListAdapter.notifyDataSetChanged();
+                } else {
+                    new HttpErrorHandler(getActivity(), message);
+                }
+
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                if (view != null) {
+                if (checkView()) {
                     swipeRefreshLayout.setRefreshing(false);
                     new HttpErrorHandler(getActivity());
                 }

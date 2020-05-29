@@ -53,6 +53,7 @@ public class SinglePlaylistFragment extends BaseFragment {
     private Playlist playlist;
     private MusicVerticalListAdapter musicVerticalListAdapter;
     private UserSharedPrefManager userSharedPrefManager;
+    private View view;
 
     @BindView(R.id.img_single_playlist)
     ImageView img_single_playlist;
@@ -80,7 +81,7 @@ public class SinglePlaylistFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_single_playlist, container, false);
+        view = inflater.inflate(R.layout.fragment_single_playlist, container, false);
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(getActivity());
         utils = new Utils();
@@ -128,7 +129,7 @@ public class SinglePlaylistFragment extends BaseFragment {
         playlistApi.single(playlist.getSlug(), !playlist.getUser().getEmail().equals(""), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                if (status) {
+                if (view != null && status) {
                     if (((SinglePlaylist) data).getMusics() != null) {
                         tv_single_playlist_count.setText(((SinglePlaylist) data).getMusics().size() + " " + getActivity().getString(R.string.music));
                     } else {
@@ -150,7 +151,9 @@ public class SinglePlaylistFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                new HttpErrorHandler(getActivity());
+                if (view != null) {
+                    new HttpErrorHandler(getActivity());
+                }
             }
         });
     }
@@ -183,7 +186,7 @@ public class SinglePlaylistFragment extends BaseFragment {
                 likeApi.like(playlist.getSlug(), "playlist", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
+                        if (view != null && !status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
                         } else {
@@ -193,8 +196,10 @@ public class SinglePlaylistFragment extends BaseFragment {
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler(getActivity());
-                        img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                        if (view != null) {
+                            new HttpErrorHandler(getActivity());
+                            img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                        }
                     }
                 });
                 likeProcess = false;
@@ -204,6 +209,9 @@ public class SinglePlaylistFragment extends BaseFragment {
                 likeApi.like(playlist.getSlug(), "playlist", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
+                        if (!checkView()) {
+                            return;
+                        }
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
@@ -214,8 +222,12 @@ public class SinglePlaylistFragment extends BaseFragment {
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
+                        if (!checkView()) {
+                            return;
+                        }
                         new HttpErrorHandler(getActivity());
                         img_single_playlist_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+
                     }
                 });
                 likeProcess = false;

@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.LikeListAdapter;
@@ -32,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LikesFragment extends Fragment {
+public class LikesFragment extends BaseFragment {
     @BindView(R.id.rc_likes)
     RecyclerView recyclerView;
     @BindView(R.id.tv_header_title)
@@ -44,11 +45,12 @@ public class LikesFragment extends Fragment {
     private LikeApi likeApi;
     private List<Like> likes;
     private int page = 1;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_likes, container, false);
+        view = inflater.inflate(R.layout.fragment_likes, container, false);
         ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.profile_likes));
 
@@ -74,7 +76,6 @@ public class LikesFragment extends Fragment {
         recyclerView.addOnScrollListener(endlessScrollEventListener);
 
 
-
         swipe_refresh_layout.setOnRefreshListener(() -> {
             page = 1;
             likes.clear();
@@ -93,6 +94,9 @@ public class LikesFragment extends Fragment {
         likeApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
                     likes.addAll((List<Like>) data);
@@ -101,10 +105,14 @@ public class LikesFragment extends Fragment {
                 } else {
                     new HttpErrorHandler(getActivity(), message);
                 }
+
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 new HttpErrorHandler(getActivity());
             }

@@ -32,4 +32,12 @@ public class BaseFragment extends Fragment {
     public interface FragmentNavigation {
         void pushFragment(Fragment fragment);
     }
+
+
+    public boolean checkView() {
+        if (getActivity() == null || getView() == null) {
+            return false;
+        }
+        return true;
+    }
 }

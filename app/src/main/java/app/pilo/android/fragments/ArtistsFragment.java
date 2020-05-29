@@ -99,24 +99,27 @@ public class ArtistsFragment extends BaseFragment {
         artistApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                if (view != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    if (status) {
-                        artists.addAll((List<Artist>) data);
-                        page++;
-                        artistsListAdapter.notifyDataSetChanged();
-                    } else {
-                        new HttpErrorHandler(getActivity(), message);
-                    }
+                if (!checkView()) {
+                    return;
                 }
+                swipeRefreshLayout.setRefreshing(false);
+                if (status) {
+                    artists.addAll((List<Artist>) data);
+                    page++;
+                    artistsListAdapter.notifyDataSetChanged();
+                } else {
+                    new HttpErrorHandler(getActivity(), message);
+                }
+
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                if (view != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                    new HttpErrorHandler(getActivity());
+                if (!checkView()) {
+                    return;
                 }
+                swipeRefreshLayout.setRefreshing(false);
+                new HttpErrorHandler(getActivity());
             }
         });
     }

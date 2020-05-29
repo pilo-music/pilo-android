@@ -34,11 +34,12 @@ public class HomeFragment extends BaseFragment {
 
     private HomeItemHelper homeItemHelper;
     private Unbinder unbinder;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
         swipe_refresh_layout.setOnRefreshListener(this::getHomeApi);
         homeItemHelper = new HomeItemHelper();
@@ -53,6 +54,9 @@ public class HomeFragment extends BaseFragment {
         homeApi.getHome(new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
                     homeItemHelper.init(HomeFragment.this, (List<Home>) data);
@@ -63,8 +67,12 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 new HttpErrorHandler(getActivity());
+
             }
         });
     }

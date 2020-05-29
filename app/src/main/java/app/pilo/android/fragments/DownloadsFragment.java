@@ -89,8 +89,6 @@ public class DownloadsFragment extends BaseFragment {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getActivity()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
-
                 final int position = viewHolder.getAdapterPosition();
                 final Download item = downloadsAdapter.getData().get(position);
 

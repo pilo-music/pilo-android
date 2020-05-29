@@ -107,7 +107,7 @@ public class SearchResultFragment extends BaseFragment {
     private UserSharedPrefManager userSharedPrefManager;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String query = "";
-
+    private View view;
 
     public SearchResultFragment(String text) {
         if (text != null && !text.isEmpty()) {
@@ -118,7 +118,7 @@ public class SearchResultFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search_result, container, false);
+        view = inflater.inflate(R.layout.fragment_search_result, container, false);
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(getActivity());
         et_search.requestFocus();
@@ -234,6 +234,9 @@ public class SearchResultFragment extends BaseFragment {
         searchApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 if (status) {
                     query = text;
                     progressBar.setVisibility(View.INVISIBLE);
@@ -302,8 +305,12 @@ public class SearchResultFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 progressBar.setVisibility(View.INVISIBLE);
                 new HttpErrorHandler(getActivity());
+
             }
         });
 

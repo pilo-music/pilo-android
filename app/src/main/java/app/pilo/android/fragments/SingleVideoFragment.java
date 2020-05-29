@@ -45,6 +45,7 @@ public class SingleVideoFragment extends BaseFragment {
     private SingleVideo singleVideo;
     private Video video;
     private Utils utils;
+    private View view;
     private boolean likeProcess = false;
 
     @BindView(R.id.img_header_back)
@@ -69,7 +70,7 @@ public class SingleVideoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_single_video, container, false);
+        view = inflater.inflate(R.layout.fragment_single_video, container, false);
         ButterKnife.bind(this, view);
         videoApi = new VideoApi(getActivity());
         likeApi = new LikeApi(getActivity());
@@ -114,6 +115,9 @@ public class SingleVideoFragment extends BaseFragment {
         videoApi.single(video.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 if (status) {
                     if (data != null) {
                         singleVideo = (SingleVideo) data;
@@ -131,20 +135,28 @@ public class SingleVideoFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 new HttpErrorHandler(getActivity());
+
             }
         });
     }
 
     private void setupLikeButton() {
+        if (checkView()) {
+            return;
+        }
+
         if (singleVideo == null) {
             return;
         }
 
         if (singleVideo.isHas_like()) {
-            img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+            img_single_video_like.setImageDrawable(getResources().getDrawable(R.drawable.ic_like_on));
         } else {
-            img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+            img_single_video_like.setImageDrawable(getResources().getDrawable(R.drawable.ic_like_off));
         }
         img_single_video_like.setVisibility(View.VISIBLE);
 
@@ -159,18 +171,22 @@ public class SingleVideoFragment extends BaseFragment {
                 likeApi.like(video.getSlug(), "video", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler(getActivity(), message);
-                            img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
-                        } else {
-                            singleVideo.setHas_like(true);
+                        if (view != null) {
+                            if (!status) {
+                                new HttpErrorHandler(getActivity(), message);
+                                img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                            } else {
+                                singleVideo.setHas_like(true);
+                            }
                         }
                     }
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler(getActivity());
-                        img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                        if (view != null) {
+                            new HttpErrorHandler(getActivity());
+                            img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                        }
                     }
                 });
                 likeProcess = false;
@@ -180,18 +196,22 @@ public class SingleVideoFragment extends BaseFragment {
                 likeApi.like(video.getSlug(), "video", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler(getActivity(), message);
-                            img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
-                        } else {
-                            singleVideo.setHas_like(false);
+                        if (view != null) {
+                            if (!status) {
+                                new HttpErrorHandler(getActivity(), message);
+                                img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                            } else {
+                                singleVideo.setHas_like(false);
+                            }
                         }
                     }
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler(getActivity());
-                        img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                        if (view != null) {
+                            new HttpErrorHandler(getActivity());
+                            img_single_video_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                        }
                     }
                 });
                 likeProcess = false;

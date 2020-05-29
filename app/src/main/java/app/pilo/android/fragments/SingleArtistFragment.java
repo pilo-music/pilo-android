@@ -152,6 +152,9 @@ public class SingleArtistFragment extends BaseFragment {
         artistApi.single(artist.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 if (status) {
                     tv_album_count.setText(String.valueOf(((SingleArtist) data).getArtist().getAlbum_count()));
                     tv_music_count.setText(String.valueOf(((SingleArtist) data).getArtist().getMusics_count()));
@@ -163,6 +166,9 @@ public class SingleArtistFragment extends BaseFragment {
                     singleArtist = (SingleArtist) data;
                     setupFollow();
                 } else {
+                    if (!checkView()) {
+                        return;
+                    }
                     new HttpErrorHandler(getActivity(), message);
                 }
             }
@@ -176,7 +182,7 @@ public class SingleArtistFragment extends BaseFragment {
     }
 
     private void setupFollow() {
-        if (singleArtist == null)
+        if (singleArtist == null || view != null)
             return;
 
         if (singleArtist.isIs_follow()) {
@@ -199,6 +205,9 @@ public class SingleArtistFragment extends BaseFragment {
                 followApi.follow(artist.getSlug(), "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
+                        if (!checkView()) {
+                            return;
+                        }
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
@@ -210,6 +219,9 @@ public class SingleArtistFragment extends BaseFragment {
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
+                        if (!checkView()) {
+                            return;
+                        }
                         new HttpErrorHandler(getActivity());
                         btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_off));
                         btn_single_artist_follow.setText(getString(R.string.follow_off));
@@ -223,6 +235,9 @@ public class SingleArtistFragment extends BaseFragment {
                 followApi.follow(artist.getSlug(), "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
+                        if (!checkView()) {
+                            return;
+                        }
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
@@ -234,6 +249,9 @@ public class SingleArtistFragment extends BaseFragment {
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
+                        if (!checkView()) {
+                            return;
+                        }
                         new HttpErrorHandler(getActivity());
                         btn_single_artist_follow.setBackground(getActivity().getDrawable(R.drawable.follow_background_on));
                         btn_single_artist_follow.setText(getString(R.string.follow_on));

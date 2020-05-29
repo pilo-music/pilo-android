@@ -108,24 +108,27 @@ public class AlbumsFragment extends BaseFragment {
         albumApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                if (view != null) {
-                    swipe_refresh_layout.setRefreshing(false);
-                    if (status) {
-                        albums.addAll((List<Album>) data);
-                        page++;
-                        albumsListAdapter.notifyDataSetChanged();
-                    } else {
-                        new HttpErrorHandler(getActivity(), message);
-                    }
+                if (!checkView()) {
+                    return;
+                }
+                swipe_refresh_layout.setRefreshing(false);
+                if (status) {
+                    albums.addAll((List<Album>) data);
+                    page++;
+                    albumsListAdapter.notifyDataSetChanged();
+                } else {
+                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                if (view != null) {
-                    swipe_refresh_layout.setRefreshing(false);
-                    new HttpErrorHandler(getActivity());
+                if (!checkView()) {
+                    return;
                 }
+                swipe_refresh_layout.setRefreshing(false);
+                new HttpErrorHandler(getActivity());
+
             }
         });
     }

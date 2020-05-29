@@ -37,13 +37,14 @@ public class SingleSearchFragment extends BaseFragment {
 
     private String query, type;
     private int page = 1;
-    SearchApi searchApi;
+    private SearchApi searchApi;
     private ArtistsListAdapter artistsListAdapter;
     private MusicsListAdapter musicsListAdapter;
     private AlbumsListAdapter albumsListAdapter;
     private PlaylistsAdapter playlistsAdapter;
     private VideosAdapter videosAdapter;
-    Search search;
+    private Search search;
+    private View view;
 
 
     @BindView(R.id.progressbar)
@@ -62,7 +63,7 @@ public class SingleSearchFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_single_search, container, false);
+        view = inflater.inflate(R.layout.fragment_single_search, container, false);
         ButterKnife.bind(this, view);
         searchApi = new SearchApi(getActivity());
         search = new Search();
@@ -124,6 +125,9 @@ public class SingleSearchFragment extends BaseFragment {
         searchApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 if (status) {
                     progressBar.setVisibility(View.GONE);
                     Search result = (Search) data;
@@ -157,6 +161,9 @@ public class SingleSearchFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 progressBar.setVisibility(View.VISIBLE);
                 new HttpErrorHandler(getActivity());
             }

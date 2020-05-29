@@ -3,6 +3,7 @@ package app.pilo.android.fragments;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,11 +141,14 @@ public class SingleAlbumFragment extends BaseFragment {
         albumApi.single(album.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 if (status) {
                     if (((SingleAlbum) data).getMusics() != null) {
-                        tv_album_count.setText(((SingleAlbum) data).getMusics().size() + " " + getActivity().getString(R.string.music));
+                        tv_album_count.setText(((SingleAlbum) data).getMusics().size() + " " + getResources().getString(R.string.music));
                     } else {
-                        tv_album_count.setText("0" + " " + getActivity().getString(R.string.music));
+                        tv_album_count.setText("0" + " " + getResources().getString(R.string.music));
                     }
 
                     if (sharedPrefManager.getLocal().equals("fa")) {
@@ -169,17 +173,21 @@ public class SingleAlbumFragment extends BaseFragment {
                 } else {
                     new HttpErrorHandler(getActivity(), message);
                 }
+
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 new HttpErrorHandler(getActivity());
             }
         });
     }
 
     private void setupLikeButton() {
-        if (singleAlbum == null) {
+        if (singleAlbum == null || view != null) {
             return;
         }
 
@@ -201,6 +209,9 @@ public class SingleAlbumFragment extends BaseFragment {
                 likeApi.like(album.getSlug(), "album", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
+                        if (!checkView()) {
+                            return;
+                        }
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
                             img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
@@ -211,6 +222,9 @@ public class SingleAlbumFragment extends BaseFragment {
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
+                        if (!checkView()) {
+                            return;
+                        }
                         new HttpErrorHandler(getActivity());
                         img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
                     }
@@ -222,9 +236,12 @@ public class SingleAlbumFragment extends BaseFragment {
                 likeApi.like(album.getSlug(), "album", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
+                        if (!checkView()) {
+                            return;
+                        }
                         if (!status) {
                             new HttpErrorHandler(getActivity(), message);
-                            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                            img_single_album_like.setImageDrawable(getResources().getDrawable(R.drawable.ic_like_on));
                         } else {
                             singleAlbum.setHas_like(false);
                         }
@@ -232,8 +249,12 @@ public class SingleAlbumFragment extends BaseFragment {
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
+                        if (!checkView()) {
+                            return;
+                        }
                         new HttpErrorHandler(getActivity());
-                        img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                        img_single_album_like.setImageDrawable(getResources().getDrawable(R.drawable.ic_like_on));
+
                     }
                 });
                 likeProcess = false;

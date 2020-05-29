@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.BookmarkListAdapter;
 import app.pilo.android.adapters.EndlessScrollEventListener;
@@ -43,12 +44,12 @@ public class BookmarksFragment extends BaseFragment {
     private BookmarkApi bookmarkApi;
     private List<Bookmark> bookmarks;
     private int page = 1;
-
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+        view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.profile_bookmarks));
 
@@ -90,6 +91,9 @@ public class BookmarksFragment extends BaseFragment {
         bookmarkApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
                     bookmarks.addAll((List<Bookmark>) data);
@@ -102,6 +106,9 @@ public class BookmarksFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 new HttpErrorHandler(getActivity());
             }

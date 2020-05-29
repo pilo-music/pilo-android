@@ -13,6 +13,7 @@ import com.android.volley.error.VolleyError;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.EndlessScrollEventListener;
@@ -50,11 +52,12 @@ public class MessagesFragment extends BaseFragment {
     private List<Message> messages;
     private MessageApi messageApi;
     private MessageListAdapter messageListAdapter;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_messages, container, false);
+        view = inflater.inflate(R.layout.fragment_messages, container, false);
         ButterKnife.bind(this, view);
         messages = new ArrayList<>();
         messageApi = new MessageApi(getContext());
@@ -91,9 +94,15 @@ public class MessagesFragment extends BaseFragment {
 
     private void getDataFromServer() {
         swipe_refresh_layout.setRefreshing(true);
-        messageApi.get(null, new HttpHandler.RequestHandler() {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("page", page);
+        params.put("count", 12);
+        messageApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 if (status) {
                     messages.addAll((List<Message>) data);
@@ -106,6 +115,9 @@ public class MessagesFragment extends BaseFragment {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                if (!checkView()) {
+                    return;
+                }
                 swipe_refresh_layout.setRefreshing(false);
                 new HttpErrorHandler(getActivity());
             }
