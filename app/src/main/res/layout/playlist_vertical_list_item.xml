@@ -5,8 +5,8 @@
     android:id="@+id/ll_playlist_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
+
+    android:layout_margin="8dp"
     android:layoutDirection="ltr"
     android:orientation="vertical">
 
@@ -68,11 +68,4 @@
                 tools:src="@drawable/music_item" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="#E4E4E4" />
 </LinearLayout>

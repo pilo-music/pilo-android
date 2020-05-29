@@ -25,6 +25,7 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -231,12 +232,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         tv_music_vertical_title.setVisibility(View.GONE);
 
 
-        musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, new OnStartDragListener() {
-            @Override
-            public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-                itemTouchHelper.startDrag(viewHolder);
-            }
-        });
+        musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, viewHolder -> itemTouchHelper.startDrag(viewHolder));
         ItemTouchHelper.Callback callback = new EditItemTouchHelperCallback(musicVerticalListAdapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(rc_music_vertical);
