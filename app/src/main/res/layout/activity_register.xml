@@ -123,7 +123,7 @@
                         <ImageView
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
-                            android:src="@drawable/ic_md_mail" />
+                            android:src="@drawable/ic_mail" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -171,7 +171,7 @@
                         <ImageView
                             android:layout_width="@dimen/_18sdp"
                             android:layout_height="@dimen/_18sdp"
-                            android:src="@drawable/ic__ionicons_svg_md_lock" />
+                            android:src="@drawable/ic_lock" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -220,7 +220,7 @@
                         <ImageView
                             android:layout_width="@dimen/_18sdp"
                             android:layout_height="@dimen/_18sdp"
-                            android:src="@drawable/ic__ionicons_svg_md_lock" />
+                            android:src="@drawable/ic_lock" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

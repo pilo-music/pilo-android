@@ -122,7 +122,7 @@
                         <ImageView
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
-                            android:src="@drawable/ic_md_mail" />
+                            android:src="@drawable/ic_mail" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
