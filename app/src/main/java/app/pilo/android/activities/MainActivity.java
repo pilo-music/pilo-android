@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +26,6 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +34,7 @@ import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -54,10 +55,10 @@ import java.util.List;
 import java.util.Random;
 
 import androidx.viewpager2.widget.ViewPager2;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.EditItemTouchHelperCallback;
 import app.pilo.android.adapters.MusicDraggableVerticalListAdapter;
-import app.pilo.android.adapters.OnStartDragListener;
 import app.pilo.android.adapters.PlayerViewPagerAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -170,12 +171,15 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private PlayerService playerService;
     private final Handler mHandler = new Handler();
     private boolean active = false;
+    private boolean hasDownloadComplete = false;
+    private int fileDownloadId = 0;
     private boolean likeProcess = false;
     private LikeApi likeApi;
     private Utils utils;
     private AnimateTest animateTest = new AnimateTest();
     private PlayHistoryApi playHistoryApi;
     private PlayerViewPagerAdapter playerViewPagerAdapter;
+
 
     private List<Integer> bottomNavigationTabs;
 
@@ -294,7 +298,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     private void setupPlayerViewPager() {
-
         playerViewPagerAdapter = new PlayerViewPagerAdapter(this, musics);
         view_pager_extended_music_player.setAdapter(playerViewPagerAdapter);
 
@@ -319,7 +322,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 super.onPageScrollStateChanged(state);
             }
         });
-
 
     }
 
@@ -399,6 +401,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             musics.addAll(items_from_db);
             musicVerticalListAdapter.notifyDataSetChanged();
             playerViewPagerAdapter.notifyDataSetChanged();
+            view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
         }
         String current_music_slug = playerService.getCurrent_music_slug();
         if (current_music_slug.equals("")) {
@@ -448,11 +451,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 }
 
 
-                for (int i = 0; i < musics.size(); i++) {
-                    if (musics.get(i).getSlug() == current_music_slug)
-                        view_pager_extended_music_player.setCurrentItem(i, true);
-                }
-
+                view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
                 // add play history
                 addMusicToHistory(music);
             }
@@ -644,11 +643,34 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         }
     }
 
+    private void addMusicToHistory(Music music) {
+        PlayHistory playHistory = AppDatabase.getInstance(this).playHistoryDao().search(music.getSlug());
+        if (playHistory != null) {
+            AppDatabase.getInstance(this).playHistoryDao().delete(playHistory);
+        }
+        playHistory = new PlayHistory();
+        playHistory.setMusic(music);
+        AppDatabase.getInstance(this).playHistoryDao().insert(playHistory);
+        playHistoryApi.add(music.getSlug(), "music");
+    }
+
+
+    private int getCurrentMusicIndex() {
+        for (int i = 0; i < musics.size(); i++) {
+            if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug()))
+                return i;
+        }
+        return 0;
+    }
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {
-        musics = event.musics;
-        initPlayerUi();
+        musics.clear();
+        musics.addAll(event.musics);
         musicVerticalListAdapter.notifyDataSetChanged();
+        playerViewPagerAdapter.notifyDataSetChanged();
+        initPlayerUi();
     }
 
 
@@ -770,12 +792,18 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @OnClick(R.id.img_extended_music_player_download)
     void img_extended_music_player_download() {
+        img_extended_music_player_download.setVisibility(View.GONE);
+        download_progress_extended_music_player.setVisibility(View.VISIBLE);
+        download_progress_extended_music_player.setIndeterminate();
         if (sliding_layout.getPanelState() != PanelState.HIDDEN) {
             for (int i = 0; i < musics.size(); i++) {
                 if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
-                    MusicDownloader.download(this, musics.get(i), new MusicDownloader.iDownload() {
+                    hasDownloadComplete = false;
+                    fileDownloadId = 0;
+                    fileDownloadId = MusicDownloader.download(this, musics.get(i), new MusicDownloader.iDownload() {
                         @Override
                         public void onStartOrResumeListener() {
+                            download_progress_extended_music_player.setDeterminate();
                             img_extended_music_player_download.setVisibility(View.GONE);
                             download_progress_extended_music_player.setVisibility(View.VISIBLE);
                             download_progress_extended_music_player.setCurrentProgress(0);
@@ -810,6 +838,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
                         @Override
                         public void onComplete() {
+                            hasDownloadComplete = true;
                             img_extended_music_player_download.setEnabled(false);
                             download_progress_extended_music_player.setVisibility(View.GONE);
                             img_extended_music_player_download.setVisibility(View.VISIBLE);
@@ -818,6 +847,15 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     });
                 }
             }
+        }
+    }
+
+    @OnClick(R.id.download_progress_extended_music_player)
+    void download_progress_extended_music_player(){
+        if (!hasDownloadComplete && fileDownloadId != 0) {
+            PRDownloader.cancel(fileDownloadId);
+            img_extended_music_player_download.setVisibility(View.VISIBLE);
+            download_progress_extended_music_player.setVisibility(View.GONE);
         }
     }
 
@@ -1009,18 +1047,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-
-    private void addMusicToHistory(Music music) {
-        PlayHistory playHistory = AppDatabase.getInstance(this).playHistoryDao().search(music.getSlug());
-        if (playHistory != null) {
-            AppDatabase.getInstance(this).playHistoryDao().delete(playHistory);
-        }
-        playHistory = new PlayHistory();
-        playHistory.setMusic(music);
-        AppDatabase.getInstance(this).playHistoryDao().insert(playHistory);
-        playHistoryApi.add(music.getSlug(), "music");
-    }
-
 
 }
 

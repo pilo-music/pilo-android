@@ -31,6 +31,7 @@ import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
@@ -150,7 +151,8 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
         });
 
         holder.ll_music_vertical.setOnLongClickListener(v -> {
-            new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG);
+            currentSlug = music.getSlug();
+            mDragStartListener.onStartDrag(holder);
             return false;
         });
 
@@ -222,7 +224,10 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
-            EventBus.getDefault().post(new MusicEvent(context, musics, currentSlug, false, false, true));
+
+            AppDatabase.getInstance(context).musicDao().nukeTable();
+            AppDatabase.getInstance(context).musicDao().insertAll(musics);
+
         }
         return true;
     }

@@ -28,7 +28,7 @@ import app.pilo.android.models.Music;
 
 public class MusicDownloader {
 
-    public static void download(Context context, Music music, iDownload iDownload) {
+    public static int download(Context context, Music music, iDownload iDownload) {
 
         String url = Utils.getMp3UrlForStreaming(context, music);
         String downloadQuality = new UserSharedPrefManager(context).getDownloadQuality();
@@ -36,7 +36,7 @@ public class MusicDownloader {
 
 
         if (checkExists(context, music, downloadQuality))
-            return;
+            return 0;
 
         File file = context.getExternalFilesDir(null);
         String path = file.getPath();
@@ -57,7 +57,7 @@ public class MusicDownloader {
 
         download.setMusic(music);
 
-        PRDownloader.download(url, path, fileName)
+        return PRDownloader.download(url, path, fileName)
                 .build()
                 .setOnStartOrResumeListener(iDownload::onStartOrResumeListener)
                 .setOnPauseListener(iDownload::onPauseListener)
