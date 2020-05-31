@@ -78,7 +78,7 @@
 
                         <ImageView
                             android:layout_width="@dimen/_15sdp"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_height="wrap_content"
                             android:src="@drawable/ic_mail" />
                     </LinearLayout>
                 </LinearLayout>
@@ -116,7 +116,6 @@
                         android:maxLines="1"
                         android:paddingStart="@dimen/activity_vertical_margin"
                         android:paddingEnd="@dimen/activity_vertical_margin"
-                        android:textAlignment="viewStart"
                         android:textColor="@color/colorDark"
                         android:textDirection="locale"
                         android:textSize="@dimen/normal_font_size" />
@@ -139,8 +138,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:gravity="bottom"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -149,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_height"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin2x"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:alpha="0.9"
                 android:background="@drawable/green_round_box_background"
@@ -275,7 +273,8 @@
             <TextView
                 android:id="@+id/tv_login_forgot_password"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:gravity="center"
