@@ -135,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin2x"
-            android:layoutDirection="ltr"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="@dimen/activity_vertical_margin"
             android:paddingEnd="@dimen/activity_vertical_margin">
@@ -148,15 +148,14 @@
                 android:gravity="center"
                 android:text="00:00"
                 android:textColor="@color/colorDark"
-                android:textSize="@dimen/small_font_size" />
+                android:textSize="10dp" />
 
 
             <SeekBar
                 android:id="@+id/seekbar_music"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
                 android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:maxHeight="5.0dip"
                 android:minHeight="5.0dip"
                 android:progressDrawable="@drawable/seekbar_drawable"
@@ -170,7 +169,7 @@
                 android:gravity="center"
                 android:text="00:00"
                 android:textColor="@color/colorDark"
-                android:textSize="@dimen/small_font_size" />
+                android:textSize="10dp" />
         </LinearLayout>
 
         <!--music control-->

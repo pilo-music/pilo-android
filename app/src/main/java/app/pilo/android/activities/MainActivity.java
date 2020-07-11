@@ -311,8 +311,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 final Handler handler = new Handler();
-                if (!firstMusicListLoad) {
-                    handler.postDelayed(() -> EventBus.getDefault().post(new MusicEvent(MainActivity.this, musics, musics.get(position).getSlug(), true, false)), 300);
+                if (!firstMusicListLoad && sliding_layout.getPanelState() == PanelState.EXPANDED) {
+                    handler.postDelayed(() -> EventBus.getDefault().post(new MusicEvent(MainActivity.this, musics, musics.get(position).getSlug(), true, false)), 500);
                 }
                 firstMusicListLoad = false;
             }
@@ -449,7 +449,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 } else {
                     img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
                 }
-
 
                 view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
                 // add play history
@@ -851,7 +850,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     @OnClick(R.id.download_progress_extended_music_player)
-    void download_progress_extended_music_player(){
+    void download_progress_extended_music_player() {
         if (!hasDownloadComplete && fileDownloadId != 0) {
             PRDownloader.cancel(fileDownloadId);
             img_extended_music_player_download.setVisibility(View.VISIBLE);

@@ -46,9 +46,6 @@ public class SingleSearchFragment extends BaseFragment {
     private Search search;
     private View view;
 
-
-    @BindView(R.id.progressbar)
-    ProgressBar progressBar;
     @BindView(R.id.tv_header_title)
     TextView tv_header_title;
     @BindView(R.id.rc_items)
@@ -121,7 +118,6 @@ public class SingleSearchFragment extends BaseFragment {
         params.put("query", query);
         params.put("type", type);
         params.put("page", page);
-        progressBar.setVisibility(View.VISIBLE);
         searchApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
@@ -129,7 +125,6 @@ public class SingleSearchFragment extends BaseFragment {
                     return;
                 }
                 if (status) {
-                    progressBar.setVisibility(View.GONE);
                     Search result = (Search) data;
                     switch (type) {
                         case "artist":
@@ -164,7 +159,6 @@ public class SingleSearchFragment extends BaseFragment {
                 if (!checkView()) {
                     return;
                 }
-                progressBar.setVisibility(View.VISIBLE);
                 new HttpErrorHandler(getActivity());
             }
         });

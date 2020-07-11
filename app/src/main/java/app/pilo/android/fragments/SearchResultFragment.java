@@ -254,7 +254,7 @@ public class SearchResultFragment extends BaseFragment {
                     if (search.getArtists().size() > 0) {
                         ll_artist_vertical.setVisibility(View.VISIBLE);
                         SearchArtistsAdapter artistVerticalListAdapter = new SearchArtistsAdapter(new WeakReference<>(getActivity()), search.getArtists(), search.getId());
-                        rc_artist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                        rc_artist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_artist_vertical.setAdapter(artistVerticalListAdapter);
                     } else {
                         ll_artist_vertical.setVisibility(View.GONE);
@@ -263,7 +263,7 @@ public class SearchResultFragment extends BaseFragment {
                     if (search.getMusics().size() > 0) {
                         ll_music_vertical.setVisibility(View.VISIBLE);
                         SearchMusicsAdapter musicVerticalListAdapter = new SearchMusicsAdapter(new WeakReference<>(getActivity()), search.getMusics(), search.getId());
-                        rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                        rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_music_vertical.setAdapter(musicVerticalListAdapter);
                     } else {
                         ll_music_vertical.setVisibility(View.GONE);
@@ -273,7 +273,7 @@ public class SearchResultFragment extends BaseFragment {
                     if (search.getAlbums().size() > 0) {
                         ll_album_vertical.setVisibility(View.VISIBLE);
                         SearchAlbumsAdapter albumsListAdapter = new SearchAlbumsAdapter(new WeakReference<>(getActivity()), search.getAlbums(), search.getId());
-                        rc_album_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                        rc_album_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_album_vertical.setAdapter(albumsListAdapter);
                     } else {
                         ll_album_vertical.setVisibility(View.GONE);
@@ -282,7 +282,7 @@ public class SearchResultFragment extends BaseFragment {
                     if (search.getPlaylists().size() > 0) {
                         ll_playlist_vertical.setVisibility(View.VISIBLE);
                         SearchPlaylistsAdapter playlistVerticalListAdapter = new SearchPlaylistsAdapter(new WeakReference<>(getActivity()), search.getPlaylists(), search.getId());
-                        rc_playlist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                        rc_playlist_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_playlist_vertical.setAdapter(playlistVerticalListAdapter);
                     } else {
                         ll_playlist_vertical.setVisibility(View.GONE);
@@ -291,7 +291,7 @@ public class SearchResultFragment extends BaseFragment {
                     if (search.getVideos().size() > 0) {
                         ll_video_vertical.setVisibility(View.VISIBLE);
                         SearchVideosAdapter videoVerticalListAdapter = new SearchVideosAdapter(new WeakReference<>(getActivity()), search.getVideos(), search.getId());
-                        rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+                        rc_video_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                         rc_video_vertical.setAdapter(videoVerticalListAdapter);
                     } else {
                         ll_video_vertical.setVisibility(View.GONE);
@@ -299,7 +299,7 @@ public class SearchResultFragment extends BaseFragment {
 
 
                 } else {
-                    new HttpErrorHandler(getActivity(), message);
+//                    new HttpErrorHandler(getActivity(), message);
                 }
             }
 
@@ -309,7 +309,7 @@ public class SearchResultFragment extends BaseFragment {
                     return;
                 }
                 progressBar.setVisibility(View.INVISIBLE);
-                new HttpErrorHandler(getActivity());
+//                new HttpErrorHandler(getActivity());
 
             }
         });

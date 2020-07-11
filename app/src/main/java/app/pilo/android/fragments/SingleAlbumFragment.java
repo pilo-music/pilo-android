@@ -123,7 +123,7 @@ public class SingleAlbumFragment extends BaseFragment {
         }
         tv_album_name.setText(album.getTitle());
         tv_header_title.setText(album.getTitle());
-        tv_album_carousel_title.setText(getString(R.string.album_related));
+        tv_album_carousel_title.setText(getString(R.string.related));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
         if (userSharedPrefManager.getShuffleMode()) {
@@ -151,12 +151,6 @@ public class SingleAlbumFragment extends BaseFragment {
                         tv_album_count.setText("0" + " " + getResources().getString(R.string.music));
                     }
 
-                    if (sharedPrefManager.getLocal().equals("fa")) {
-                        tv_album_artist.setTextDirection(View.TEXT_DIRECTION_RTL);
-                        tv_album_name.setTextDirection(View.TEXT_DIRECTION_RTL);
-                    }
-
-
                     tv_album_artist.setText(((SingleAlbum) data).getAlbum().getArtist().getName());
                     setupMusic(((SingleAlbum) data).getMusics());
                     singleAlbum = ((SingleAlbum) data);
@@ -165,7 +159,7 @@ public class SingleAlbumFragment extends BaseFragment {
                         sfl_album.setVisibility(View.GONE);
                         rc_album_carousel.setVisibility(View.VISIBLE);
                         AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), singleAlbum.getRelated());
-                        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, true));
+                        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                         rc_album_carousel.setAdapter(albumCarouselAdapter);
                     }
 

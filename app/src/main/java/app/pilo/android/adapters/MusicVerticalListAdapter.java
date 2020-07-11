@@ -80,6 +80,9 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
             holder.music_item_image.setVisibility(View.GONE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.VISIBLE);
+        }else{
+            holder.music_item_image.setVisibility(View.VISIBLE);
+            holder.fl_music_vertical_list_item_playing.setVisibility(View.GONE);
         }
 
         if (music.isHas_like()) {

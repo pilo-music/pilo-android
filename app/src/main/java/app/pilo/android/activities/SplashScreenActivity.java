@@ -1,14 +1,12 @@
 package app.pilo.android.activities;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import app.pilo.android.BuildConfig;
 import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.VersionApi;
-import app.pilo.android.helpers.LocalHelper;
 import app.pilo.android.repositories.UserRepo;
 import app.pilo.android.views.UpdateDialog;
 import butterknife.BindView;

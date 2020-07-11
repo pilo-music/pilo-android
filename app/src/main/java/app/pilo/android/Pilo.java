@@ -5,11 +5,7 @@ import android.content.res.Configuration;
 
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
-import com.facebook.stetho.Stetho;
-
 import org.jetbrains.annotations.NotNull;
-
-import app.pilo.android.helpers.LocalHelper;
 
 
 public class Pilo extends Application {
@@ -18,29 +14,13 @@ public class Pilo extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
         // Enabling database for resume support even after the application is killed:
         PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
                 .setDatabaseEnabled(true)
                 .build();
         PRDownloader.initialize(getApplicationContext(), config);
 
-        LocalHelper.updateResources(this, "fa");
         // Required initialization logic here!`
     }
 
-    // Called by the system when the device configuration changes while your component is running.
-    // Overriding this method is totally optional!
-    @Override
-    public void onConfigurationChanged(@NotNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    // This is called when the overall system is running low on memory,
-    // and would like actively running processes to tighten their belts.
-    // Overriding this method is totally optional!
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-    }
 }

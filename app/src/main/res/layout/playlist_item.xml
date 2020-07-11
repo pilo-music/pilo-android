@@ -73,31 +73,23 @@
                 tools:src="@drawable/ic_music_placeholder" />
         </RelativeLayout>
 
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_label"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|left"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            app:cardBackgroundColor="@color/colorDark"
-            app:cardCornerRadius="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/font"
-                android:gravity="center"
-                android:paddingStart="8dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp"
-                android:text="PLAYLIST"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/extra_small_font_size" />
-        </androidx.cardview.widget.CardView>
+            android:alpha="0.8"
+            android:background="@drawable/dark_round_box_background"
+            android:fontFamily="@font/font"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="3dp"
+            android:text="PLAYLIST"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/extra_small_font_size" />
     </FrameLayout>
 
     <TextView
@@ -121,4 +113,5 @@
         android:textColor="@color/colorDark"
         android:textSize="@dimen/small_font_size"
         tools:text="23 موزیک" />
+
 </LinearLayout>
