@@ -129,7 +129,8 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.tv_settings_notifications)
     void tv_settings_notifications() {
-        new NotificationsSettingDialog(getActivity()).show();
+
+        new NotificationsSettingDialog(getActivity()).show(getActivity().getSupportFragmentManager(), NotificationsSettingDialog.TAG);
     }
 
 

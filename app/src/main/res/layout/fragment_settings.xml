@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorlayout"
     android:layout_width="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin2x"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
@@ -14,15 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"
-        android:paddingBottom="40dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin2x"
         android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/activity_vertical_margin">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,7 +27,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_vertical_margin">
 
 
                 <ImageView
@@ -51,8 +49,8 @@
 
 
                 <ImageView
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_width="@dimen/_10sdp"
+                    android:layout_height="@dimen/_10sdp"
                     android:src="@drawable/ic_keyboard_arrow_left_black" />
             </LinearLayout>
 
@@ -61,11 +59,11 @@
                 android:id="@+id/tv_settings_quality"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
+                android:paddingEnd="@dimen/activity_vertical_margin"
                 android:text="@string/audio_download_quality"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -74,11 +72,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_vertical_margin">
 
 
                 <ImageView
@@ -99,8 +97,8 @@
 
 
                 <ImageView
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_width="@dimen/_10sdp"
+                    android:layout_height="@dimen/_10sdp"
                     android:src="@drawable/ic_keyboard_arrow_left_black" />
             </LinearLayout>
 
@@ -109,11 +107,11 @@
                 android:id="@+id/tv_settings_notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
                 android:text="@string/notifications"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -130,10 +128,10 @@
                 android:id="@+id/tv_settings_clear_search_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
                 android:text="@string/clear_search_history"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -150,10 +148,10 @@
                 android:id="@+id/tv_settings_clear_music_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
                 android:text="@string/clear_music_history"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -170,10 +168,10 @@
                 android:id="@+id/tv_settings_clear_downloads"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
                 android:text="@string/clear_downloads"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -181,11 +179,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_vertical_margin">
 
 
                 <ImageView
@@ -206,8 +204,8 @@
 
 
                 <ImageView
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_width="@dimen/_10sdp"
+                    android:layout_height="@dimen/_10sdp"
                     android:src="@drawable/ic_keyboard_arrow_left_black" />
             </LinearLayout>
 
@@ -216,11 +214,11 @@
                 android:id="@+id/tv_settings_instagram"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
                 android:text="@string/instagram"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -237,10 +235,10 @@
                 android:id="@+id/tv_settings_telegram"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
                 android:fontFamily="@font/font"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
+                android:paddingStart="@dimen/activity_vertical_margin"
                 android:text="@string/telegram"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -250,13 +248,15 @@
                 android:id="@+id/ll_settings_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:gravity="center"
+                android:layout_marginBottom="@dimen/activity_vertical_margin2x"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:paddingStart="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin">
 
 
                 <ImageView
@@ -278,8 +278,8 @@
 
 
                 <ImageView
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_width="@dimen/_10sdp"
+                    android:layout_height="@dimen/_10sdp"
                     android:src="@drawable/ic_keyboard_arrow_left_black" />
             </LinearLayout>
 
