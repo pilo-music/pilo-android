@@ -49,13 +49,19 @@ public class DownloadsFragment extends BaseFragment {
     private DownloadsAdapter downloadsAdapter;
     private List<Download> downloads;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        downloads = new ArrayList<>();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_downloads, container, false);
         ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.downloads));
-        downloads = new ArrayList<>();
+
 
         downloadsAdapter = new DownloadsAdapter(new WeakReference<>(getActivity()), downloads);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);

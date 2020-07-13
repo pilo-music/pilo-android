@@ -23,21 +23,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.adapters.ClickListenerPlayList;
 import app.pilo.android.adapters.EndlessScrollEventListener;
-import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.VideosAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.MusicApi;
 import app.pilo.android.api.VideoApi;
-import app.pilo.android.models.Music;
 import app.pilo.android.models.Video;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class VideosFragment extends BaseFragment {
-    private View view;
     @BindView(R.id.rc_videos)
     RecyclerView rc_videos;
     @BindView(R.id.swipe_refresh_layout)
@@ -63,13 +58,19 @@ public class VideosFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        videos = new ArrayList<>();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_videos, container, false);
+        View view = inflater.inflate(R.layout.fragment_videos, container, false);
         ButterKnife.bind(this, view);
         videoApi = new VideoApi(getActivity());
-        videos = new ArrayList<>();
+
         if (getArguments() != null) {
             tv_header_title.setText(getArguments().getString("title"));
         }

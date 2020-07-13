@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,22 +25,16 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicVerticalListAdapter;
-import app.pilo.android.api.HttpErrorHandler;
-import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.LikeApi;
-import app.pilo.android.api.PlaylistApi;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SinglePlaylist;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SingleForYouFragment extends BaseFragment {
-    private UserSharedPrefManager sharedPrefManager;
     private SinglePlaylist singlePlaylist;
     private ForYou forYou;
     private MusicVerticalListAdapter musicVerticalListAdapter;
@@ -75,7 +67,6 @@ public class SingleForYouFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(getActivity());
         setupViews();
-        sharedPrefManager = new UserSharedPrefManager(getActivity());
         getDataFromServer();
         return view;
     }

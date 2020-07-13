@@ -45,18 +45,21 @@ public class LikesFragment extends BaseFragment {
     private LikeApi likeApi;
     private List<Like> likes;
     private int page = 1;
-    private View view;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        likes = new ArrayList<>();
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_likes, container, false);
+        View view = inflater.inflate(R.layout.fragment_likes, container, false);
         ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.profile_likes));
 
         likeApi = new LikeApi(getActivity());
-        likes = new ArrayList<>();
-
 
         likeListAdapter = new LikeListAdapter(new WeakReference<>(getActivity()), likes);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);

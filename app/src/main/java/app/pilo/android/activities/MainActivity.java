@@ -311,7 +311,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 final Handler handler = new Handler();
-                if (!firstMusicListLoad && sliding_layout.getPanelState() == PanelState.EXPANDED) {
+                if (position != getCurrentMusicIndex()) {
                     handler.postDelayed(() -> EventBus.getDefault().post(new MusicEvent(MainActivity.this, musics, musics.get(position).getSlug(), true, false)), 500);
                 }
                 firstMusicListLoad = false;

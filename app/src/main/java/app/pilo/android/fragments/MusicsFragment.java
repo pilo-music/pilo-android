@@ -62,6 +62,11 @@ public class MusicsFragment extends BaseFragment {
         this.params = params;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        musics = new ArrayList<>();
+    }
 
     @Nullable
     @Override
@@ -69,7 +74,7 @@ public class MusicsFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_musics, container, false);
         ButterKnife.bind(this, view);
         musicApi = new MusicApi(getActivity());
-        musics = new ArrayList<>();
+
         if (getArguments() != null) {
             tv_header_title.setText(getArguments().getString("title"));
         }

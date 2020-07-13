@@ -44,17 +44,22 @@ public class BookmarksFragment extends BaseFragment {
     private BookmarkApi bookmarkApi;
     private List<Bookmark> bookmarks;
     private int page = 1;
-    private View view;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bookmarks = new ArrayList<>();
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
+        View view = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         ButterKnife.bind(this, view);
         tv_header_title.setText(getString(R.string.profile_bookmarks));
 
         bookmarkApi = new BookmarkApi(getActivity());
-        bookmarks = new ArrayList<>();
+
 
         bookmarkListAdapter = new BookmarkListAdapter(new WeakReference<>(getActivity()), bookmarks);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);

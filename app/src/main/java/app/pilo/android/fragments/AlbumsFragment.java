@@ -63,13 +63,19 @@ public class AlbumsFragment extends BaseFragment {
         this.params = params;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        albums = new ArrayList<>();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_albums, container, false);
         ButterKnife.bind(this, view);
         albumApi = new AlbumApi(getActivity());
-        albums = new ArrayList<>();
+
         tv_header_title.setText(getString(R.string.albums));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 

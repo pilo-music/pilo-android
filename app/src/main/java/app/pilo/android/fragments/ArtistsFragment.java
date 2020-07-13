@@ -53,6 +53,11 @@ public class ArtistsFragment extends BaseFragment {
 
     private int page = 1;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        artists = new ArrayList<>();
+    }
 
     @Nullable
     @Override
@@ -60,7 +65,7 @@ public class ArtistsFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_artists, container, false);
         ButterKnife.bind(this, view);
         artistApi = new ArtistApi(getActivity());
-        artists = new ArrayList<>();
+
         tv_header_title.setText(getString(R.string.artist_best));
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 

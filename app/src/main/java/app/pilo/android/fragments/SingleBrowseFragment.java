@@ -75,18 +75,24 @@ public class SingleBrowseFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_single_browse, container, false);
-        ButterKnife.bind(this, view);
-        homeApi = new HomeApi(getActivity());
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         musics = new ArrayList<>();
         artists = new ArrayList<>();
         albums = new ArrayList<>();
         playlistLists = new ArrayList<>();
         videos = new ArrayList<>();
         albumMusics = new ArrayList<>();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_single_browse, container, false);
+        ButterKnife.bind(this, view);
+        homeApi = new HomeApi(getActivity());
+
         if (getArguments() != null) {
             id = getArguments().getInt("id");
             type = getArguments().getString("type");

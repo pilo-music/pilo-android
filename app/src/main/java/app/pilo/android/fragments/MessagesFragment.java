@@ -54,12 +54,18 @@ public class MessagesFragment extends BaseFragment {
     private MessageListAdapter messageListAdapter;
     private View view;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        messages = new ArrayList<>();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_messages, container, false);
-        ButterKnife.bind(this, view);
-        messages = new ArrayList<>();
+        unbinder = ButterKnife.bind(this, view);
+
         messageApi = new MessageApi(getContext());
         tv_header_title.setText(getString(R.string.messages));
 
@@ -134,5 +140,11 @@ public class MessagesFragment extends BaseFragment {
     @OnClick(R.id.img_header_back)
     void back() {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

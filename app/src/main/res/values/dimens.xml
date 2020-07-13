@@ -2,7 +2,7 @@
 <resources>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_vertical_margin2x">32dp</dimen>
-    <dimen name="large_font_size">@dimen/_15ssp</dimen>
+    <dimen name="large_font_size">@dimen/_17ssp</dimen>
     <dimen name="normal_font_size">@dimen/_11ssp</dimen>
     <dimen name="small_font_size">@dimen/_9ssp</dimen>
     <dimen name="extra_small_font_size">@dimen/_5ssp</dimen>

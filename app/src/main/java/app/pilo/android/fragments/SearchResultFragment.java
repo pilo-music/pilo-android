@@ -107,7 +107,6 @@ public class SearchResultFragment extends BaseFragment {
     private UserSharedPrefManager userSharedPrefManager;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String query = "";
-    private View view;
 
     public SearchResultFragment(String text) {
         if (text != null && !text.isEmpty()) {
@@ -118,7 +117,7 @@ public class SearchResultFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search_result, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_result, container, false);
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(getActivity());
         et_search.requestFocus();
