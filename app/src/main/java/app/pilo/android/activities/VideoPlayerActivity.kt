@@ -25,11 +25,12 @@ class VideoPlayerActivity : BaseActivity() {
     private fun initializePlayer() {
 
         player = ExoPlayerFactory.newSimpleInstance(this)
+        val url = intent.getStringExtra("url")
 
         mediaDataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"))
 
         val mediaSource = ProgressiveMediaSource.Factory(mediaDataSourceFactory)
-                .createMediaSource(Uri.parse(STREAM_URL))
+                .createMediaSource(Uri.parse(url))
 
 
         with(player) {
@@ -70,9 +71,5 @@ class VideoPlayerActivity : BaseActivity() {
         super.onStop()
 
         if (Util.SDK_INT > 23) releasePlayer()
-    }
-
-    companion object {
-        const val STREAM_URL = "https://dl.pilo.app/video/Shahram%20Shabpareh%20-%20Lajbaz%20[720].mp4"
     }
 }

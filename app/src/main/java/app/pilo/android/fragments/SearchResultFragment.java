@@ -157,13 +157,8 @@ public class SearchResultFragment extends BaseFragment {
 
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-
-        if (userSharedPrefManager.getLocal().equals("fa"))
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "fa");
-        else
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en");
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, R.string.search_search_hint);
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
@@ -176,9 +171,12 @@ public class SearchResultFragment extends BaseFragment {
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (et_search.getText().toString().length() > 3) {
-                    img_search_close.setVisibility(View.VISIBLE);
+                if (et_search.getText().toString().length() >= 3) {
                     search(et_search.getText().toString());
+                }
+
+                if (et_search.getText().toString().length() > 0) {
+                    img_search_close.setVisibility(View.VISIBLE);
                 } else {
                     img_search_close.setVisibility(View.GONE);
                 }
@@ -186,9 +184,11 @@ public class SearchResultFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (et_search.getText().toString().length() > 3) {
-                    img_search_close.setVisibility(View.VISIBLE);
+                if (et_search.getText().toString().length() >= 3) {
                     search(et_search.getText().toString());
+                }
+                if (et_search.getText().toString().length() > 0) {
+                    img_search_close.setVisibility(View.VISIBLE);
                 } else {
                     img_search_close.setVisibility(View.GONE);
                 }
@@ -196,9 +196,12 @@ public class SearchResultFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (et_search.getText().toString().length() > 3) {
-                    img_search_close.setVisibility(View.VISIBLE);
+                if (et_search.getText().toString().length() >= 3) {
                     search(et_search.getText().toString());
+                }
+
+                if (et_search.getText().toString().length() > 0) {
+                    img_search_close.setVisibility(View.VISIBLE);
                 } else {
                     img_search_close.setVisibility(View.GONE);
                 }
