@@ -74,7 +74,7 @@ public class VerifyActivity extends BaseActivity {
                     progressBar.setVisibility(View.GONE);
                     ll_verify.setEnabled(true);
                     if (status) {
-                        doLogin((User) ((Map) data).get("user"));
+                        doLogin((User) data);
                     } else {
                         new HttpErrorHandler(VerifyActivity.this, message);
                     }
