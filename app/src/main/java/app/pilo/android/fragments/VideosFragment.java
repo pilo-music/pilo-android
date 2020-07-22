@@ -71,8 +71,10 @@ public class VideosFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         videoApi = new VideoApi(getActivity());
 
-        if (getArguments() != null) {
+        if (getArguments() != null && getArguments().getString("title") != null) {
             tv_header_title.setText(getArguments().getString("title"));
+        }else{
+            tv_header_title.setText(getString(R.string.videos));
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 

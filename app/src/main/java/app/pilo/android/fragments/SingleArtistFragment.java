@@ -182,7 +182,7 @@ public class SingleArtistFragment extends BaseFragment {
     }
 
     private void setupFollow() {
-        if (singleArtist == null || view != null)
+        if (singleArtist == null || view == null)
             return;
 
         if (singleArtist.isIs_follow()) {

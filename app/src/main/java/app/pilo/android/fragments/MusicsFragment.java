@@ -75,8 +75,10 @@ public class MusicsFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         musicApi = new MusicApi(getActivity());
 
-        if (getArguments() != null) {
+        if (getArguments() != null && getArguments().getString("title") != null) {
             tv_header_title.setText(getArguments().getString("title"));
+        }else{
+            tv_header_title.setText(getString(R.string.musics));
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 

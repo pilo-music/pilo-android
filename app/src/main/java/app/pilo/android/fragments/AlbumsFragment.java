@@ -76,7 +76,11 @@ public class AlbumsFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         albumApi = new AlbumApi(getActivity());
 
-        tv_header_title.setText(getString(R.string.albums));
+        if (getArguments() != null && getArguments().getString("title") != null) {
+            tv_header_title.setText(getArguments().getString("title"));
+        } else {
+            tv_header_title.setText(getString(R.string.albums));
+        }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
 

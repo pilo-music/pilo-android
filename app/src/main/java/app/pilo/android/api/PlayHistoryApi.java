@@ -1,6 +1,7 @@
 package app.pilo.android.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -25,13 +26,19 @@ public class PlayHistoryApi {
 
 
     public void add(String slug, String type) {
-        if (slug.equals("")) {
+        if (!slug.equals("")) {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("slug", slug);
                 jsonObject.put("type", type);
                 final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.PLAY_HISTORY, jsonObject,
                         response -> {
+                            try {
+                                boolean status = response.getBoolean("status");
+                                Log.e("test", "add: "+status );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }, null) {
                     @Override
                     public Map<String, String> getHeaders() {

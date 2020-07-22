@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.ll_login_google)
     void loginGoogle() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://api.pilo.app/login/google/android"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://new.pilo.app/login/google/android"));
         startActivity(browserIntent);
     }
 

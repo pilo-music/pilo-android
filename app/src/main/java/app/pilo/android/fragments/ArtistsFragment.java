@@ -66,9 +66,13 @@ public class ArtistsFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         artistApi = new ArtistApi(getActivity());
 
-        tv_header_title.setText(getString(R.string.artist_best));
-        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
+        if (getArguments() != null && getArguments().getString("title") != null) {
+            tv_header_title.setText(getArguments().getString("title"));
+        } else {
+            tv_header_title.setText(getString(R.string.artists));
+        }
 
+        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
         artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists, R.layout.artist_item_full_width);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_artists.setAdapter(artistsListAdapter);
