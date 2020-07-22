@@ -184,13 +184,7 @@ public class UserApi {
                         try {
                             boolean status = response.getBoolean("status");
                             String message = response.getString("message");
-                            if (status) {
-                                JSONObject data = response.getJSONObject("data");
-                                User user = JsonParser.userParser(data);
-                                requestHandler.onGetInfo(user, message, status);
-                            } else {
-                                requestHandler.onGetInfo(null, message, status);
-                            }
+                            requestHandler.onGetInfo(null, message, status);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             requestHandler.onGetError(null);

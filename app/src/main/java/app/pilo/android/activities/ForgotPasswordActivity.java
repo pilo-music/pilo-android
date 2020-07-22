@@ -125,7 +125,7 @@ public class ForgotPasswordActivity extends BaseActivity {
             return;
         }
 
-        if (et_forgot_password_password.getText() != et_forgot_password_confirm.getText()) {
+        if (!et_forgot_password_password.getText().toString().equals(et_forgot_password_confirm.getText().toString())) {
             et_forgot_password_confirm.setError(getString(R.string.password_not_match));
             return;
         }
@@ -146,23 +146,9 @@ public class ForgotPasswordActivity extends BaseActivity {
                             .setBackgroundColorRes(R.color.colorGreen)
                             .show();
 
-                    if (((User) data).getAccess_token() != null) {
-                        User user = new User();
-                        user.setAccess_token(((User) data).getAccess_token());
-                        user.setEmail(((User) data).getEmail());
-                        user.setPhone(((User) data).getPhone());
-                        user.setBirth(((User) data).getBirth());
-                        user.setGender(((User) data).getGender());
-                        user.setPic(((User) data).getPic());
-                        user.setGlobal_notification(((User) data).isGlobal_notification());
-                        user.setMusic_notification(((User) data).isMusic_notification());
-                        user.setAlbum_notification(((User) data).isAlbum_notification());
-                        user.setVideo_notification(((User) data).isVideo_notification());
+                    startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+                    finishAffinity();
 
-                        UserRepo.getInstance(ForgotPasswordActivity.this).insert(user);
-                        startActivity(new Intent(ForgotPasswordActivity.this, MainActivity.class));
-                        finishAffinity();
-                    }
                 } else {
                     new HttpErrorHandler(ForgotPasswordActivity.this, message);
                 }
