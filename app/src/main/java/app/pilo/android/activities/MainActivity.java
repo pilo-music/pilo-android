@@ -630,10 +630,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     public boolean isPlaying() {
-        if (playerService != null && playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady()) {
-            return true;
-        }
-        return false;
+        return playerService != null && playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady();
     }
 
     public void pause() {
@@ -999,7 +996,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         registerReceiver(mIntentReceiver, intentToReceiveFilter, null, mHandler);
         mReceiversRegistered = true;
         active = true;
-
+        initPlayerUi();
     }
 
     @Override

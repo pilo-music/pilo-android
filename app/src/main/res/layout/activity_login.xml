@@ -187,9 +187,11 @@
                 android:alpha="0.9"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/ll_login">
 
                 <LinearLayout
+
                     android:id="@+id/ll_login_google"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

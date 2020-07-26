@@ -19,20 +19,19 @@
         <ImageView
             android:id="@+id/img_search_close"
             android:layout_width="wrap_content"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
             android:src="@drawable/ic_close"
-            android:visibility="gone"
-           />
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
             android:background="@null"
             android:focusedByDefault="true"
             android:fontFamily="@font/font"
@@ -64,19 +63,19 @@
     <LinearLayout
         android:id="@+id/ll_search_recommend"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_vertical_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/font"
+            android:text="@string/did_you_mean"
             android:textColor="@color/colorDark"
-            android:textStyle="italic"
             android:textSize="@dimen/small_font_size"
-            android:text="@string/did_you_mean" />
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/tv_search_recommend"
@@ -84,28 +83,33 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:textStyle="italic"
             android:fontFamily="@font/font_bold"
             android:textColor="@color/colorError"
             android:textSize="@dimen/small_font_size"
+            android:textStyle="italic"
             tools:text="بهنام بانی" />
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <include layout="@layout/artist_vertical_list" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <include layout="@layout/music_vertical_list" />
+            <include layout="@layout/artist_vertical_list" />
 
-        <include layout="@layout/album_vertical_list" />
+            <include layout="@layout/music_vertical_list" />
 
-        <include layout="@layout/playlist_vertical_list" />
+            <include layout="@layout/album_vertical_list" />
 
-        <include layout="@layout/video_vertical_list" />
-    </LinearLayout>
+            <include layout="@layout/playlist_vertical_list" />
+
+            <include layout="@layout/video_vertical_list" />
+        </LinearLayout>
 
 
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
