@@ -26,6 +26,7 @@ import app.pilo.android.repositories.UserRepo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.pushe.plus.Pushe;
 
 public class LoginActivity extends BaseActivity {
 
@@ -120,6 +121,7 @@ public class LoginActivity extends BaseActivity {
             user.setAlbum_notification(data.isAlbum_notification());
             user.setVideo_notification(data.isVideo_notification());
             UserRepo.getInstance(this).insert(user);
+            Pushe.setUserEmail(data.getEmail());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finishAffinity();
         }

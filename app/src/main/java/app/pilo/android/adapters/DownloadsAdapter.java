@@ -22,16 +22,19 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
+import app.pilo.android.api.MusicApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
+import app.pilo.android.models.SingleMusic;
 import app.pilo.android.utils.Utils;
 import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
@@ -44,6 +47,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     private LikeApi likeApi;
     private boolean likeProcess = false;
     private Utils utils;
+    private MusicApi musicApi;
 
     public DownloadsAdapter(WeakReference<Context> context, List<Download> downloads) {
         this.context = context.get();
@@ -51,6 +55,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         this.likeApi = new LikeApi(context.get());
         musics = new ArrayList<>();
         utils = new Utils();
+        musicApi = new MusicApi(context.get());
 
         for (int i = 0; i < downloads.size(); i++) {
             musics.add(downloads.get(i).getMusic());
@@ -92,7 +97,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
             holder.img_download_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
         }
 
-        holder.ll_download.setOnClickListener(v -> EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false)));
+        holder.ll_download.setOnClickListener(v -> playMusic(music));
 
         holder.img_download_like.setOnClickListener(v -> {
             if (likeProcess)
@@ -150,6 +155,27 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
         holder.ll_download.setOnLongClickListener(v -> {
             new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG);
             return false;
+        });
+    }
+
+    private void playMusic(Music music) {
+        musicApi.single(music.getSlug(), new HttpHandler.RequestHandler() {
+            @Override
+            public void onGetInfo(Object data, String message, boolean status) {
+                if (status) {
+                    try {
+                        musics.add(((SingleMusic) data).getMusic());
+                        EventBus.getDefault().post(new MusicEvent(context, musics, ((SingleMusic) data).getMusic().getSlug(), true, false));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onGetError(@Nullable VolleyError error) {
+
+            }
         });
     }
 

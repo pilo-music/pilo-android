@@ -11,6 +11,7 @@ import app.pilo.android.repositories.UserRepo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.pushe.plus.Pushe;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -105,6 +106,7 @@ public class VerifyActivity extends BaseActivity {
             user.setAlbum_notification(data.isAlbum_notification());
             user.setVideo_notification(data.isVideo_notification());
             UserRepo.getInstance(this).insert(user);
+            Pushe.setUserEmail(data.getEmail());
             startActivity(new Intent(VerifyActivity.this, MainActivity.class));
             finishAffinity();
         }
