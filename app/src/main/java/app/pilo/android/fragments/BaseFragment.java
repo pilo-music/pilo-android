@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import app.pilo.android.helpers.UserSharedPrefManager;
+
 public class BaseFragment extends Fragment {
 
     public static final String ARGS_INSTANCE = "app.pilo.android";

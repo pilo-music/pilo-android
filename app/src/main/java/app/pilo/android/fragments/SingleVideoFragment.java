@@ -101,6 +101,11 @@ public class SingleVideoFragment extends BaseFragment {
     @OnClick(R.id.fl_single_video)
     void playVideo() {
         if (!video.getVideo480().equals("")) {
+            if (((MainActivity)getActivity()).isPlaying()){
+                ((MainActivity)getActivity()).pause();
+            }
+
+
             PlayHistoryApi playHistoryApi = new PlayHistoryApi(getActivity());
             playHistoryApi.add(video.getSlug(), "video");
             Intent mIntent = new Intent(getActivity(), VideoPlayerActivity.class);

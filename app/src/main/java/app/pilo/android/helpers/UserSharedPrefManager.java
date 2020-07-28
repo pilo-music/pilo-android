@@ -13,11 +13,22 @@ public class UserSharedPrefManager {
     private static final String SHUFFLE_MODE = "shuffle_mode";
     private static final String STREAM_QUALITY = "STREAM_QUALITY";
     private static final String DOWNLOAD_QUALITY = "STREAM_QUALITY";
+    private static final String FIRST_LUNCH = "FIRST_LUNCH";
 
     private SharedPreferences sharedPreferences;
 
     public UserSharedPrefManager(Context context) {
         sharedPreferences = context.getSharedPreferences(USER_SHARED_PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public void setFirstLunch(boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(FIRST_LUNCH, value);
+        editor.apply();
+    }
+
+    public boolean getFirstLunch() {
+        return sharedPreferences.getBoolean(FIRST_LUNCH, true);
     }
 
     //----------LOCAL-----------------------
