@@ -17,6 +17,8 @@ import java.lang.ref.WeakReference;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.SearchHistoryAdapter;
+import app.pilo.android.helpers.OperatorDetectHelper;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.repositories.SearchHistoryRepo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +37,7 @@ public class SearchFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
-
-
+        new OperatorDetectHelper(getActivity(), view);
         ll_search.setOnClickListener(v -> {
             SearchResultFragment searchResultFragment = new SearchResultFragment(null);
             ((MainActivity) getActivity()).pushFragment(searchResultFragment);
@@ -55,7 +56,6 @@ public class SearchFragment extends BaseFragment {
         SearchHistoryAdapter searchHistoryAdapter = new SearchHistoryAdapter(new WeakReference<>(getActivity()), SearchHistoryRepo.getInstance(getActivity()).get());
         rc_history.setLayoutManager(new LinearLayoutManager(getActivity()));
         rc_history.setAdapter(searchHistoryAdapter);
-
 
         return view;
     }

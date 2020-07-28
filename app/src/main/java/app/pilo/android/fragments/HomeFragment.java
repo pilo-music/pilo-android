@@ -23,6 +23,8 @@ import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.HomeItemHelper;
+import app.pilo.android.helpers.OperatorDetectHelper;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Home;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +43,7 @@ public class HomeFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, view);
+        new OperatorDetectHelper(getActivity(), view);
         swipe_refresh_layout.setOnRefreshListener(this::getHomeApi);
         homeItemHelper = new HomeItemHelper();
         getHomeApi();
