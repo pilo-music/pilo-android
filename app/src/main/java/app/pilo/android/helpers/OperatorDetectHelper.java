@@ -2,7 +2,9 @@ package app.pilo.android.helpers;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -28,6 +30,10 @@ public class OperatorDetectHelper {
     private void check() {
         if (userSharedPrefManager.getFirstLunch()) {
             if (!isIran(context)) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                ViewGroup parent = view.findViewById(R.id.framelayout);
+                View view = inflater.inflate(R.layout.first_lunch_layout, parent);
+
                 LinearLayout ll_first_lunch = view.findViewById(R.id.ll_first_lunch);
                 LinearLayout ll_first_lunch_send = view.findViewById(R.id.ll_first_lunch_send);
                 EditText et_first_lunch = view.findViewById(R.id.et_first_lunch);
