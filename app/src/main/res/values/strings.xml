@@ -62,6 +62,7 @@
     <string name="close">Close</string>
     <string name="verify_account">Verify Account</string>
     <string name="forgot_password">Forgot your password ?</string>
+    <string name="policy">Privacy &amp; Policy</string>
     <string name="operation_done">Operation Done</string>
     <string name="follow_on">Following</string>
     <string name="follow_off">Follow</string>

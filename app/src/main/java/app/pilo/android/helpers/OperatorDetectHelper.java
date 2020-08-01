@@ -37,7 +37,6 @@ public class OperatorDetectHelper {
                     if (et_first_lunch.getText().toString().equals("یلدا") || et_first_lunch.getText().toString().equals("yalda")) {
                         userSharedPrefManager.setFirstLunch(false);
                         ll_first_lunch.setVisibility(View.GONE);
-                        userSharedPrefManager.setFirstLunch(false);
                     }
                 });
             } else {

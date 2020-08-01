@@ -288,6 +288,19 @@
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
 
+
+            <TextView
+                android:id="@+id/tv_login_forgot_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:fontFamily="@font/font"
+                android:gravity="center"
+                android:text="@string/policy"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size" />
+
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
