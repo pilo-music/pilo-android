@@ -229,6 +229,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         setupSlidingUpPanel();
         handleIncomingBroadcast(getIntent());
         setupPlayerViewPager();
+        setupPlayerSeekbar();
     }
 
     private void setupMusicVerticalList() {
@@ -274,7 +275,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
         });
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
+    }
 
+    private void setupPlayerSeekbar(){
         player_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
