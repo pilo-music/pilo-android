@@ -5,299 +5,104 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".activities.LoginActivity">
+    android:orientation="vertical"
+    tools:context=".activities.WelcomeActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:adjustViewBounds="true"
-        android:alpha="0.2"
-        android:src="@drawable/headset" />
+        android:src="@drawable/bk_welcome" />
+
+    <ImageView
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="@dimen/_70sdp"
+        android:src="@drawable/ic_pilo_logo" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:gravity="bottom"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_100sdp"
-            android:layout_marginTop="@dimen/activity_vertical_margin2x"
-            android:src="@drawable/ic_pilo_logo" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/gray_light_round_box_background"
+            android:fontFamily="@font/font"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/gray_light_round_box_background"
+            android:fontFamily="@font/font"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:paddingHorizontal="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
+
+        <TextView
+            android:id="@+id/tv_forgot_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/rest_password"
+            android:textColor="@color/colorDark"
+            android:textSize="@dimen/normal_font_size" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin2x"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:alpha="0.9"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="0dp">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/box_height"
-                    android:background="@color/colorGrayLight"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="@dimen/box_height"
-                        android:layout_height="@dimen/box_height"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="@dimen/_15sdp"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_mail" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/et_login_email"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="#F9F9F9"
-                        android:fontFamily="@font/font"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:paddingStart="@dimen/activity_vertical_margin"
-                        android:paddingEnd="@dimen/activity_vertical_margin"
-                        android:textColor="@color/colorDark"
-                        android:textDirection="locale"
-                        android:textSize="@dimen/normal_font_size" />
-
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:alpha="0.9"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="0dp">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/box_height"
-                    android:background="@color/colorGrayLight"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="@dimen/box_height"
-                        android:layout_height="@dimen/box_height"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="@dimen/_18sdp"
-                            android:layout_height="@dimen/_18sdp"
-                            android:src="@drawable/ic_key" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/et_login_password"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="#F9F9F9"
-                        android:fontFamily="@font/font"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:paddingStart="@dimen/activity_vertical_margin"
-                        android:paddingEnd="@dimen/activity_vertical_margin"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/colorDark"
-                        android:textDirection="locale"
-                        android:textSize="@dimen/normal_font_size" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
+        <app.pilo.android.views.PiloButton
+            android:id="@+id/ll_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pilo_button_height"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            app:text="@string/login" />
 
         <LinearLayout
+            android:id="@+id/ll_login_google"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="vertical">
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
+            android:layout_marginBottom="@dimen/activity_vertical_margin2x"
+            android:background="@drawable/white_round_box_background"
+            android:clickable="true"
+            android:elevation="3dp"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/ll_login"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:alpha="0.9"
-                android:background="@drawable/green_round_box_background"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/font"
-                    android:gravity="center"
-                    android:text="@string/login"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/normal_font_size" />
-
-                <ProgressBar
-                    android:id="@+id/progress_bar_login"
-                    android:layout_width="30dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView3"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:alpha="0.9"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="0dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/ll_login">
-
-                <LinearLayout
-
-                    android:id="@+id/ll_login_google"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#ededed"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="8dp"
-                        android:fontFamily="@font/font"
-                        android:text="@string/login_with_google"
-                        android:textColor="@color/colorDark"
-                        android:textSize="@dimen/normal_font_size" />
-
-                    <ImageView
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:src="@drawable/ic_google" />
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@color/colorDark" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:fontFamily="@font/font"
-                    android:gravity="center"
-                    android:text="@string/or"
-                    android:textColor="@color/colorDark"
-                    android:textSize="@dimen/large_font_size" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@color/colorDark" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_register"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:alpha="0.9"
-                android:background="@drawable/primary_round_box_background"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/font"
-                    android:text="@string/register"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/normal_font_size" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_google" />
 
             <TextView
-                android:id="@+id/tv_login_forgot_password"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:fontFamily="@font/font"
-                android:gravity="center"
-                android:text="@string/forgot_password"
-                android:textColor="@color/colorDark"
-                android:textSize="@dimen/normal_font_size" />
-
-
-            <TextView
-                android:id="@+id/tv_login_forgot_policy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:fontFamily="@font/font"
-                android:gravity="center"
-                android:text="@string/policy"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:fontFamily="@font/font_medium"
+                android:text="@string/login_with_google"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
 

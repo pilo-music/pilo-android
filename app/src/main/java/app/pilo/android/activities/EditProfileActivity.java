@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends BaseActivity {
     @BindView(R.id.et_profile_edit_name)
     EditText et_name;
     @BindView(R.id.et_profile_edit_email)

@@ -157,7 +157,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     ViewPager2 view_pager_extended_music_player;
 
     private boolean doubleBackToExitPressedOnce = false;
-    private boolean firstMusicListLoad = true;
     private Unbinder unbinder;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
@@ -317,7 +316,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 if (position != getCurrentMusicIndex()) {
                     handler.postDelayed(() -> EventBus.getDefault().post(new MusicEvent(MainActivity.this, musics, musics.get(position).getSlug(), true, false)), 500);
                 }
-                firstMusicListLoad = false;
             }
 
             @Override

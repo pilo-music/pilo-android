@@ -1,20 +1,26 @@
 package app.pilo.android.activities;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.error.VolleyError;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Map;
 
@@ -24,6 +30,7 @@ import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
+import app.pilo.android.views.PiloButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,21 +38,40 @@ import co.pushe.plus.Pushe;
 
 public class LoginActivity extends BaseActivity {
 
-    @BindView(R.id.et_login_email)
-    EditText et_email;
-    @BindView(R.id.et_login_password)
-    EditText et_password;
-    @BindView(R.id.progress_bar_login)
-    ProgressBar progressBar;
+    @BindView(R.id.et_email)
+    TextInputEditText et_email;
+    @BindView(R.id.et_password)
+    TextInputEditText et_password;
     @BindView(R.id.ll_login)
-    LinearLayout ll_login;
+    PiloButton piloButton;
+
+    private static final int RC_SIGN_IN = 111;
+    private GoogleSignInClient mGoogleSignInClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        ll_login.setOnClickListener(v -> login());
+        piloButton.setOnClickListener(v -> login());
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("8427120984-hu3aul4fnhlnufuefnbtjujk6o7rhn3v.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
     }
 
 
@@ -61,14 +87,13 @@ public class LoginActivity extends BaseActivity {
             et_password.setError(getString(R.string.password_small_length));
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
-        ll_login.setEnabled(false);
+
+        piloButton.setProgress(true);
         UserApi userApi = new UserApi(this);
         userApi.login(email, password, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                progressBar.setVisibility(View.GONE);
-                ll_login.setEnabled(true);
+                piloButton.setProgress(false);
                 if (status) {
                     if (((Map) data).get("status").toString().equals("login")) {
                         doLogin((User) ((Map) data).get("user"));
@@ -84,8 +109,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                progressBar.setVisibility(View.GONE);
-                ll_login.setEnabled(true);
+                piloButton.setProgress(false);
                 new HttpErrorHandler(LoginActivity.this);
             }
         });
@@ -93,26 +117,35 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.ll_login_google)
     void loginGoogle() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://new.pilo.app/login/google/android"));
-        startActivity(browserIntent);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    @OnClick(R.id.ll_register)
-    void register() {
-        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-    }
-
-    @OnClick(R.id.tv_login_forgot_password)
+    @OnClick(R.id.tv_forgot_password)
     void forgotPassword() {
         startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
     }
 
-    @OnClick(R.id.tv_login_forgot_policy)
-    void tv_login_forgot_policy() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://new.pilo.app/policy"));
-        startActivity(browserIntent);
-    }
+//    @OnClick(R.id.tv_login_forgot_policy)
+//    void tv_login_forgot_policy() {
+//        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://new.pilo.app/policy"));
+//        startActivity(browserIntent);
+//    }
 
+    /**
+     * method to handle google sign in result
+     *
+     * @param completedTask from google onActivityResult
+     */
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            Toast.makeText(this, account.getIdToken(), Toast.LENGTH_SHORT).show();
+
+        } catch (ApiException e) {
+            Toast.makeText(this, "Failed to do Sign In : " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void doLogin(User data) {
         if (data != null && data.getAccess_token() != null) {

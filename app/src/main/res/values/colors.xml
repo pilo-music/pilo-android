@@ -4,9 +4,9 @@
     <color name="colorPrimaryDark">#00838F</color>
     <color name="colorPrimaryLight" tools:ignore="MissingDefaultResource">#E0F7FA</color>
     <color name="colorAccent">#384055</color>
-    <color name="colorDark">#5e5e5e</color>
+    <color name="colorDark">#141414</color>
     <color name="colorGray">#757575</color>
-    <color name="colorGrayLight">#E0E0E0</color>
+    <color name="colorGrayLight">#F5F5F5</color>
     <color name="colorShimmer">@color/colorGrayLight</color>
     <color name="colorGreen">#35C374</color>
     <color name="colorError">#B00020</color>

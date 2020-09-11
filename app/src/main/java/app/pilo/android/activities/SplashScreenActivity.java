@@ -67,7 +67,7 @@ public class SplashScreenActivity extends BaseActivity {
         if (token != null && !token.equals("")) {
             startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
         } else {
-            startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+            startActivity(new Intent(SplashScreenActivity.this, WelcomeActivity.class));
         }
         finish();
     }

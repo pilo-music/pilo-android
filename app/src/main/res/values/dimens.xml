@@ -13,5 +13,6 @@
 
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="pilo_button_height">@dimen/_40sdp</dimen>
 
 </resources>

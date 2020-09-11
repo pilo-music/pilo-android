@@ -17,6 +17,11 @@
     <string name="server_connection_error">Please check your internet connection</string>
     <string name="server_connection_message">Please try again</string>
 
+    <string name="welcome_page_one_title">High Fidelity Sound Quality</string>
+    <string name="welcome_page_one_description">Sit back and enjoy our lossless audio \n experience. Unlimited access to ower 56 \n thousand tracks.</string>
+    <string name="welcome_page_two_title">Curated Editorial</string>
+    <string name="welcome_page_two_description">Tailor-made recommendations,playlists and \n articles by experienced music journalists.</string>
+
     <string name="bottom_navigation_home">Home</string>
     <string name="bottom_navigation_browser">Browse</string>
     <string name="bottom_navigation_search">Search</string>
@@ -29,7 +34,7 @@
     <string name="playlists">Playlists</string>
     <string name="videos">Videos</string>
     <string name="artists">Artists</string>
-    <string name="login">Login</string>
+    <string name="login">Log in</string>
     <string name="email">Email</string>
     <string name="enter_email">Enter your email</string>
     <string name="forgot_password_btn_create">Send forgot password verify token</string>
@@ -41,7 +46,7 @@
     <string name="have_account">Already a member? Sign in</string>
     <string name="or">or</string>
     <string name="login_with_google">Login with Google</string>
-    <string name="register">Register</string>
+    <string name="register">Sign up</string>
     <string name="email_not_valid">Invalid Email</string>
     <string name="password_small_length">Password should at last 5 characters</string>
     <string name="password_not_match">Passwords does not match</string>
@@ -62,6 +67,7 @@
     <string name="close">Close</string>
     <string name="verify_account">Verify Account</string>
     <string name="forgot_password">Forgot your password ?</string>
+    <string name="rest_password">Rest password ?</string>
     <string name="policy">Privacy &amp; Policy</string>
     <string name="operation_done">Operation Done</string>
     <string name="follow_on">Following</string>
