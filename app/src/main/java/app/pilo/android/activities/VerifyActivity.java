@@ -8,6 +8,7 @@ import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
+import app.pilo.android.views.PiloButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,10 +34,8 @@ public class VerifyActivity extends BaseActivity {
     EditText et_code;
     @BindView(R.id.et_email)
     EditText et_email;
-    @BindView(R.id.ll_verify)
-    LinearLayout ll_verify;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
+    @BindView(R.id.pb_verify)
+    PiloButton pb_verify;
 
     private String email;
 
@@ -50,46 +49,42 @@ public class VerifyActivity extends BaseActivity {
             startActivity(new Intent(VerifyActivity.this, LoginActivity.class));
             finishAffinity();
         }
-
         et_email.setText(email);
+    }
 
-        ll_verify.setOnClickListener(v -> {
-            String email = et_email.getText().toString().trim();
-            String code = et_code.getText().toString().trim();
-            if (!isValidEmail(email)) {
-                et_email.setError(getString(R.string.email_not_valid));
-                return;
+
+    @OnClick
+    void pb_verify(){
+        String email = et_email.getText().toString().trim();
+        String code = et_code.getText().toString().trim();
+        if (!isValidEmail(email)) {
+            et_email.setError(getString(R.string.email_not_valid));
+            return;
+        }
+
+        if (code.length() < 4) {
+            et_code.setError(getString(R.string.invalid_verify_code));
+            return;
+        }
+
+        pb_verify.setProgress(true);
+        new UserApi(VerifyActivity.this).verify(email, code, new HttpHandler.RequestHandler() {
+            @Override
+            public void onGetInfo(Object data, String message, boolean status) {
+                pb_verify.setProgress(false);
+                if (status) {
+                    doLogin((User) data);
+                } else {
+                    new HttpErrorHandler(VerifyActivity.this, message);
+                }
             }
 
-            if (code.length() < 4) {
-                et_code.setError(getString(R.string.invalid_verify_code));
-                return;
+            @Override
+            public void onGetError(@Nullable VolleyError error) {
+                pb_verify.setProgress(false);
+                new HttpErrorHandler(VerifyActivity.this);
             }
-
-
-            progressBar.setVisibility(View.VISIBLE);
-            ll_verify.setEnabled(false);
-            new UserApi(VerifyActivity.this).verify(email, code, new HttpHandler.RequestHandler() {
-                @Override
-                public void onGetInfo(Object data, String message, boolean status) {
-                    progressBar.setVisibility(View.GONE);
-                    ll_verify.setEnabled(true);
-                    if (status) {
-                        doLogin((User) data);
-                    } else {
-                        new HttpErrorHandler(VerifyActivity.this, message);
-                    }
-                }
-
-                @Override
-                public void onGetError(@Nullable VolleyError error) {
-                    progressBar.setVisibility(View.GONE);
-                    ll_verify.setEnabled(true);
-                    new HttpErrorHandler(VerifyActivity.this);
-                }
-            });
         });
-
     }
 
     private void doLogin(User data) {
@@ -110,12 +105,6 @@ public class VerifyActivity extends BaseActivity {
             startActivity(new Intent(VerifyActivity.this, MainActivity.class));
             finishAffinity();
         }
-    }
-
-    @OnClick(R.id.tv_login)
-    void tv_login() {
-        startActivity(new Intent(VerifyActivity.this, LoginActivity.class));
-        finishAffinity();
     }
 
     public static boolean isValidEmail(CharSequence target) {

@@ -41,50 +41,21 @@
             android:orientation="horizontal" />
     </FrameLayout>
 
-    <LinearLayout
+    <app.pilo.android.views.PiloButton
         android:id="@+id/ll_singin"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_height="@dimen/pilo_button_height"
         android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
-        android:background="@drawable/primary_light_round_box_background"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        app:text="@string/register" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/font_medium"
-            android:text="@string/register"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/normal_font_size" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <app.pilo.android.views.PiloButton
         android:id="@+id/ll_login"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_height="@dimen/pilo_button_height"
         android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin2x"
-        android:background="@drawable/primary_light_round_box_background"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/font_medium"
-            android:text="@string/login"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/normal_font_size" />
-
-    </LinearLayout>
+        app:text="@string/login" />
 
 </LinearLayout>

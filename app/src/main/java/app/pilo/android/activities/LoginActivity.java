@@ -126,12 +126,6 @@ public class LoginActivity extends BaseActivity {
         startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
     }
 
-//    @OnClick(R.id.tv_login_forgot_policy)
-//    void tv_login_forgot_policy() {
-//        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://new.pilo.app/policy"));
-//        startActivity(browserIntent);
-//    }
-
     /**
      * method to handle google sign in result
      *

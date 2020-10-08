@@ -1,6 +1,5 @@
 package app.pilo.android.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
@@ -38,7 +37,6 @@ public class WelcomeActivity extends BaseActivity {
     @OnClick(R.id.ll_singin)
     void ll_signin() {
         startActivity(new Intent(this, RegisterActivity.class));
-        finish();
     }
 
     @OnClick(R.id.ll_login)

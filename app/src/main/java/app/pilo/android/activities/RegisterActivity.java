@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -17,21 +18,22 @@ import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
+import app.pilo.android.views.PiloButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RegisterActivity extends BaseActivity {
-    @BindView(R.id.et_register_name)
+    @BindView(R.id.et_name)
     EditText et_name;
-    @BindView(R.id.et_register_email)
+    @BindView(R.id.et_email)
     EditText et_email;
-    @BindView(R.id.et_register_confirm)
+    @BindView(R.id.et_confirm)
     EditText et_confirm;
-    @BindView(R.id.et_register_password)
+    @BindView(R.id.et_password)
     EditText et_password;
-    @BindView(R.id.progress_bar_register)
-    ProgressBar progressBar;
+    @BindView(R.id.pb_register)
+    PiloButton pb_register;
 
     private UserApi userApi;
 
@@ -43,24 +45,19 @@ public class RegisterActivity extends BaseActivity {
         userApi = new UserApi(this);
     }
 
-    @OnClick(R.id.ll_register)
+    @OnClick(R.id.pb_register)
     void register() {
         if (validateData()) {
             sendDataToServer();
         }
     }
 
-    @OnClick(R.id.tv_register_have_account)
-    void goToLogin() {
-        finish();
-    }
-
     private void sendDataToServer() {
-        progressBar.setVisibility(View.VISIBLE);
+        pb_register.setProgress(true);
         userApi.register(et_name.getText().toString(), et_email.getText().toString(), et_password.getText().toString(), et_confirm.getText().toString(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                progressBar.setVisibility(View.GONE);
+                pb_register.setProgress(false);
                 if (status) {
                     Intent intent = new Intent(RegisterActivity.this, VerifyActivity.class);
                     intent.putExtra("email", et_email.getText().toString());
@@ -72,7 +69,7 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                progressBar.setVisibility(View.GONE);
+                pb_register.setProgress(false);
                 new HttpErrorHandler(RegisterActivity.this);
             }
         });
@@ -110,4 +107,10 @@ public class RegisterActivity extends BaseActivity {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
+
+    @OnClick(R.id.tv_forgot_password)
+    void tv_forgot_password() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://new.pilo.app/policy"));
+        startActivity(browserIntent);
+    }
 }

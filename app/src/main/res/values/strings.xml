@@ -68,7 +68,7 @@
     <string name="verify_account">Verify Account</string>
     <string name="forgot_password">Forgot your password ?</string>
     <string name="rest_password">Rest password ?</string>
-    <string name="policy">Privacy &amp; Policy</string>
+    <string name="policy">By signing up, you agree to Pilo’s Terms and \n Conditions of Use, Privacy Policy and Mobile Terms</string>
     <string name="operation_done">Operation Done</string>
     <string name="follow_on">Following</string>
     <string name="follow_off">Follow</string>
