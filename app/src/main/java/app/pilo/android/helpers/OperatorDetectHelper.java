@@ -5,13 +5,15 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Arrays;
 import java.util.List;
 
 import app.pilo.android.R;
+import app.pilo.android.views.PiloButton;
 
 public class OperatorDetectHelper {
     private String[] operators = new String[]{"irancell", "mtn", "mci", "rightel", "righ", "rtl", "iran"};
@@ -35,11 +37,11 @@ public class OperatorDetectHelper {
                 View view = inflater.inflate(R.layout.first_lunch_layout, parent);
 
                 LinearLayout ll_first_lunch = view.findViewById(R.id.ll_first_lunch);
-                LinearLayout ll_first_lunch_send = view.findViewById(R.id.ll_first_lunch_send);
-                EditText et_first_lunch = view.findViewById(R.id.et_first_lunch);
+                PiloButton pb_first_lunch_send = view.findViewById(R.id.pb_first_lunch_send);
+                TextInputEditText et_first_lunch = view.findViewById(R.id.et_first_lunch);
                 ll_first_lunch.setVisibility(View.VISIBLE);
 
-                ll_first_lunch_send.setOnClickListener(view1 -> {
+                pb_first_lunch_send.setOnClickListener(view1 -> {
                     if (et_first_lunch.getText().toString().equals("یلدا") || et_first_lunch.getText().toString().equals("yalda")) {
                         userSharedPrefManager.setFirstLunch(false);
                         ll_first_lunch.setVisibility(View.GONE);
