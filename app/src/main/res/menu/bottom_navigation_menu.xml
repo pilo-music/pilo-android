@@ -8,19 +8,16 @@
 
     <item
         android:id="@+id/bottom_browser"
-        android:enabled="true"
         android:icon="@drawable/bottom_tab_browser"
         android:title="@string/bottom_navigation_browser"/>
 
     <item
         android:id="@+id/bottom_search"
-        android:enabled="true"
         android:icon="@drawable/bottom_tab_search"
         android:title="@string/bottom_navigation_search"/>
 
     <item
         android:id="@+id/bottom_profile"
-        android:enabled="true"
         android:icon="@drawable/bottom_tab_profile"
         android:title="@string/bottom_navigation_profile"/>
 </menu>

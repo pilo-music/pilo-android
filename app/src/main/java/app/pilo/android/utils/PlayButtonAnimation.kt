@@ -5,7 +5,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.ViewCompat.animate
 
-class AnimateTest{
+class PlayButtonAnimation{
     fun showBonceAnimation(view: View) {
         view.apply {
             clearAnimation()

@@ -79,7 +79,7 @@ import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.PlayHistory;
 import app.pilo.android.services.PlayerService;
-import app.pilo.android.utils.AnimateTest;
+import app.pilo.android.utils.PlayButtonAnimation;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
 import app.pilo.android.utils.MusicDownloader;
@@ -90,12 +90,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import me.ibrahimsn.lib.OnItemReselectedListener;
+import me.ibrahimsn.lib.OnItemSelectedListener;
+import me.ibrahimsn.lib.SmoothBottomBar;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
     // main activity
     @BindView(R.id.bottom_navigation)
-    BottomNavigationView bottom_navigation;
+    SmoothBottomBar bottom_navigation;
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout sliding_layout;
     @BindView(R.id.ll_music_player_collapsed)
@@ -175,12 +178,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private boolean likeProcess = false;
     private LikeApi likeApi;
     private Utils utils;
-    private AnimateTest animateTest = new AnimateTest();
+    private PlayButtonAnimation playButtonAnimation = new PlayButtonAnimation();
     private PlayHistoryApi playHistoryApi;
     private PlayerViewPagerAdapter playerViewPagerAdapter;
-
-
-    private List<Integer> bottomNavigationTabs;
 
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -216,7 +216,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         fragmentHistory = new FragmentHistory();
         mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
                 .transactionListener(this)
-                .rootFragmentListener(this, bottomNavigationTabs.size())
+                .rootFragmentListener(this, 4)
                 .build();
         switchTab(0);
         musics = new ArrayList<>();
@@ -276,7 +276,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
     }
 
-    private void setupPlayerSeekbar(){
+    private void setupPlayerSeekbar() {
         player_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -332,56 +332,91 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
 
     private void setupBottomNavigation() {
-        bottomNavigationTabs = new ArrayList<>();
-        bottomNavigationTabs.add(R.id.bottom_home);
-        bottomNavigationTabs.add(R.id.bottom_browser);
-        bottomNavigationTabs.add(R.id.bottom_search);
-        bottomNavigationTabs.add(R.id.bottom_profile);
 
-        for (int i = 0; i < bottom_navigation.getMenu().size(); i++) {
-            TooltipCompat.setTooltipText(bottom_navigation.findViewById(bottom_navigation.getMenu().getItem(i).getItemId()), null);
-        }
-
-        bottom_navigation.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.bottom_home:
+        bottom_navigation.setOnItemSelectedListener(position -> {
+            switch (position) {
+                case 0:
                     fragmentHistory.push(0);
                     switchTab(0);
-                    return true;
-                case R.id.bottom_browser:
+                    break;
+                case 1:
                     fragmentHistory.push(1);
                     switchTab(1);
-                    return true;
-                case R.id.bottom_search:
+                    break;
+                case 2:
                     fragmentHistory.push(2);
                     switchTab(2);
-                    return true;
-                case R.id.bottom_profile:
+                    break;
+                case 3:
                     fragmentHistory.push(3);
                     switchTab(3);
-                    return true;
+                    break;
             }
             return false;
         });
-
-        bottom_navigation.setOnNavigationItemReselectedListener(item -> {
-            mNavController.clearStack();
-            switch (item.getItemId()) {
-                case R.id.bottom_home:
-                    switchTab(0);
-                    break;
-                case R.id.bottom_browser:
-                    switchTab(1);
-                    break;
-                case R.id.bottom_search:
-                    switchTab(2);
-                    break;
-                case R.id.bottom_profile:
-                    switchTab(3);
-                    break;
+        bottom_navigation.setOnItemReselectedListener(new OnItemReselectedListener() {
+            @Override
+            public void onItemReselect(int position) {
+                mNavController.clearStack();
+                switch (position) {
+                    case 0:
+                        switchTab(0);
+                        break;
+                    case 1:
+                        switchTab(1);
+                        break;
+                    case 2:
+                        switchTab(2);
+                        break;
+                    case 3:
+                        switchTab(3);
+                        break;
+                }
             }
-
         });
+
+
+//
+//        bottom_navigation.setOnNavigationItemSelectedListener(item -> {
+//            switch (item.getItemId()) {
+//                case R.id.bottom_home:
+//                    fragmentHistory.push(0);
+//                    switchTab(0);
+//                    return true;
+//                case R.id.bottom_browser:
+//                    fragmentHistory.push(1);
+//                    switchTab(1);
+//                    return true;
+//                case R.id.bottom_search:
+//                    fragmentHistory.push(2);
+//                    switchTab(2);
+//                    return true;
+//                case R.id.bottom_profile:
+//                    fragmentHistory.push(3);
+//                    switchTab(3);
+//                    return true;
+//            }
+//            return false;
+//        });
+
+//        bottom_navigation.setOnNavigationItemReselectedListener(item -> {
+//            mNavController.clearStack();
+//            switch (item.getItemId()) {
+//                case R.id.bottom_home:
+//                    switchTab(0);
+//                    break;
+//                case R.id.bottom_browser:
+//                    switchTab(1);
+//                    break;
+//                case R.id.bottom_search:
+//                    switchTab(2);
+//                    break;
+//                case R.id.bottom_profile:
+//                    switchTab(3);
+//                    break;
+//            }
+//
+//        });
     }
 
 
@@ -681,7 +716,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 EventBus.getDefault().post(new MusicEvent(this, musics, current_music_slug, true, false));
             }
         }
-        animateTest.showBonceAnimation(img_extended_music_player_play);
+        playButtonAnimation.showBonceAnimation(img_extended_music_player_play);
     }
 
     @OnClick({R.id.img_extended_music_player_previous, R.id.img_music_player_collapsed_prev})
@@ -942,10 +977,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     if (fragmentHistory.getStackSize() > 1) {
                         int position = fragmentHistory.popPrevious();
                         switchTab(position);
-                        bottom_navigation.setSelectedItemId(bottomNavigationTabs.get(position));
+                        bottom_navigation.setItemActiveIndex(position);
                     } else {
                         switchTab(0);
-                        bottom_navigation.setSelectedItemId(bottomNavigationTabs.get(0));
+                        bottom_navigation.setItemActiveIndex(0);
                         fragmentHistory.emptyStack();
                     }
                 }
