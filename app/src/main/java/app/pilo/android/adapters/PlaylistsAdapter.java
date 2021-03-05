@@ -23,10 +23,8 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SinglePlaylistFragment;
 import app.pilo.android.models.Playlist;
-import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Route;
 
 public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.PlaylistAdapterViewHolder> {
     private Context context;

@@ -45,7 +45,7 @@ public class ForgotPasswordActivity extends BaseActivity {
         userApi = new UserApi(this);
     }
 
-    @OnClick(R.id.pb_register)
+    @OnClick(R.id.pb_rest)
     void forgotPasswordCreate() {
         if (!isValidEmail(et_email.getText().toString())) {
             et_email.setError(getString(R.string.email_not_valid));
