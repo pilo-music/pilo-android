@@ -31,8 +31,8 @@ import butterknife.OnClick;
 public class ForgotPasswordActivity extends BaseActivity {
     @BindView(R.id.et_email)
     EditText et_email;
-    @BindView(R.id.pb_register)
-    PiloButton pb_register;
+    @BindView(R.id.pb_forgot_password)
+    PiloButton pb_forgot_password;
 
     private UserApi userApi;
 
@@ -45,26 +45,21 @@ public class ForgotPasswordActivity extends BaseActivity {
         userApi = new UserApi(this);
     }
 
-    @OnClick(R.id.pb_rest)
+    @OnClick(R.id.pb_forgot_password)
     void forgotPasswordCreate() {
         if (!isValidEmail(et_email.getText().toString())) {
             et_email.setError(getString(R.string.email_not_valid));
             return;
         }
-        pb_register.setProgress(true);
+        pb_forgot_password.setProgress(true);
         userApi.forgotPasswordCreate(et_email.getText().toString(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                pb_register.setProgress(false);
+                pb_forgot_password.setProgress(false);
                 if (status) {
-                    Alerter.create(ForgotPasswordActivity.this)
-                            .setTitle(message)
-                            .setTextTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setTitleTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setButtonTypeface(Utils.font(ForgotPasswordActivity.this))
-                            .setText("")
-                            .setBackgroundColorRes(R.color.colorGreen)
-                            .show();
+                    Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
+                    intent.putExtra("email", et_email.getText().toString());
+                    startActivity(intent);
                 } else {
                     new HttpErrorHandler(ForgotPasswordActivity.this, message);
                 }
@@ -72,7 +67,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                pb_register.setProgress(false);
+                pb_forgot_password.setProgress(false);
                 new HttpErrorHandler(ForgotPasswordActivity.this);
             }
         });

@@ -37,6 +37,7 @@
             android:background="@drawable/gray_light_round_box_background"
             android:fontFamily="@font/font"
             android:hint="@string/email"
+            android:enabled="false"
             android:inputType="textEmailAddress"
             android:paddingHorizontal="@dimen/activity_vertical_margin"
             android:textColor="@color/colorDark"
@@ -67,7 +68,7 @@
             android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin2x"
-            app:text="@string/forgot_password_btn" />
+            app:text="@string/verify_account" />
 
     </RelativeLayout>
 </FrameLayout>

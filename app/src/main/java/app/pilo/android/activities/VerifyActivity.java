@@ -53,7 +53,7 @@ public class VerifyActivity extends BaseActivity {
     }
 
 
-    @OnClick
+    @OnClick(R.id.pb_verify)
     void pb_verify(){
         String email = et_email.getText().toString().trim();
         String code = et_code.getText().toString().trim();
