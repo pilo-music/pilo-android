@@ -10,17 +10,11 @@
     android:layoutDirection="ltr"
     android:orientation="vertical">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/riv_artist_image"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_artist_image"
         android:layout_width="@dimen/_85sdp"
         android:layout_height="@dimen/_85sdp"
-        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        app:riv_corner_radius_bottom_left="@dimen/_43sdp"
-        app:riv_corner_radius_bottom_right="@dimen/_43sdp"
-        app:riv_corner_radius_top_right="@dimen/_43sdp"
-        app:riv_corner_radius_top_left="0dp"
-        app:riv_mutate_background="true"
         android:src="@drawable/ic_artist_placeholder" />
 
     <TextView
@@ -30,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/font"
         android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorDark"
         android:textSize="@dimen/normal_font_size"
-        tools:text="دختر ترک" />
+        tools:text="Hamid sefat" />
 </LinearLayout>

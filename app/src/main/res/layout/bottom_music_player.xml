@@ -30,6 +30,52 @@
         android:paddingStart="@dimen/activity_vertical_margin"
         android:paddingEnd="@dimen/activity_vertical_margin">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_music_player_collapsed_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/font"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/normal_font_size"
+                app:layout_constraintStart_toEndOf="@+id/riv_music_player_collapsed_image"
+                app:layout_constraintTop_toTopOf="@+id/riv_music_player_collapsed_image"
+                tools:text="Karma" />
+
+            <TextView
+                android:id="@+id/tv_music_player_collapsed_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/font"
+                android:textColor="@color/colorGray"
+                android:textSize="@dimen/small_font_size"
+                app:layout_constraintBottom_toBottomOf="@+id/riv_music_player_collapsed_image"
+                app:layout_constraintStart_toEndOf="@+id/riv_music_player_collapsed_image"
+                app:layout_constraintTop_toBottomOf="@+id/tv_music_player_collapsed_title"
+                tools:text="Hamid sefat" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_music_player_collapsed_image"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_music_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -53,9 +99,9 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_play_icon"
                 app:backgroundTint="@color/colorPrimary"
+                app:elevation="2dp"
                 app:fabCustomSize="44dp"
                 app:maxImageSize="15dp"
-                app:elevation="2dp"
                 app:rippleColor="@color/colorPrimary" />
 
 
@@ -72,52 +118,6 @@
 
 
         </LinearLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/tv_music_player_collapsed_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:ellipsize="end"
-                android:fontFamily="@font/font"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/normal_font_size"
-                app:layout_constraintEnd_toStartOf="@+id/riv_music_player_collapsed_image"
-                app:layout_constraintTop_toTopOf="@+id/riv_music_player_collapsed_image"
-                tools:text="برای تو" />
-
-            <TextView
-                android:id="@+id/tv_music_player_collapsed_artist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:ellipsize="end"
-                android:fontFamily="@font/font"
-                android:textColor="@color/colorDark"
-                android:textSize="@dimen/small_font_size"
-                app:layout_constraintBottom_toBottomOf="@+id/riv_music_player_collapsed_image"
-                app:layout_constraintEnd_toStartOf="@+id/riv_music_player_collapsed_image"
-                app:layout_constraintTop_toBottomOf="@+id/tv_music_player_collapsed_title"
-                tools:text="برای تو" />
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/riv_music_player_collapsed_image"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_music_placeholder"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:riv_corner_radius="10dp"
-                app:riv_mutate_background="true" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 </FrameLayout>

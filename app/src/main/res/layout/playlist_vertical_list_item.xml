@@ -5,7 +5,6 @@
     android:id="@+id/ll_playlist_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:layout_margin="8dp"
     android:layoutDirection="ltr"
     android:orientation="vertical">
@@ -25,6 +24,17 @@
             android:orientation="horizontal"
             android:padding="7dp">
 
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_playlist_vertical_list_item_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:textSize="@dimen/small_font_size"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true"
+                tools:src="@drawable/music_item" />
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -39,34 +49,22 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorDark"
                     android:textSize="@dimen/normal_font_size"
-                    tools:text="خاک" />
+                    tools:text="Karma" />
 
                 <TextView
                     android:id="@+id/tv_playlist_vertical_list_item_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-
                     android:fontFamily="@font/font"
                     android:gravity="start"
                     android:textColor="@color/colorDark"
                     android:textSize="@dimen/small_font_size"
-                    tools:text="23 موزیک" />
+                    tools:text="23 Muiscs" />
 
             </LinearLayout>
-
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/riv_playlist_vertical_list_item_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:textSize="@dimen/small_font_size"
-                app:riv_corner_radius="10dp"
-                app:riv_mutate_background="true"
-                tools:src="@drawable/music_item" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

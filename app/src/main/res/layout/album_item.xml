@@ -24,16 +24,6 @@
             app:riv_mutate_background="true"
             tools:src="@drawable/ic_music_placeholder" />
 
-        <ImageView
-            android:id="@+id/img_album_item_play"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_circle_play_black" />
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,11 +32,11 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:alpha="0.8"
+            android:background="@drawable/dark_round_box_background"
             android:fontFamily="@font/font"
             android:gravity="center"
             android:paddingStart="8dp"
             android:paddingTop="3dp"
-            android:background="@drawable/dark_round_box_background"
             android:paddingEnd="8dp"
             android:paddingBottom="3dp"
             android:text="ALBUM"
@@ -61,22 +51,26 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:fontFamily="@font/font"
-        android:gravity="center"
+        android:gravity="start"
         android:maxLines="1"
-        android:textColor="@color/colorPrimaryDark"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/colorDark"
         android:textSize="@dimen/normal_font_size"
-        tools:text="دختر ترک" />
+        tools:text="Karma" />
 
     <TextView
         android:id="@+id/tv_album_item_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="start"
         android:ellipsize="end"
         android:fontFamily="@font/font"
-        android:gravity="center"
+        android:gravity="start"
         android:maxLines="1"
-        android:textColor="@color/colorDark"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/colorGray"
         android:textSize="@dimen/small_font_size"
-        tools:text="علیرضا روزگار" />
+        tools:text="Masoud Sadeghloo" />
 </LinearLayout>

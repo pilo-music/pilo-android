@@ -59,6 +59,7 @@ public class SingleArtistFragment extends BaseFragment {
     private MusicsListAdapter musicCarouselAdapter;
     private AlbumsListAdapter albumCarouselAdapter;
     private MusicVerticalListAdapter musicVerticalListAdapter;
+    private VideoCarouselAdapter videoCarouselAdapter;
 
     @BindView(R.id.tv_single_artist_name)
     TextView tv_artist_name;
@@ -79,8 +80,8 @@ public class SingleArtistFragment extends BaseFragment {
     TextView tv_video_carousel_title;
     @BindView(R.id.tv_video_carousel_show_more)
     TextView tv_video_carousel_show_more;
-    @BindView(R.id.imageSlider)
-    SliderView sliderView;
+    @BindView(R.id.rc_video_carousel)
+    RecyclerView rc_video_carousel;
     @BindView(R.id.sfl_video)
     ShimmerFrameLayout sfl_video;
 
@@ -279,14 +280,13 @@ public class SingleArtistFragment extends BaseFragment {
     }
 
     private void setupVideoViewPager(List<Video> videos) {
-        if (sliderView != null) {
+        if (rc_video_carousel != null) {
             sfl_video.setVisibility(View.GONE);
             if (videos.size() > 0) {
-                sliderView.setVisibility(View.VISIBLE);
-                sliderView.setSliderAdapter(new VideoCarouselAdapter(new WeakReference<>(getActivity()), videos));
-                sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
-                sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-
+                rc_video_carousel.setVisibility(View.VISIBLE);
+                videoCarouselAdapter = new VideoCarouselAdapter(new WeakReference<>(getActivity()), videos);
+                rc_video_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+                rc_video_carousel.setAdapter(videoCarouselAdapter);
             } else {
                 tv_video_carousel_show_more.setVisibility(View.GONE);
                 tv_video_carousel_title.setVisibility(View.GONE);

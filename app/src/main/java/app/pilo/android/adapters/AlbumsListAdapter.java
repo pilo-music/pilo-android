@@ -81,8 +81,6 @@ public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.Al
         TextView tv_album_title;
         @BindView(R.id.tv_album_item_artist)
         TextView tv_album_artist;
-        @BindView(R.id.img_album_item_play)
-        ImageView img_album_play;
         @BindView(R.id.riv_album_item_image)
         ImageView album_image;
         @BindView(R.id.ll_album_item)

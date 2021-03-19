@@ -24,6 +24,7 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.EndlessScrollEventListener;
+import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.adapters.VideosAdapter;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
@@ -42,7 +43,7 @@ public class VideosFragment extends BaseFragment {
     @BindView(R.id.img_header_back)
     ImageView img_header_back;
 
-    private VideosAdapter videosAdapter;
+    private VideoVerticalListAdapter videosAdapter;
     private VideoApi videoApi;
     private List<Video> videos;
     private int page = 1;
@@ -78,7 +79,7 @@ public class VideosFragment extends BaseFragment {
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
-        videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
+        videosAdapter = new VideoVerticalListAdapter(new WeakReference<>(getActivity()), videos);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         rc_videos.setAdapter(videosAdapter);
         rc_videos.setLayoutManager(layoutManager);

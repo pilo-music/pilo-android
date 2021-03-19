@@ -12,7 +12,7 @@ import app.pilo.android.models.PlayHistory;
 import app.pilo.android.models.SearchHistory;
 import app.pilo.android.models.User;
 
-@Database(entities = {Music.class, User.class, SearchHistory.class, Download.class, PlayHistory.class}, version = 1, exportSchema = false)
+@Database(entities = {Music.class, User.class, SearchHistory.class, Download.class, PlayHistory.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;

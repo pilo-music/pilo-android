@@ -1,30 +1,25 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.smarteist.autoimageslider.SliderViewAdapter;
-
 import java.lang.ref.WeakReference;
 import java.util.List;
-
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SingleVideoFragment;
 import app.pilo.android.models.Video;
 
-public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter.SliderAdapterVH> {
+public class VideoCarouselAdapter extends RecyclerView.Adapter<VideoCarouselAdapter.VideoCarouselAdapterViewHolder> {
 
     private Context context;
     private List<Video> videos;
@@ -35,16 +30,19 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
         this.videos = videoList;
     }
 
+
+    @NonNull
     @Override
-    public SliderAdapterVH onCreateViewHolder(ViewGroup parent) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_item, null);
-        return new SliderAdapterVH(inflate);
+    public VideoCarouselAdapter.VideoCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(context).inflate(R.layout.video_item, viewGroup, false);
+        return new VideoCarouselAdapter.VideoCarouselAdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
+    public void onBindViewHolder(VideoCarouselAdapterViewHolder viewHolder, int position) {
         Video video = videos.get(position);
-        viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist().getName());
+        viewHolder.tv_video_item_title.setText(video.getTitle());
+        viewHolder.tv_video_item_artist.setText(video.getArtist().getName());
         Glide.with(context)
                 .load(video.getImage())
                 .placeholder(R.drawable.ic_video_placeholder)
@@ -62,20 +60,22 @@ public class VideoCarouselAdapter extends SliderViewAdapter<VideoCarouselAdapter
 
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return videos.size();
     }
 
-    static class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
+    static class VideoCarouselAdapterViewHolder extends RecyclerView.ViewHolder {
         private RoundedImageView riv_video_item_image;
         private TextView tv_video_item_title;
+        private TextView tv_video_item_artist;
         private LinearLayout ll_video_item;
         private CardView cv_label;
 
-        SliderAdapterVH(View itemView) {
+        VideoCarouselAdapterViewHolder(View itemView) {
             super(itemView);
             riv_video_item_image = itemView.findViewById(R.id.riv_video_item_image);
             tv_video_item_title = itemView.findViewById(R.id.tv_video_item_title);
+            tv_video_item_artist = itemView.findViewById(R.id.tv_video_item_artist);
             ll_video_item = itemView.findViewById(R.id.ll_video_item);
             cv_label = itemView.findViewById(R.id.cv_label);
         }

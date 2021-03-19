@@ -367,19 +367,19 @@ public class HomeItemHelper {
         if (((List<Video>) home.getData()).size() == 0)
             return;
         View view = inflater.inflate(R.layout.video_carousel, parent);
-        SliderView sliderView = view.findViewById(R.id.imageSlider);
+        RecyclerView rc_video_carousel = view.findViewById(R.id.rc_video_carousel);
         TextView tv_video_carousel_title = view.findViewById(R.id.tv_video_carousel_title);
         TextView tv_video_carousel_show_more = view.findViewById(R.id.tv_video_carousel_show_more);
         ShimmerFrameLayout sfl_video = view.findViewById(R.id.sfl_video);
-        if (sliderView != null) {
+        if (rc_video_carousel != null) {
             sfl_video.setVisibility(View.GONE);
-            sliderView.setVisibility(View.VISIBLE);
+            rc_video_carousel.setVisibility(View.VISIBLE);
             tv_video_carousel_title.setText(home.getName());
-            sliderView.setSliderAdapter(new VideoCarouselAdapter(new WeakReference<>(fragment.getActivity()), ((List<Video>) home.getData())));
-            sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
-            sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-
+            VideoCarouselAdapter videoCarouselAdapter = new VideoCarouselAdapter(new WeakReference<>(fragment.getActivity()), ((List<Video>) home.getData()));
+            rc_video_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
+            rc_video_carousel.setAdapter(videoCarouselAdapter);
             tv_video_carousel_show_more.setOnClickListener(v -> goToSingleHome(home));
+            adapters.add(new WeakReference<>(videoCarouselAdapter));
         }
     }
 

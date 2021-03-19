@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_artist_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/ll_artist_vertical"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layoutDirection="ltr"
@@ -25,6 +25,18 @@
             android:orientation="horizontal"
             android:padding="7dp">
 
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_artist_vertical_list_item_image"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_artist_placeholder"
+                app:riv_corner_radius_bottom_left="@dimen/_20sdp"
+                app:riv_corner_radius_bottom_right="@dimen/_20sdp"
+                app:riv_corner_radius_top_left="0dp"
+                app:riv_corner_radius_top_right="@dimen/_20sdp"
+                app:riv_mutate_background="true" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -40,9 +52,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorDark"
                     android:textSize="@dimen/normal_font_size"
-                    tools:text="خاک" />
+                    tools:text="Hamid sefat" />
 
                 <TextView
                     android:id="@+id/tv_artist_vertical_list_item_info"
@@ -51,24 +63,12 @@
                     android:layout_marginTop="3dp"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorDark"
+                    android:textColor="@color/colorGray"
                     android:textSize="@dimen/small_font_size"
-                    tools:text="44 موزیک . 3 آلبوم" />
+                    tools:text="44 musics . 3 Album" />
 
             </LinearLayout>
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/riv_artist_vertical_list_item_image"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_artist_placeholder"
-                app:riv_corner_radius_bottom_left="@dimen/_20sdp"
-                app:riv_corner_radius_bottom_right="@dimen/_20sdp"
-                app:riv_corner_radius_top_left="0dp"
-                app:riv_corner_radius_top_right="@dimen/_20sdp"
-                app:riv_mutate_background="true" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

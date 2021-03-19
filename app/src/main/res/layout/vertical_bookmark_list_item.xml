@@ -35,9 +35,9 @@
             android:fontFamily="@font/font"
             android:gravity="start"
             android:maxLines="1"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorDark"
             android:textSize="@dimen/normal_font_size"
-            tools:text="خاک" />
+            tools:text="Karma" />
 
         <TextView
             android:id="@+id/tv_bookmark_artist"
@@ -49,9 +49,9 @@
             android:fontFamily="@font/font"
             android:gravity="start"
             android:maxLines="1"
-            android:textColor="@color/colorDark"
+            android:textColor="@color/colorGray"
             android:textSize="@dimen/small_font_size"
-            tools:text="خاک" />
+            tools:text="Hamid sefat" />
     </LinearLayout>
 
     <ImageView

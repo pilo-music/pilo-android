@@ -51,7 +51,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
 
         Video video = videos.get(position);
 
-        viewHolder.tv_video_item_title.setText(video.getTitle() + " - " + video.getArtist().getName());
+        viewHolder.tv_video_item_title.setText(video.getTitle());
+        viewHolder.tv_video_item_artist.setText(video.getArtist().getName());
         Glide.with(context)
                 .load(video.getImage())
                 .placeholder(R.drawable.ic_video_placeholder)
@@ -78,6 +79,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
         RoundedImageView riv_video_item_image;
         @BindView(R.id.tv_video_item_title)
         TextView tv_video_item_title;
+        @BindView(R.id.tv_video_item_artist)
+        TextView tv_video_item_artist;
         @BindView(R.id.ll_video_item)
         LinearLayout ll_video_item;
 

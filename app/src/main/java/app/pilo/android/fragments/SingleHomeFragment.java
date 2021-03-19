@@ -31,6 +31,7 @@ import app.pilo.android.adapters.ArtistsListAdapter;
 import app.pilo.android.adapters.EndlessScrollEventListener;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.PlaylistsAdapter;
+import app.pilo.android.adapters.VideoVerticalListAdapter;
 import app.pilo.android.adapters.VideosAdapter;
 import app.pilo.android.api.HomeApi;
 import app.pilo.android.api.HttpErrorHandler;
@@ -53,7 +54,7 @@ public class SingleHomeFragment extends BaseFragment {
     private int page = 1;
     private MusicsListAdapter musicsListAdapter;
     private AlbumsListAdapter albumsListAdapter;
-    private VideosAdapter videosAdapter;
+    private VideoVerticalListAdapter videosAdapter;
     private PlaylistsAdapter playlistsAdapter;
     private ArtistsListAdapter artistsListAdapter;
     private AlbumMusicGridListAdapter albumMusicGridListAdapter;
@@ -140,7 +141,7 @@ public class SingleHomeFragment extends BaseFragment {
                 break;
             case Home.TYPE_VIDEOS:
                 layoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-                videosAdapter = new VideosAdapter(new WeakReference<>(getActivity()), videos);
+                videosAdapter = new VideoVerticalListAdapter(new WeakReference<>(getActivity()), videos);
                 rc_home.setAdapter(videosAdapter);
                 break;
         }

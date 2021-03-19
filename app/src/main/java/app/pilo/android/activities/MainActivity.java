@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -37,7 +35,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -90,8 +87,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import me.ibrahimsn.lib.OnItemReselectedListener;
-import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
@@ -178,7 +173,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private boolean likeProcess = false;
     private LikeApi likeApi;
     private Utils utils;
-    private PlayButtonAnimation playButtonAnimation = new PlayButtonAnimation();
+    private final PlayButtonAnimation playButtonAnimation = new PlayButtonAnimation();
     private PlayHistoryApi playHistoryApi;
     private PlayerViewPagerAdapter playerViewPagerAdapter;
 
@@ -327,7 +322,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     public void setupStatusBar() {
-        rl_main_layout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            rl_main_layout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 
 
@@ -354,24 +351,21 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
             return false;
         });
-        bottom_navigation.setOnItemReselectedListener(new OnItemReselectedListener() {
-            @Override
-            public void onItemReselect(int position) {
-                mNavController.clearStack();
-                switch (position) {
-                    case 0:
-                        switchTab(0);
-                        break;
-                    case 1:
-                        switchTab(1);
-                        break;
-                    case 2:
-                        switchTab(2);
-                        break;
-                    case 3:
-                        switchTab(3);
-                        break;
-                }
+        bottom_navigation.setOnItemReselectedListener(position -> {
+            mNavController.clearStack();
+            switch (position) {
+                case 0:
+                    switchTab(0);
+                    break;
+                case 1:
+                    switchTab(1);
+                    break;
+                case 2:
+                    switchTab(2);
+                    break;
+                case 3:
+                    switchTab(3);
+                    break;
             }
         });
 

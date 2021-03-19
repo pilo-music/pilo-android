@@ -104,10 +104,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/font"
-        android:gravity="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:gravity="start"
+        android:textColor="@color/colorDark"
         android:textSize="@dimen/normal_font_size"
-        tools:text="دختر ترک" />
+        tools:text="Playlist" />
 
     <TextView
         android:id="@+id/tv_playlist_item_count"
@@ -115,8 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/font"
-        android:gravity="center"
-        android:textColor="@color/colorDark"
+        android:gravity="start"
+        android:textColor="@color/colorGray"
         android:textSize="@dimen/small_font_size"
-        tools:text="23 موزیک" />
+        tools:text="23 Musics" />
 </LinearLayout>

@@ -6,7 +6,8 @@
     android:id="@+id/ll_music_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:background="@android:color/white"
     android:orientation="vertical">
 
@@ -34,9 +35,9 @@
                 android:layout_height="60dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                tools:src="@drawable/music_item"
                 app:riv_corner_radius="10dp"
-                app:riv_mutate_background="true" />
+                app:riv_mutate_background="true"
+                tools:src="@drawable/music_item" />
 
             <FrameLayout
                 android:id="@+id/fl_music_vertical_list_item_playing"
@@ -51,9 +52,9 @@
                     android:layout_height="60dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    tools:src="@drawable/music_item"
                     app:riv_corner_radius="10dp"
-                    app:riv_mutate_background="true" />
+                    app:riv_mutate_background="true"
+                    tools:src="@drawable/music_item" />
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:layout_width="60dp"
@@ -69,8 +70,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    app:SpinKit_Style="Pulse"
-                    app:SpinKit_Color="@color/colorPrimary" />
+                    app:SpinKit_Color="@color/colorPrimary"
+                    app:SpinKit_Style="Pulse" />
 
             </FrameLayout>
 
@@ -88,21 +89,20 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorDark"
                     android:textSize="@dimen/normal_font_size"
-                    tools:text="خاک" />
+                    tools:text="Karma" />
 
                 <TextView
                     android:id="@+id/tv_music_vertical_list_item_artist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorDark"
+                    android:textColor="@color/colorGray"
                     android:textSize="@dimen/small_font_size"
-                    tools:text="بهزاد لیتو" />
+                    tools:text="Hamid sefat" />
 
             </LinearLayout>
 

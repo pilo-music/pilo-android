@@ -52,9 +52,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorDark"
                     android:textSize="@dimen/normal_font_size"
-                    tools:text="خاک" />
+                    tools:text="Khak" />
 
                 <TextView
                     android:id="@+id/tv_music_actions_artist"
@@ -63,9 +63,9 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/font"
                     android:gravity="start"
-                    android:textColor="@color/colorDark"
+                    android:textColor="@color/colorGray"
                     android:textSize="@dimen/small_font_size"
-                    tools:text="بهزاد لیتو" />
+                    tools:text="Hamid sefat" />
 
             </LinearLayout>
 
