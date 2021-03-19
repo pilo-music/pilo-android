@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/tv_video_vertical_title"
-            android:fontFamily="@font/font_medium"
+            android:fontFamily="@font/font_bold"
             android:textSize="@dimen/large_font_size"
             android:textColor="@color/colorDark"
             android:gravity="start"

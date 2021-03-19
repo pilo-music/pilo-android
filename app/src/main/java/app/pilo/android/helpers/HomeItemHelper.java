@@ -181,7 +181,8 @@ public class HomeItemHelper {
         TextView tv_music_vertical_show_more = view.findViewById(R.id.tv_music_vertical_show_more);
         if (rc_music_vertical != null) {
             tv_music_vertical_title.setText(home.getName());
-            tv_music_vertical_show_more.setVisibility(View.GONE);
+            rc_music_vertical.setVisibility(View.VISIBLE);
+            tv_music_vertical_show_more.setVisibility(View.VISIBLE);
 
             List<Music> musics = new ArrayList<>();
             for (PlayHistory item : playHistories) {
