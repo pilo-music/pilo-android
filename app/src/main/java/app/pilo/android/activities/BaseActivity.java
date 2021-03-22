@@ -1,10 +1,16 @@
 package app.pilo.android.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
+import app.pilo.android.db.AppDatabase;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -13,6 +19,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         active = true;
+//        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+//        if (account == null){
+//            logout();
+//        }
     }
 
     @Override
@@ -29,5 +39,11 @@ public class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         active = false;
+    }
+
+    private void logout(){
+        AppDatabase.NukeAllTables(this);
+        startActivity(new Intent(this, SplashScreenActivity.class));
+        finishAffinity();
     }
 }

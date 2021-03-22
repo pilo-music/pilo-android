@@ -11,6 +11,7 @@ public class PiloApi {
     static final String SEARCH = BASE_URL + "search/";
     static final String SEARCH_CLICK = BASE_URL + "search/click";
     static final String LOGIN = BASE_URL + "login";
+    static final String LOGIN_WITH_GOOGLE = BASE_URL + "login/google";
     static final String REGISTER = BASE_URL + "register";
     static final String VERIFY = BASE_URL + "verify";
     static final String ME = BASE_URL + "me";

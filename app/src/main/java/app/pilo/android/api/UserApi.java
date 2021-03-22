@@ -69,6 +69,46 @@ public class UserApi {
         }
     }
 
+
+    public void loginWithGoogle(String tokenId, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id_token", tokenId);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.LOGIN_WITH_GOOGLE, jsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            if (status) {
+                                JSONObject data = response.getJSONObject("data");
+                                User user = JsonParser.userParser(data);
+                                requestHandler.onGetInfo(user, message, status);
+                            } else {
+                                requestHandler.onGetInfo(null, message, status);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    return params;
+                }
+            };
+            request.setShouldCache(false);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     public void register(String name, String email, String password, String confirm, final HttpHandler.RequestHandler requestHandler) {
         JSONObject requestJsonObject = new JSONObject();
         try {

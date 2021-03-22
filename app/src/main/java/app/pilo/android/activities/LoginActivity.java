@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -51,6 +52,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -60,7 +63,6 @@ public class LoginActivity extends BaseActivity {
                 .requestIdToken("8427120984-hu3aul4fnhlnufuefnbtjujk6o7rhn3v.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
@@ -134,10 +136,26 @@ public class LoginActivity extends BaseActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Toast.makeText(this, account.getIdToken(), Toast.LENGTH_SHORT).show();
+            UserApi userApi = new UserApi(this);
+            userApi.loginWithGoogle(account.getIdToken(), new HttpHandler.RequestHandler() {
+                @Override
+                public void onGetInfo(Object data, String message, boolean status) {
+                    if (status) {
+                        doLogin((User) data);
+                    } else {
+                        new HttpErrorHandler(LoginActivity.this, message);
+                    }
+                }
+
+                @Override
+                public void onGetError(@Nullable VolleyError error) {
+                    piloButton.setProgress(false);
+                    new HttpErrorHandler(LoginActivity.this);
+                }
+            });
 
         } catch (ApiException e) {
-            Toast.makeText(this, "Failed to do Sign In : " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to do Sign In : " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
