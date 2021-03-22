@@ -1,6 +1,5 @@
 package app.pilo.android.views;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
-import app.pilo.android.api.BookmarkApi;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
@@ -42,7 +40,6 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
     private Music music;
     private Context context;
     private LikeApi likeApi;
-    private BookmarkApi bookmarkApi;
     private boolean likeProcess = false;
     private boolean bookmarkProcess = false;
     private Utils utils;
@@ -60,8 +57,6 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
     TextView tv_music_actions_artist;
     @BindView(R.id.img_music_actions_like)
     ImageView img_music_actions_like;
-    @BindView(R.id.img_music_actions_bookmark)
-    ImageView img_music_actions_bookmark;
     @BindView(R.id.ll_music_actions_go_to_artist)
     LinearLayout ll_music_actions_go_to_artist;
     @BindView(R.id.ll_music_actions_add_to_playlist)
@@ -81,7 +76,6 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
         this.context = context;
         this.music = music;
         likeApi = new LikeApi(context);
-        bookmarkApi = new BookmarkApi(context);
         utils = new Utils();
     }
 
@@ -96,68 +90,9 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
         setupViews();
         setupDownload();
         setupLike();
-        setupBookmark();
         setupDownload();
 
         return  view;
-    }
-
-    private void setupBookmark() {
-
-        if (music.isHas_bookmark()) {
-            img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_on));
-        } else {
-            img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_off));
-        }
-
-
-        img_music_actions_bookmark.setOnClickListener(v -> {
-            if (bookmarkProcess)
-                return;
-            if (!music.isHas_bookmark()) {
-                bookmarkProcess = true;
-                img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_on));
-                bookmarkApi.bookmark(music.getSlug(), "music", "add", new HttpHandler.RequestHandler() {
-                    @Override
-                    public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler((MainActivity) context, message);
-                            img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_off));
-                        } else {
-                            music.setHas_bookmark(true);
-                        }
-                    }
-
-                    @Override
-                    public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler((MainActivity) context);
-                        img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_off));
-                    }
-                });
-                bookmarkProcess = false;
-            } else {
-                bookmarkProcess = true;
-                img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_off));
-                bookmarkApi.bookmark(music.getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
-                    @Override
-                    public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler((MainActivity) context, message);
-                            img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_on));
-                        } else {
-                            music.setHas_bookmark(false);
-                        }
-                    }
-
-                    @Override
-                    public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler((MainActivity) context);
-                        img_music_actions_bookmark.setImageDrawable(context.getDrawable(R.drawable.ic_bookmark_on));
-                    }
-                });
-                bookmarkProcess = false;
-            }
-        });
     }
 
     private void setupLike() {

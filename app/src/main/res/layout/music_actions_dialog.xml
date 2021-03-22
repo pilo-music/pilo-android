@@ -75,15 +75,8 @@
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_like_off" />
-
-            <ImageView
-                android:id="@+id/img_music_actions_bookmark"
-                android:layout_width="@dimen/_18sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:layout_gravity="center"
                 android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_bookmark_off" />
+                android:src="@drawable/ic_like_off" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

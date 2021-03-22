@@ -109,11 +109,11 @@
 
 
             <ImageView
-                android:id="@+id/img_music_vertical_list_item_like"
-                android:layout_width="@dimen/_18sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:layout_marginEnd="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_like_off" />
+                android:id="@+id/img_music_vertical_list_item_more"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:paddingEnd="@dimen/activity_vertical_margin"
+                android:src="@drawable/ic_ellipsis" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

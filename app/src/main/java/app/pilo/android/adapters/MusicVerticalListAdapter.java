@@ -85,67 +85,10 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
             holder.fl_music_vertical_list_item_playing.setVisibility(View.GONE);
         }
 
-        if (music.isHas_like()) {
-            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
-        } else {
-            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
-        }
 
         holder.ll_music_vertical.setOnClickListener(v -> EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false)));
 
-        holder.img_music_vertical_list_item_like.setOnClickListener(v -> {
-            if (likeProcess)
-                return;
-            if (!music.isHas_like()) {
-                likeProcess = true;
-                utils.animateHeartButton(holder.img_music_vertical_list_item_like);
-                holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
-                likeApi.like(music.getSlug(), "music", "add", new HttpHandler.RequestHandler() {
-                    @Override
-                    public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler((MainActivity) context, message);
-                            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
-                        } else {
-                            music.setHas_like(true);
-                        }
-                    }
-
-                    @Override
-                    public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler((MainActivity) context);
-                        holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
-                    }
-                });
-                likeProcess = false;
-            } else {
-                likeProcess = true;
-                holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
-                likeApi.like(music.getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
-                    @Override
-                    public void onGetInfo(Object data, String message, boolean status) {
-                        if (!status) {
-                            new HttpErrorHandler((MainActivity) context, message);
-                            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
-                        } else {
-                            music.setHas_like(false);
-                        }
-                    }
-
-                    @Override
-                    public void onGetError(@Nullable VolleyError error) {
-                        new HttpErrorHandler((MainActivity) context);
-                        holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
-                    }
-                });
-                likeProcess = false;
-            }
-        });
-
-        holder.ll_music_vertical.setOnLongClickListener(v -> {
-            new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG);
-            return false;
-        });
+        holder.img_music_vertical_list_item_more.setOnClickListener(view -> new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
     }
 
     @Override
@@ -162,8 +105,8 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         ImageView music_item_image;
         @BindView(R.id.ll_music_vertical)
         LinearLayout ll_music_vertical;
-        @BindView(R.id.img_music_vertical_list_item_like)
-        ImageView img_music_vertical_list_item_like;
+        @BindView(R.id.img_music_vertical_list_item_more)
+        ImageView img_music_vertical_list_item_more;
         @BindView(R.id.riv_music_vertical_list_item_image2)
         ImageView music_item_image2;
         @BindView(R.id.fl_music_vertical_list_item_playing)

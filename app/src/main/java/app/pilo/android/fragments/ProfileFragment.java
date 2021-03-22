@@ -93,11 +93,6 @@ public class ProfileFragment extends BaseFragment {
         startActivity(new Intent(getActivity(), EditProfileActivity.class));
     }
 
-    @OnClick(R.id.ll_profile_bookmarks)
-    void bookmarks() {
-        ((MainActivity) getActivity()).pushFragment(new BookmarksFragment());
-    }
-
     @OnClick(R.id.ll_profile_contact_us)
     void contactUs() {
         ((MainActivity) getActivity()).pushFragment(new ContactUsFragment());
