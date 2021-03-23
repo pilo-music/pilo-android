@@ -2,7 +2,7 @@ package app.pilo.android.api;
 
 public class PiloApi {
 
-    private static final String BASE_URL = "https://new.pilo.app/api/v1/";
+    private static final String BASE_URL = "https://api.pilo.app/api/v1/";
     static final String VERSION = BASE_URL + "version";
     static final String HOME_GET = BASE_URL + "homes";
     static final String HOME_SINGLE = BASE_URL + "home";
@@ -34,8 +34,6 @@ public class PiloApi {
     static final String LIKE_ADD = BASE_URL + "like";
     static final String FOLLOW_GET = BASE_URL + "follows";
     static final String FOLLOW_ADD = BASE_URL + "follow";
-    static final String BOOKMARK_ADD = BASE_URL + "bookmark";
-    static final String BOOKMARK_GET = BASE_URL + "bookmarks";
     static final String MESSAGE_GET = BASE_URL + "messages";
     static final String MESSAGE_ADD = BASE_URL + "message";
     static final String FORGOT_PASSWORD_CREATE = BASE_URL + "forgot-passport/create";

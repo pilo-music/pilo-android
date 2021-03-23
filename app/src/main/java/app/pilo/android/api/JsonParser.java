@@ -11,7 +11,6 @@ import java.util.List;
 
 import app.pilo.android.models.Album;
 import app.pilo.android.models.Artist;
-import app.pilo.android.models.Bookmark;
 import app.pilo.android.models.Follow;
 import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Like;
@@ -56,7 +55,6 @@ class JsonParser {
             music.setShare_url(jsonObject.getString("share_url"));
             music.setCreated_at(jsonObject.getString("created_at"));
             music.setHas_like(jsonObject.getBoolean("has_like"));
-            music.setHas_bookmark(jsonObject.getBoolean("has_bookmark"));
             music.setArtist(artist);
             music.setTags(tags);
             return music;
@@ -73,7 +71,6 @@ class JsonParser {
 
         Music music = JsonParser.musicParser(data.getJSONObject("music"));
         boolean has_like = data.getBoolean("has_like");
-        boolean has_bookmark = data.getBoolean("has_bookmark");
 
         // parse related
         JSONArray relatedJsonArray = data.getJSONArray("related");
@@ -86,7 +83,6 @@ class JsonParser {
         }
 
         singleMusic.setMusic(music);
-        singleMusic.setHas_bookmark(has_bookmark);
         singleMusic.setHas_like(has_like);
         singleMusic.setRelated(related);
 
@@ -125,7 +121,6 @@ class JsonParser {
 
         Album album = JsonParser.albumParser(data.getJSONObject("album"));
         boolean has_like = data.getBoolean("has_like");
-        boolean has_bookmark = data.getBoolean("has_bookmark");
 
         // parse musics
         JSONArray musicsJsonArray = data.getJSONArray("musics");
@@ -150,7 +145,6 @@ class JsonParser {
         singleAlbum.setAlbum(album);
         singleAlbum.setMusics(musics);
         singleAlbum.setRelated(related);
-        singleAlbum.setHas_bookmark(has_bookmark);
         singleAlbum.setHas_like(has_like);
 
         return singleAlbum;
@@ -240,7 +234,6 @@ class JsonParser {
 
         Video video = JsonParser.videoJson(data.getJSONObject("video"));
         boolean has_like = data.getBoolean("has_like");
-        boolean has_bookmark = data.getBoolean("has_bookmark");
 
         // parse related
         JSONArray relatedJsonArray = data.getJSONArray("related");
@@ -253,7 +246,6 @@ class JsonParser {
         }
 
         singleVideo.setVideo(video);
-        singleVideo.setHas_bookmark(has_bookmark);
         singleVideo.setHas_like(has_like);
         singleVideo.setRelated(related);
 
@@ -326,7 +318,6 @@ class JsonParser {
             singlePlaylist.setPlaylist(playlist);
             singlePlaylist.setMusics(musics);
             singlePlaylist.setHas_like(jsonObject.getBoolean("has_like"));
-            singlePlaylist.setHas_bookmark(jsonObject.getBoolean("has_bookmark"));
             return singlePlaylist;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -412,35 +403,6 @@ class JsonParser {
             }
 
             return user;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    static Bookmark bookmarkParser(JSONObject jsonObject) {
-        try {
-            Bookmark bookmark = new Bookmark();
-            bookmark.setType(jsonObject.getString("type"));
-            bookmark.setCreated_at(jsonObject.getString("created_at"));
-
-            switch (jsonObject.getString("type")) {
-                case "music":
-                    bookmark.setMusic(JsonParser.musicParser(jsonObject.getJSONObject("item")));
-                    break;
-                case "video":
-                    bookmark.setVideo(JsonParser.videoJson(jsonObject.getJSONObject("item")));
-                    break;
-                case "album":
-                    bookmark.setAlbum(JsonParser.albumParser(jsonObject.getJSONObject("item")));
-                    break;
-                case "playlist":
-                    bookmark.setPlaylist(JsonParser.playlistParser(jsonObject.getJSONObject("item")));
-                    break;
-                default:
-                    return null;
-            }
-            return bookmark;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

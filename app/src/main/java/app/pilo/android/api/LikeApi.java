@@ -19,7 +19,6 @@ import java.util.Map;
 import androidx.annotation.Nullable;
 
 import app.pilo.android.helpers.UserSharedPrefManager;
-import app.pilo.android.models.Bookmark;
 import app.pilo.android.models.Like;
 import app.pilo.android.repositories.UserRepo;
 

@@ -7,13 +7,11 @@ public class SinglePlaylist {
     private Playlist playlist;
     private List<Music> musics;
     private boolean has_like;
-    private boolean has_bookmark;
 
     public SinglePlaylist() {
         this.playlist = new Playlist();
         this.musics = new ArrayList<>();
         this.has_like = false;
-        this.has_bookmark = false;
     }
 
     public Playlist getPlaylist() {
@@ -38,13 +36,5 @@ public class SinglePlaylist {
 
     public void setHas_like(boolean has_like) {
         this.has_like = has_like;
-    }
-
-    public boolean isHas_bookmark() {
-        return has_bookmark;
-    }
-
-    public void setHas_bookmark(boolean has_bookmark) {
-        this.has_bookmark = has_bookmark;
     }
 }

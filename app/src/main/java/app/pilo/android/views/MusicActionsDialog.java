@@ -41,7 +41,6 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
     private Context context;
     private LikeApi likeApi;
     private boolean likeProcess = false;
-    private boolean bookmarkProcess = false;
     private Utils utils;
 
     public final static String TAG = "MusicActionsDialog";

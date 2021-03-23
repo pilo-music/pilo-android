@@ -38,8 +38,6 @@ public class Music {
     private String created_at;
     @ColumnInfo(name = "music_has_like")
     private boolean has_like;
-    @ColumnInfo(name = "music_has_bookmark")
-    private boolean has_bookmark;
 
     @Embedded
     private Artist artist;
@@ -62,7 +60,6 @@ public class Music {
         this.artist = new Artist();
         this.tags = new ArrayList<>();
         this.setHas_like(false);
-        this.setHas_bookmark(false);
     }
 
 
@@ -176,14 +173,6 @@ public class Music {
 
     public void setHas_like(boolean has_like) {
         this.has_like = has_like;
-    }
-
-    public boolean isHas_bookmark() {
-        return has_bookmark;
-    }
-
-    public void setHas_bookmark(boolean has_bookmark) {
-        this.has_bookmark = has_bookmark;
     }
 
     public String getShare_url() {

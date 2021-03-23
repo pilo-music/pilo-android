@@ -9,7 +9,6 @@ public class SingleAlbum {
     private List<Music> musics;
     private List<Album> related;
     private boolean has_like;
-    private boolean has_bookmark;
 
 
     public SingleAlbum() {
@@ -17,16 +16,14 @@ public class SingleAlbum {
         this.musics = new ArrayList<>();
         this.related = new ArrayList<>();
         this.has_like = false;
-        this.has_bookmark = false;
     }
 
 
-    public SingleAlbum(Album album, List<Music> musics, List<Album> related, boolean has_like, boolean has_bookmark) {
+    public SingleAlbum(Album album, List<Music> musics, List<Album> related, boolean has_like) {
         this.album = album;
         this.musics = musics;
         this.related = related;
         this.has_like = has_like;
-        this.has_bookmark = has_bookmark;
     }
 
     public Album getAlbum() {
@@ -61,11 +58,4 @@ public class SingleAlbum {
         this.has_like = has_like;
     }
 
-    public boolean isHas_bookmark() {
-        return has_bookmark;
-    }
-
-    public void setHas_bookmark(boolean has_bookmark) {
-        this.has_bookmark = has_bookmark;
-    }
 }
