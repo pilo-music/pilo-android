@@ -55,17 +55,17 @@ public class SettingsFragment extends BaseFragment {
         }).show(getActivity().getSupportFragmentManager(), CustomDialog.TAG);
     }
 
-    @OnClick(R.id.tv_settings_telegram)
-    void tv_settings_telegram() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/pilomusic"));
-        getActivity().startActivity(browserIntent);
-    }
-
-    @OnClick(R.id.tv_settings_instagram)
-    void tv_settings_instagram() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/pilo.app/"));
-        getActivity().startActivity(browserIntent);
-    }
+//    @OnClick(R.id.tv_settings_telegram)
+//    void tv_settings_telegram() {
+//        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/pilomusic"));
+//        getActivity().startActivity(browserIntent);
+//    }
+//
+//    @OnClick(R.id.tv_settings_instagram)
+//    void tv_settings_instagram() {
+//        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/pilo.app/"));
+//        getActivity().startActivity(browserIntent);
+//    }
 
     @OnClick(R.id.tv_settings_clear_downloads)
     void tv_settings_clear_downloads() {

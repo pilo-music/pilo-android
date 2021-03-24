@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.error.VolleyError;
 import com.tapadoo.alerter.Alerter;
@@ -71,16 +72,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
             public void onGetInfo(Object data, String message, boolean status) {
                 pb_reset_password.setProgress(false);
                 if (status) {
+                    Toast.makeText(ResetPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ResetPasswordActivity.this,LoginActivity.class));
                     finishAffinity();
-                    Alerter.create(ResetPasswordActivity.this)
-                            .setTitle(message)
-                            .setTextTypeface(Utils.font(ResetPasswordActivity.this))
-                            .setTitleTypeface(Utils.font(ResetPasswordActivity.this))
-                            .setButtonTypeface(Utils.font(ResetPasswordActivity.this))
-                            .setText(message)
-                            .setBackgroundColorRes(R.color.colorGreen)
-                            .show();
                 } else {
                     new HttpErrorHandler(ResetPasswordActivity.this, message);
                 }

@@ -177,6 +177,7 @@
                 android:textSize="@dimen/normal_font_size" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -219,6 +220,7 @@
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
                 android:paddingStart="@dimen/activity_vertical_margin"
+                android:visibility="gone"
                 android:text="@string/instagram"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
@@ -229,6 +231,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:visibility="gone"
                 android:background="#E4E4E4" />
 
             <TextView
@@ -239,6 +242,7 @@
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="8dp"
                 android:paddingStart="@dimen/activity_vertical_margin"
+                android:visibility="gone"
                 android:text="@string/telegram"
                 android:textColor="@color/colorDark"
                 android:textSize="@dimen/normal_font_size" />
