@@ -147,8 +147,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     DownloadButtonProgress download_progress_extended_music_player;
     @BindView(R.id.img_extended_music_player_like)
     ImageView img_extended_music_player_like;
-    @BindView(R.id.tv_music_vertical_show_more)
-    TextView tv_music_vertical_show_more;
+    @BindView(R.id.ll_music_vertical_show_more)
+    LinearLayout ll_music_vertical_show_more;
     @BindView(R.id.tv_music_vertical_title)
     TextView tv_music_vertical_title;
     @BindView(R.id.view_pager_extended_music_player)
@@ -227,7 +227,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     private void setupMusicVerticalList() {
-        tv_music_vertical_show_more.setVisibility(View.GONE);
+        ll_music_vertical_show_more.setVisibility(View.GONE);
         tv_music_vertical_title.setVisibility(View.GONE);
 
 
@@ -1014,6 +1014,17 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         throw new IllegalStateException("Need to send an index that we know");
     }
 
+    @Override
+    public void onTabTransaction(Fragment fragment, int index) {
+
+    }
+
+    @Override
+    public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
+
+    }
+
+
 
     @Override
     protected void onResume() {
@@ -1050,15 +1061,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
 
-    @Override
-    public void onTabTransaction(Fragment fragment, int index) {
-
-    }
-
-    @Override
-    public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
-
-    }
 
     @Override
     public void onStart() {
