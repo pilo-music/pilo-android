@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import app.pilo.android.R;
 import app.pilo.android.activities.SplashScreenActivity;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class UpdateDialog extends BottomSheetDialogFragment {
 
@@ -35,9 +36,9 @@ public class UpdateDialog extends BottomSheetDialogFragment {
     @BindView(R.id.tv_description)
     TextView tvDescription;
     @BindView(R.id.btn_update)
-    Button btnCancel;
-    @BindView(R.id.btn_cancel)
     Button btnUpdate;
+    @BindView(R.id.btn_cancel)
+    Button btnCancel;
 
     public UpdateDialog(Activity activity, String title, String description, String link, int version, int minVersion) {
         this.activity = activity;
@@ -54,6 +55,7 @@ public class UpdateDialog extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.update_dialog, container, false);
         this.setCancelable(version < minVersion);
+        ButterKnife.bind(this, view);
 
         tvTitle.setText(title);
         tvDescription.setText(description);
