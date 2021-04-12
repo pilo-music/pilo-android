@@ -6,7 +6,7 @@
     android:background="@android:color/white">
 
 
-    <include layout="@layout/page_header" />
+    <include layout="@layout/layout_page_header" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -167,13 +167,13 @@
 
             </LinearLayout>
 
-            <include layout="@layout/music_vertical_list" />
+            <include layout="@layout/list_vertical_music" />
 
-            <include layout="@layout/music_carousel" />
+            <include layout="@layout/list_horizontal_music" />
 
-            <include layout="@layout/album_carousel" />
+            <include layout="@layout/list_horizontal_album" />
 
-            <include layout="@layout/video_carousel" />
+            <include layout="@layout/list_horizontal_video" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

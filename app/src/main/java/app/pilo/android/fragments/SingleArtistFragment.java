@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +18,6 @@ import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.smarteist.autoimageslider.IndicatorAnimations;
-import com.smarteist.autoimageslider.SliderAnimations;
-import com.smarteist.autoimageslider.SliderView;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -78,8 +75,8 @@ public class SingleArtistFragment extends BaseFragment {
 
     @BindView(R.id.tv_video_carousel_title)
     TextView tv_video_carousel_title;
-    @BindView(R.id.tv_video_carousel_show_more)
-    TextView tv_video_carousel_show_more;
+    @BindView(R.id.ll_video_carousel_show_more)
+    LinearLayout ll_video_carousel_show_more;
     @BindView(R.id.rc_video_carousel)
     RecyclerView rc_video_carousel;
     @BindView(R.id.sfl_video)
@@ -89,8 +86,8 @@ public class SingleArtistFragment extends BaseFragment {
     RecyclerView rc_album_carousel;
     @BindView(R.id.tv_album_carousel_title)
     TextView tv_album_carousel_title;
-    @BindView(R.id.tv_album_carousel_show_more)
-    TextView tv_album_carousel_show_more;
+    @BindView(R.id.ll_album_carousel_show_more)
+    LinearLayout ll_album_carousel_show_more;
     @BindView(R.id.sfl_album)
     ShimmerFrameLayout sfl_album;
 
@@ -98,15 +95,15 @@ public class SingleArtistFragment extends BaseFragment {
     RecyclerView rc_music_vertical;
     @BindView(R.id.tv_music_vertical_title)
     TextView tv_music_vertical_title;
-    @BindView(R.id.tv_music_vertical_show_more)
-    TextView tv_music_vertical_show_more;
+    @BindView(R.id.ll_music_vertical_show_more)
+    LinearLayout ll_music_vertical_show_more;
 
     @BindView(R.id.rc_music_carousel)
     RecyclerView rc_music_carousel;
     @BindView(R.id.tv_music_carousel_title)
     TextView tv_music_carousel_title;
-    @BindView(R.id.tv_music_carousel_show_more)
-    TextView tv_music_carousel_show_more;
+    @BindView(R.id.ll_music_carousel_show_more)
+    LinearLayout ll_music_carousel_show_more;
     @BindView(R.id.sfl_music)
     ShimmerFrameLayout sfl_music;
     @BindView(R.id.btn_single_artist_follow)
@@ -273,7 +270,7 @@ public class SingleArtistFragment extends BaseFragment {
                 rc_music_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_music_carousel.setAdapter(musicCarouselAdapter);
             } else {
-                tv_music_carousel_show_more.setVisibility(View.GONE);
+                ll_music_carousel_show_more.setVisibility(View.GONE);
                 tv_music_carousel_title.setVisibility(View.GONE);
             }
         }
@@ -288,7 +285,7 @@ public class SingleArtistFragment extends BaseFragment {
                 rc_video_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_video_carousel.setAdapter(videoCarouselAdapter);
             } else {
-                tv_video_carousel_show_more.setVisibility(View.GONE);
+                ll_video_carousel_show_more.setVisibility(View.GONE);
                 tv_video_carousel_title.setVisibility(View.GONE);
             }
         }
@@ -303,7 +300,7 @@ public class SingleArtistFragment extends BaseFragment {
                 rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
                 rc_album_carousel.setAdapter(albumCarouselAdapter);
             } else {
-                tv_album_carousel_show_more.setVisibility(View.GONE);
+                ll_album_carousel_show_more.setVisibility(View.GONE);
                 tv_album_carousel_title.setVisibility(View.GONE);
             }
         }
@@ -316,14 +313,14 @@ public class SingleArtistFragment extends BaseFragment {
                 rc_music_vertical.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                 rc_music_vertical.setAdapter(musicVerticalListAdapter);
             } else {
-                tv_music_vertical_show_more.setVisibility(View.GONE);
+                ll_music_vertical_show_more.setVisibility(View.GONE);
                 tv_music_vertical_title.setVisibility(View.GONE);
             }
         }
     }
 
 
-    @OnClick(R.id.tv_video_carousel_show_more)
+    @OnClick(R.id.ll_video_carousel_show_more)
     void tv_video_carousel_show_more() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("artist", artist.getSlug());
@@ -331,7 +328,7 @@ public class SingleArtistFragment extends BaseFragment {
         ((MainActivity) getActivity()).pushFragment(mFragment);
     }
 
-    @OnClick(R.id.tv_album_carousel_show_more)
+    @OnClick(R.id.ll_album_carousel_show_more)
     void tv_album_carousel_show_more() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("artist", artist.getSlug());
@@ -339,7 +336,7 @@ public class SingleArtistFragment extends BaseFragment {
         ((MainActivity) getActivity()).pushFragment(mFragment);
     }
 
-    @OnClick(R.id.tv_music_vertical_show_more)
+    @OnClick(R.id.ll_music_vertical_show_more)
     void tv_music_vertical_show_more() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("artist", artist.getSlug());
@@ -348,7 +345,7 @@ public class SingleArtistFragment extends BaseFragment {
         ((MainActivity) getActivity()).pushFragment(mFragment);
     }
 
-    @OnClick(R.id.tv_music_carousel_show_more)
+    @OnClick(R.id.ll_music_carousel_show_more)
     void tv_music_carousel_show_more() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("artist", artist.getSlug());

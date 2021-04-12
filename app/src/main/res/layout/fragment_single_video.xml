@@ -8,7 +8,7 @@
     android:background="@android:color/white"
     android:configChanges="orientation|keyboardHidden|screenLayout|screenSize">
 
-    <include layout="@layout/page_header" />
+    <include layout="@layout/layout_page_header" />
 
 
     <ScrollView
@@ -106,7 +106,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/video_vertical_list" />
+            <include layout="@layout/list_vertical_video" />
         </LinearLayout>
     </ScrollView>
 

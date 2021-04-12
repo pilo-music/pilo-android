@@ -15,7 +15,7 @@ import app.pilo.android.R;
 public class WelcomeViewPager extends PagerAdapter {
 
     private Context context;
-    private Integer[] pages = {R.layout.welcome_page_one, R.layout.welcome_page_two};
+    private Integer[] pages = {R.layout.layout_welcome_page_one, R.layout.layout_welcome_page_two};
 
     public WelcomeViewPager(Context context) {
         this.context = context;

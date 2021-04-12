@@ -1,5 +1,6 @@
 package app.pilo.android.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -12,9 +13,8 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 public class BaseFragment extends Fragment {
 
     public static final String ARGS_INSTANCE = "app.pilo.android";
-
-
-    static FragmentNavigation mFragmentNavigation;
+    public static FragmentNavigation mFragmentNavigation;
+    protected Activity activity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +28,10 @@ public class BaseFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof FragmentNavigation) {
             mFragmentNavigation = (FragmentNavigation) context;
+        }
+
+        if (context instanceof Activity) {
+            activity = (Activity) context;
         }
     }
 

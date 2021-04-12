@@ -20,7 +20,6 @@ import java.util.List;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SinglePlaylistFragment;
-import app.pilo.android.models.Album;
 import app.pilo.android.models.Playlist;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +36,7 @@ public class PlaylistVerticalListAdapter extends RecyclerView.Adapter<PlaylistVe
     @NonNull
     @Override
     public PlaylistCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.playlist_vertical_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_vertical_list_playlist, viewGroup, false);
         return new PlaylistCarouselAdapterViewHolder(view);
     }
 

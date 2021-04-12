@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -189,7 +188,7 @@ public class AddToPlaylistFragment extends BaseFragment {
         ViewGroup parent = ll_add_to_playlist_container;
 
         for (Playlist playlist : playlists) {
-            View view = inflater.inflate(R.layout.playlist_vertical_list_item, parent);
+            View view = inflater.inflate(R.layout.item_vertical_list_playlist, parent);
             TextView tv_playlist_title = view.findViewById(R.id.tv_playlist_vertical_list_item_playlist);
             TextView tv_playlist_count = view.findViewById(R.id.tv_playlist_vertical_list_item_count);
             RoundedImageView playlist_item_image = view.findViewById(R.id.riv_playlist_vertical_list_item_image);

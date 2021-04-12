@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +28,7 @@ import butterknife.ButterKnife;
 public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.PlaylistAdapterViewHolder> {
     private Context context;
     private List<Playlist> playlists;
-    private int viewId = R.layout.playlist_item;
+    private int viewId = R.layout.item_playlist;
 
     public PlaylistsAdapter(WeakReference<Context> context, List<Playlist> playlists) {
         this.context = context.get();

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,10 +20,7 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.event.MusicEvent;
-import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.ForYou;
-import app.pilo.android.models.Music;
-import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -44,7 +38,7 @@ public class ForYouListAdapter extends RecyclerView.Adapter<ForYouListAdapter.Fo
     @NonNull
     @Override
     public ForYouAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.for_you_carousel_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_for_you, viewGroup, false);
         return new ForYouAdapterViewHolder(view);
     }
 

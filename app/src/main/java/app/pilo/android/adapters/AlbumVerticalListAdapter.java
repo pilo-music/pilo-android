@@ -21,7 +21,6 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.fragments.SingleAlbumFragment;
 import app.pilo.android.models.Album;
-import app.pilo.android.models.Artist;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -37,7 +36,7 @@ public class AlbumVerticalListAdapter extends RecyclerView.Adapter<AlbumVertical
     @NonNull
     @Override
     public AlbumCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.album_vertical_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_vertical_list_album, viewGroup, false);
         return new AlbumCarouselAdapterViewHolder(view);
     }
 

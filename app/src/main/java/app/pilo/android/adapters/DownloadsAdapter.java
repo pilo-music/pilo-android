@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,7 +30,6 @@ import app.pilo.android.api.LikeApi;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
-import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleMusic;
@@ -65,7 +63,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
     @NonNull
     @Override
     public DownlandsAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.download_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_download, viewGroup, false);
         return new DownlandsAdapterViewHolder(view);
     }
 

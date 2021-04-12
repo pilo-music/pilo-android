@@ -54,10 +54,10 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         if (viewType == 0) {
-            View view = LayoutInflater.from(context).inflate(R.layout.album_item_full_width, viewGroup, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_full_width_album, viewGroup, false);
             return new AlbumAdapterViewHolder(view);
         } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.music_item_full_width, viewGroup, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_full_width_music, viewGroup, false);
             return new MusicAdapterViewHolder(view);
         }
     }

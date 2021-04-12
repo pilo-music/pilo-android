@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -84,7 +82,7 @@ public class AlbumsFragment extends BaseFragment {
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
 
-        albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.album_item_full_width);
+        albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.item_full_width_album);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_albums.setAdapter(albumsListAdapter);
         rc_albums.setLayoutManager(layoutManager);

@@ -51,7 +51,7 @@ public class EditPlaylistDialog {
         dialog = new Dialog(context, R.style.DialogTheme);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.edit_playlist_dialog);
+        dialog.setContentView(R.layout.dialog_edit_playlist);
         ButterKnife.bind(this, dialog);
         et_edit_playlist_name.setText(playlist.getTitle());
 

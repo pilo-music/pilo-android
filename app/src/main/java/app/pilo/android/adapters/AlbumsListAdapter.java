@@ -1,8 +1,6 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,7 @@ import butterknife.ButterKnife;
 public class AlbumsListAdapter extends RecyclerView.Adapter<AlbumsListAdapter.AlbumListAdapterViewHolder> {
     private Context context;
     private List<Album> albums;
-    private int viewId = R.layout.album_item;
+    private int viewId = R.layout.item_album;
 
     public AlbumsListAdapter(WeakReference<Context> context, List<Album> albums) {
         this.context = context.get();

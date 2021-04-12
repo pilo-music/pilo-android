@@ -10,10 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -24,8 +22,6 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
-import app.pilo.android.api.HttpErrorHandler;
-import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
@@ -54,7 +50,7 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
     @NonNull
     @Override
     public MusicCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.music_vertical_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_vertical_list_music, viewGroup, false);
         return new MusicCarouselAdapterViewHolder(view);
     }
 

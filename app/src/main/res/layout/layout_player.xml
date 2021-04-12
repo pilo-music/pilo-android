@@ -239,5 +239,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include layout="@layout/music_vertical_list" />
+    <include layout="@layout/list_vertical_music" />
 </LinearLayout>

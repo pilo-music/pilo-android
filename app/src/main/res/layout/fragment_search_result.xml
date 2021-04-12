@@ -99,15 +99,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/artist_vertical_list" />
+            <include layout="@layout/list_vertical_artist" />
 
-            <include layout="@layout/music_vertical_list" />
+            <include layout="@layout/list_vertical_music" />
 
-            <include layout="@layout/album_vertical_list" />
+            <include layout="@layout/list_vertical_album" />
 
-            <include layout="@layout/playlist_vertical_list" />
+            <include layout="@layout/list_vertical_playlist" />
 
-            <include layout="@layout/video_vertical_list" />
+            <include layout="@layout/list_vertical_video" />
         </LinearLayout>
 
 

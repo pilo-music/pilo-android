@@ -34,7 +34,7 @@ public class VideoCarouselAdapter extends RecyclerView.Adapter<VideoCarouselAdap
     @NonNull
     @Override
     public VideoCarouselAdapter.VideoCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.video_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_video, viewGroup, false);
         return new VideoCarouselAdapter.VideoCarouselAdapterViewHolder(view);
     }
 

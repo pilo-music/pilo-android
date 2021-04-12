@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.MusicCarouselAdapterViewHolder> {
     private Context context;
     private List<Music> musics;
-    private int viewId = R.layout.music_item;
+    private int viewId = R.layout.item_music;
     private UserSharedPrefManager userSharedPrefManager;
 
     public MusicsListAdapter(WeakReference<Context> context, List<Music> musics) {

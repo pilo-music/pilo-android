@@ -36,7 +36,7 @@ public class ArtistVerticalListAdapter extends RecyclerView.Adapter<ArtistVertic
     @NonNull
     @Override
     public ArtistCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.artist_vertical_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_vertical_list_artist, viewGroup, false);
         return new ArtistCarouselAdapterViewHolder(view);
     }
 

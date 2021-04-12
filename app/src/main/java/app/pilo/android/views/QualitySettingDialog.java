@@ -40,7 +40,7 @@ public class QualitySettingDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.quality_setting_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_quality_setting, container, false);
         ButterKnife.bind(this, view);
 
         UserSharedPrefManager userSharedPrefManager = new UserSharedPrefManager(context);

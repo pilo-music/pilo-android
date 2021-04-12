@@ -36,7 +36,7 @@ public class NotificationsSettingDialog  extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.notification_setting_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_notification_setting, container, false);
 
         userApi = new UserApi(context);
         User user = UserRepo.getInstance(context).get();

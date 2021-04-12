@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -75,19 +74,19 @@ public class SingleSearchFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         switch (type) {
             case "artist":
-                artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), search.getArtists(), R.layout.artist_item_full_width);
+                artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), search.getArtists(), R.layout.item_full_width_artist);
                 rc_items.setAdapter(artistsListAdapter);
                 break;
             case "music":
-                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), search.getMusics(), R.layout.music_item_full_width);
+                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), search.getMusics(), R.layout.item_full_width_music);
                 rc_items.setAdapter(musicsListAdapter);
                 break;
             case "album":
-                albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), search.getAlbums(), R.layout.album_item_full_width);
+                albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), search.getAlbums(), R.layout.item_full_width_album);
                 rc_items.setAdapter(albumsListAdapter);
                 break;
             case "playlist":
-                playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), search.getPlaylists(), R.layout.playlist_item_full_width);
+                playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), search.getPlaylists(), R.layout.item_full_width_playlist);
                 rc_items.setAdapter(playlistsAdapter);
                 break;
             case "video":

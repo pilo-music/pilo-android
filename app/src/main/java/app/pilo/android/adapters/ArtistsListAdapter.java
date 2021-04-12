@@ -23,7 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ArtistsListAdapter extends RecyclerView.Adapter<ArtistsListAdapter.ArtistCarouselAdapterViewHolder> {
     private Context context;
     private List<Artist> artists;
-    private int viewId = R.layout.artist_item;
+    private int viewId = R.layout.item_artist;
 
     public ArtistsListAdapter(WeakReference<Context> context, List<Artist> artists) {
         this.context = context.get();

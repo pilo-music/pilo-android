@@ -34,7 +34,7 @@ public class OperatorDetectHelper {
             if (!isIran(context)) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 ViewGroup parent = view.findViewById(R.id.framelayout);
-                View view = inflater.inflate(R.layout.first_lunch_layout, parent);
+                View view = inflater.inflate(R.layout.layout_first_lunch, parent);
 
                 LinearLayout ll_first_lunch = view.findViewById(R.id.ll_first_lunch);
                 PiloButton pb_first_lunch_send = view.findViewById(R.id.pb_first_lunch_send);

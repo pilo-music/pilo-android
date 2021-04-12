@@ -327,27 +327,27 @@ public class SearchResultFragment extends BaseFragment {
         search(tv_search_recommend.getText().toString());
     }
 
-    @OnClick(R.id.tv_artist_vertical_show_more)
+    @OnClick(R.id.ll_artist_vertical_show_more)
     void artistShowMore() {
         goToSingle("artist");
     }
 
-    @OnClick(R.id.tv_music_vertical_show_more)
+    @OnClick(R.id.ll_music_vertical_show_more)
     void musicShowMore() {
         goToSingle("music");
     }
 
-    @OnClick(R.id.tv_album_vertical_show_more)
+    @OnClick(R.id.ll_album_vertical_show_more)
     void albumShowMore() {
         goToSingle("album");
     }
 
-    @OnClick(R.id.tv_playlist_vertical_show_more)
+    @OnClick(R.id.ll_playlist_vertical_show_more)
     void playlistShowMore() {
         goToSingle("playlist");
     }
 
-    @OnClick(R.id.tv_video_vertical_show_more)
+    @OnClick(R.id.ll_video_vertical_show_more)
     void videoShowMore() {
         goToSingle("video");
     }

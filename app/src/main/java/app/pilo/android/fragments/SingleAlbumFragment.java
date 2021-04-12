@@ -3,16 +3,16 @@ package app.pilo.android.fragments;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,15 +51,13 @@ import butterknife.OnClick;
 
 public class SingleAlbumFragment extends BaseFragment {
     private View view;
-    private UserSharedPrefManager sharedPrefManager;
     private Utils utils;
     private LikeApi likeApi;
     private boolean likeProcess = false;
     private SingleAlbum singleAlbum;
-    private Album album;
+    private final Album album;
     private MusicVerticalListAdapter musicVerticalListAdapter;
     private UserSharedPrefManager userSharedPrefManager;
-    private ItemTouchHelper itemTouchHelper;
 
 
     @BindView(R.id.img_single_album)
@@ -88,6 +86,8 @@ public class SingleAlbumFragment extends BaseFragment {
     RecyclerView rc_album_carousel;
     @BindView(R.id.tv_album_carousel_title)
     TextView tv_album_carousel_title;
+    @BindView(R.id.ll_album_carousel_show_more)
+    LinearLayout ll_album_carousel_show_more;
     @BindView(R.id.sfl_album)
     ShimmerFrameLayout sfl_album;
 
@@ -101,18 +101,17 @@ public class SingleAlbumFragment extends BaseFragment {
         view = inflater.inflate(R.layout.fragment_single_album, container, false);
 
         ButterKnife.bind(this, view);
-        userSharedPrefManager = new UserSharedPrefManager(getActivity());
+        userSharedPrefManager = new UserSharedPrefManager(activity);
         utils = new Utils();
-        likeApi = new LikeApi(getActivity());
+        likeApi = new LikeApi(activity);
         setupViews();
-        sharedPrefManager = new UserSharedPrefManager(getActivity());
         getDataFromServer();
         return view;
     }
 
     private void setupViews() {
         if (album.getImage() != null && !album.getImage().equals("")) {
-            Glide.with(getActivity())
+            Glide.with(activity)
                     .load(album.getImage())
                     .placeholder(R.drawable.ic_music_placeholder)
                     .error(R.drawable.ic_music_placeholder)
@@ -124,20 +123,20 @@ public class SingleAlbumFragment extends BaseFragment {
         tv_album_name.setText(album.getTitle());
         tv_header_title.setText(album.getTitle());
         tv_album_carousel_title.setText(getString(R.string.related));
-        img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
+        img_header_back.setOnClickListener(v -> activity.onBackPressed());
 
         if (userSharedPrefManager.getShuffleMode()) {
-            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon_primery));
-            fab_single_album_shuffle.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimaryLight));
+            fab_single_album_shuffle.setImageDrawable(activity.getDrawable(R.drawable.ic_shuffle_icon_primery));
+            fab_single_album_shuffle.setBackgroundColor(activity.getResources().getColor(R.color.colorPrimaryLight));
         } else {
-            fab_single_album_shuffle.setImageDrawable(getActivity().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_single_album_shuffle.setImageDrawable(activity.getDrawable(R.drawable.ic_shuffle_icon));
             fab_single_album_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
         }
 
     }
 
     private void getDataFromServer() {
-        AlbumApi albumApi = new AlbumApi(getActivity());
+        AlbumApi albumApi = new AlbumApi(activity);
         albumApi.single(album.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
@@ -156,16 +155,22 @@ public class SingleAlbumFragment extends BaseFragment {
                     singleAlbum = ((SingleAlbum) data);
 
                     if (rc_album_carousel != null) {
+                        ll_album_carousel_show_more.setVisibility(View.GONE);
                         sfl_album.setVisibility(View.GONE);
-                        rc_album_carousel.setVisibility(View.VISIBLE);
-                        AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), singleAlbum.getRelated());
-                        rc_album_carousel.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-                        rc_album_carousel.setAdapter(albumCarouselAdapter);
+                        if (singleAlbum.getRelated().size() > 0) {
+                            rc_album_carousel.setVisibility(View.VISIBLE);
+                            AlbumsListAdapter albumCarouselAdapter = new AlbumsListAdapter(new WeakReference<>(activity), singleAlbum.getRelated());
+                            rc_album_carousel.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
+                            rc_album_carousel.setAdapter(albumCarouselAdapter);
+                        }else{
+                            rc_album_carousel.setVisibility(View.GONE);
+                            tv_album_carousel_title.setVisibility(View.GONE);
+                        }
                     }
 
                     setupLikeButton();
                 } else {
-                    new HttpErrorHandler(getActivity(), message);
+                    new HttpErrorHandler(activity, message);
                 }
 
             }
@@ -175,7 +180,7 @@ public class SingleAlbumFragment extends BaseFragment {
                 if (!checkView()) {
                     return;
                 }
-                new HttpErrorHandler(getActivity());
+                new HttpErrorHandler(activity);
             }
         });
     }
@@ -186,9 +191,9 @@ public class SingleAlbumFragment extends BaseFragment {
         }
 
         if (singleAlbum.isHas_like()) {
-            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+            img_single_album_like.setImageDrawable(activity.getDrawable(R.drawable.ic_like_on));
         } else {
-            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+            img_single_album_like.setImageDrawable(activity.getDrawable(R.drawable.ic_like_off));
         }
         img_single_album_like.setVisibility(View.VISIBLE);
 
@@ -199,7 +204,7 @@ public class SingleAlbumFragment extends BaseFragment {
             if (!singleAlbum.isHas_like()) {
                 likeProcess = true;
                 utils.animateHeartButton(img_single_album_like);
-                img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_on));
+                img_single_album_like.setImageDrawable(activity.getDrawable(R.drawable.ic_like_on));
                 likeApi.like(album.getSlug(), "album", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
@@ -207,8 +212,8 @@ public class SingleAlbumFragment extends BaseFragment {
                             return;
                         }
                         if (!status) {
-                            new HttpErrorHandler(getActivity(), message);
-                            img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                            new HttpErrorHandler(activity, message);
+                            img_single_album_like.setImageDrawable(activity.getDrawable(R.drawable.ic_like_off));
                         } else {
                             singleAlbum.setHas_like(true);
                         }
@@ -219,14 +224,14 @@ public class SingleAlbumFragment extends BaseFragment {
                         if (!checkView()) {
                             return;
                         }
-                        new HttpErrorHandler(getActivity());
-                        img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                        new HttpErrorHandler(activity);
+                        img_single_album_like.setImageDrawable(activity.getDrawable(R.drawable.ic_like_off));
                     }
                 });
                 likeProcess = false;
             } else {
                 likeProcess = true;
-                img_single_album_like.setImageDrawable(getActivity().getDrawable(R.drawable.ic_like_off));
+                img_single_album_like.setImageDrawable(activity.getDrawable(R.drawable.ic_like_off));
                 likeApi.like(album.getSlug(), "album", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
@@ -234,7 +239,7 @@ public class SingleAlbumFragment extends BaseFragment {
                             return;
                         }
                         if (!status) {
-                            new HttpErrorHandler(getActivity(), message);
+                            new HttpErrorHandler(activity, message);
                             img_single_album_like.setImageDrawable(getResources().getDrawable(R.drawable.ic_like_on));
                         } else {
                             singleAlbum.setHas_like(false);
@@ -246,7 +251,7 @@ public class SingleAlbumFragment extends BaseFragment {
                         if (!checkView()) {
                             return;
                         }
-                        new HttpErrorHandler(getActivity());
+                        new HttpErrorHandler(activity);
                         img_single_album_like.setImageDrawable(getResources().getDrawable(R.drawable.ic_like_on));
 
                     }
@@ -260,17 +265,17 @@ public class SingleAlbumFragment extends BaseFragment {
 
     private void setupMusic(List<Music> musics) {
         if (musics.size() > 0) {
-            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(getActivity()), musics);
-            rc_album_musics.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
+            musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(activity), musics);
+            rc_album_musics.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
             rc_album_musics.setAdapter(musicVerticalListAdapter);
         }
     }
 
     @OnClick(R.id.fab_single_album_play)
     void fab_single_album_play() {
-        PlayHistoryApi playHistoryApi = new PlayHistoryApi(getActivity());
+        PlayHistoryApi playHistoryApi = new PlayHistoryApi(activity);
         playHistoryApi.add(album.getSlug(), "album");
-        EventBus.getDefault().post(new MusicEvent(getActivity(), singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true, false));
+        EventBus.getDefault().post(new MusicEvent(activity, singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true, false));
 
     }
 
@@ -278,7 +283,7 @@ public class SingleAlbumFragment extends BaseFragment {
     void fab_single_album_shuffle() {
         if (userSharedPrefManager.getShuffleMode()) {
             userSharedPrefManager.setShuffleMode(false);
-            fab_single_album_shuffle.setImageDrawable(getResources().getDrawable(R.drawable.ic_shuffle_icon));
+            fab_single_album_shuffle.setImageDrawable(ResourcesCompat.getDrawable(activity.getResources(), R.drawable.ic_shuffle_icon, null));
             fab_single_album_shuffle.setBackgroundColor(Color.parseColor("#F1F1F1"));
         } else {
             userSharedPrefManager.setShuffleMode(true);
@@ -288,12 +293,12 @@ public class SingleAlbumFragment extends BaseFragment {
     }
 
 
-    @OnClick(R.id.tv_album_carousel_show_more)
-    void tv_album_carousel_show_more() {
+    @OnClick(R.id.ll_album_carousel_show_more)
+    void ll_album_carousel_show_more() {
         HashMap<String, Object> params = new HashMap<>();
         params.put("related", album.getSlug());
         AlbumsFragment mFragment = new AlbumsFragment(params);
-        ((MainActivity) getActivity()).pushFragment(mFragment);
+        ((MainActivity) activity).pushFragment(mFragment);
     }
 
 

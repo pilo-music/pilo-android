@@ -82,7 +82,7 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.music_actions_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_music_actions, container, false);
         ButterKnife.bind(this, view);
         userSharedPrefManager = new UserSharedPrefManager(context);
 

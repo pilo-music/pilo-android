@@ -53,7 +53,7 @@ public class UpdateDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.update_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_update, container, false);
         this.setCancelable(version < minVersion);
         ButterKnife.bind(this, view);
 

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <include layout="@layout/page_header" />
+    <include layout="@layout/layout_page_header" />
 
     <LinearLayout
         android:layout_width="match_parent"

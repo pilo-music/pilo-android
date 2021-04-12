@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
@@ -82,7 +81,7 @@ public class MusicsFragment extends BaseFragment {
         }
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
 
-        musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width);
+        musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.item_full_width_music);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_musics.setAdapter(musicsListAdapter);
         rc_musics.setLayoutManager(layoutManager);

@@ -1,7 +1,6 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -41,7 +38,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoAdapt
     @NonNull
     @Override
     public VideoAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.video_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_video, viewGroup, false);
         return new VideoAdapterViewHolder(view);
     }
 

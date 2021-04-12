@@ -73,7 +73,7 @@ public class ArtistsFragment extends BaseFragment {
         }
 
         img_header_back.setOnClickListener(v -> getActivity().onBackPressed());
-        artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists, R.layout.artist_item_full_width);
+        artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists, R.layout.item_full_width_artist);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         rc_artists.setAdapter(artistsListAdapter);
         rc_artists.setLayoutManager(layoutManager);

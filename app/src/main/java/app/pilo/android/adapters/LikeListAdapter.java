@@ -20,7 +20,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.models.Like;
@@ -41,7 +40,7 @@ public class LikeListAdapter extends RecyclerView.Adapter<LikeListAdapter.LikeLi
     @NonNull
     @Override
     public LikeListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.like_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_like, viewGroup, false);
         return new LikeListAdapterViewHolder(view);
     }
 

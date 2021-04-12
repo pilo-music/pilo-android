@@ -1,7 +1,6 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,7 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     @NonNull
     @Override
     public SearchHistoryAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.search_history_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_search_history, viewGroup, false);
         return new SearchHistoryAdapterViewHolder(view);
     }
 

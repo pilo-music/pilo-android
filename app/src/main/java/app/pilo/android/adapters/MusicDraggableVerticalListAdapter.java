@@ -36,7 +36,6 @@ import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.utils.Utils;
-import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -62,7 +61,7 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
     @NonNull
     @Override
     public MusicCarouselAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.music_draggable_vertical_list_item, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_vertical_list_music_draggable, viewGroup, false);
         return new MusicCarouselAdapterViewHolder(view);
     }
 

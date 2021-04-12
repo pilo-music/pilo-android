@@ -96,7 +96,7 @@ public class CustomDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.custom_dialog, container, false);
+        View view = inflater.inflate(R.layout.dialog_custom, container, false);
         this.setCancelable(cancelable);
         ButterKnife.bind(this, view);
 

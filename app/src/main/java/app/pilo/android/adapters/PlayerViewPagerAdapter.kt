@@ -10,12 +10,12 @@ import app.pilo.android.models.Music
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.makeramen.roundedimageview.RoundedImageView
-import kotlinx.android.synthetic.main.player_view_pager_item.view.*
+import kotlinx.android.synthetic.main.item_view_pager_player.view.*
 
 class PlayerViewPagerAdapter(private val context: Context, private val musics: List<Music>) : RecyclerView.Adapter<PagerVH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerVH =
-            PagerVH(LayoutInflater.from(parent.context).inflate(R.layout.player_view_pager_item, parent, false))
+            PagerVH(LayoutInflater.from(parent.context).inflate(R.layout.item_view_pager_player, parent, false))
 
     override fun getItemCount(): Int = musics.size
 

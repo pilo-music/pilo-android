@@ -115,23 +115,23 @@ public class SingleBrowseFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         switch (type) {
             case Home.TYPE_ARTISTS:
-                artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists, R.layout.artist_item_full_width);
+                artistsListAdapter = new ArtistsListAdapter(new WeakReference<>(getActivity()), artists, R.layout.item_full_width_artist);
                 rc_browse.setAdapter(artistsListAdapter);
                 break;
             case Home.TYPE_MUSICS:
             case Home.TYPE_MUSIC_GRID:
             case Home.TYPE_MUSIC_VERTICAL:
             case Home.TYPE_TRENDING:
-                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.music_item_full_width);
+                musicsListAdapter = new MusicsListAdapter(new WeakReference<>(getActivity()), musics, R.layout.item_full_width_music);
                 rc_browse.setAdapter(musicsListAdapter);
                 break;
             case Home.TYPE_ALBUMS:
-                albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.album_item_full_width);
+                albumsListAdapter = new AlbumsListAdapter(new WeakReference<>(getActivity()), albums, R.layout.item_full_width_album);
                 rc_browse.setAdapter(albumsListAdapter);
                 break;
             case Home.TYPE_PLAYLISTS:
             case Home.TYPE_PLAYLIST_GRID:
-                playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), playlistLists, R.layout.playlist_item_full_width);
+                playlistsAdapter = new PlaylistsAdapter(new WeakReference<>(getActivity()), playlistLists, R.layout.item_full_width_playlist);
                 rc_browse.setAdapter(playlistsAdapter);
                 break;
             case Home.TYPE_ALBUM_MUSIC_GRID:
