@@ -20,3 +20,4 @@
 .idea/vcs.xml
 app/libs/
 gradle/
+.idea/*
