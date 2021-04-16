@@ -24,6 +24,7 @@ import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.LikeApi;
 import app.pilo.android.event.MusicEvent;
+import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.utils.Utils;
@@ -34,16 +35,19 @@ import butterknife.ButterKnife;
 public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVerticalListAdapter.MusicCarouselAdapterViewHolder> {
     protected Context context;
     protected List<Music> musics;
-    private LikeApi likeApi;
-    private boolean likeProcess = false;
-    private Utils utils;
+    protected boolean loadRelative = false;
     private UserSharedPrefManager userSharedPrefManager;
 
     public MusicVerticalListAdapter(WeakReference<Context> context, List<Music> musics) {
         this.context = context.get();
         this.musics = musics;
-        this.likeApi = new LikeApi(context.get());
-        utils = new Utils();
+        userSharedPrefManager = new UserSharedPrefManager(context.get());
+    }
+
+    public MusicVerticalListAdapter(WeakReference<Context> context, List<Music> musics, boolean loadRelative) {
+        this.context = context.get();
+        this.musics = musics;
+        this.loadRelative = loadRelative;
         userSharedPrefManager = new UserSharedPrefManager(context.get());
     }
 
@@ -76,13 +80,19 @@ public class MusicVerticalListAdapter extends RecyclerView.Adapter<MusicVertical
         if (userSharedPrefManager.getActiveMusicSlug().equals(music.getSlug())) {
             holder.music_item_image.setVisibility(View.GONE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.music_item_image.setVisibility(View.VISIBLE);
             holder.fl_music_vertical_list_item_playing.setVisibility(View.GONE);
         }
 
 
-        holder.ll_music_vertical.setOnClickListener(v -> EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false)));
+        holder.ll_music_vertical.setOnClickListener(v -> {
+            if (loadRelative) {
+                EventBus.getDefault().post(new MusicRelatedEvent(musics, music.getSlug(), true));
+            } else {
+                EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true));
+            }
+        });
 
         holder.img_music_vertical_list_item_more.setOnClickListener(view -> new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
     }

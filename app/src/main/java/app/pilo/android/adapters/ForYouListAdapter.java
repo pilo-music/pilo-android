@@ -53,10 +53,10 @@ public class ForYouListAdapter extends RecyclerView.Adapter<ForYouListAdapter.Fo
                 .into(holder.riv_for_you_carousel);
 
         holder.riv_for_you_carousel.setOnClickListener(v -> {
-            EventBus.getDefault().post(new MusicEvent(context, forYou.getMusics(), forYou.getMusics().get(0).getSlug(), true, false));
+            EventBus.getDefault().post(new MusicEvent(context, forYou.getMusics(), forYou.getMusics().get(0).getSlug(), true));
         });
         holder.fab_for_you_carousel_play.setOnClickListener(v -> {
-            EventBus.getDefault().post(new MusicEvent(context, forYou.getMusics(), forYou.getMusics().get(0).getSlug(), true, false));
+            EventBus.getDefault().post(new MusicEvent(context, forYou.getMusics(), forYou.getMusics().get(0).getSlug(), true));
         });
     }
 

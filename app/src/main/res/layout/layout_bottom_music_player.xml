@@ -74,9 +74,39 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_corner_radius="10dp"
                 app:riv_mutate_background="true" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/riv_music_player_collapsed_image_placeholder"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_music_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"
+                app:riv_corner_radius="10dp"
+                app:riv_mutate_background="true" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            android:id="@+id/ll_music_player_collapsed_loading"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_music_player_collapsed_controls"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"

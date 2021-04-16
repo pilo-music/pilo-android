@@ -163,7 +163,7 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.Down
                 if (status) {
                     try {
                         musics.add(((SingleMusic) data).getMusic());
-                        EventBus.getDefault().post(new MusicEvent(context, musics, ((SingleMusic) data).getMusic().getSlug(), true, false));
+                        EventBus.getDefault().post(new MusicEvent(context, musics, ((SingleMusic) data).getMusic().getSlug(), true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

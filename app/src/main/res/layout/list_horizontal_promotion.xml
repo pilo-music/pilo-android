@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_promotion_carousel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingEnd="8dp"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:layoutAnimation="@anim/layout_animation"
+        android:visibility="gone" />
+
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/sfl_promotion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        shimmer:duration="800">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_video" />
+
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+</LinearLayout>

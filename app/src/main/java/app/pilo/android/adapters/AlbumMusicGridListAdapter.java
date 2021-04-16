@@ -101,13 +101,10 @@ public class AlbumMusicGridListAdapter extends RecyclerView.Adapter<RecyclerView
                         musics.add(music);
                 }
 
-                EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));
+                EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true));
             });
-
         }
-
     }
-
 
     @Override
     public int getItemCount() {

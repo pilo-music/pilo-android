@@ -98,7 +98,7 @@ public class MusicDraggableVerticalListAdapter extends RecyclerView.Adapter<Musi
             holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
         }
 
-        holder.ll_music_vertical.setOnClickListener(v -> EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false)));
+        holder.ll_music_vertical.setOnClickListener(v -> EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true)));
 
         holder.img_music_vertical_list_item_like.setOnClickListener(v -> {
             if (likeProcess)

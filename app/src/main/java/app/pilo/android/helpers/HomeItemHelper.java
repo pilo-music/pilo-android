@@ -35,6 +35,7 @@ import app.pilo.android.adapters.MusicVerticalListAdapter;
 import app.pilo.android.adapters.MusicsListAdapter;
 import app.pilo.android.adapters.AlbumMusicGridListAdapter;
 import app.pilo.android.adapters.PlaylistsAdapter;
+import app.pilo.android.adapters.PromotionsAdapter;
 import app.pilo.android.adapters.VideoCarouselAdapter;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.fragments.AlbumsFragment;
@@ -209,19 +210,16 @@ public class HomeItemHelper {
     }
 
     private void setupPromotion(Home home, LayoutInflater inflater, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.item_promotion, parent);
-        RoundedImageView riv_promotion = view.findViewById(R.id.riv_promotion);
-        Glide.with(fragment.getActivity())
-                .load(((Promotion) home.getData()).getImage())
-                .placeholder(R.drawable.ic_music_placeholder)
-                .error(R.drawable.ic_music_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(riv_promotion);
-
-        riv_promotion.setOnClickListener(v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(((Promotion) home.getData()).getUrl()));
-            fragment.startActivity(browserIntent);
-        });
+        if (((List<Promotion>) home.getData()).size() == 0)
+            return;
+        View view = inflater.inflate(R.layout.list_horizontal_promotion, parent);
+        RecyclerView rc_promotions_carousel = view.findViewById(R.id.rc_promotion_carousel);
+        if (rc_promotions_carousel != null) {
+            PromotionsAdapter promotionsAdapter = new PromotionsAdapter(new WeakReference<>(fragment.getActivity()), ((List<Promotion>) home.getData()));
+            rc_promotions_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
+            rc_promotions_carousel.setAdapter(promotionsAdapter);
+            adapters.add(new WeakReference<>(promotionsAdapter));
+        }
     }
 
     private void setupPlaylistsViewPager(Home home, LayoutInflater inflater, ViewGroup parent) {
@@ -276,7 +274,7 @@ public class HomeItemHelper {
         if (rc_music_grid != null) {
             rc_music_grid.setVisibility(View.VISIBLE);
             tv_music_grid_title.setText(home.getName());
-            MusicsListAdapter musicsListAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), R.layout.item_full_width_music);
+            MusicsListAdapter musicsListAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), R.layout.item_full_width_music,true);
             rc_music_grid.setLayoutManager(new GridLayoutManager(fragment.getActivity(), 2));
             rc_music_grid.setAdapter(musicsListAdapter);
             MusicsFragment musicsFragment = new MusicsFragment();
@@ -323,7 +321,7 @@ public class HomeItemHelper {
             sfl_music.setVisibility(View.GONE);
             rc_music_carousel.setVisibility(View.VISIBLE);
             tv_music_carousel_title.setText(home.getName());
-            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
+            MusicsListAdapter musicCarouselAdapter = new MusicsListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()), true);
 
             rc_music_carousel.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.HORIZONTAL, false));
             rc_music_carousel.setAdapter(musicCarouselAdapter);
@@ -409,7 +407,7 @@ public class HomeItemHelper {
         LinearLayout ll_music_vertical_show_more = view.findViewById(R.id.ll_music_vertical_show_more);
         if (rc_music_vertical != null) {
             tv_music_vertical_title.setText(home.getName());
-            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()));
+            MusicVerticalListAdapter musicVerticalListAdapter = new MusicVerticalListAdapter(new WeakReference<>(fragment.getActivity()), ((List<Music>) home.getData()),true);
             rc_music_vertical.setLayoutManager(new LinearLayoutManager(fragment.getActivity(), RecyclerView.VERTICAL, false));
             rc_music_vertical.setAdapter(musicVerticalListAdapter);
             ll_music_vertical_show_more.setOnClickListener(v -> goToSingleHome(home));

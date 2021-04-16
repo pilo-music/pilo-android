@@ -275,7 +275,7 @@ public class SingleAlbumFragment extends BaseFragment {
     void fab_single_album_play() {
         PlayHistoryApi playHistoryApi = new PlayHistoryApi(activity);
         playHistoryApi.add(album.getSlug(), "album");
-        EventBus.getDefault().post(new MusicEvent(activity, singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true, false));
+        EventBus.getDefault().post(new MusicEvent(activity, singleAlbum.getMusics(), singleAlbum.getMusics().get(0).getSlug(), true));
 
     }
 

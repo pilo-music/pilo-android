@@ -247,7 +247,7 @@ public class SinglePlaylistFragment extends BaseFragment {
 
     @OnClick(R.id.fab_single_playlist_play)
     void fab_single_playlist_play() {
-        EventBus.getDefault().post(new MusicEvent(getActivity(), singlePlaylist.getMusics(), singlePlaylist.getMusics().get(0).getSlug(), true, false));
+        EventBus.getDefault().post(new MusicEvent(getActivity(), singlePlaylist.getMusics(), singlePlaylist.getMusics().get(0).getSlug(), true));
     }
 
     @OnClick(R.id.fab_single_playlist_shuffle)

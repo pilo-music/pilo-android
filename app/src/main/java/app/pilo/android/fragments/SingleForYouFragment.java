@@ -137,7 +137,7 @@ public class SingleForYouFragment extends BaseFragment {
 
     @OnClick(R.id.fab_for_you_play)
     void fab_for_you_play() {
-        EventBus.getDefault().post(new MusicEvent(getActivity(), singlePlaylist.getMusics(), singlePlaylist.getMusics().get(0).getSlug(), true, false));
+        EventBus.getDefault().post(new MusicEvent(getActivity(), singlePlaylist.getMusics(), singlePlaylist.getMusics().get(0).getSlug(), true));
     }
 
     @OnClick(R.id.fab_for_you_shuffle)

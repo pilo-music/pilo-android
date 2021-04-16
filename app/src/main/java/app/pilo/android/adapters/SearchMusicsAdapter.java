@@ -1,8 +1,6 @@
 package app.pilo.android.adapters;
 
 import android.content.Context;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +14,7 @@ import java.util.List;
 
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.SearchApi;
-import app.pilo.android.event.MusicEvent;
+import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.models.Music;
 
 public class SearchMusicsAdapter extends MusicVerticalListAdapter {
@@ -35,13 +33,15 @@ public class SearchMusicsAdapter extends MusicVerticalListAdapter {
         super.onBindViewHolder(holder, position);
         final Music music = musics.get(position);
         holder.ll_music_vertical.setOnClickListener(v -> {
-            EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));
+            EventBus.getDefault().post(new MusicRelatedEvent(musics, music.getSlug(), true));
             searchApi.search(searchId, music.getSlug(), "music", new HttpHandler.RequestHandler() {
                 @Override
-                public void onGetInfo(Object data, String message, boolean status) { }
+                public void onGetInfo(Object data, String message, boolean status) {
+                }
 
                 @Override
-                public void onGetError(@Nullable VolleyError error) { }
+                public void onGetError(@Nullable VolleyError error) {
+                }
             });
         });
 

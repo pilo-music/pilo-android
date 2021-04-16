@@ -15,11 +15,11 @@
 
         <!--music info-->
         <androidx.viewpager2.widget.ViewPager2
-            android:overScrollMode="never"
-            android:layoutDirection="ltr"
             android:id="@+id/view_pager_extended_music_player"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_250sdp" />
+            android:layout_height="@dimen/_250sdp"
+            android:layoutDirection="ltr"
+            android:overScrollMode="never" />
 
 
         <TextView
@@ -154,8 +154,8 @@
             <SeekBar
                 android:id="@+id/seekbar_music"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:maxHeight="5.0dip"
                 android:minHeight="5.0dip"
                 android:progressDrawable="@drawable/seekbar_drawable"
@@ -173,9 +173,24 @@
         </LinearLayout>
 
         <!--music control-->
+        <LinearLayout
+            android:id="@+id/ll_extended_music_player_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center" />
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/ll_extended_music_player_controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"

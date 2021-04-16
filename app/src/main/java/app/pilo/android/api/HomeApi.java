@@ -21,6 +21,7 @@ import app.pilo.android.models.ForYou;
 import app.pilo.android.models.Home;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
+import app.pilo.android.models.Promotion;
 import app.pilo.android.models.Video;
 import app.pilo.android.repositories.UserRepo;
 
@@ -218,8 +219,16 @@ public class HomeApi {
                     data = playlists;
                     break;
                 case Home.TYPE_PROMOTION:
-                    JSONObject promotionsData = jsonArray.getJSONObject(i);
-                    data = JsonParser.promotionParser(promotionsData.getJSONObject("data"));
+                    List<Promotion> promotions = new ArrayList<>();
+                    JSONArray promotionsData = jsonArray.getJSONObject(i).getJSONArray("data");
+                    if (promotionsData.length() > 0) {
+                        for (int j = 0; j < promotionsData.length(); j++) {
+                            Promotion promotion = JsonParser.promotionParser(promotionsData.getJSONObject(j));
+                            if (promotion != null)
+                                promotions.add(promotion);
+                        }
+                    }
+                    data = promotions;
                     break;
                 case Home.TYPE_ALBUM_MUSIC_GRID:
                     List<Object> albumMusics = new ArrayList<>();

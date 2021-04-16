@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.event.MusicEvent;
-import app.pilo.android.helpers.UserSharedPrefManager;
+import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.models.Music;
 import app.pilo.android.views.MusicActionsDialog;
 import butterknife.BindView;
@@ -33,19 +33,31 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
     private Context context;
     private List<Music> musics;
     private int viewId = R.layout.item_music;
-    private UserSharedPrefManager userSharedPrefManager;
+    private boolean loadRelative = false;
 
     public MusicsListAdapter(WeakReference<Context> context, List<Music> musics) {
         this.context = context.get();
         this.musics = musics;
-        userSharedPrefManager = new UserSharedPrefManager(context.get());
     }
 
     public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId) {
         this.context = context.get();
         this.musics = musics;
         this.viewId = viewId;
-        userSharedPrefManager = new UserSharedPrefManager(context.get());
+    }
+
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, boolean loadRelative) {
+        this.context = context.get();
+        this.musics = musics;
+        this.loadRelative = loadRelative;
+    }
+
+
+    public MusicsListAdapter(WeakReference<Context> context, List<Music> musics, int viewId, boolean loadRelative) {
+        this.context = context.get();
+        this.musics = musics;
+        this.viewId = viewId;
+        this.loadRelative = loadRelative;
     }
 
 
@@ -68,20 +80,17 @@ public class MusicsListAdapter extends RecyclerView.Adapter<MusicsListAdapter.Mu
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.music_item_image);
 
-
-//        if (music.isHas_like()) {
-//            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_on));
-//        } else {
-//            holder.img_music_vertical_list_item_like.setImageDrawable(context.getDrawable(R.drawable.ic_like_off));
-//        }
-
         holder.ll_music_item.setOnLongClickListener(v -> {
             new MusicActionsDialog(context, music).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG);
             return false;
         });
 
         holder.ll_music_item.setOnClickListener(v -> {
-            EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true, false));
+            if (loadRelative) {
+                EventBus.getDefault().post(new MusicRelatedEvent(musics, music.getSlug(), true));
+            } else {
+                EventBus.getDefault().post(new MusicEvent(context, musics, music.getSlug(), true));
+            }
         });
     }
 
