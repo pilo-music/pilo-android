@@ -1,8 +1,5 @@
 package app.pilo.android.services;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -11,29 +8,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaMetadata;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.text.Html;
 import android.view.KeyEvent;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BaseTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -52,18 +38,13 @@ import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
-import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
 
@@ -76,8 +57,18 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
     private boolean mReceiversRegistered = false;
     private AudioManager mAudioManager;
-    private static final int NOTIF_ID = 32432;
     private UserSharedPrefManager userSharedPrefManager;
+    private final Runnable updateProgressAction = this::updateProgress;
+
+
+    private SimpleExoPlayer exoPlayer;
+    private IBinder mBinder;
+    private Handler mHandler;
+    private String current_music_slug = "";
+    private PlaybackStateCompat.Builder mStateBuilder;
+    private MediaSessionCompat mMediaSession;
+    private NotificationBuilder notificationBuilder;
+
 
     private BroadcastReceiver button_reciever = new BroadcastReceiver() {
         @Override
@@ -125,17 +116,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             }
         }
     };
-    SimpleExoPlayer exoPlayer;
-    IBinder mBinder = new LocalBinder();
-    private UserSharedPrefManager sessionManager;
-    private Handler mHandler;
-    private String current_music_slug = "";
-    private final Runnable updateProgressAction = new Runnable() {
-        @Override
-        public void run() {
-            updateProgress();
-        }
-    };
+
 
     @Nullable
     @Override
@@ -147,59 +128,21 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     @Override
     public void onCreate() {
         super.onCreate();
-        userSharedPrefManager = new UserSharedPrefManager(this);
         init();
         showNotification();
     }
 
     @Override
     public void onDestroy() {
-        if (exoPlayer != null) {
-            exoPlayer.stop(true);
-            exoPlayer.release();
-        }
-        if (mReceiversRegistered) {
-            unregisterReceiver(button_reciever);
-            mReceiversRegistered = false;
-        }
-        if (mAudioManager != null) {
-            mAudioManager.abandonAudioFocus(this);
-        }
-        if (notifManager != null) {
-            notifManager.cancelAll();
-        }
-
-        this.stopForeground(true);
-
         super.onDestroy();
-
     }
 
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        if (exoPlayer != null) {
-            exoPlayer.stop(true);
-            exoPlayer.release();
-        }
-        if (mReceiversRegistered) {
-            unregisterReceiver(button_reciever);
-            mReceiversRegistered = false;
-        }
-        if (mAudioManager != null) {
-            mAudioManager.abandonAudioFocus(this);
-        }
-        if (notifManager != null) {
-            notifManager.cancelAll();
-        }
-
-        this.stopForeground(true);
         super.onTaskRemoved(rootIntent);
-
     }
 
-    PlaybackStateCompat.Builder mStateBuilder;
-    MediaSessionCompat mMediaSession;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -214,7 +157,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
         registerReceiver(button_reciever, filter);
         mReceiversRegistered = true;
-        mMediaSession = new MediaSessionCompat(this, "casset");
+        mMediaSession = new MediaSessionCompat(this, "pilo");
 
         mStateBuilder = new PlaybackStateCompat.Builder();
         updateMediaSessionMetaData();
@@ -234,7 +177,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                 i.setAction(CUSTOM_PLAYER_INTENT);
                 i.putExtra("close", true);
                 sendBroadcast(i);
-                notifManager.cancelAll();
+                notificationBuilder.cancelAll();
                 if (exoPlayer != null) {
                     exoPlayer.setPlayWhenReady(false);
                     exoPlayer.release();
@@ -377,12 +320,11 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
     }
 
-    NotificationManager notifManager;
 
     private void init() {
-        sessionManager = new UserSharedPrefManager(this);
-        notifManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mBinder = new LocalBinder();
+        userSharedPrefManager = new UserSharedPrefManager(this);
+        notificationBuilder = new NotificationBuilder(this, exoPlayer);
     }
 
     private void skipToNext() {
@@ -390,7 +332,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
         int active_index = -1;
         for (int i = 0; i < current_items.size(); i++) {
-            if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
+            if (current_items.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
                 active_index = i;
             }
         }
@@ -434,11 +376,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             }
         }
 
-//        String url = Utils.getMp3UrlForStreaming(this, musicTable);
-//        if (!url.equals("")) {
-//            sessionManager.setActiveMusicSlug(music_slug);
-//            prepareExoPlayerFromURL(Uri.parse(url), music_slug, true);
-//        }
         Intent intent = new Intent();
         intent.setAction(CUSTOM_PLAYER_INTENT);
         intent.putExtra("notify", true);
@@ -456,7 +393,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
             int active_index = -1;
             for (int i = 0; i < current_items.size(); i++) {
-                if (current_items.get(i).getSlug().equals(sessionManager.getActiveMusicSlug())) {
+                if (current_items.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
                     active_index = i;
                 }
             }
@@ -467,7 +404,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     }
 
     public void prepareExoPlayerFromURL(Uri uri, String music_slug, boolean play_when_ready) {
-
         current_music_slug = music_slug;
         if (exoPlayer != null) {
             exoPlayer.release();
@@ -483,7 +419,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
         exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
 
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "casset"), null);
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "pilo"), null);
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
         MediaSource audioSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
@@ -547,7 +483,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             intent.setAction(CUSTOM_PLAYER_INTENT);
             intent.putExtra("pause", true);
             sendBroadcast(intent);
-            showNotification();
         } else {
             exoPlayer.setPlayWhenReady(true);
             Intent intent = new Intent();
@@ -561,8 +496,8 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             if (mAudioManager != null) {
                 mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             }
-            showNotification();
         }
+        showNotification();
     }
 
     public class LocalBinder extends Binder {
@@ -599,127 +534,12 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     }
 
     private void showNotification() {
-
-
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setAction(Intent.ACTION_MEDIA_BUTTON);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //Intent for Play
-        Intent playIntent = new Intent(this, PlayerService.class);
-        playIntent.setAction("toggle");
-        PendingIntent pplayIntent = PendingIntent.getService(this, 0, playIntent, 0);
-
-
-        //Intent for next
-        Intent nextIntent = new Intent(this, PlayerService.class);
-        nextIntent.setAction("next");
-        PendingIntent nextPIntent = PendingIntent.getService(this, 0, nextIntent, 0);
-
-        //Intent for previous
-        Intent previousIntent = new Intent(this, PlayerService.class);
-        previousIntent.setAction("previous");
-        PendingIntent ppreviousIntent = PendingIntent.getService(this, 0, previousIntent, 0);
-
-        //Intent for close
-        Intent closeIntent = new Intent(this, PlayerService.class);
-        closeIntent.setAction("close");
-        PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "my_casset_channel";// The id of the channel.
-            CharSequence name = "casset";// The user-visible name of the channel.
-            int importance = NotificationManager.IMPORTANCE_LOW;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            notifManager.createNotificationChannel(mChannel);
-        }
-
-        int play_pause_icon = 0;
-
-        if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
-            play_pause_icon = R.drawable.ic_pause_notification;
-        } else {
-            play_pause_icon = R.drawable.ic_play_notification;
-        }
-
         Music music = AppDatabase.getInstance(this).musicDao().findById(current_music_slug);
-        if (music != null) {
-            String artist_name = "";
-            if (music.getArtist() != null) {
-                artist_name = music.getArtist().getName();
-            }
-            NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(PlayerService.this, "my_casset_channel")
-                    .setContentTitle(Html.fromHtml(music.getTitle()))
-                    .setContentText(Html.fromHtml(artist_name))
-                    .setPriority(Notification.PRIORITY_LOW)
-                    .setSmallIcon(R.drawable.ic_pilo_logo)
-                    .setContentIntent(pendingIntent)
-                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
-                    .setOngoing(true)
-                    .addAction(R.drawable.ic_previous_notification, "", ppreviousIntent)
-                    .addAction(play_pause_icon, "", pplayIntent)
-                    .addAction(R.drawable.ic_next_notification, "", nextPIntent)
-                    .addAction(R.drawable.ic_close_notification, "", pcloseIntent);
-
-
-            if (Build.VERSION.SDK_INT >= 26) {
-                startForeground(NOTIF_ID, mNotificationBuilder.build());
-            } else {
-                notifManager.notify(NOTIF_ID,
-                        mNotificationBuilder.build());
-            }
-            int largeIconSize = Math.round(64 * getResources().getDisplayMetrics().density);
-            Glide.with(this).asBitmap().load(music.getImage()).override(largeIconSize, largeIconSize)
-                    .placeholder(R.drawable.placeholder_song).into(new BaseTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    mNotificationBuilder.setLargeIcon(resource);
-                    notifManager.notify(NOTIF_ID,
-                            mNotificationBuilder.build());
-                }
-
-                @Override
-                public void getSize(@NonNull SizeReadyCallback cb) {
-                    cb.onSizeReady(largeIconSize, largeIconSize);
-
-                }
-
-                @Override
-                public void removeCallback(@NonNull SizeReadyCallback cb) {
-
-                }
-            });
-
-
-        } else {
-            NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(PlayerService.this, "my_casset_channel")
-                    .setPriority(Notification.PRIORITY_LOW)
-                    .setSmallIcon(R.drawable.ic_pilo_logo)
-                    .setContentIntent(pendingIntent)
-                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle())
-                    .setOngoing(true)
-                    .addAction(R.drawable.ic_previous_notification, "", ppreviousIntent)
-                    .addAction(play_pause_icon, "", pplayIntent)
-                    .addAction(R.drawable.ic_next_notification, "", nextPIntent)
-                    .addAction(R.drawable.ic_close, "", pcloseIntent);
-
-            if (Build.VERSION.SDK_INT >= 26) {
-                startForeground(NOTIF_ID, mNotificationBuilder.build());
-            } else {
-                notifManager.notify(NOTIF_ID,
-                        mNotificationBuilder.build());
-            }
-        }
+        notificationBuilder.show(music);
     }
 
 
     private void updateMediaSessionMetaData() {
-        mMediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mMediaSession.setCaptioningEnabled(true);
 
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, new Intent(this, PlayerService.class), 0);

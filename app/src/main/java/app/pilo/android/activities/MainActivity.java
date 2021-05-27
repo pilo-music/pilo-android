@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -423,7 +422,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
                 img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             }
-
             Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(current_music_slug);
             if (music != null) {
                 tv_music_player_collapsed_title.setText(music.getTitle());
@@ -437,7 +435,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                         .error(R.drawable.ic_music_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(riv_music_player_collapsed_image);
-
 
                 if (MusicDownloader.checkExists(this, music, userSharedPrefManager.getDownloadQuality())) {
                     img_extended_music_player_download.setEnabled(false);
