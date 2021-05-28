@@ -248,19 +248,14 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                     if (action == KeyEvent.ACTION_DOWN) {
                         d++;
                         Handler handler = new Handler();
-                        Runnable r = new Runnable() {
-
-                            @Override
-                            public void run() {
-
-                                if (d == 1) {
-                                    togglePlay();
-                                }
-                                if (d == 2) {
-                                    skipToNext();
-                                }
-                                d = 0;
+                        Runnable r = () -> {
+                            if (d == 1) {
+                                togglePlay();
                             }
+                            if (d == 2) {
+                                skipToNext();
+                            }
+                            d = 0;
                         };
                         if (d == 1) {
                             handler.postDelayed(r, 500);
@@ -341,8 +336,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         } else if (current_items.size() > 0) {
             playTrack(current_items.get(0).getSlug());
         }
-
-
     }
 
     private void playTrack(String music_slug) {
