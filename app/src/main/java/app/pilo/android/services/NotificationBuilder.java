@@ -24,13 +24,16 @@ import org.jetbrains.annotations.NotNull;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
+import app.pilo.android.db.AppDatabase;
+import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 
 public class NotificationBuilder {
 
     private final PlayerService context;
-    private final NotificationManager notifManager;
+    private final NotificationManager notificationManager;
     private final SimpleExoPlayer exoPlayer;
+    private UserSharedPrefManager userSharedPrefManager;
 
     private static final int NOTIF_ID = 32432;
     private static final String CHANNEL_ID = "my_pilo_channel";
@@ -41,11 +44,14 @@ public class NotificationBuilder {
     public NotificationBuilder(PlayerService context, SimpleExoPlayer exoPlayer) {
         this.context = context;
         this.exoPlayer = exoPlayer;
-        notifManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        userSharedPrefManager = new UserSharedPrefManager(context);
     }
 
 
-    public void show(Music music) {
+    public void show() {
+        Music music = AppDatabase.getInstance(context).musicDao().findById(currentMusicSlug());
+
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MEDIA_BUTTON);
 
@@ -77,7 +83,7 @@ public class NotificationBuilder {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
-            notifManager.createNotificationChannel(mChannel);
+            notificationManager.createNotificationChannel(mChannel);
         }
 
         if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
@@ -111,7 +117,7 @@ public class NotificationBuilder {
                 @Override
                 public void onResourceReady(@NonNull @NotNull Bitmap resource, @Nullable @org.jetbrains.annotations.Nullable Transition<? super Bitmap> transition) {
                     mNotificationBuilder.setLargeIcon(resource);
-                    notifManager.notify(NOTIF_ID,
+                    notificationManager.notify(NOTIF_ID,
                             mNotificationBuilder.build());
                 }
 
@@ -124,7 +130,7 @@ public class NotificationBuilder {
             if (Build.VERSION.SDK_INT >= 26) {
                 context.startForeground(NOTIF_ID, mNotificationBuilder.build());
             } else {
-                notifManager.notify(NOTIF_ID,
+                notificationManager.notify(NOTIF_ID,
                         mNotificationBuilder.build());
             }
 
@@ -133,7 +139,11 @@ public class NotificationBuilder {
 
 
     public void cancelAll() {
-        notifManager.cancelAll();
+        notificationManager.cancelAll();
     }
 
+
+    private String currentMusicSlug() {
+        return userSharedPrefManager.getActiveMusicSlug();
+    }
 }

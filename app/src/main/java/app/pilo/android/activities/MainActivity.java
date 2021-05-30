@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (playerService != null) {
-                    playerService.seekTo(seekBar.getProgress());
+                    playerService.getMusicModule().getMusicPlayer().seekTo(seekBar.getProgress());
                 }
 
                 is_seeking = false;
@@ -405,7 +405,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             playerViewPagerAdapter.notifyDataSetChanged();
             view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
         }
-        String current_music_slug = playerService.getCurrent_music_slug();
+        String current_music_slug = getCurrentSlug();
         if (current_music_slug.equals("")) {
             current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
         }
@@ -415,7 +415,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
 
-            if (playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady()) {
+            if (isPlayerReady()) {
                 img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
                 img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
             } else {
@@ -513,7 +513,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             if (playerService != null) {
-                playerService.getPlayer().setPlayWhenReady(false);
+                playerService.getMusicModule().getMusicPlayer().getExoPlayer().setPlayWhenReady(false);
             }
         } else if (intent.getBooleanExtra("notify", false)) {
             initPlayerUi();
@@ -620,12 +620,12 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     public boolean isPlaying() {
-        return playerService != null && playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady();
+        return playerService != null && isPlayerReady();
     }
 
     public void pause() {
-        if (playerService != null && playerService.getPlayer() != null && playerService.getPlayer().getPlayWhenReady()) {
-            playerService.togglePlay();
+        if (playerService != null && isPlayerReady()) {
+            playerService.getMusicModule().getMusicPlayer().togglePlay();
         }
     }
 
@@ -662,7 +662,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @Subscribe(priority = 1, threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicRelatedEvent event) {
-        if (event.musicSlug.equals(playerService.getCurrent_music_slug())) {
+        if (event.musicSlug.equals(getCurrentSlug())) {
             return;
         }
 
@@ -676,8 +676,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @OnClick({R.id.img_extended_music_player_play, R.id.img_music_player_collapsed_play})
     void img_extended_music_player_play() {
-        if (playerService != null && !playerService.getCurrent_music_slug().equals("") && playerService.getPlayer() != null) {
-            playerService.togglePlay();
+        if (playerService != null && getCurrentSlug().equals("") && isPlayerReady()) {
+            playerService.getMusicModule().getMusicPlayer().togglePlay();
         } else {
             String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
             if (!current_music_slug.equals("")) {
@@ -689,8 +689,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @OnClick({R.id.img_extended_music_player_previous, R.id.img_music_player_collapsed_prev})
     void img_extended_music_player_previous() {
-        if (playerService != null && playerService.getPlayer() != null && ((playerService.getPlayer().getCurrentPosition() * 100) / playerService.getPlayer().getDuration() > 5)) {
-            playerService.getPlayer().seekTo(0);
+        if (playerService != null && isPlayerReady() && ((playerService.getMusicModule().getMusicPlayer().getCurrentMusicPosition() * 100) / playerService.getMusicModule().getMusicPlayer().getDuration() > 5)) {
+            playerService.getMusicModule().getMusicPlayer().seekTo(0);
         } else {
             if (musics.size() > 0) {
                 int active_index = -1;
@@ -1046,6 +1046,14 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 setupMusicControlAndMusicLoading();
             }
         });
+    }
+
+    private String getCurrentSlug() {
+        return userSharedPrefManager.getActiveMusicSlug();
+    }
+
+    private boolean isPlayerReady(){
+        return playerService.getMusicModule().getMusicPlayer().isPlayerReady();
     }
 
     @Override

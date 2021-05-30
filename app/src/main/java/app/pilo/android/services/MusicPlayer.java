@@ -1,6 +1,5 @@
 package app.pilo.android.services;
 
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -23,19 +22,20 @@ public class MusicPlayer implements iMusicPlayer {
     private final SimpleExoPlayer exoPlayer;
     private final AudioManager audioManager;
     private final UserSharedPrefManager userSharedPrefManager;
-    private final Context context;
+    private final PlayerService context;
     private final Handler handler;
     private final Runnable updateProgressAction = this::updateProgress;
-
+    private final NotificationBuilder notificationBuilder;
 
     public static String CUSTOM_PLAYER_INTENT = "app.pilo.android.Services.custom_broadcast_intent";
 
 
-    public MusicPlayer(Context context, SimpleExoPlayer exoPlayer, AudioManager audioManager) {
+    public MusicPlayer(PlayerService context, SimpleExoPlayer exoPlayer, AudioManager audioManager, NotificationBuilder notificationBuilder) {
         this.exoPlayer = exoPlayer;
         this.context = context;
         this.audioManager = audioManager;
         this.userSharedPrefManager = new UserSharedPrefManager(context);
+        this.notificationBuilder = notificationBuilder;
         handler = new Handler();
     }
 
@@ -64,7 +64,7 @@ public class MusicPlayer implements iMusicPlayer {
 
     @Override
     public void playTrack(String slug) {
-        int result = audioManager.requestAudioFocus((AudioManager.OnAudioFocusChangeListener) context,
+        int result = audioManager.requestAudioFocus(context,
                 AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (result != AudioManager.AUDIOFOCUS_GAIN) {
             return;
@@ -76,19 +76,19 @@ public class MusicPlayer implements iMusicPlayer {
             return;
         }
 
-// -------------       For playing from file if downloaded
+        // For playing from file if downloaded
         Download downloaded = AppDatabase.getInstance(context).downloadDao().findById(currentMusicSlug());
         if (downloaded != null && MusicDownloader.checkExists(context, musicTable, userSharedPrefManager.getStreamQuality())) {
             String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath128() : downloaded.getPath128();
             File file = new File(downloadedFile);
             Uri uri = Uri.fromFile(file);
             userSharedPrefManager.setActiveMusicSlug(currentMusicSlug());
-            prepareExoPlayerFromURL(uri, currentMusicSlug(), true);
+            context.prepareExoPlayerFromURL(uri, currentMusicSlug(), true);
         } else {
             String url = Utils.getMp3UrlForStreaming(context, musicTable);
             if (!url.equals("")) {
                 userSharedPrefManager.setActiveMusicSlug(currentMusicSlug());
-                prepareExoPlayerFromURL(Uri.parse(url), currentMusicSlug(), true);
+                context.prepareExoPlayerFromURL(Uri.parse(url), currentMusicSlug(), true);
             }
         }
 
@@ -96,20 +96,16 @@ public class MusicPlayer implements iMusicPlayer {
         intent.setAction(CUSTOM_PLAYER_INTENT);
         intent.putExtra("notify", true);
         context.sendBroadcast(intent);
-        audioManager.requestAudioFocus((AudioManager.OnAudioFocusChangeListener) context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
     @Override
-    public void prepareExoPlayerFromURL(Uri url, String slug, boolean playWhenReady) {
-    }
-
-    @Override
-    public void seekTo(int progress) {
+    public void seekTo(long progress) {
         exoPlayer.seekTo(progress);
     }
 
     @Override
-    public void updateProgress() {
+    public Runnable updateProgress() {
         if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
             Intent intent = new Intent();
             intent.setAction(CUSTOM_PLAYER_INTENT);
@@ -124,7 +120,7 @@ public class MusicPlayer implements iMusicPlayer {
                 handler.postDelayed(updateProgressAction, delayMs);
             }
         }
-
+        return this::updateProgress;
     }
 
     @Override
@@ -146,11 +142,29 @@ public class MusicPlayer implements iMusicPlayer {
             context.sendBroadcast(intent);
             handler.post(updateProgressAction);
             if (audioManager != null) {
-                audioManager.requestAudioFocus((AudioManager.OnAudioFocusChangeListener) context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             }
         }
+
+        notificationBuilder.show();
     }
 
+
+    public SimpleExoPlayer getExoPlayer() {
+        return this.exoPlayer;
+    }
+
+    public boolean isPlayerReady(){
+        return this.exoPlayer != null && this.exoPlayer.getPlayWhenReady();
+    }
+
+    public long getCurrentMusicPosition() {
+        return exoPlayer.getCurrentPosition();
+    }
+
+    public long getDuration(){
+        return this.exoPlayer.getDuration();
+    }
 
     private int findCurrentMusicIndex(List<Music> musics) {
         int activeIndex = -1;

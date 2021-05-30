@@ -8,11 +8,9 @@ public interface iMusicPlayer {
 
     void playTrack(String slug);
 
-    void prepareExoPlayerFromURL(Uri url,String slug,boolean playWhenReady);
+    void seekTo(long progress);
 
-    void seekTo(int progress);
-
-    void updateProgress();
+    Runnable updateProgress();
 
     void togglePlay();
 }
