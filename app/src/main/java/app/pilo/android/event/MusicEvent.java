@@ -22,18 +22,8 @@ public class MusicEvent {
             return;
         }
 
-        addMusicsToDB(context, musicListItems);
         playMusics(context, musicSlug, playWhenReady);
     }
-
-
-    private void addMusicsToDB(Context context, List<Music> musicList) {
-        AppDatabase.getInstance(context).musicDao().nukeTable();
-        AppDatabase.getInstance(context).musicDao().insertAll(musicList);
-        musics.clear();
-        musics.addAll(musicList);
-    }
-
 
     private void playMusics(Context context, String musicSlug, boolean playWhenReady) {
         ((MainActivity) context).play_music(musicSlug, playWhenReady);

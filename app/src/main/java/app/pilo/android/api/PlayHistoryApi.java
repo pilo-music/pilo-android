@@ -35,7 +35,6 @@ public class PlayHistoryApi {
                         response -> {
                             try {
                                 boolean status = response.getBoolean("status");
-                                Log.e("test", "add: "+status );
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

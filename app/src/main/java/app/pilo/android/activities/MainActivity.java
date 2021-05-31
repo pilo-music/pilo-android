@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,12 +44,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -74,7 +71,6 @@ import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.fragments.SingleArtistFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
-import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.PlayHistory;
 import app.pilo.android.services.PlayerService;
@@ -324,7 +320,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 super.onPageSelected(position);
                 final Handler handler = new Handler();
                 if (position != getCurrentMusicIndex()) {
-                    handler.postDelayed(() -> EventBus.getDefault().post(new MusicEvent(MainActivity.this, musics, musics.get(position).getSlug(), true)), 500);
+                    handler.postDelayed(() -> playerService.getMusicModule().getMusicPlayer().playTrack(musics, musics.get(position).getSlug()), 500);
                 }
             }
 
@@ -394,6 +390,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     private void initPlayerUi() {
+        checkPlayerService();
         if (playerService == null) {
             return;
         }
@@ -405,11 +402,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             playerViewPagerAdapter.notifyDataSetChanged();
             view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
         }
-        String current_music_slug = getCurrentSlug();
-        if (current_music_slug.equals("")) {
-            current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
-        }
-        if (!current_music_slug.equals("")) {
+
+        if (!getCurrentSlug().equals("")) {
 
             if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
                 sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -422,7 +416,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
                 img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             }
-            Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(current_music_slug);
+            Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(getCurrentSlug());
             if (music != null) {
                 tv_music_player_collapsed_title.setText(music.getTitle());
                 tv_extended_music_player_title.setText(music.getTitle());
@@ -545,7 +539,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 public void onGetInfo(Object data, String message, boolean status) {
                     if (status) {
                         List<Music> result = (List<Music>) data;
-                        EventBus.getDefault().post(new MusicEvent(MainActivity.this, result, result.get(0).getSlug(), false));
+                        playerService.getMusicModule().getMusicPlayer().playTrack(result, result.get(0).getSlug());
                     } else {
                         sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                     }
@@ -575,10 +569,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
 
     public void play_music(String music_slug, boolean play_when_ready) {
-        if (!mBounded || playerService == null) {
-            startPlayerService();
-            return;
-        }
+        checkPlayerService();
         setRepeatAndShuffle();
 
         if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
@@ -595,38 +586,16 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         }
 
         Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(music_slug);
+        if (music == null)
+            return;
 
         if (!music.getImage().equals("")) {
             Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()
                     .placeholder(R.drawable.placeholder_song)).load(music.getImage()).into(riv_music_player_collapsed_image);
         }
         player_progress.setProgress(0);
-
-        Download downloaded = AppDatabase.getInstance(this).downloadDao().findById(music_slug);
-        if (downloaded != null && MusicDownloader.checkExists(this, music, userSharedPrefManager.getStreamQuality())) {
-            String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath320() : downloaded.getPath128();
-            File file = new File(downloadedFile);
-            Uri uri = Uri.fromFile(file);
-            userSharedPrefManager.setActiveMusicSlug(music_slug);
-            playerService.prepareExoPlayerFromURL(uri, music_slug, play_when_ready);
-        } else {
-            String url = Utils.getMp3UrlForStreaming(MainActivity.this, music);
-            if (!url.equals("") && playerService != null) {
-                userSharedPrefManager.setActiveMusicSlug(music_slug);
-                playerService.prepareExoPlayerFromURL(Uri.parse(url), music_slug, play_when_ready);
-            }
-        }
+        playerService.getMusicModule().getMusicPlayer().playTrack(musics, music_slug);
         initPlayerUi();
-    }
-
-    public boolean isPlaying() {
-        return playerService != null && isPlayerReady();
-    }
-
-    public void pause() {
-        if (playerService != null && isPlayerReady()) {
-            playerService.getMusicModule().getMusicPlayer().togglePlay();
-        }
     }
 
     private void addMusicToHistory(Music music) {
@@ -663,71 +632,42 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     @Subscribe(priority = 1, threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicRelatedEvent event) {
         if (event.musicSlug.equals(getCurrentSlug())) {
+            playerService.getMusicModule().getMusicPlayer().togglePlay();
             return;
         }
 
         if (!musicLoading) {
             musicLoading = true;
             setupMusicControlAndMusicLoading();
-
             loadRelativeMusics(event.musics, event.musicSlug, event.playWhenReady);
         }
     }
 
     @OnClick({R.id.img_extended_music_player_play, R.id.img_music_player_collapsed_play})
     void img_extended_music_player_play() {
-        if (playerService != null && getCurrentSlug().equals("") && isPlayerReady()) {
-            playerService.getMusicModule().getMusicPlayer().togglePlay();
-        } else {
-            String current_music_slug = new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug();
-            if (!current_music_slug.equals("")) {
-                EventBus.getDefault().post(new MusicEvent(this, musics, current_music_slug, true));
-            }
+        String currentSlug = getCurrentSlug();
+        if (currentSlug.equals("")) {
+            return;
         }
+        checkPlayerService();
+        playerService.getMusicModule().getMusicPlayer().togglePlay();
         playButtonAnimation.showBonceAnimation(img_extended_music_player_play);
     }
 
     @OnClick({R.id.img_extended_music_player_previous, R.id.img_music_player_collapsed_prev})
     void img_extended_music_player_previous() {
-        if (playerService != null && isPlayerReady() && ((playerService.getMusicModule().getMusicPlayer().getCurrentMusicPosition() * 100) / playerService.getMusicModule().getMusicPlayer().getDuration() > 5)) {
+        checkPlayerService();
+        if (((playerService.getMusicModule().getMusicPlayer().getCurrentMusicPosition() * 100) / playerService.getMusicModule().getMusicPlayer().getDuration() > 5)) {
             playerService.getMusicModule().getMusicPlayer().seekTo(0);
         } else {
-            if (musics.size() > 0) {
-                int active_index = -1;
-                for (int i = 0; i < musics.size(); i++) {
-                    if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
-                        active_index = i;
-                    }
-                }
-                if (active_index != -1 && (active_index - 1) >= 0) {
-                    EventBus.getDefault().post(new MusicEvent(this, musics, musics.get(active_index - 1).getSlug(), true));
-                }
-            }
+            playerService.getMusicModule().getMusicPlayer().skip(false);
         }
     }
 
     @OnClick({R.id.img_extended_music_player_next, R.id.img_music_player_collapsed_next})
     void img_extended_music_player_next() {
-        if (musics.size() > 0) {
-            int active_index = -1;
-            for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
-                    active_index = i;
-                }
-            }
-
-            if (userSharedPrefManager.getShuffleMode()) {
-                Random random = new Random();
-                active_index = random.nextInt(musics.size());
-            }
-
-
-            if (active_index != -1 && (active_index + 1) < musics.size()) {
-                EventBus.getDefault().post(new MusicEvent(this, musics, musics.get(active_index + 1).getSlug(), true));
-            } else if (musics.size() > 0) {
-                EventBus.getDefault().post(new MusicEvent(this, musics, musics.get(0).getSlug(), true));
-            }
-        }
+        checkPlayerService();
+        playerService.getMusicModule().getMusicPlayer().skip(true);
     }
 
     @OnClick(R.id.img_extended_music_player_repeat)
@@ -742,11 +682,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @OnClick(R.id.img_extended_music_player_shuffle)
     void img_extended_music_player_shuffle() {
-        if (userSharedPrefManager.getShuffleMode())
-            userSharedPrefManager.setShuffleMode(false);
-        else
-            userSharedPrefManager.setShuffleMode(true);
-
+        userSharedPrefManager.setShuffleMode(!userSharedPrefManager.getShuffleMode());
         setRepeatAndShuffle();
     }
 
@@ -1031,9 +967,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
-                    EventBus.getDefault().post(new MusicEvent(MainActivity.this, (List<Music>) data, musicSlug, playWhenReady));
+                    playerService.getMusicModule().getMusicPlayer().playTrack( (List<Music>) data, musicSlug);
                 } else {
-                    EventBus.getDefault().post(new MusicEvent(MainActivity.this, musicListItems, musicSlug, playWhenReady));
+                    playerService.getMusicModule().getMusicPlayer().playTrack(musicListItems, musicSlug);
                 }
                 musicLoading = false;
                 setupMusicControlAndMusicLoading();
@@ -1041,7 +977,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                EventBus.getDefault().post(new MusicEvent(MainActivity.this, musicListItems, musicSlug, playWhenReady));
+                playerService.getMusicModule().getMusicPlayer().playTrack(musicListItems, musicSlug);
                 musicLoading = false;
                 setupMusicControlAndMusicLoading();
             }
@@ -1052,8 +988,22 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         return userSharedPrefManager.getActiveMusicSlug();
     }
 
-    private boolean isPlayerReady(){
+    private boolean isPlayerReady() {
         return playerService.getMusicModule().getMusicPlayer().isPlayerReady();
+    }
+
+    private void checkPlayerService() {
+        if (!mBounded || playerService == null || playerService.getExpoPlayer() == null) {
+            startPlayerService();
+        }
+    }
+
+    public boolean isPlaying() {
+        return playerService != null && isPlayerReady();
+    }
+
+    public PlayerService getPlayerService() {
+        return this.playerService;
     }
 
     @Override
@@ -1095,8 +1045,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        startPlayerService();
-
+        checkPlayerService();
     }
 
     @Override
@@ -1104,7 +1053,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-
 }
 
 

@@ -33,7 +33,7 @@ public class MusicModule {
         this.mediaSession = new MediaSession(context, musicPlayer);
     }
 
-    private SimpleExoPlayer initExoPlayer(){
+    public SimpleExoPlayer initExoPlayer(){
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         DefaultTrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);

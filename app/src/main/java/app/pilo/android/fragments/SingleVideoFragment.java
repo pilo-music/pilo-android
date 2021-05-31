@@ -102,7 +102,7 @@ public class SingleVideoFragment extends BaseFragment {
     void playVideo() {
         if (!video.getVideo480().equals("")) {
             if (((MainActivity)getActivity()).isPlaying()){
-                ((MainActivity)getActivity()).pause();
+                ((MainActivity)getActivity()).getPlayerService().getMusicModule().getMusicPlayer().togglePlay();
             }
 
 

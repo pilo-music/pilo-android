@@ -11,7 +11,6 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
-
 import androidx.annotation.Nullable;
 import androidx.media.session.MediaButtonReceiver;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -127,9 +126,8 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
     public void prepareExoPlayerFromURL(Uri uri, String music_slug, boolean play_when_ready) {
         userSharedPrefManager.setActiveMusicSlug(music_slug);
-
-        if (getExpoPlayer() != null) {
-            getExpoPlayer().release();
+        if (getExpoPlayer() == null) {
+            musicModule = new MusicModule(this);
         }
 
         musicModule.getMediaSession().updateMediaSessionMetaData();
@@ -195,7 +193,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         return this.musicModule;
     }
 
-    private SimpleExoPlayer getExpoPlayer(){
+    public SimpleExoPlayer getExpoPlayer(){
         return musicModule.getMusicPlayer().getExoPlayer();
     }
 
