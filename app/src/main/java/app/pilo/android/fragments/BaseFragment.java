@@ -41,9 +41,6 @@ public class BaseFragment extends Fragment {
 
 
     public boolean checkView() {
-        if (getActivity() == null || getView() == null) {
-            return false;
-        }
-        return true;
+        return getActivity() != null && getView() != null;
     }
 }

@@ -48,9 +48,17 @@
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
-                <include layout="@layout/layout_player" />
 
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/fragment_container_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </androidx.core.widget.NestedScrollView>
+
+            <include
+                layout="@layout/layout_player"
+                android:visibility="gone" />
+
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
@@ -74,12 +82,12 @@
             android:layout_height="@dimen/tabbar_height"
             app:backgroundColor="@android:color/white"
             app:iconTint="@color/colorGray"
-            app:itemPadding="12dp"
-            app:textColor="@color/colorPrimaryDark"
             app:iconTintActive="@color/colorPrimaryDark"
             app:indicatorColor="@color/colorPrimaryLight"
             app:indicatorRadius="8dp"
-            app:menu="@menu/bottom_navigation_menu" />
+            app:itemPadding="12dp"
+            app:menu="@menu/bottom_navigation_menu"
+            app:textColor="@color/colorPrimaryDark" />
 
     </LinearLayout>
 </RelativeLayout>

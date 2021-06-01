@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
 import com.github.abdularis.buttonprogress.DownloadButtonProgress;
@@ -67,6 +66,7 @@ import app.pilo.android.fragments.AddToPlaylistFragment;
 import app.pilo.android.fragments.BaseFragment;
 import app.pilo.android.fragments.BrowserFragment;
 import app.pilo.android.fragments.HomeFragment;
+import app.pilo.android.fragments.MusicPlayerFragment;
 import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.fragments.SingleArtistFragment;
@@ -86,6 +86,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.ibrahimsn.lib.SmoothBottomBar;
+
+import static app.pilo.android.services.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
@@ -190,7 +192,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(PlayerService.CUSTOM_PLAYER_INTENT) && active) {
+            if (intent.getAction() != null && intent.getAction().equals(CUSTOM_PLAYER_INTENT) && active) {
                 handleIncomingBroadcast(intent);
             }
         }
@@ -230,11 +232,21 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         playHistoryApi = new PlayHistoryApi(this);
         userSharedPrefManager = new UserSharedPrefManager(this);
         musicApi = new MusicApi(this);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container_view, MusicPlayerFragment.class, null)
+                    .commit();
+        }
         setupMusicVerticalList();
         setupSlidingUpPanel();
         handleIncomingBroadcast(getIntent());
         setupPlayerViewPager();
         setupPlayerSeekbar();
+        setupPlayerStateListener();
+    }
+
+    private void setupPlayerStateListener() {
     }
 
     private void setupMusicVerticalList() {
@@ -522,7 +534,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     break;
                 }
                 case Constant.REPEAT_MODE_ONE: {
-                    play_music(new UserSharedPrefManager(MainActivity.this).getActiveMusicSlug(), true);
+                    playerService.getMusicModule().getMusicPlayer().playTrack(musics, getCurrentSlug());
                     break;
                 }
             }
@@ -531,7 +543,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     private void checkActiveMusic() {
         if (!userSharedPrefManager.getActiveMusicSlug().equals("")) {
-            play_music(userSharedPrefManager.getActiveMusicSlug(), false);
+            playerService.getMusicModule().getMusicPlayer().playTrack(musics, getCurrentSlug());
         } else {
             MusicApi musicApi = new MusicApi(this);
             musicApi.get(null, new HttpHandler.RequestHandler() {
@@ -567,37 +579,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         }
     }
 
-
-    public void play_music(String music_slug, boolean play_when_ready) {
-        checkPlayerService();
-        setRepeatAndShuffle();
-
-        if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
-            sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
-
-
-        if (play_when_ready) {
-            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
-            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_pause_icon));
-        } else {
-            img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
-            img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
-        }
-
-        Music music = AppDatabase.getInstance(MainActivity.this).musicDao().findById(music_slug);
-        if (music == null)
-            return;
-
-        if (!music.getImage().equals("")) {
-            Glide.with(MainActivity.this).setDefaultRequestOptions(new RequestOptions()
-                    .placeholder(R.drawable.placeholder_song)).load(music.getImage()).into(riv_music_player_collapsed_image);
-        }
-        player_progress.setProgress(0);
-        playerService.getMusicModule().getMusicPlayer().playTrack(musics, music_slug);
-        initPlayerUi();
-    }
-
     private void addMusicToHistory(Music music) {
         PlayHistory playHistory = AppDatabase.getInstance(this).playHistoryDao().search(music.getSlug());
         if (playHistory != null) {
@@ -625,7 +606,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         musics.addAll(event.musics);
         musicVerticalListAdapter.notifyDataSetChanged();
         playerViewPagerAdapter.notifyDataSetChanged();
-        initPlayerUi();
+        playerService.getMusicModule().getMusicPlayer().playTrack(musics, event.slug);
     }
 
 
@@ -967,7 +948,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 if (status) {
-                    playerService.getMusicModule().getMusicPlayer().playTrack( (List<Music>) data, musicSlug);
+                    playerService.getMusicModule().getMusicPlayer().playTrack((List<Music>) data, musicSlug);
                 } else {
                     playerService.getMusicModule().getMusicPlayer().playTrack(musicListItems, musicSlug);
                 }
@@ -998,21 +979,13 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         }
     }
 
-    public boolean isPlaying() {
-        return playerService != null && isPlayerReady();
-    }
-
-    public PlayerService getPlayerService() {
-        return this.playerService;
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         this.doubleBackToExitPressedOnce = false;
 
         IntentFilter intentToReceiveFilter = new IntentFilter();
-        intentToReceiveFilter.addAction(PlayerService.CUSTOM_PLAYER_INTENT);
+        intentToReceiveFilter.addAction(CUSTOM_PLAYER_INTENT);
         intentToReceiveFilter.setPriority(999);
         registerReceiver(mIntentReceiver, intentToReceiveFilter, null, mHandler);
         mReceiversRegistered = true;

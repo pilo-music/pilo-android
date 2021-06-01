@@ -39,6 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static app.pilo.android.services.MusicPlayer.CUSTOM_PLAYER_INTENT;
+
 public class SingleVideoFragment extends BaseFragment {
     private VideoApi videoApi;
     private LikeApi likeApi;
@@ -101,9 +103,10 @@ public class SingleVideoFragment extends BaseFragment {
     @OnClick(R.id.fl_single_video)
     void playVideo() {
         if (!video.getVideo480().equals("")) {
-            if (((MainActivity)getActivity()).isPlaying()){
-                ((MainActivity)getActivity()).getPlayerService().getMusicModule().getMusicPlayer().togglePlay();
-            }
+            Intent intent = new Intent();
+            intent.setAction(CUSTOM_PLAYER_INTENT);
+            intent.putExtra("pause", true);
+            getActivity().sendBroadcast(intent);
 
 
             PlayHistoryApi playHistoryApi = new PlayHistoryApi(getActivity());

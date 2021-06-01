@@ -25,12 +25,12 @@ import com.google.android.exoplayer2.util.Util;
 
 import app.pilo.android.helpers.UserSharedPrefManager;
 
+import static app.pilo.android.services.MusicPlayer.CUSTOM_PLAYER_INTENT;
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 
 public class PlayerService extends Service implements AudioManager.OnAudioFocusChangeListener {
-    public static String CUSTOM_PLAYER_INTENT = "app.pilo.android.Services.custom_broadcast_intent";
 
     private boolean mReceiversRegistered = false;
 

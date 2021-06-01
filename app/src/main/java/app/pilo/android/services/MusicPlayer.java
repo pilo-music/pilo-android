@@ -1,18 +1,14 @@
 package app.pilo.android.services;
 
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
-
 import com.google.android.exoplayer2.SimpleExoPlayer;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
@@ -67,6 +63,7 @@ public class MusicPlayer implements iMusicPlayer {
 
     @Override
     public void playTrack(List<Music> musics, String slug) {
+
         addMusicsToDB(musics);
 
         int result = audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
