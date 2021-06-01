@@ -87,7 +87,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
-import static app.pilo.android.services.MusicPlayer.CUSTOM_PLAYER_INTENT;
+import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
@@ -232,12 +232,15 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         playHistoryApi = new PlayHistoryApi(this);
         userSharedPrefManager = new UserSharedPrefManager(this);
         musicApi = new MusicApi(this);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
                     .add(R.id.fragment_container_view, MusicPlayerFragment.class, null)
                     .commit();
         }
+
+
         setupMusicVerticalList();
         setupSlidingUpPanel();
         handleIncomingBroadcast(getIntent());
@@ -331,7 +334,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 final Handler handler = new Handler();
-                if (position != getCurrentMusicIndex()) {
+                if (position != playerService.getMusicModule().getMusicPlayer().findCurrentMusicIndex(musics)) {
                     handler.postDelayed(() -> playerService.getMusicModule().getMusicPlayer().playTrack(musics, musics.get(position).getSlug()), 500);
                 }
             }
@@ -412,7 +415,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             musics.addAll(items_from_db);
             musicVerticalListAdapter.notifyDataSetChanged();
             playerViewPagerAdapter.notifyDataSetChanged();
-            view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
+            view_pager_extended_music_player.setCurrentItem(playerService.getMusicModule().getMusicPlayer().findCurrentMusicIndex(musics), true);
         }
 
         if (!getCurrentSlug().equals("")) {
@@ -456,7 +459,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     img_extended_music_player_like.setImageDrawable(getDrawable(R.drawable.ic_like_off));
                 }
 
-                view_pager_extended_music_player.setCurrentItem(getCurrentMusicIndex(), true);
+                view_pager_extended_music_player.setCurrentItem(playerService.getMusicModule().getMusicPlayer().findCurrentMusicIndex(musics), true);
                 // add play history
                 addMusicToHistory(music);
             }
@@ -518,9 +521,9 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         } else if (intent.getBooleanExtra("pause", false)) {
             img_extended_music_player_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
             img_music_player_collapsed_play.setImageDrawable(getDrawable(R.drawable.ic_play_icon));
-            if (playerService != null) {
-                playerService.getMusicModule().getMusicPlayer().getExoPlayer().setPlayWhenReady(false);
-            }
+//            if (playerService != null) {
+//                playerService.getMusicModule().getMusicPlayer().getExoPlayer().setPlayWhenReady(false);
+//            }
         } else if (intent.getBooleanExtra("notify", false)) {
             initPlayerUi();
         } else if (intent.getBooleanExtra("close", false)) {
@@ -589,16 +592,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         AppDatabase.getInstance(this).playHistoryDao().insert(playHistory);
         playHistoryApi.add(music.getSlug(), "music");
     }
-
-
-    private int getCurrentMusicIndex() {
-        for (int i = 0; i < musics.size(); i++) {
-            if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug()))
-                return i;
-        }
-        return 0;
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {

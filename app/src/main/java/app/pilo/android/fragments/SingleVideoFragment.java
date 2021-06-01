@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static app.pilo.android.services.MusicPlayer.CUSTOM_PLAYER_INTENT;
+import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class SingleVideoFragment extends BaseFragment {
     private VideoApi videoApi;

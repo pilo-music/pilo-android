@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 
 import app.pilo.android.services.MediaSession.MediaSession;
+import app.pilo.android.services.MusicPlayer.MusicPlayer;
 
 public class MusicModule {
 

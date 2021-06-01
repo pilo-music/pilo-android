@@ -11,7 +11,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.services.MusicPlayer;
+import app.pilo.android.services.MusicPlayer.MusicPlayer;
 import app.pilo.android.services.PlayerService;
 
 public class MediaSession {

@@ -1,4 +1,4 @@
-package app.pilo.android.services;
+package app.pilo.android.services.MusicPlayer;
 
 import android.net.Uri;
 

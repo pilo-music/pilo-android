@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.view.KeyEvent;
 
-import app.pilo.android.services.MusicPlayer;
+import app.pilo.android.services.MusicPlayer.MusicPlayer;
 
 public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private final MusicPlayer musicPlayer;

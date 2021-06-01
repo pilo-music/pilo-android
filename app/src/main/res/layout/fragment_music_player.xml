@@ -253,6 +253,4 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <include layout="@layout/list_vertical_music" />
 </LinearLayout>

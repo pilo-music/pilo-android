@@ -1,4 +1,4 @@
-package app.pilo.android.services;
+package app.pilo.android.services.MusicPlayer;
 
 import android.content.Intent;
 import android.media.AudioManager;
@@ -13,6 +13,8 @@ import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
+import app.pilo.android.services.NotificationBuilder;
+import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
 
@@ -171,7 +173,7 @@ public class MusicPlayer implements iMusicPlayer {
         return this.exoPlayer.getDuration();
     }
 
-    private int findCurrentMusicIndex(List<Music> musics) {
+    public int findCurrentMusicIndex(List<Music> musics) {
         int activeIndex = -1;
         for (int i = 0; i < musics.size(); i++) {
             if (musics.get(i).getSlug().equals(currentMusicSlug())) {
