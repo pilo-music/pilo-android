@@ -38,7 +38,10 @@
                 android:layout_height="1dp"
                 android:background="#E4E4E4" />
 
-            <include layout="@layout/layout_bottom_music_player" />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container_music_mini_player"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/list"
@@ -48,16 +51,11 @@
                 android:overScrollMode="never"
                 android:scrollbars="none">
 
-
                 <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/fragment_container_view"
+                    android:id="@+id/fragment_container_music_player"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content" />
             </androidx.core.widget.NestedScrollView>
-
-            <include
-                layout="@layout/layout_player"
-                android:visibility="gone" />
 
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
