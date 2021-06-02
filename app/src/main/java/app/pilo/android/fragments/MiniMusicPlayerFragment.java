@@ -12,17 +12,14 @@ import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
 import org.jetbrains.annotations.NotNull;
 
 import app.pilo.android.R;
@@ -98,7 +95,6 @@ public class MiniMusicPlayerFragment extends Fragment {
         }
     };
 
-
     private void handleIncomingBroadcast(Intent intent) {
         if (binding == null) {
             return;
@@ -108,6 +104,8 @@ public class MiniMusicPlayerFragment extends Fragment {
             binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
         } else if (intent.getBooleanExtra("pause", false)) {
             binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
+        } else if (intent.getBooleanExtra("loading", false)) {
+            setAudioLoading(intent.getBooleanExtra("loading", false));
         }
         initPlayerUi();
     }
@@ -136,7 +134,6 @@ public class MiniMusicPlayerFragment extends Fragment {
         }
     }
 
-
     private void setupControls() {
         if (binding == null) {
             return;
@@ -154,7 +151,6 @@ public class MiniMusicPlayerFragment extends Fragment {
             }
         });
     }
-
 
     private String getCurrentSlug() {
         return userSharedPrefManager.getActiveMusicSlug();
@@ -182,6 +178,25 @@ public class MiniMusicPlayerFragment extends Fragment {
         });
     }
 
+
+    private void setAudioLoading(boolean loading) {
+        if (!loading) {
+            binding.llMusicPlayerCollapsedControls.setVisibility(View.GONE);
+            binding.llMusicPlayerCollapsedLoading.setVisibility(View.VISIBLE);
+
+            binding.rivMusicPlayerCollapsedImage.setVisibility(View.GONE);
+            binding.rivMusicPlayerCollapsedImagePlaceholder.setVisibility(View.VISIBLE);
+        } else {
+            binding.llMusicPlayerCollapsedControls.setVisibility(View.VISIBLE);
+            binding.llMusicPlayerCollapsedLoading.setVisibility(View.GONE);
+
+            binding.rivMusicPlayerCollapsedImage.setVisibility(View.VISIBLE);
+            binding.rivMusicPlayerCollapsedImagePlaceholder.setVisibility(View.GONE);
+
+            binding.tvMusicPlayerCollapsedTitle.setText("");
+            binding.tvMusicPlayerCollapsedArtist.setText("");
+        }
+    }
 
     @Override
     public void onDestroyView() {

@@ -31,19 +31,6 @@ public class Utils {
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
 
-    public static String getMp3UrlForStreaming(Context context, Music musicTable) {
-        String quality = new UserSharedPrefManager(context).getStreamQuality();
-        if ("320".equals(quality)) {
-            if (!musicTable.getLink320().equals(""))
-                return musicTable.getLink320();
-            return musicTable.getLink128();
-        }
-
-        if (!musicTable.getLink128().equals(""))
-            return musicTable.getLink128();
-        return musicTable.getLink320();
-    }
-
     public static Typeface font(Context context) {
         return Typeface.createFromAsset(context.getAssets(), "font/font.ttf");
     }

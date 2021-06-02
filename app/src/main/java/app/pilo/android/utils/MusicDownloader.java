@@ -1,36 +1,25 @@
 package app.pilo.android.utils;
 
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.os.Environment;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.downloader.Error;
-import com.downloader.OnCancelListener;
 import com.downloader.OnDownloadListener;
-import com.downloader.OnPauseListener;
-import com.downloader.OnProgressListener;
-import com.downloader.OnStartOrResumeListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
-import com.github.abdularis.buttonprogress.DownloadButtonProgress;
-
 import java.io.File;
 import java.util.Random;
-
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
+import app.pilo.android.services.MusicPlayer.MusicUtils;
 
 public class MusicDownloader {
 
     public static int download(Context context, Music music, iDownload iDownload) {
+        MusicUtils musicUtils = new MusicUtils(context);
 
-        String url = Utils.getMp3UrlForStreaming(context, music);
+
+        String url = musicUtils.getMp3UrlForStreaming(context, music);
         String downloadQuality = new UserSharedPrefManager(context).getDownloadQuality();
         Download download = new Download();
 

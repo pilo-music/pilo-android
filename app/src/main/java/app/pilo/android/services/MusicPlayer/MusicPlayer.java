@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
+
 import com.google.android.exoplayer2.SimpleExoPlayer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
@@ -16,7 +19,6 @@ import app.pilo.android.models.Music;
 import app.pilo.android.services.NotificationBuilder;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.MusicDownloader;
-import app.pilo.android.utils.Utils;
 
 public class MusicPlayer implements iMusicPlayer {
     private final SimpleExoPlayer exoPlayer;
@@ -26,6 +28,7 @@ public class MusicPlayer implements iMusicPlayer {
     private final Handler handler;
     private final Runnable updateProgressAction = this::updateProgress;
     private final NotificationBuilder notificationBuilder;
+    private final MusicUtils utils;
 
     public static String CUSTOM_PLAYER_INTENT = "app.pilo.android.Services.custom_broadcast_intent";
     List<Music> musics;
@@ -37,6 +40,7 @@ public class MusicPlayer implements iMusicPlayer {
         this.audioManager = audioManager;
         this.userSharedPrefManager = new UserSharedPrefManager(context);
         this.notificationBuilder = notificationBuilder;
+        this.utils = new MusicUtils(context);
         handler = new Handler();
     }
 
@@ -44,7 +48,7 @@ public class MusicPlayer implements iMusicPlayer {
     @Override
     public void skip(boolean isNext) {
         List<Music> musics = AppDatabase.getInstance(context).musicDao().getAll();
-        int activeIndex = findCurrentMusicIndex(musics);
+        int activeIndex = utils.findCurrentMusicIndex(musics);
 
         if (isNext) {
             if (activeIndex != -1 && (activeIndex + 1) < musics.size()) {
@@ -64,10 +68,17 @@ public class MusicPlayer implements iMusicPlayer {
     }
 
     @Override
+    public void playTrack(List<Music> musics, String slug, boolean loadRelative) {
+        if (!loadRelative)
+            this.playTrack(musics, slug);
+        else
+            this.utils.loadRelativeMusics(musics, slug);
+    }
+
+
+    @Override
     public void playTrack(List<Music> musics, String slug) {
-
-        addMusicsToDB(musics);
-
+        utils.addMusicsToDB(musics);
         int result = audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (result != AudioManager.AUDIOFOCUS_GAIN) {
             return;
@@ -78,31 +89,30 @@ public class MusicPlayer implements iMusicPlayer {
             return;
         }
 
-        Music musicTable = AppDatabase.getInstance(context).musicDao().findById(slug);
+        Music music = AppDatabase.getInstance(context).musicDao().findById(slug);
 
-        if (musicTable == null) {
+        if (music == null) {
             return;
         }
 
+        utils.addMusicToHistory(music);
+        userSharedPrefManager.setActiveMusicSlug(slug);
+
         // For playing from file if downloaded
-        Download downloaded = AppDatabase.getInstance(context).downloadDao().findById(currentMusicSlug());
-        if (downloaded != null && MusicDownloader.checkExists(context, musicTable, userSharedPrefManager.getStreamQuality())) {
+        Download downloaded = AppDatabase.getInstance(context).downloadDao().findById(slug);
+        if (downloaded != null && MusicDownloader.checkExists(context, music, userSharedPrefManager.getStreamQuality())) {
             String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath128() : downloaded.getPath128();
             File file = new File(downloadedFile);
             Uri uri = Uri.fromFile(file);
-            userSharedPrefManager.setActiveMusicSlug(currentMusicSlug());
-            context.prepareExoPlayerFromURL(uri, slug, true);
+            context.prepareExoPlayerFromURL(uri, true);
         } else {
-            String url = Utils.getMp3UrlForStreaming(context, musicTable);
+            String url = utils.getMp3UrlForStreaming(context, music);
             if (!url.equals("")) {
-                context.prepareExoPlayerFromURL(Uri.parse(url), slug, true);
+                context.prepareExoPlayerFromURL(Uri.parse(url), true);
             }
         }
 
-        Intent intent = new Intent();
-        intent.setAction(CUSTOM_PLAYER_INTENT);
-        intent.putExtra("notify", true);
-        context.sendBroadcast(intent);
+        sendIntent("notify");
         audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
@@ -137,16 +147,10 @@ public class MusicPlayer implements iMusicPlayer {
         }
         if (exoPlayer.getPlayWhenReady()) {
             exoPlayer.setPlayWhenReady(false);
-            Intent intent = new Intent();
-            intent.setAction(CUSTOM_PLAYER_INTENT);
-            intent.putExtra("pause", true);
-            context.sendBroadcast(intent);
+            sendIntent("pause");
         } else {
             exoPlayer.setPlayWhenReady(true);
-            Intent intent = new Intent();
-            intent.setAction(CUSTOM_PLAYER_INTENT);
-            intent.putExtra("play", true);
-            context.sendBroadcast(intent);
+            sendIntent("play");
             handler.post(updateProgressAction);
             if (audioManager != null) {
                 audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -173,24 +177,14 @@ public class MusicPlayer implements iMusicPlayer {
         return this.exoPlayer.getDuration();
     }
 
-    public int findCurrentMusicIndex(List<Music> musics) {
-        int activeIndex = -1;
-        for (int i = 0; i < musics.size(); i++) {
-            if (musics.get(i).getSlug().equals(currentMusicSlug())) {
-                activeIndex = i;
-            }
-        }
-        return activeIndex;
-    }
-
     private String currentMusicSlug() {
         return userSharedPrefManager.getActiveMusicSlug();
     }
 
-    private void addMusicsToDB(List<Music> musicList) {
-        AppDatabase.getInstance(context).musicDao().nukeTable();
-        AppDatabase.getInstance(context).musicDao().insertAll(musicList);
-        musics.clear();
-        musics.addAll(musicList);
+    private void sendIntent(String action){
+        Intent intent = new Intent();
+        intent.setAction(CUSTOM_PLAYER_INTENT);
+        intent.putExtra(action, true);
+        context.sendBroadcast(intent);
     }
 }

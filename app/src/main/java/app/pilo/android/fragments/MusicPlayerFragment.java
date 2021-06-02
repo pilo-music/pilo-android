@@ -47,6 +47,7 @@ import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.services.MusicModule;
+import app.pilo.android.services.MusicPlayer.MusicUtils;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.MusicDownloader;
@@ -57,7 +58,6 @@ import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_IN
 
 public class MusicPlayerFragment extends Fragment {
 
-    private boolean musicLoading = false;
     private boolean is_seeking;
     private final Handler mHandler = new Handler();
     private boolean hasDownloadComplete = false;
@@ -73,6 +73,7 @@ public class MusicPlayerFragment extends Fragment {
     private MusicModule musicModule;
     private UserSharedPrefManager userSharedPrefManager;
     private Context context;
+    private MusicUtils musicUtils;
 
     private FragmentMusicPlayerBinding binding;
 
@@ -86,9 +87,9 @@ public class MusicPlayerFragment extends Fragment {
         View view = binding.getRoot();
         this.userSharedPrefManager = new UserSharedPrefManager(context);
         this.musics = new ArrayList<>();
-//        this.musics = AppDatabase.getInstance(context).musicDao().getAll();
         likeApi = new LikeApi(context);
         utils = new Utils();
+        musicUtils = new MusicUtils(context);
 
         setupService();
 
@@ -142,7 +143,7 @@ public class MusicPlayerFragment extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 final Handler handler = new Handler();
-                if (position != musicModule.getMusicPlayer().findCurrentMusicIndex(musics)) {
+                if (position != musicUtils.findCurrentMusicIndex(musics)) {
                     handler.postDelayed(() -> musicModule.getMusicPlayer().playTrack(musics, musics.get(position).getSlug()), 500);
                 }
             }
@@ -157,6 +158,13 @@ public class MusicPlayerFragment extends Fragment {
 
     private void initPlayerUi() {
         setRepeatAndShuffle();
+
+        if (musics.size() == 0) {
+            musics.addAll(AppDatabase.getInstance(context).musicDao().getAll());
+            playerViewPagerAdapter.notifyDataSetChanged();
+        }
+
+
         if (!getCurrentSlug().equals("")) {
             if (isPlayerReady()) {
                 binding.imgExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
@@ -182,7 +190,7 @@ public class MusicPlayerFragment extends Fragment {
                     binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
                 }
 
-                binding.viewPagerExtendedMusicPlayer.setCurrentItem(musicModule.getMusicPlayer().findCurrentMusicIndex(musics), true);
+                binding.viewPagerExtendedMusicPlayer.setCurrentItem(musicUtils.findCurrentMusicIndex(musics), true);
             }
         }
     }
@@ -348,7 +356,7 @@ public class MusicPlayerFragment extends Fragment {
     void toArtist() {
         if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
             for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
                     getMainActivity().pushFragment(new SingleArtistFragment(musics.get(i).getArtist()));
                     getMainActivity().getSliding_layout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
@@ -359,7 +367,7 @@ public class MusicPlayerFragment extends Fragment {
     void share() {
         if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
             for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
                     new ShareCompat.IntentBuilder(context)
                             .setType("text/plain")
                             .setChooserTitle(musics.get(i).getTitle())
@@ -374,7 +382,7 @@ public class MusicPlayerFragment extends Fragment {
     void addToPlaylist() {
         if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
             for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
                     getMainActivity().pushFragment(new AddToPlaylistFragment(musics.get(i)));
                     getSlidingLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
@@ -388,7 +396,7 @@ public class MusicPlayerFragment extends Fragment {
         binding.downloadProgressExtendedMusicPlayer.setIndeterminate();
         if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
             for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
+                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
                     hasDownloadComplete = false;
                     fileDownloadId = 0;
                     fileDownloadId = MusicDownloader.download(context, musics.get(i), new MusicDownloader.iDownload() {

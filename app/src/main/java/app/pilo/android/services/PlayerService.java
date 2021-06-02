@@ -11,8 +11,10 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
+
 import androidx.annotation.Nullable;
 import androidx.media.session.MediaButtonReceiver;
+
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -38,8 +40,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private Handler mHandler;
     private PlaybackStateCompat.Builder mStateBuilder;
     private MediaBroadcastReceiver mediaBroadcastReceiver;
-    private UserSharedPrefManager userSharedPrefManager;
-
     private MusicModule musicModule;
 
     @Nullable
@@ -60,7 +60,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         mBinder = new LocalBinder();
         this.musicModule = new MusicModule(this);
         mediaBroadcastReceiver = new MediaBroadcastReceiver(musicModule.getMusicPlayer());
-        this.userSharedPrefManager = new UserSharedPrefManager(this);
     }
 
     @Override
@@ -124,8 +123,13 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         }
     }
 
-    public void prepareExoPlayerFromURL(Uri uri, String music_slug, boolean play_when_ready) {
-        userSharedPrefManager.setActiveMusicSlug(music_slug);
+    public void prepareExoPlayerFromURL(Uri uri, boolean play_when_ready) {
+        Intent intent = new Intent();
+        intent.setAction(CUSTOM_PLAYER_INTENT);
+        intent.putExtra("progress", 0);
+        intent.putExtra("max", 0);
+        sendBroadcast(intent);
+
         if (getExpoPlayer() == null) {
             musicModule = new MusicModule(this);
         }
@@ -174,10 +178,10 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         mHandler.post(musicModule.getMusicPlayer().updateProgress());
 
 
-        Intent intent = new Intent();
-        intent.setAction(CUSTOM_PLAYER_INTENT);
-        intent.putExtra("notify", true);
-        sendBroadcast(intent);
+        Intent intent1 = new Intent();
+        intent1.setAction(CUSTOM_PLAYER_INTENT);
+        intent1.putExtra("notify", true);
+        sendBroadcast(intent1);
 
         musicModule.getNotificationBuilder().show();
     }
@@ -193,7 +197,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         return this.musicModule;
     }
 
-    public SimpleExoPlayer getExpoPlayer(){
+    public SimpleExoPlayer getExpoPlayer() {
         return musicModule.getMusicPlayer().getExoPlayer();
     }
 
