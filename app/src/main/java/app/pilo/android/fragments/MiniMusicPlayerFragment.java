@@ -42,6 +42,7 @@ public class MiniMusicPlayerFragment extends Fragment {
     private MusicModule musicModule;
     private UserSharedPrefManager userSharedPrefManager;
     private Context context;
+    private boolean musicLoading = false;
 
     private FragmentMiniMusicPlayerBinding binding;
 
@@ -102,16 +103,19 @@ public class MiniMusicPlayerFragment extends Fragment {
 
         if (intent.getBooleanExtra("play", false)) {
             binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
-        } else if (intent.getBooleanExtra("pause", false)) {
+        }else if (intent.getBooleanExtra("pause", false)) {
             binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
-        } else if (intent.getBooleanExtra("loading", false)) {
-            setAudioLoading(intent.getBooleanExtra("loading", false));
+        }
+
+        if (intent.hasExtra("loading")) {
+            musicLoading = intent.getBooleanExtra("loading", false);
+            setAudioLoading();
         }
         initPlayerUi();
     }
 
     private void initPlayerUi() {
-        if (binding == null)
+        if (binding == null || musicLoading)
             return;
 
         if (!getCurrentSlug().equals("")) {
@@ -179,23 +183,24 @@ public class MiniMusicPlayerFragment extends Fragment {
     }
 
 
-    private void setAudioLoading(boolean loading) {
-        if (!loading) {
+    private void setAudioLoading() {
+        if (musicLoading) {
             binding.llMusicPlayerCollapsedControls.setVisibility(View.GONE);
             binding.llMusicPlayerCollapsedLoading.setVisibility(View.VISIBLE);
 
             binding.rivMusicPlayerCollapsedImage.setVisibility(View.GONE);
             binding.rivMusicPlayerCollapsedImagePlaceholder.setVisibility(View.VISIBLE);
+
+            binding.tvMusicPlayerCollapsedTitle.setText("");
+            binding.tvMusicPlayerCollapsedArtist.setText("");
         } else {
             binding.llMusicPlayerCollapsedControls.setVisibility(View.VISIBLE);
             binding.llMusicPlayerCollapsedLoading.setVisibility(View.GONE);
 
             binding.rivMusicPlayerCollapsedImage.setVisibility(View.VISIBLE);
             binding.rivMusicPlayerCollapsedImagePlaceholder.setVisibility(View.GONE);
-
-            binding.tvMusicPlayerCollapsedTitle.setText("");
-            binding.tvMusicPlayerCollapsedArtist.setText("");
         }
+
     }
 
     @Override
