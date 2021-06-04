@@ -2,18 +2,7 @@ package app.pilo.android.services;
 
 import android.content.Context;
 import android.media.AudioManager;
-
-
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.upstream.DefaultAllocator;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-
 import app.pilo.android.services.MediaSession.MediaSession;
 import app.pilo.android.services.MusicPlayer.MusicPlayer;
 
@@ -35,13 +24,7 @@ public class MusicModule {
     }
 
     public SimpleExoPlayer initExoPlayer(){
-        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        DefaultAllocator allocator = new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE);
-        DefaultLoadControl loadControl = new DefaultLoadControl(allocator, 600000, 8000000, 3000, 10000, -1, true);
-
-        return ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
+       return new SimpleExoPlayer.Builder(context).build();
     }
 
 

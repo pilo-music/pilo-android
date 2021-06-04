@@ -21,28 +21,34 @@ public class MediaBroadcastReceiver extends BroadcastReceiver {
             return;
         }
 
-        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
-            int state = intent.getIntExtra("state", -1);
-            switch (state) {
-                case 0:
-                    musicPlayer.togglePlay();
-                    break;
-                case 1:
-                    break;
+        switch (intent.getAction()) {
+            case Intent.ACTION_HEADSET_PLUG: {
+                int state = intent.getIntExtra("state", -1);
+                switch (state) {
+                    case 0:
+                        musicPlayer.togglePlay();
+                        break;
+                    case 1:
+                        break;
+                }
+                break;
             }
-        } else if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-            final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-            switch (state) {
-                case BluetoothAdapter.STATE_OFF:
-                case BluetoothAdapter.STATE_TURNING_OFF:
-                    musicPlayer.togglePlay();
-                    break;
-                case BluetoothAdapter.STATE_ON:
-                case BluetoothAdapter.STATE_TURNING_ON:
-                    break;
+            case BluetoothAdapter.ACTION_STATE_CHANGED: {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        musicPlayer.togglePlay();
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        break;
+                }
+                break;
             }
-        } else if (intent.getAction().equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
-            musicPlayer.togglePlay();
+            case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                musicPlayer.togglePlay();
+                break;
         }
     }
 }

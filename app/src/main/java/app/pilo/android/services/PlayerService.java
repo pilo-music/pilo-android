@@ -11,22 +11,11 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
-
 import androidx.annotation.Nullable;
 import androidx.media.session.MediaButtonReceiver;
-
-import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-
-import app.pilo.android.helpers.UserSharedPrefManager;
-
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
@@ -135,14 +124,9 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         }
 
         musicModule.getMediaSession().updateMediaSessionMetaData();
-
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "pilo"), null);
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-
-        MediaSource audioSource = new ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null);
+        getExpoPlayer().setMediaItem(MediaItem.fromUri(uri));
         getExpoPlayer().setPlayWhenReady(play_when_ready);
-        getExpoPlayer().prepare(audioSource);
-
+        getExpoPlayer().prepare();
         getExpoPlayer().setVolume(1);
         if (play_when_ready) {
             if (musicModule.getAudioManager() != null) {
@@ -150,27 +134,21 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             }
         }
 
-        getExpoPlayer().addListener(new Player.EventListener() {
-
+        getExpoPlayer().addListener(new Player.Listener() {
             @Override
-            public void onPlayerError(ExoPlaybackException error) {
-
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-                if (playbackState == STATE_ENDED) {
+            public void onPlaybackStateChanged(int state) {
+                if (state == STATE_ENDED) {
                     musicModule.getMusicPlayer().skip(false);
-                } else if (playbackState == STATE_READY) {
+                } else if (state == STATE_READY) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, getExpoPlayer().getCurrentPosition(), 1f);
                     musicModule.getMediaSession().getMediaSession().setPlaybackState(mStateBuilder.build());
-                } else if (playbackState == STATE_BUFFERING) {
+                } else if (state == STATE_BUFFERING) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_BUFFERING, getExpoPlayer().getCurrentPosition(), 1f);
                     musicModule.getMediaSession().getMediaSession().setPlaybackState(mStateBuilder.build());
                 }
             }
         });
+
         if (mHandler == null) {
             mHandler = new Handler();
         }

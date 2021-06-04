@@ -33,12 +33,11 @@ public class NotificationBuilder {
     private final PlayerService context;
     private final NotificationManager notificationManager;
     private final SimpleExoPlayer exoPlayer;
-    private UserSharedPrefManager userSharedPrefManager;
+    private final UserSharedPrefManager userSharedPrefManager;
 
     private static final int NOTIF_ID = 32432;
     private static final String CHANNEL_ID = "my_pilo_channel";
     private static final CharSequence CHANNEL_NAME = "pilo";
-    private int play_pause_icon = 0;
 
 
     public NotificationBuilder(PlayerService context, SimpleExoPlayer exoPlayer) {
@@ -86,6 +85,7 @@ public class NotificationBuilder {
             notificationManager.createNotificationChannel(mChannel);
         }
 
+        int play_pause_icon;
         if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
             play_pause_icon = R.drawable.ic_pause_notification;
         } else {

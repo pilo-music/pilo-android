@@ -13,36 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.android.volley.error.VolleyError;
-import com.downloader.PRDownloader;
-import com.downloader.Progress;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
+import com.google.android.exoplayer2.Player;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import app.pilo.android.R;
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.PlayerViewPagerAdapter;
-import app.pilo.android.api.HttpErrorHandler;
-import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.LikeApi;
 import app.pilo.android.databinding.FragmentMusicPlayerBinding;
 import app.pilo.android.db.AppDatabase;
-import app.pilo.android.db.MusicDao;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
@@ -52,22 +38,15 @@ import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.PlayButtonAnimation;
-import app.pilo.android.utils.Utils;
-
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MusicPlayerFragment extends Fragment {
 
     private boolean is_seeking;
     private final Handler mHandler = new Handler();
-    private boolean hasDownloadComplete = false;
-    private int fileDownloadId = 0;
-    private boolean likeProcess = false;
     private boolean active = false;
 
     private List<Music> musics;
-    private LikeApi likeApi;
-    private Utils utils;
     private final PlayButtonAnimation playButtonAnimation = new PlayButtonAnimation();
     private PlayerViewPagerAdapter playerViewPagerAdapter;
     private MusicModule musicModule;
@@ -82,13 +61,11 @@ public class MusicPlayerFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMusicPlayerBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         this.userSharedPrefManager = new UserSharedPrefManager(context);
         this.musics = new ArrayList<>();
-        likeApi = new LikeApi(context);
-        utils = new Utils();
         musicUtils = new MusicUtils(context);
 
         setupService();
@@ -98,7 +75,6 @@ public class MusicPlayerFragment extends Fragment {
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container_music_queue, MusicPlayerQueue.class, null)
                 .commit();
-
         return view;
     }
 
@@ -158,6 +134,9 @@ public class MusicPlayerFragment extends Fragment {
 
     private void initPlayerUi() {
         setRepeatAndShuffle();
+        if (binding == null){
+            return;
+        }
 
         if (musics.size() == 0) {
             musics.addAll(AppDatabase.getInstance(context).musicDao().getAll());
@@ -250,12 +229,18 @@ public class MusicPlayerFragment extends Fragment {
                 setupPlayerSeekbar();
                 setRepeatAndShuffle();
                 initPlayerUi();
+                setupViews();
+                setPlayerChangeState();
             }
         }
     };
 
 
     private void handleIncomingBroadcast(Intent intent) {
+        if (binding == null){
+            return;
+        }
+
         if (intent.getIntExtra("progress", -100) != -100) {
             if (!is_seeking) {
                 binding.seekbarMusic.setMax(intent.getIntExtra("max", 0));
@@ -290,30 +275,13 @@ public class MusicPlayerFragment extends Fragment {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MusicEvent event) {
-        musics.clear();
-        musics.addAll(event.musics);
-        playerViewPagerAdapter.notifyDataSetChanged();
-        initPlayerUi();
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onAttach(@NonNull @NotNull Context context) {
-        this.context = context;
-        super.onAttach(context);
+    private void setupViews() {
+        binding.imgExtendedMusicPlayerPlay.setOnClickListener(view -> play());
+        binding.imgExtendedMusicPlayerNext.setOnClickListener(view -> next());
+        binding.imgExtendedMusicPlayerPrevious.setOnClickListener(view -> previous());
+        binding.imgExtendedMusicPlayerShuffle.setOnClickListener(view -> shuffle());
+        binding.imgExtendedMusicPlayerRepeat.setOnClickListener(view -> repeat());
     }
 
 
@@ -323,7 +291,7 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
         musicModule.getMusicPlayer().togglePlay();
-        playButtonAnimation.showBonceAnimation(binding.viewPagerExtendedMusicPlayer);
+        playButtonAnimation.showBonceAnimation(binding.imgExtendedMusicPlayerPlay);
     }
 
     void previous() {
@@ -353,165 +321,17 @@ public class MusicPlayerFragment extends Fragment {
     }
 
 
-    void toArtist() {
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
-                    getMainActivity().pushFragment(new SingleArtistFragment(musics.get(i).getArtist()));
-                    getMainActivity().getSliding_layout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    void setPlayerChangeState(){
+        musicModule.getMusicPlayer().getExoPlayer().addListener(new Player.Listener() {
+            @Override
+            public void onIsLoadingChanged(boolean isLoading) {
+                if (isLoading) {
+                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-    }
-
-    void share() {
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
-                    new ShareCompat.IntentBuilder(context)
-                            .setType("text/plain")
-                            .setChooserTitle(musics.get(i).getTitle())
-                            .setText(musics.get(i).getShare_url())
-                            .startChooser();
-
-                }
-            }
-        }
-    }
-
-    void addToPlaylist() {
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
-                    getMainActivity().pushFragment(new AddToPlaylistFragment(musics.get(i)));
-                    getSlidingLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                }
-            }
-        }
-    }
-
-    void download() {
-        binding.imgExtendedMusicPlayerDownload.setVisibility(View.GONE);
-        binding.downloadProgressExtendedMusicPlayer.setVisibility(View.VISIBLE);
-        binding.downloadProgressExtendedMusicPlayer.setIndeterminate();
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(getCurrentSlug())) {
-                    hasDownloadComplete = false;
-                    fileDownloadId = 0;
-                    fileDownloadId = MusicDownloader.download(context, musics.get(i), new MusicDownloader.iDownload() {
-                        @Override
-                        public void onStartOrResumeListener() {
-                            binding.downloadProgressExtendedMusicPlayer.setDeterminate();
-                            binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-                            binding.downloadProgressExtendedMusicPlayer.setVisibility(View.VISIBLE);
-                            binding.downloadProgressExtendedMusicPlayer.setCurrentProgress(0);
-                        }
-
-                        @Override
-                        public void onProgressListener(Progress progress) {
-                            long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-                            // Displays the progress bar for the first time.
-                            binding.downloadProgressExtendedMusicPlayer.setCurrentProgress((int) progressPercent);
-                        }
-
-                        @Override
-                        public void onPauseListener() {
-
-                        }
-
-                        @Override
-                        public void onCancelListener() {
-
-                        }
-
-                        @Override
-                        public void onStart() {
-
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            hasDownloadComplete = true;
-                            binding.imgExtendedMusicPlayerDownload.setEnabled(false);
-                            binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-                            binding.imgExtendedMusicPlayerDownload.setVisibility(View.VISIBLE);
-                            binding.imgExtendedMusicPlayerDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    void clickDownloadProgress() {
-        if (!hasDownloadComplete && fileDownloadId != 0) {
-            PRDownloader.cancel(fileDownloadId);
-            binding.imgExtendedMusicPlayerDownload.setVisibility(View.VISIBLE);
-            binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-        }
-    }
-
-    void like() {
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            for (int i = 0; i < musics.size(); i++) {
-                if (musics.get(i).getSlug().equals(userSharedPrefManager.getActiveMusicSlug())) {
-                    if (likeProcess)
-                        return;
-                    if (!musics.get(i).isHas_like()) {
-                        likeProcess = true;
-                        utils.animateHeartButton(binding.imgExtendedMusicPlayerLike);
-                        binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                        int finalI = i;
-                        likeApi.like(musics.get(i).getSlug(), "music", "add", new HttpHandler.RequestHandler() {
-                            @Override
-                            public void onGetInfo(Object data, String message, boolean status) {
-                                if (!status) {
-                                    new HttpErrorHandler(getMainActivity(), message);
-                                    binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                                } else {
-                                    musics.get(finalI).setHas_like(true);
-                                }
-                            }
-
-                            @Override
-                            public void onGetError(@Nullable VolleyError error) {
-                                new HttpErrorHandler(getMainActivity());
-                                binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                            }
-                        });
-                        likeProcess = false;
-                    } else {
-                        likeProcess = true;
-                        binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                        int finalI1 = i;
-                        likeApi.like(musics.get(i).getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
-                            @Override
-                            public void onGetInfo(Object data, String message, boolean status) {
-                                if (!status) {
-                                    new HttpErrorHandler(getMainActivity(), message);
-                                    binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                                } else {
-                                    musics.get(finalI1).setHas_like(false);
-                                }
-                            }
-
-                            @Override
-                            public void onGetError(@Nullable VolleyError error) {
-                                new HttpErrorHandler(getMainActivity());
-                                binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                            }
-                        });
-                        likeProcess = false;
-                    }
-                }
-            }
-        }
+        });
     }
 
     private String getCurrentSlug() {
@@ -522,11 +342,30 @@ public class MusicPlayerFragment extends Fragment {
         return musicModule.getMusicPlayer().isPlayerReady();
     }
 
-    private SlidingUpPanelLayout getSlidingLayout() {
-        return ((MainActivity) context).getSliding_layout();
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MusicEvent event) {
+        musics.clear();
+        musics.addAll(event.musics);
+        playerViewPagerAdapter.notifyDataSetChanged();
+        initPlayerUi();
     }
 
-    private MainActivity getMainActivity() {
-        return ((MainActivity) context);
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onAttach(@NonNull @NotNull Context context) {
+        this.context = context;
+        super.onAttach(context);
     }
 }

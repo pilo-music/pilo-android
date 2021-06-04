@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import app.pilo.android.R
-import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -24,7 +23,7 @@ class VideoPlayerActivity : BaseActivity() {
 
     private fun initializePlayer() {
 
-        player = ExoPlayerFactory.newSimpleInstance(this)
+        player = SimpleExoPlayer.Builder(this).build();
         val url = intent.getStringExtra("url")
 
         mediaDataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"))
