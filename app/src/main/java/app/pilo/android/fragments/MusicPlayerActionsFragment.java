@@ -89,7 +89,6 @@ public class MusicPlayerActionsFragment extends Fragment {
 
 
     private void initPlayerUi() {
-        //todo like icon don't change
         if (binding == null) {
             return;
         }

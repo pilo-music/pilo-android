@@ -13,36 +13,23 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
-
-import com.android.volley.error.VolleyError;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.MusicDraggableVerticalListAdapter;
-import app.pilo.android.api.HttpHandler;
-import app.pilo.android.api.MusicApi;
-import app.pilo.android.api.PlayHistoryApi;
-import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.fragments.BaseFragment;
@@ -54,7 +41,6 @@ import app.pilo.android.fragments.ProfileFragment;
 import app.pilo.android.fragments.SearchFragment;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.models.PlayHistory;
 import app.pilo.android.services.MusicPlayer.MusicUtils;
 import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
@@ -391,42 +377,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
 
     }
-
-//    private void setupMusicControlAndMusicLoading() {
-//        LinearLayout ll_extended_music_player_controls = musicPlayerFragment.getView().findViewById(R.id.ll_extended_music_player_controls);
-//        LinearLayout ll_music_player_collapsed_controls = miniMusicPlayerFragment.getView().findViewById(R.id.ll_music_player_collapsed_controls);
-//
-//        LinearLayout ll_extended_music_player_loading = musicPlayerFragment.getView().findViewById(R.id.ll_extended_music_player_loading);
-//        LinearLayout ll_music_player_collapsed_loading = miniMusicPlayerFragment.getView().findViewById(R.id.ll_music_player_collapsed_loading);
-//
-//        LinearLayout riv_music_player_collapsed_image = miniMusicPlayerFragment.getView().findViewById(R.id.riv_music_player_collapsed_image);
-//        LinearLayout riv_music_player_collapsed_image_placeholder = miniMusicPlayerFragment.getView().findViewById(R.id.riv_music_player_collapsed_image_placeholder);
-//        TextView tv_music_player_collapsed_title = miniMusicPlayerFragment.getView().findViewById(R.id.tv_music_player_collapsed_title);
-//        TextView tv_music_player_collapsed_artist = miniMusicPlayerFragment.getView().findViewById(R.id.tv_music_player_collapsed_artist);
-//
-//        if (musicLoading) {
-//            ll_extended_music_player_controls.setVisibility(View.GONE);
-//            ll_music_player_collapsed_controls.setVisibility(View.GONE);
-//
-//            ll_extended_music_player_loading.setVisibility(View.VISIBLE);
-//            ll_music_player_collapsed_loading.setVisibility(View.VISIBLE);
-//
-//            riv_music_player_collapsed_image.setVisibility(View.GONE);
-//            riv_music_player_collapsed_image_placeholder.setVisibility(View.VISIBLE);
-//            tv_music_player_collapsed_title.setText("");
-//            tv_music_player_collapsed_artist.setText("");
-//        } else {
-//            ll_extended_music_player_controls.setVisibility(View.VISIBLE);
-//            ll_music_player_collapsed_controls.setVisibility(View.VISIBLE);
-//
-//            ll_extended_music_player_loading.setVisibility(View.GONE);
-//            ll_music_player_collapsed_loading.setVisibility(View.GONE);
-//
-//            riv_music_player_collapsed_image_placeholder.setVisibility(View.GONE);
-//            riv_music_player_collapsed_image.setVisibility(View.VISIBLE);
-//        }
-//    }
-
 
     private String getCurrentSlug() {
         return userSharedPrefManager.getActiveMusicSlug();

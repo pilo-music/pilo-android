@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
-
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class MusicPlayer implements iMusicPlayer {
 
     @Override
     public void skip(boolean isNext) {
-        List<Music> musics = AppDatabase.getInstance(context).musicDao().getAll();
+        List<Music> musics = getCurrentPlaylist();
         int activeIndex = utils.findCurrentMusicIndex(musics);
 
         if (isNext) {
@@ -145,6 +145,13 @@ public class MusicPlayer implements iMusicPlayer {
         if (exoPlayer == null) {
             return;
         }
+
+        if (exoPlayer.getPlaybackState() == Player.STATE_IDLE){
+            List<Music> musics = getCurrentPlaylist();
+            playTrack(musics,currentMusicSlug());
+            return;
+        }
+
         if (exoPlayer.getPlayWhenReady()) {
             exoPlayer.setPlayWhenReady(false);
             sendIntent("pause");
@@ -179,6 +186,10 @@ public class MusicPlayer implements iMusicPlayer {
 
     private String currentMusicSlug() {
         return userSharedPrefManager.getActiveMusicSlug();
+    }
+
+    private List<Music> getCurrentPlaylist(){
+        return AppDatabase.getInstance(context).musicDao().getAll();
     }
 
     private void sendIntent(String action){
