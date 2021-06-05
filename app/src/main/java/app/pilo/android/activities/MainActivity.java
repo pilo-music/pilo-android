@@ -118,6 +118,18 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             playerService = mLocalBinder.getServerInstance();
             if (playerService != null && active) {
                 initPlayerUi();
+
+                MiniMusicPlayerFragment miniMusicPlayerFragment = new MiniMusicPlayerFragment(playerService.getMusicModule());
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .add(R.id.fragment_container_music_mini_player, miniMusicPlayerFragment, null)
+                        .commit();
+
+                MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment(playerService.getMusicModule());
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .add(R.id.fragment_container_music_player, musicPlayerFragment, null)
+                        .commit();
             }
         }
     };
@@ -139,19 +151,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         musics = new ArrayList<>();
         userSharedPrefManager = new UserSharedPrefManager(this);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_music_mini_player, MiniMusicPlayerFragment.class, null)
-                    .commit();
-
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_music_player, MusicPlayerFragment.class, null)
-                    .commit();
-        }
-
-        setupMusicVerticalList();
         setupSlidingUpPanel();
         handleIncomingBroadcast(getIntent());
         setupPlayerStateListener();
@@ -160,22 +159,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     private void setupPlayerStateListener() {
-    }
-
-    private void setupMusicVerticalList() {
-//        ll_music_vertical_show_more.setVisibility(View.GONE);
-//        tv_music_vertical_title.setVisibility(View.GONE);
-//
-//
-//        musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(this), musics, viewHolder -> itemTouchHelper.startDrag(viewHolder));
-//        ItemTouchHelper.Callback callback = new EditItemTouchHelperCallback(musicVerticalListAdapter);
-//        itemTouchHelper = new ItemTouchHelper(callback);
-//        itemTouchHelper.attachToRecyclerView(rc_music_vertical);
-//
-//
-//        rc_music_vertical.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-//        rc_music_vertical.setAdapter(musicVerticalListAdapter);
-
     }
 
     private void setupSlidingUpPanel() {
@@ -270,7 +253,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                 sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         } else {
-           musicUtils.findDefaultMusic();
+            musicUtils.findDefaultMusic();
         }
     }
 
@@ -294,7 +277,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
         }
     }
-
 
 
     private void startPlayerService() {

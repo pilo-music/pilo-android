@@ -1,14 +1,11 @@
 package app.pilo.android.fragments;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 import org.jetbrains.annotations.NotNull;
 
 import app.pilo.android.R;
@@ -29,7 +27,6 @@ import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.services.MusicModule;
-import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.PlayButtonAnimation;
 
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
@@ -39,15 +36,16 @@ public class MiniMusicPlayerFragment extends Fragment {
     private final Handler mHandler = new Handler();
     private boolean active = false;
     private final PlayButtonAnimation playButtonAnimation = new PlayButtonAnimation();
-    private MusicModule musicModule;
+    private final MusicModule musicModule;
     private UserSharedPrefManager userSharedPrefManager;
     private Context context;
     private boolean musicLoading = false;
 
     private FragmentMiniMusicPlayerBinding binding;
 
-    public MiniMusicPlayerFragment() {
+    public MiniMusicPlayerFragment(MusicModule musicModule) {
         super(R.layout.fragment_mini_music_player);
+        this.musicModule = musicModule;
     }
 
     @Override
@@ -56,6 +54,9 @@ public class MiniMusicPlayerFragment extends Fragment {
         View view = binding.getRoot();
         this.userSharedPrefManager = new UserSharedPrefManager(context);
         setupService();
+        setupControls();
+        setupSlidingUpPanel();
+        initPlayerUi();
         return view;
     }
 
@@ -65,9 +66,6 @@ public class MiniMusicPlayerFragment extends Fragment {
         intentToReceiveFilter.setPriority(999);
         context.registerReceiver(mIntentReceiver, intentToReceiveFilter, null, mHandler);
         active = true;
-
-        Intent player_service_intent = new Intent(context, PlayerService.class);
-        context.bindService(player_service_intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
@@ -79,23 +77,6 @@ public class MiniMusicPlayerFragment extends Fragment {
         }
     };
 
-
-    ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceDisconnected(ComponentName name) {
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerService.LocalBinder mLocalBinder = (PlayerService.LocalBinder) service;
-            PlayerService playerService = mLocalBinder.getServerInstance();
-            if (playerService != null && active) {
-                musicModule = playerService.getMusicModule();
-                setupControls();
-                setupSlidingUpPanel();
-                initPlayerUi();
-            }
-        }
-    };
-
     private void handleIncomingBroadcast(Intent intent) {
         if (binding == null) {
             return;
@@ -103,7 +84,7 @@ public class MiniMusicPlayerFragment extends Fragment {
 
         if (intent.getBooleanExtra("play", false)) {
             binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
-        }else if (intent.getBooleanExtra("pause", false)) {
+        } else if (intent.getBooleanExtra("pause", false)) {
             binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
         }
 

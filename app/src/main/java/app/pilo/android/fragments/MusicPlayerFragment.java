@@ -1,14 +1,11 @@
 package app.pilo.android.fragments;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +31,7 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.services.MusicModule;
 import app.pilo.android.services.MusicPlayer.MusicUtils;
-import app.pilo.android.services.PlayerService;
 import app.pilo.android.utils.Constant;
-import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.PlayButtonAnimation;
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
@@ -49,15 +44,16 @@ public class MusicPlayerFragment extends Fragment {
     private List<Music> musics;
     private final PlayButtonAnimation playButtonAnimation = new PlayButtonAnimation();
     private PlayerViewPagerAdapter playerViewPagerAdapter;
-    private MusicModule musicModule;
+    private final MusicModule musicModule;
     private UserSharedPrefManager userSharedPrefManager;
     private Context context;
     private MusicUtils musicUtils;
 
     private FragmentMusicPlayerBinding binding;
 
-    public MusicPlayerFragment() {
+    public MusicPlayerFragment(MusicModule musicModule) {
         super(R.layout.fragment_music_player);
+        this.musicModule = musicModule;
     }
 
     @Override
@@ -69,12 +65,25 @@ public class MusicPlayerFragment extends Fragment {
         musicUtils = new MusicUtils(context);
 
         setupService();
+        setupPlayerViewPager();
+        setupPlayerSeekbar();
+        setRepeatAndShuffle();
+        initPlayerUi();
+        setupViews();
+        setPlayerChangeState();
 
 
         this.getParentFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .add(R.id.fragment_container_music_queue, MusicPlayerQueue.class, null)
+                .add(R.id.fragment_container_music_player_actions, MusicPlayerActionsFragment.class, null)
                 .commit();
+
+        this.getParentFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_music_queue, MusicPlayerQueueFragment.class, null)
+                .commit();
+
+
         return view;
     }
 
@@ -154,21 +163,6 @@ public class MusicPlayerFragment extends Fragment {
             if (music != null) {
                 binding.tvExtendedMusicPlayerTitle.setText(music.getTitle());
                 binding.tvExtendedMusicPlayerArtist.setText(music.getArtist().getName());
-
-                if (MusicDownloader.checkExists(getActivity(), music, userSharedPrefManager.getDownloadQuality())) {
-                    binding.imgExtendedMusicPlayerDownload.setEnabled(false);
-                    binding.imgExtendedMusicPlayerDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
-                } else {
-                    binding.imgExtendedMusicPlayerDownload.setEnabled(true);
-                    binding.imgExtendedMusicPlayerDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_download));
-                }
-
-                if (music.isHas_like()) {
-                    binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                } else {
-                    binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                }
-
                 binding.viewPagerExtendedMusicPlayer.setCurrentItem(musicUtils.findCurrentMusicIndex(musics), true);
             }
         }
@@ -208,32 +202,7 @@ public class MusicPlayerFragment extends Fragment {
         intentToReceiveFilter.setPriority(999);
         context.registerReceiver(mIntentReceiver, intentToReceiveFilter, null, mHandler);
         active = true;
-
-        Intent player_service_intent = new Intent(context, PlayerService.class);
-        context.bindService(player_service_intent, mConnection, Context.BIND_AUTO_CREATE);
-
     }
-
-
-    ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceDisconnected(ComponentName name) {
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            PlayerService.LocalBinder mLocalBinder = (PlayerService.LocalBinder) service;
-            PlayerService playerService = mLocalBinder.getServerInstance();
-            if (playerService != null && active) {
-                musicModule = playerService.getMusicModule();
-
-                setupPlayerViewPager();
-                setupPlayerSeekbar();
-                setRepeatAndShuffle();
-                initPlayerUi();
-                setupViews();
-                setPlayerChangeState();
-            }
-        }
-    };
 
 
     private void handleIncomingBroadcast(Intent intent) {
