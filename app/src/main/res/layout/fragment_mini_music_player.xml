@@ -35,7 +35,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <TextView
+            <app.pilo.android.views.AutoScrollingTextView
                 android:id="@+id/tv_music_player_collapsed_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="@+id/riv_music_player_collapsed_image"
                 tools:text="Karma" />
 
-            <TextView
+            <app.pilo.android.views.AutoScrollingTextView
                 android:id="@+id/tv_music_player_collapsed_artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

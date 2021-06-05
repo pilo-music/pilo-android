@@ -72,18 +72,6 @@ public class MusicPlayerFragment extends Fragment {
         setupViews();
         setPlayerChangeState();
 
-
-        this.getParentFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_music_player_actions, MusicPlayerActionsFragment.class, null)
-                .commit();
-
-        this.getParentFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_music_queue, MusicPlayerQueueFragment.class, null)
-                .commit();
-
-
         return view;
     }
 
@@ -336,5 +324,16 @@ public class MusicPlayerFragment extends Fragment {
     public void onAttach(@NonNull @NotNull Context context) {
         this.context = context;
         super.onAttach(context);
+
+        this.getParentFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_music_player_actions, MusicPlayerActionsFragment.class, null)
+                .commit();
+
+        this.getParentFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_music_queue, MusicPlayerQueueFragment.class, null)
+                .commit();
+
     }
 }

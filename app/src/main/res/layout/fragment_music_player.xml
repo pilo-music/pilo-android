@@ -22,28 +22,29 @@
             android:overScrollMode="never" />
 
 
-        <TextView
+        <app.pilo.android.views.AutoScrollingTextView
             android:id="@+id/tv_extended_music_player_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:ellipsize="end"
             android:fontFamily="@font/font"
-            android:gravity="center"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/large_font_size"
-            tools:text="دختر ترک" />
+            tools:text="Naro az pisham" />
 
-        <TextView
+        <app.pilo.android.views.AutoScrollingTextView
             android:id="@+id/tv_extended_music_player_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/font"
-            android:gravity="center"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/activity_vertical_margin"
             android:textColor="@color/colorDark"
             android:textSize="@dimen/normal_font_size"
-            tools:text="علیرضا روزگار" />
+            tools:text="Hamid sefat" />
 
         <!--music progress-->
 
