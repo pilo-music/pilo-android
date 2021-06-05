@@ -90,22 +90,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
-            android:id="@+id/ll_music_player_collapsed_loading"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="horizontal">
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/ll_music_player_collapsed_controls"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -133,6 +117,23 @@
                 app:fabCustomSize="44dp"
                 app:maxImageSize="15dp"
                 app:rippleColor="@color/colorPrimary" />
+
+            <LinearLayout
+                android:id="@+id/ll_extended_music_player_loading"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:background="@drawable/primary_circle_background"
+                android:gravity="center"
+                android:visibility="gone"
+                android:elevation="2dp"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:indeterminateTint="@android:color/white" />
+            </LinearLayout>
 
 
             <ImageView

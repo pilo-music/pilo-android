@@ -95,23 +95,6 @@
                 android:textSize="10dp" />
         </LinearLayout>
 
-        <!--music control-->
-        <LinearLayout
-            android:id="@+id/ll_extended_music_player_loading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
         <LinearLayout
             android:id="@+id/ll_extended_music_player_controls"
             android:layout_width="match_parent"
@@ -147,7 +130,7 @@
                     android:src="@drawable/ic_previous" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/img_extended_music_player_play"
+                    android:id="@+id/fab_extended_music_player_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/activity_vertical_margin"
@@ -156,6 +139,24 @@
                     app:fabCustomSize="60dp"
                     app:maxImageSize="20dp"
                     app:rippleColor="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:id="@+id/ll_extended_music_player_loading"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/activity_vertical_margin"
+                    android:background="@drawable/primary_circle_background"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:elevation="10dp"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:indeterminateTint="@android:color/white" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/img_extended_music_player_next"

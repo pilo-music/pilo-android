@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.exoplayer2.Player;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +58,7 @@ public class MiniMusicPlayerFragment extends Fragment {
         setupControls();
         setupSlidingUpPanel();
         initPlayerUi();
+        setPlayerChangeState();
         return view;
     }
 
@@ -90,7 +92,6 @@ public class MiniMusicPlayerFragment extends Fragment {
 
         if (intent.hasExtra("loading")) {
             musicLoading = intent.getBooleanExtra("loading", false);
-            setAudioLoading();
         }
         initPlayerUi();
     }
@@ -123,12 +124,25 @@ public class MiniMusicPlayerFragment extends Fragment {
         if (binding == null) {
             return;
         }
+
         binding.imgMusicPlayerCollapsedPlay.setOnClickListener(v -> {
+            if (musicLoading) {
+                return;
+            }
             musicModule.getMusicPlayer().togglePlay();
             playButtonAnimation.showBonceAnimation(binding.imgMusicPlayerCollapsedPlay);
         });
-        binding.imgMusicPlayerCollapsedNext.setOnClickListener(v -> musicModule.getMusicPlayer().skip(true));
+        binding.imgMusicPlayerCollapsedNext.setOnClickListener(v -> {
+            if (musicLoading) {
+                return;
+            }
+            musicModule.getMusicPlayer().skip(true);
+        });
         binding.imgMusicPlayerCollapsedPrev.setOnClickListener(v -> {
+            if (musicLoading) {
+                return;
+            }
+
             if (((musicModule.getMusicPlayer().getCurrentMusicPosition() * 100) / musicModule.getMusicPlayer().getDuration() > 5)) {
                 musicModule.getMusicPlayer().seekTo(0);
             } else {
@@ -163,25 +177,19 @@ public class MiniMusicPlayerFragment extends Fragment {
         });
     }
 
-
-    private void setAudioLoading() {
-        if (musicLoading) {
-            binding.llMusicPlayerCollapsedControls.setVisibility(View.GONE);
-            binding.llMusicPlayerCollapsedLoading.setVisibility(View.VISIBLE);
-
-            binding.rivMusicPlayerCollapsedImage.setVisibility(View.GONE);
-            binding.rivMusicPlayerCollapsedImagePlaceholder.setVisibility(View.VISIBLE);
-
-            binding.tvMusicPlayerCollapsedTitle.setText("");
-            binding.tvMusicPlayerCollapsedArtist.setText("");
-        } else {
-            binding.llMusicPlayerCollapsedControls.setVisibility(View.VISIBLE);
-            binding.llMusicPlayerCollapsedLoading.setVisibility(View.GONE);
-
-            binding.rivMusicPlayerCollapsedImage.setVisibility(View.VISIBLE);
-            binding.rivMusicPlayerCollapsedImagePlaceholder.setVisibility(View.GONE);
-        }
-
+    void setPlayerChangeState() {
+        musicModule.getMusicPlayer().getExoPlayer().addListener(new Player.Listener() {
+            @Override
+            public void onIsLoadingChanged(boolean isLoading) {
+                if (isLoading) {
+                    binding.imgMusicPlayerCollapsedPlay.setVisibility(View.GONE);
+                    binding.llExtendedMusicPlayerLoading.setVisibility(View.VISIBLE);
+                } else {
+                    binding.imgMusicPlayerCollapsedPlay.setVisibility(View.VISIBLE);
+                    binding.llExtendedMusicPlayerLoading.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override

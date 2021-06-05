@@ -9,19 +9,25 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.exoplayer2.Player;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import app.pilo.android.R;
 import app.pilo.android.adapters.PlayerViewPagerAdapter;
 import app.pilo.android.databinding.FragmentMusicPlayerBinding;
@@ -33,6 +39,7 @@ import app.pilo.android.services.MusicModule;
 import app.pilo.android.services.MusicPlayer.MusicUtils;
 import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.PlayButtonAnimation;
+
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MusicPlayerFragment extends Fragment {
@@ -131,7 +138,7 @@ public class MusicPlayerFragment extends Fragment {
 
     private void initPlayerUi() {
         setRepeatAndShuffle();
-        if (binding == null){
+        if (binding == null) {
             return;
         }
 
@@ -143,9 +150,9 @@ public class MusicPlayerFragment extends Fragment {
 
         if (!getCurrentSlug().equals("")) {
             if (isPlayerReady()) {
-                binding.imgExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
+                binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
             } else {
-                binding.imgExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
+                binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
             }
             Music music = AppDatabase.getInstance(getActivity()).musicDao().findById(getCurrentSlug());
             if (music != null) {
@@ -194,7 +201,7 @@ public class MusicPlayerFragment extends Fragment {
 
 
     private void handleIncomingBroadcast(Intent intent) {
-        if (binding == null){
+        if (binding == null) {
             return;
         }
 
@@ -223,9 +230,9 @@ public class MusicPlayerFragment extends Fragment {
                 binding.seekbarMusic.setProgress(intent.getIntExtra("progress", 0));
             }
         } else if (intent.getBooleanExtra("play", false)) {
-            binding.imgExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
+            binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
         } else if (intent.getBooleanExtra("pause", false)) {
-            binding.imgExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
+            binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
         }
 
         initPlayerUi();
@@ -234,7 +241,7 @@ public class MusicPlayerFragment extends Fragment {
 
 
     private void setupViews() {
-        binding.imgExtendedMusicPlayerPlay.setOnClickListener(view -> play());
+        binding.fabExtendedMusicPlayerPlay.setOnClickListener(view -> play());
         binding.imgExtendedMusicPlayerNext.setOnClickListener(view -> next());
         binding.imgExtendedMusicPlayerPrevious.setOnClickListener(view -> previous());
         binding.imgExtendedMusicPlayerShuffle.setOnClickListener(view -> shuffle());
@@ -248,7 +255,7 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
         musicModule.getMusicPlayer().togglePlay();
-        playButtonAnimation.showBonceAnimation(binding.imgExtendedMusicPlayerPlay);
+        playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
     }
 
     void previous() {
@@ -278,14 +285,16 @@ public class MusicPlayerFragment extends Fragment {
     }
 
 
-    void setPlayerChangeState(){
+    void setPlayerChangeState() {
         musicModule.getMusicPlayer().getExoPlayer().addListener(new Player.Listener() {
             @Override
             public void onIsLoadingChanged(boolean isLoading) {
                 if (isLoading) {
-                    Toast.makeText(context, "loading", Toast.LENGTH_SHORT).show();
+                    binding.fabExtendedMusicPlayerPlay.setVisibility(View.GONE);
+                    binding.llExtendedMusicPlayerLoading.setVisibility(View.VISIBLE);
                 } else {
-                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+                    binding.fabExtendedMusicPlayerPlay.setVisibility(View.VISIBLE);
+                    binding.llExtendedMusicPlayerLoading.setVisibility(View.GONE);
                 }
             }
         });
