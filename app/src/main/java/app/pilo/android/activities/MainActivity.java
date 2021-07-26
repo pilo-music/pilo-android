@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -27,9 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 import app.pilo.android.R;
-import app.pilo.android.adapters.MusicDraggableVerticalListAdapter;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.fragments.BaseFragment;
@@ -72,10 +69,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private Unbinder unbinder;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
-    private MusicDraggableVerticalListAdapter musicVerticalListAdapter;
     private List<Music> musics;
     private UserSharedPrefManager userSharedPrefManager;
-    private ItemTouchHelper itemTouchHelper;
 
     private boolean mReceiversRegistered = false;
     private boolean mBounded;
