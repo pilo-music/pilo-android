@@ -9,11 +9,10 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -56,6 +55,7 @@ public class MusicPlayerFragment extends Fragment {
     private Context context;
     private MusicUtils musicUtils;
 
+    private View view;
     private FragmentMusicPlayerBinding binding;
 
     public MusicPlayerFragment(MusicModule musicModule) {
@@ -65,8 +65,13 @@ public class MusicPlayerFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentMusicPlayerBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        if (binding == null) {
+            binding = FragmentMusicPlayerBinding.inflate(inflater, container, false);
+        }
+        if (view == null) {
+            view = binding.getRoot();
+        }
+
         this.userSharedPrefManager = new UserSharedPrefManager(context);
         this.musics = new ArrayList<>();
         musicUtils = new MusicUtils(context);
@@ -343,6 +348,6 @@ public class MusicPlayerFragment extends Fragment {
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container_music_queue, MusicPlayerQueueFragment.class, null)
                 .commit();
-
     }
 }
+

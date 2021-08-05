@@ -181,7 +181,7 @@
             android:id="@+id/img_music_actions_download"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
-            android:src="@drawable/ic_download" />
+            android:src="@drawable/ic_music_actions_sync" />
 
 
         <com.github.abdularis.buttonprogress.DownloadButtonProgress

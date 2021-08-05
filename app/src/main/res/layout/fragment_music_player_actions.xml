@@ -1,123 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/activity_vertical_margin2x">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabIndicatorColor="@color/colorTransparent">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_music_actions_sync" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_music_actions_like_off" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_music_actions_more" />
-
-        </com.google.android.material.tabs.TabLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_weight="1"
         android:gravity="center"
-        android:layoutDirection="ltr"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingTop="@dimen/activity_vertical_margin2x"
-        android:paddingEnd="@dimen/activity_vertical_margin">
-
+        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/img_extended_music_player_share"
+            android:id="@+id/img_sync"
             android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:layout_weight="1"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_share" />
-
-        <ImageView
-            android:id="@+id/img_extended_music_player_add_to_playlist"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_add_to_playlist" />
-
-        <ImageView
-            android:id="@+id/img_extended_music_player_like"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:padding="@dimen/_3sdp"
-            android:src="@drawable/ic_like_off" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/img_extended_music_player_download"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_download"
-                tools:visibility="gone" />
+            android:src="@drawable/ic_music_actions_sync" />
 
 
-            <com.github.abdularis.buttonprogress.DownloadButtonProgress
-                android:id="@+id/download_progress_extended_music_player"
-                android:layout_width="@dimen/_22sdp"
-                android:layout_height="@dimen/_22sdp"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:cancelIconDrawable="@drawable/ic_close"
-                app:currentProgress="20"
-                app:determinateBackgroundDrawable="@drawable/download_determinate_drawable"
-                app:finishBackgroundDrawable="@drawable/download_idle_drawable"
-                app:idleBackgroundDrawable="@drawable/download_idle_drawable"
-                app:idleIconDrawable="@drawable/ic_download"
-                app:indeterminateBackgroundDrawable="@drawable/download_idle_drawable"
-                app:maxProgress="100"
-                app:progressDeterminateColor="@color/colorPrimary"
-                app:progressIndeterminateColor="@color/colorPrimary"
-                app:progressWidth="2.0dip"
-                app:state="DETERMINATE"
-                tools:visibility="visible" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/img_extended_music_player_go_to_artist"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_person" />
+        <com.github.abdularis.buttonprogress.DownloadButtonProgress
+            android:id="@+id/download_progress_extended_music_player"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:cancelIconDrawable="@drawable/ic_close"
+            app:currentProgress="20"
+            app:determinateBackgroundDrawable="@drawable/download_determinate_drawable"
+            app:finishBackgroundDrawable="@drawable/download_idle_drawable"
+            app:idleBackgroundDrawable="@drawable/download_idle_drawable"
+            app:idleIconDrawable="@drawable/ic_download"
+            app:indeterminateBackgroundDrawable="@drawable/download_idle_drawable"
+            app:maxProgress="100"
+            app:progressDeterminateColor="@color/colorPrimary"
+            app:progressIndeterminateColor="@color/colorPrimary"
+            app:progressWidth="2.0dip"
+            app:state="DETERMINATE" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/img_like"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:padding="@dimen/_13sdp"
+        android:src="@drawable/ic_like_off" />
+
+    <ImageView
+        android:id="@+id/img_more"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:padding="@dimen/_13sdp"
+        android:src="@drawable/ic_music_actions_more" />
 </LinearLayout>

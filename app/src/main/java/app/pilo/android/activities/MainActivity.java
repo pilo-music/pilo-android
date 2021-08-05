@@ -11,22 +11,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
 import app.pilo.android.R;
+import app.pilo.android.databinding.ActivityMainBinding;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.fragments.BaseFragment;
@@ -44,29 +48,12 @@ import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
 import app.pilo.android.views.FragNavController;
 import app.pilo.android.views.NestedScrollableViewHelper;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import me.ibrahimsn.lib.SmoothBottomBar;
 
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
-    // main activity
-    @BindView(R.id.bottom_navigation)
-    SmoothBottomBar bottom_navigation;
-    @BindView(R.id.sliding_layout)
-    SlidingUpPanelLayout sliding_layout;
-    @BindView(R.id.list)
-    NestedScrollView nestedScrollView;
-    @BindView(R.id.rl_main_layout)
-    RelativeLayout rl_main_layout;
-    @BindView(R.id.ll_tab_layout)
-    LinearLayout ll_tab_layout;
-
     private boolean doubleBackToExitPressedOnce = false;
-    private Unbinder unbinder;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
     private List<Music> musics;
@@ -78,6 +65,37 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private final Handler mHandler = new Handler();
     private boolean active = false;
     private MusicUtils musicUtils;
+
+    private ActivityMainBinding binding;
+    private View view;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (binding == null)
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+        if (view == null)
+             view = binding.getRoot();
+
+        setContentView(view);
+        setupStatusBar();
+        setupBottomNavigation();
+        fragmentHistory = new FragmentHistory();
+        mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
+                .transactionListener(this)
+                .rootFragmentListener(this, 4)
+                .build();
+        switchTab(0);
+        musicUtils = new MusicUtils(this);
+        musics = new ArrayList<>();
+        userSharedPrefManager = new UserSharedPrefManager(this);
+
+        setupSlidingUpPanel();
+        handleIncomingBroadcast(getIntent());
+        setupSlidingUpPanel();
+
+    }
+
 
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -99,84 +117,46 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             playerService = mLocalBinder.getServerInstance();
             if (playerService != null && active) {
                 initPlayerUi();
-
-                MiniMusicPlayerFragment miniMusicPlayerFragment = new MiniMusicPlayerFragment(playerService.getMusicModule());
-                getSupportFragmentManager().beginTransaction()
-                        .setReorderingAllowed(true)
-                        .add(R.id.fragment_container_music_mini_player, miniMusicPlayerFragment, null)
-                        .commit();
-
-                MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment(playerService.getMusicModule());
-                getSupportFragmentManager().beginTransaction()
-                        .setReorderingAllowed(true)
-                        .add(R.id.fragment_container_music_player, musicPlayerFragment, null)
-                        .commit();
+                createFragments();
             }
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        unbinder = ButterKnife.bind(this);
-        setupStatusBar();
-        setupBottomNavigation();
-        fragmentHistory = new FragmentHistory();
-        mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.framelayout)
-                .transactionListener(this)
-                .rootFragmentListener(this, 4)
-                .build();
-        switchTab(0);
-        musicUtils = new MusicUtils(this);
-        musics = new ArrayList<>();
-        userSharedPrefManager = new UserSharedPrefManager(this);
-
-        setupSlidingUpPanel();
-        handleIncomingBroadcast(getIntent());
-        setupPlayerStateListener();
-        setupSlidingUpPanel();
-
-    }
-
-    private void setupPlayerStateListener() {
-    }
 
     private void setupSlidingUpPanel() {
-        sliding_layout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(nestedScrollView)));
+        binding.slidingLayout.setScrollableViewHelper(new NestedScrollableViewHelper(new WeakReference<>(binding.list)));
         float tablayout_bottom_margin_collapsed = getResources().getDimension(R.dimen.tabbar_height);
-        sliding_layout.addPanelSlideListener(new PanelSlideListener() {
+        binding.slidingLayout.addPanelSlideListener(new PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_tab_layout.getLayoutParams();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.llTabLayout.getLayoutParams();
                 params.bottomMargin = (int) (-slideOffset * tablayout_bottom_margin_collapsed);
-                ll_tab_layout.setLayoutParams(params);
+                binding.llTabLayout.setLayoutParams(params);
 
             }
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
                 if (newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ll_tab_layout.getLayoutParams();
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.llTabLayout.getLayoutParams();
                     params.bottomMargin = 0;
-                    ll_tab_layout.setLayoutParams(params);
+                    binding.llTabLayout.setLayoutParams(params);
                 }
             }
         });
-        sliding_layout.setFadeOnClickListener(view -> sliding_layout.setPanelState(PanelState.COLLAPSED));
+        binding.slidingLayout.setFadeOnClickListener(view -> binding.slidingLayout.setPanelState(PanelState.COLLAPSED));
     }
 
 
     public void setupStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            rl_main_layout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            binding.rlMainLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
 
-
     private void setupBottomNavigation() {
 
-        bottom_navigation.setOnItemSelectedListener(position -> {
+        binding.bottomNavigation.setOnItemSelectedListener(position -> {
             switch (position) {
                 case 0:
                     fragmentHistory.push(0);
@@ -197,7 +177,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
             return false;
         });
-        bottom_navigation.setOnItemReselectedListener(position -> {
+        binding.bottomNavigation.setOnItemReselectedListener(position -> {
             mNavController.clearStack();
             switch (position) {
                 case 0:
@@ -216,11 +196,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         });
     }
 
-
     private void switchTab(int position) {
         mNavController.switchTab(position);
-        if (sliding_layout.getPanelState() == PanelState.EXPANDED) {
-            sliding_layout.setPanelState(PanelState.COLLAPSED);
+        if (binding.slidingLayout.getPanelState() == PanelState.EXPANDED) {
+            binding.slidingLayout.setPanelState(PanelState.COLLAPSED);
         }
     }
 
@@ -230,8 +209,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             return;
         }
         if (!getCurrentSlug().equals("")) {
-            if (sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
-                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            if (binding.slidingLayout.getPanelState() == SlidingUpPanelLayout.PanelState.HIDDEN) {
+                binding.slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             }
         } else {
             musicUtils.findDefaultMusic();
@@ -258,7 +237,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
         }
     }
-
 
     private void startPlayerService() {
         Intent player_service_intent = new Intent(this, PlayerService.class);
@@ -301,8 +279,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @Override
     public void onBackPressed() {
-        if (sliding_layout.getPanelState() == PanelState.EXPANDED) {
-            sliding_layout.setPanelState(PanelState.COLLAPSED);
+        if (binding.slidingLayout.getPanelState() == PanelState.EXPANDED) {
+            binding.slidingLayout.setPanelState(PanelState.COLLAPSED);
         } else {
             if (!mNavController.isRootFragment()) {
                 mNavController.popFragment();
@@ -320,10 +298,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
                     if (fragmentHistory.getStackSize() > 1) {
                         int position = fragmentHistory.popPrevious();
                         switchTab(position);
-                        bottom_navigation.setItemActiveIndex(position);
+                        binding.bottomNavigation.setItemActiveIndex(position);
                     } else {
                         switchTab(0);
-                        bottom_navigation.setItemActiveIndex(0);
+                        binding.bottomNavigation.setItemActiveIndex(0);
                         fragmentHistory.emptyStack();
                     }
                 }
@@ -384,7 +362,22 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     public SlidingUpPanelLayout getSliding_layout() {
-        return sliding_layout;
+        return binding.slidingLayout;
+    }
+
+
+    private void createFragments(){
+        MiniMusicPlayerFragment miniMusicPlayerFragment = new MiniMusicPlayerFragment(playerService.getMusicModule());
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_music_mini_player, miniMusicPlayerFragment, null)
+                .commit();
+
+        MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment(playerService.getMusicModule());
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container_music_player, musicPlayerFragment, null)
+                .commit();
     }
 
     @Override
@@ -417,7 +410,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     @Override
     protected void onDestroy() {
-        unbinder.unbind();
         super.onDestroy();
     }
 

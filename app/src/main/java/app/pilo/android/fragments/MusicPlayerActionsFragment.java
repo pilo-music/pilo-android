@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.error.VolleyError;
@@ -37,6 +36,7 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
+import app.pilo.android.views.MusicActionsDialog;
 
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
@@ -50,7 +50,10 @@ public class MusicPlayerActionsFragment extends Fragment {
     private int fileDownloadId = 0;
     private boolean likeProcess = false;
 
+    private Music currentMusic;
+
     private FragmentMusicPlayerActionsBinding binding;
+    private View view;
 
     public MusicPlayerActionsFragment() {
         super(R.layout.fragment_music_player_actions);
@@ -59,7 +62,12 @@ public class MusicPlayerActionsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentMusicPlayerActionsBinding.inflate(inflater, container, false);
+        if (binding == null) {
+            binding = FragmentMusicPlayerActionsBinding.inflate(inflater, container, false);
+        }
+        if (view == null){
+            view  = binding.getRoot();
+        }
         View view = binding.getRoot();
         userSharedPrefManager = new UserSharedPrefManager(context);
         likeApi = new LikeApi(context);
@@ -92,77 +100,34 @@ public class MusicPlayerActionsFragment extends Fragment {
         if (binding == null) {
             return;
         }
-        Music music = AppDatabase.getInstance(getActivity()).musicDao().findById(getCurrentSlug());
-        if (music != null) {
-            if (MusicDownloader.checkExists(getActivity(), music, userSharedPrefManager.getDownloadQuality())) {
-                binding.imgExtendedMusicPlayerDownload.setEnabled(false);
-                binding.imgExtendedMusicPlayerDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
+        currentMusic = getCurrentMusic();
+        if (currentMusic != null) {
+            if (MusicDownloader.checkExists(getActivity(), currentMusic, userSharedPrefManager.getDownloadQuality())) {
+                binding.imgSync.setEnabled(false);
+                binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
             } else {
-                binding.imgExtendedMusicPlayerDownload.setEnabled(true);
-                binding.imgExtendedMusicPlayerDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_download));
+                binding.imgSync.setEnabled(true);
+                binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_music_actions_sync));
             }
 
-            if (music.isHas_like()) {
-                binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
+            if (currentMusic.isHas_like()) {
+                binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
             } else {
-                binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
+                binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
             }
         }
     }
 
 
     void setupViews() {
-        binding.imgExtendedMusicPlayerGoToArtist.setOnClickListener(view -> toArtist());
-        binding.imgExtendedMusicPlayerShare.setOnClickListener(view -> share());
-        binding.imgExtendedMusicPlayerAddToPlaylist.setOnClickListener(view -> addToPlaylist());
-        binding.imgExtendedMusicPlayerDownload.setOnClickListener(view -> download());
+        binding.imgSync.setOnClickListener(view -> download());
         binding.downloadProgressExtendedMusicPlayer.setOnClickListener(view -> clickDownloadProgress());
-        binding.imgExtendedMusicPlayerLike.setOnClickListener(view -> like());
-    }
-
-    void toArtist() {
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-
-            Music music = getCurrentMusic();
-            if (music == null)
-                return;
-
-            getMainActivity().pushFragment(new SingleArtistFragment(music.getArtist()));
-            getMainActivity().getSliding_layout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-        }
-
-    }
-
-    void share() {
-        //todo conflict with ui
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            Music music = getCurrentMusic();
-            if (music == null)
-                return;
-
-            new ShareCompat.IntentBuilder(context)
-                    .setType("text/plain")
-                    .setChooserTitle(music.getTitle())
-                    .setText(music.getShare_url())
-                    .startChooser();
-        }
-    }
-
-    void addToPlaylist() {
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            Music music = getCurrentMusic();
-            if (music == null)
-                return;
-
-            getMainActivity().pushFragment(new AddToPlaylistFragment(music));
-            getSlidingLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
-
+        binding.imgLike.setOnClickListener(view -> like());
+        binding.imgMore.setOnClickListener(view -> new MusicActionsDialog(context, currentMusic).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
     }
 
     void download() {
-        binding.imgExtendedMusicPlayerDownload.setVisibility(View.GONE);
+        binding.imgSync.setVisibility(View.GONE);
         binding.downloadProgressExtendedMusicPlayer.setVisibility(View.VISIBLE);
         binding.downloadProgressExtendedMusicPlayer.setIndeterminate();
         if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
@@ -212,10 +177,10 @@ public class MusicPlayerActionsFragment extends Fragment {
                 @Override
                 public void onComplete() {
                     hasDownloadComplete = true;
-                    binding.imgExtendedMusicPlayerDownload.setEnabled(false);
+                    binding.imgSync.setEnabled(false);
                     binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-                    binding.imgExtendedMusicPlayerDownload.setVisibility(View.VISIBLE);
-                    binding.imgExtendedMusicPlayerDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
+                    binding.imgSync.setVisibility(View.VISIBLE);
+                    binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
                 }
             });
         }
@@ -225,61 +190,60 @@ public class MusicPlayerActionsFragment extends Fragment {
     void clickDownloadProgress() {
         if (!hasDownloadComplete && fileDownloadId != 0) {
             PRDownloader.cancel(fileDownloadId);
-            binding.imgExtendedMusicPlayerDownload.setVisibility(View.VISIBLE);
+            binding.imgSync.setVisibility(View.VISIBLE);
             binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
         }
     }
 
     void like() {
         if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            Music music = getCurrentMusic();
-            if (music == null)
+            if (currentMusic == null)
                 return;
 
             if (likeProcess)
                 return;
-            if (!music.isHas_like()) {
+            if (!currentMusic.isHas_like()) {
                 likeProcess = true;
-                utils.animateHeartButton(binding.imgExtendedMusicPlayerLike);
-                binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                likeApi.like(music.getSlug(), "music", "add", new HttpHandler.RequestHandler() {
+                utils.animateHeartButton(binding.imgLike);
+                binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
+                likeApi.like(currentMusic.getSlug(), "music", "add", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
                             new HttpErrorHandler(getMainActivity(), message);
-                            binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
+                            binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
                         } else {
-                            music.setHas_like(true);
-                            AppDatabase.getInstance(context).musicDao().update(music);
+                            currentMusic.setHas_like(true);
+                            AppDatabase.getInstance(context).musicDao().update(currentMusic);
                         }
                     }
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
                         new HttpErrorHandler(getMainActivity());
-                        binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
+                        binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
                     }
                 });
                 likeProcess = false;
             } else {
                 likeProcess = true;
-                binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                likeApi.like(music.getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
+                binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
+                likeApi.like(currentMusic.getSlug(), "music", "remove", new HttpHandler.RequestHandler() {
                     @Override
                     public void onGetInfo(Object data, String message, boolean status) {
                         if (!status) {
                             new HttpErrorHandler(getMainActivity(), message);
-                            binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
+                            binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
                         } else {
-                            music.setHas_like(false);
-                            AppDatabase.getInstance(context).musicDao().update(music);
+                            currentMusic.setHas_like(false);
+                            AppDatabase.getInstance(context).musicDao().update(currentMusic);
                         }
                     }
 
                     @Override
                     public void onGetError(@Nullable VolleyError error) {
                         new HttpErrorHandler(getMainActivity());
-                        binding.imgExtendedMusicPlayerLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
+                        binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
                     }
                 });
                 likeProcess = false;
