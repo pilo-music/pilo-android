@@ -67,15 +67,12 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     private MusicUtils musicUtils;
 
     private ActivityMainBinding binding;
-    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (binding == null)
-            binding = ActivityMainBinding.inflate(getLayoutInflater());
-        if (view == null)
-            view = binding.getRoot();
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
 
         setContentView(view);
         setupStatusBar();
@@ -145,7 +142,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         });
         binding.slidingLayout.setFadeOnClickListener(view -> binding.slidingLayout.setPanelState(PanelState.COLLAPSED));
     }
-
 
     public void setupStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -367,7 +363,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
 
     private void createFragments() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("fragment_container_music_mini_player");
-        if (fragment == null){
+        if (fragment == null) {
             MiniMusicPlayerFragment miniMusicPlayerFragment = new MiniMusicPlayerFragment(playerService.getMusicModule());
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)

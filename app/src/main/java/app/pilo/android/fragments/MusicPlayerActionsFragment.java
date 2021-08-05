@@ -53,7 +53,6 @@ public class MusicPlayerActionsFragment extends Fragment {
     private Music currentMusic;
 
     private FragmentMusicPlayerActionsBinding binding;
-    private View view;
 
     public MusicPlayerActionsFragment() {
         super(R.layout.fragment_music_player_actions);
@@ -62,12 +61,7 @@ public class MusicPlayerActionsFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (binding == null) {
-            binding = FragmentMusicPlayerActionsBinding.inflate(inflater, container, false);
-        }
-        if (view == null){
-            view  = binding.getRoot();
-        }
+        binding = FragmentMusicPlayerActionsBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         userSharedPrefManager = new UserSharedPrefManager(context);
         likeApi = new LikeApi(context);
@@ -107,7 +101,7 @@ public class MusicPlayerActionsFragment extends Fragment {
                 binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
             } else {
                 binding.imgSync.setEnabled(true);
-                binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_music_actions_sync));
+                binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_download));
             }
 
             if (currentMusic.isHas_like()) {
