@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         if (binding == null)
             binding = ActivityMainBinding.inflate(getLayoutInflater());
         if (view == null)
-             view = binding.getRoot();
+            view = binding.getRoot();
 
         setContentView(view);
         setupStatusBar();
@@ -93,7 +93,6 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         setupSlidingUpPanel();
         handleIncomingBroadcast(getIntent());
         setupSlidingUpPanel();
-
     }
 
 
@@ -366,18 +365,21 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
 
-    private void createFragments(){
-        MiniMusicPlayerFragment miniMusicPlayerFragment = new MiniMusicPlayerFragment(playerService.getMusicModule());
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_music_mini_player, miniMusicPlayerFragment, null)
-                .commit();
+    private void createFragments() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("fragment_container_music_mini_player");
+        if (fragment == null){
+            MiniMusicPlayerFragment miniMusicPlayerFragment = new MiniMusicPlayerFragment(playerService.getMusicModule());
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container_music_mini_player, miniMusicPlayerFragment, "fragment_container_music_mini_player")
+                    .commit();
 
-        MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment(playerService.getMusicModule());
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container_music_player, musicPlayerFragment, null)
-                .commit();
+            MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment(playerService.getMusicModule());
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container_music_player, musicPlayerFragment, "fragment_container_music_player")
+                    .commit();
+        }
     }
 
     @Override
