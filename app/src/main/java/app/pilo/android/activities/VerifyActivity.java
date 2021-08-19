@@ -1,17 +1,14 @@
 package app.pilo.android.activities;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
+import app.pilo.android.databinding.ActivityVerifyBinding;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-import app.pilo.android.views.PiloButton;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import co.pushe.plus.Pushe;
 
 import android.content.Intent;
@@ -19,59 +16,49 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
 
-import java.util.Map;
 
 public class VerifyActivity extends BaseActivity {
 
-    @BindView(R.id.et_code)
-    EditText et_code;
-    @BindView(R.id.et_email)
-    EditText et_email;
-    @BindView(R.id.pb_verify)
-    PiloButton pb_verify;
-
-    private String email;
+    ActivityVerifyBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verify);
-        ButterKnife.bind(this);
-        email = getIntent().getExtras().getString("email");
-        if (email == null || email.isEmpty()) {
+        binding = ActivityVerifyBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
+        String phone = getIntent().getExtras().getString("phone");
+        if (phone == null || phone.isEmpty()) {
             startActivity(new Intent(VerifyActivity.this, LoginActivity.class));
             finishAffinity();
         }
-        et_email.setText(email);
+        binding.etPhone.setText(phone);
+        binding.pbVerify.setOnClickListener(v -> verify());
     }
 
 
-    @OnClick(R.id.pb_verify)
-    void pb_verify(){
-        String email = et_email.getText().toString().trim();
-        String code = et_code.getText().toString().trim();
-        if (!isValidEmail(email)) {
-            et_email.setError(getString(R.string.email_not_valid));
+    private void verify() {
+        String phone = binding.etPhone.getText().toString().trim();
+        String code = binding.etCode.getText().toString().trim();
+        if (!isValidPhoneNumber(phone)) {
+            binding.etPhone.setError(getString(R.string.phone_not_valid));
             return;
         }
 
         if (code.length() < 4) {
-            et_code.setError(getString(R.string.invalid_verify_code));
+            binding.etCode.setError(getString(R.string.invalid_verify_code));
             return;
         }
 
-        pb_verify.setProgress(true);
-        new UserApi(VerifyActivity.this).verify(email, code, new HttpHandler.RequestHandler() {
+        binding.pbVerify.setProgress(true);
+        new UserApi(VerifyActivity.this).verify(phone, code, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                pb_verify.setProgress(false);
+                binding.pbVerify.setProgress(false);
                 if (status) {
                     doLogin((User) data);
                 } else {
@@ -81,7 +68,7 @@ public class VerifyActivity extends BaseActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                pb_verify.setProgress(false);
+                binding.pbVerify.setProgress(false);
                 new HttpErrorHandler(VerifyActivity.this);
             }
         });
@@ -107,7 +94,7 @@ public class VerifyActivity extends BaseActivity {
         }
     }
 
-    public static boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    public static boolean isValidPhoneNumber(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.PHONE.matcher(target).matches());
     }
 }

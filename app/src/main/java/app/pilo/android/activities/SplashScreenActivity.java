@@ -1,30 +1,41 @@
 package app.pilo.android.activities;
 
 import androidx.annotation.Nullable;
+
 import app.pilo.android.BuildConfig;
-import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.VersionApi;
+import app.pilo.android.databinding.ActivitySplashScreenBinding;
 import app.pilo.android.repositories.UserRepo;
 import app.pilo.android.views.UpdateDialog;
-import butterknife.ButterKnife;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+
 import com.android.volley.error.VolleyError;
+
 import java.util.Map;
 
 public class SplashScreenActivity extends BaseActivity {
+
+    private ActivitySplashScreenBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
         checkUpdate();
+        binding.btnRetry.setOnClickListener(v -> checkUpdate());
     }
 
     private void checkUpdate() {
+        binding.progress.setVisibility(View.VISIBLE);
+        binding.btnRetry.setVisibility(View.GONE);
         new VersionApi(this).get(new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
@@ -50,8 +61,12 @@ public class SplashScreenActivity extends BaseActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
+                binding.progress.setVisibility(View.GONE);
+                binding.btnRetry.setVisibility(View.VISIBLE);
                 new HttpErrorHandler(SplashScreenActivity.this);
-                Log.e("error", "onGetError: " + error.getMessage());
+                if (error != null) {
+                    error.printStackTrace();
+                }
             }
         });
 

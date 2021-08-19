@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
             }
         }
     };
+
     ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceDisconnected(ComponentName name) {
             mBounded = false;

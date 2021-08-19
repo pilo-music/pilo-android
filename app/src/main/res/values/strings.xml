@@ -36,6 +36,8 @@
     <string name="artists">Artists</string>
     <string name="login">Log in</string>
     <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="enter_phone">Enter your phone number</string>
     <string name="enter_email">Enter your email</string>
     <string name="forgot_password_btn_create">Send forgot password verify token</string>
     <string name="forgot_password_btn">Forgot Password</string>
@@ -48,6 +50,7 @@
     <string name="login_with_google">Login with Google</string>
     <string name="register">Sign up</string>
     <string name="email_not_valid">Invalid Email</string>
+    <string name="phone_not_valid">Invalid phone number</string>
     <string name="password_small_length">Password should at last 5 characters</string>
     <string name="password_not_match">Passwords does not match</string>
     <string name="follower">Follower</string>
@@ -65,7 +68,7 @@
     <string name="update">Update</string>
     <string name="update_later">Update Later</string>
     <string name="close">Close</string>
-    <string name="verify_account">Verify Account</string>
+    <string name="verify">Verify</string>
     <string name="forgot_password">Forgot your password ?</string>
     <string name="rest_password">Rest password ?</string>
     <string name="policy">By signing up, you agree to Pilo’s Terms and \n Conditions of Use, Privacy Policy and Mobile Terms</string>
@@ -81,6 +84,7 @@
     <string name="play_list_update">Edit Playlist</string>
     <string name="play_list_delete">Delete Playlist</string>
     <string name="play_list_delete_body">Are you sure you want delete playlist</string>
+    <string name="retry">Try again</string>
 
     <string name="show_more">View all</string>
 

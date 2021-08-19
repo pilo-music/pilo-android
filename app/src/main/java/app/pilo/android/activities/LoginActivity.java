@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
-import android.widget.Toast;
+import android.view.View;
 
 import com.android.volley.error.VolleyError;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Map;
 
@@ -17,79 +16,46 @@ import app.pilo.android.R;
 import app.pilo.android.api.HttpErrorHandler;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.UserApi;
+import app.pilo.android.databinding.ActivityLoginBinding;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-import app.pilo.android.views.PiloButton;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import co.pushe.plus.Pushe;
 
 public class LoginActivity extends BaseActivity {
 
-    @BindView(R.id.et_email)
-    TextInputEditText et_email;
-    @BindView(R.id.et_password)
-    TextInputEditText et_password;
-    @BindView(R.id.ll_login)
-    PiloButton piloButton;
-
-    private static final int RC_SIGN_IN = 111;
-//    private GoogleSignInClient mGoogleSignInClient;
-
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-        piloButton.setOnClickListener(v -> login());
-//
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken("8427120984-hu3aul4fnhlnufuefnbtjujk6o7rhn3v.apps.googleusercontent.com")
-//                .requestEmail()
-//                .build();
-//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-    }
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//            handleSignInResult(task);
-        }
+        binding.btnLogin.setOnClickListener(v -> login());
     }
 
 
     private void login() {
-        String email = et_email.getText().toString().trim();
-        String password = et_password.getText().toString().trim();
-        if (!isValidEmail(email)) {
-            et_email.setError(getString(R.string.email_not_valid));
+        String phone = binding.etPhone.getText().toString().trim();
+        if (!isValidPhoneNumber(phone)) {
+            binding.etPhone.setError(getString(R.string.phone_not_valid));
             return;
         }
 
-        if (password.length() < 5) {
-            et_password.setError(getString(R.string.password_small_length));
-            return;
-        }
 
-        piloButton.setProgress(true);
+        binding.btnLogin.setProgress(true);
         UserApi userApi = new UserApi(this);
-        userApi.login(email, password, new HttpHandler.RequestHandler() {
+        userApi.login(phone, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-                piloButton.setProgress(false);
+                binding.btnLogin.setProgress(false);
                 if (status) {
                     if (((Map) data).get("status").toString().equals("login")) {
                         doLogin((User) ((Map) data).get("user"));
                     } else {
                         Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
-                        intent.putExtra("email", email);
+                        intent.putExtra("phone", phone);
                         startActivity(intent);
                     }
                 } else {
@@ -99,53 +65,12 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                piloButton.setProgress(false);
+                binding.btnLogin.setProgress(false);
                 new HttpErrorHandler(LoginActivity.this);
             }
         });
     }
 
-    @OnClick(R.id.ll_login_google)
-    void loginGoogle() {
-//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-//        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @OnClick(R.id.tv_forgot_password)
-    void forgotPassword() {
-        startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
-    }
-
-//    /**
-//     * method to handle google sign in result
-//     *
-//     * @param completedTask from google onActivityResult
-//     */
-//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-//        try {
-//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            UserApi userApi = new UserApi(this);
-//            userApi.loginWithGoogle(account.getIdToken(), new HttpHandler.RequestHandler() {
-//                @Override
-//                public void onGetInfo(Object data, String message, boolean status) {
-//                    if (status) {
-//                        doLogin((User) data);
-//                    } else {
-//                        new HttpErrorHandler(LoginActivity.this, message);
-//                    }
-//                }
-//
-//                @Override
-//                public void onGetError(@Nullable VolleyError error) {
-//                    piloButton.setProgress(false);
-//                    new HttpErrorHandler(LoginActivity.this);
-//                }
-//            });
-//
-//        } catch (ApiException e) {
-//            Toast.makeText(this, "Failed to do Sign In : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void doLogin(User data) {
         if (data != null && data.getAccess_token() != null) {
@@ -167,7 +92,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    public static boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    public static boolean isValidPhoneNumber(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.PHONE.matcher(target).matches());
     }
 }

@@ -28,16 +28,16 @@
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_email"
+            android:id="@+id/et_phone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_centerInParent="true"
             android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:background="@drawable/gray_light_round_box_background"
-            android:fontFamily="@font/font"
-            android:hint="@string/email"
             android:enabled="false"
+            android:fontFamily="@font/font"
+            android:hint="@string/phone"
             android:inputType="textEmailAddress"
             android:paddingHorizontal="@dimen/activity_vertical_margin"
             android:textColor="@color/colorDark"
@@ -45,9 +45,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_code"
-            android:layout_below="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
+            android:layout_below="@+id/et_phone"
             android:layout_centerInParent="true"
             android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
             android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -68,7 +68,7 @@
             android:layout_marginHorizontal="@dimen/activity_vertical_margin2x"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin2x"
-            app:text="@string/verify_account" />
+            app:text="@string/verify" />
 
     </RelativeLayout>
 </FrameLayout>

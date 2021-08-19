@@ -5,49 +5,39 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import app.pilo.android.R;
 import app.pilo.android.adapters.WelcomeViewPager;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import app.pilo.android.databinding.ActivityWelcomeBinding;
 
 public class WelcomeActivity extends BaseActivity {
 
     private int dotscount;
     private ImageView[] dots;
 
-    @BindView(R.id.viewPager)
-    ViewPager viewPager;
-    @BindView(R.id.SliderDots)
-    LinearLayout sliderDotspanel;
+    ActivityWelcomeBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-        ButterKnife.bind(this);
+        binding = ActivityWelcomeBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
         setupViewPager();
+
+        binding.llLogin.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
     }
 
-
-    @OnClick(R.id.ll_singin)
-    void ll_signin() {
-        startActivity(new Intent(this, RegisterActivity.class));
-    }
-
-    @OnClick(R.id.ll_login)
-    void ll_login() {
-        startActivity(new Intent(this, LoginActivity.class));
-    }
 
     private void setupViewPager() {
         WelcomeViewPager viewPagerAdapter = new WelcomeViewPager(this);
 
-        viewPager.setAdapter(viewPagerAdapter);
+        binding.viewPager.setAdapter(viewPagerAdapter);
 
         dotscount = viewPagerAdapter.getCount();
         dots = new ImageView[dotscount];
@@ -61,13 +51,13 @@ public class WelcomeActivity extends BaseActivity {
 
             params.setMargins(8, 0, 8, 0);
 
-            sliderDotspanel.addView(dots[i], params);
+            binding.sliderDots.addView(dots[i], params);
 
         }
 
         dots[0].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.active_dot));
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
