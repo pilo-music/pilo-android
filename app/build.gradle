@@ -15,7 +15,7 @@ android {
         versionCode 10
         versionName "1.3.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [PUSHE_TOKEN: PUSHE_TOKEN]
+        manifestPlaceholders = [PUSHE_TOKEN: PUSHE_TOKEN, 'SENTRY_DNS': SENTRY_DNS]
         multiDexEnabled true
         resConfigs "en"
     }
@@ -40,8 +40,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation "com.google.android.material:material:1.5.0-alpha01"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation "com.google.android.material:material:1.5.0-alpha02"
     implementation "androidx.fragment:fragment-ktx:1.3.6"
 
     //butterknife
@@ -62,9 +62,7 @@ dependencies {
 
     //google
     implementation 'com.google.firebase:firebase-analytics:19.0.0'
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.14.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.15.0'
 
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
@@ -83,6 +81,8 @@ dependencies {
     implementation 'co.pushe.plus:base:2.5.0'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
     implementation 'com.github.ibrahimsn98:SmoothBottomBar:1.7.6'
+    implementation 'io.sentry:sentry-android:5.1.0'
+
 }
 repositories {
     mavenCentral()

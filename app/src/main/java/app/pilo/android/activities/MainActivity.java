@@ -48,6 +48,7 @@ import app.pilo.android.utils.Constant;
 import app.pilo.android.utils.FragmentHistory;
 import app.pilo.android.views.FragNavController;
 import app.pilo.android.views.NestedScrollableViewHelper;
+import io.sentry.Sentry;
 
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
@@ -73,8 +74,8 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-
         setContentView(view);
+
         setupStatusBar();
         setupBottomNavigation();
         fragmentHistory = new FragmentHistory();

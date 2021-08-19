@@ -4,23 +4,11 @@ import androidx.annotation.Nullable;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.error.VolleyError;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Map;
@@ -47,7 +35,7 @@ public class LoginActivity extends BaseActivity {
     PiloButton piloButton;
 
     private static final int RC_SIGN_IN = 111;
-    private GoogleSignInClient mGoogleSignInClient;
+//    private GoogleSignInClient mGoogleSignInClient;
 
 
     @Override
@@ -58,12 +46,12 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         piloButton.setOnClickListener(v -> login());
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("8427120984-hu3aul4fnhlnufuefnbtjujk6o7rhn3v.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+//
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestIdToken("8427120984-hu3aul4fnhlnufuefnbtjujk6o7rhn3v.apps.googleusercontent.com")
+//                .requestEmail()
+//                .build();
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -71,8 +59,8 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//            handleSignInResult(task);
         }
     }
 
@@ -119,8 +107,8 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.ll_login_google)
     void loginGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+//        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+//        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @OnClick(R.id.tv_forgot_password)
@@ -128,36 +116,36 @@ public class LoginActivity extends BaseActivity {
         startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
     }
 
-    /**
-     * method to handle google sign in result
-     *
-     * @param completedTask from google onActivityResult
-     */
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            UserApi userApi = new UserApi(this);
-            userApi.loginWithGoogle(account.getIdToken(), new HttpHandler.RequestHandler() {
-                @Override
-                public void onGetInfo(Object data, String message, boolean status) {
-                    if (status) {
-                        doLogin((User) data);
-                    } else {
-                        new HttpErrorHandler(LoginActivity.this, message);
-                    }
-                }
-
-                @Override
-                public void onGetError(@Nullable VolleyError error) {
-                    piloButton.setProgress(false);
-                    new HttpErrorHandler(LoginActivity.this);
-                }
-            });
-
-        } catch (ApiException e) {
-            Toast.makeText(this, "Failed to do Sign In : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
+//    /**
+//     * method to handle google sign in result
+//     *
+//     * @param completedTask from google onActivityResult
+//     */
+//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+//        try {
+//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+//            UserApi userApi = new UserApi(this);
+//            userApi.loginWithGoogle(account.getIdToken(), new HttpHandler.RequestHandler() {
+//                @Override
+//                public void onGetInfo(Object data, String message, boolean status) {
+//                    if (status) {
+//                        doLogin((User) data);
+//                    } else {
+//                        new HttpErrorHandler(LoginActivity.this, message);
+//                    }
+//                }
+//
+//                @Override
+//                public void onGetError(@Nullable VolleyError error) {
+//                    piloButton.setProgress(false);
+//                    new HttpErrorHandler(LoginActivity.this);
+//                }
+//            });
+//
+//        } catch (ApiException e) {
+//            Toast.makeText(this, "Failed to do Sign In : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void doLogin(User data) {
         if (data != null && data.getAccess_token() != null) {

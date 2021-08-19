@@ -64,6 +64,11 @@
         <meta-data
             android:name="pushe_token"
             android:value="${PUSHE_TOKEN}" />
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="${SENTRY_DNS}" />
+
     </application>
 
 </manifest>
