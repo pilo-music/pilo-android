@@ -116,7 +116,7 @@ public class MusicPlayerActionsFragment extends Fragment {
     void setupViews() {
         binding.imgSync.setOnClickListener(view -> download());
         binding.downloadProgressExtendedMusicPlayer.setOnClickListener(view -> clickDownloadProgress());
-        binding.imgLike.setOnClickListener(view -> like());
+        binding.llLike.setOnClickListener(view -> like());
         binding.imgMore.setOnClickListener(view -> new MusicActionsDialog(context, currentMusic).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
     }
 
