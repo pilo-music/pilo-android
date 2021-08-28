@@ -201,12 +201,14 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     @Override
     public void onDestroy() {
         super.onDestroy();
+        stopPiloService();
     }
 
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        stopPiloService();
     }
 
 }

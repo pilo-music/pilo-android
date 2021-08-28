@@ -42,8 +42,8 @@ public class VerifyActivity extends BaseActivity {
 
 
     private void verify() {
-        String phone = binding.etPhone.getText().toString().trim();
-        String code = binding.etCode.getText().toString().trim();
+        String phone = binding.etPhone.getText().toString();
+        String code = binding.etCode.getText().toString();
         if (!isValidPhoneNumber(phone)) {
             binding.etPhone.setError(getString(R.string.phone_not_valid));
             return;
@@ -55,7 +55,7 @@ public class VerifyActivity extends BaseActivity {
         }
 
         binding.pbVerify.setProgress(true);
-        new UserApi(VerifyActivity.this).verify(phone, code, new HttpHandler.RequestHandler() {
+        new UserApi(VerifyActivity.this).login(new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 binding.pbVerify.setProgress(false);
@@ -94,7 +94,7 @@ public class VerifyActivity extends BaseActivity {
         }
     }
 
-    public static boolean isValidPhoneNumber(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.PHONE.matcher(target).matches());
+    public static boolean isValidPhoneNumber(String target) {
+        return target.length() == 11;
     }
 }

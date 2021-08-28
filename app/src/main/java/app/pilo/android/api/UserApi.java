@@ -25,10 +25,12 @@ public class UserApi {
         this.context = context;
     }
 
-    public void login(String phone, final HttpHandler.RequestHandler requestHandler) {
+    public void login(final HttpHandler.RequestHandler requestHandler) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("phone", phone);
+            //todo remove this
+            jsonObject.put("email", "senatorblack1@gmail.com");
+            jsonObject.put("password", "123456");
             final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.LOGIN, jsonObject,
                     response -> {
                         try {
@@ -36,11 +38,7 @@ public class UserApi {
                             String message = response.getString("message");
                             if (status) {
                                 JSONObject data = response.getJSONObject("data");
-                                Map<String, Object> user = new HashMap<>();
-                                if (data.getString("status").equals("login")) {
-                                    user.put("user", JsonParser.userParser(data));
-                                }
-                                user.put("status", data.getString("status"));
+                                User user = JsonParser.userParser(data);
                                 requestHandler.onGetInfo(user, message, status);
                             } else {
                                 requestHandler.onGetInfo(null, message, status);
@@ -66,6 +64,38 @@ public class UserApi {
         }
     }
 
+
+
+    public void loginNew(String phone, final HttpHandler.RequestHandler requestHandler) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("phone", phone);
+            final JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, PiloApi.LOGIN, jsonObject,
+                    response -> {
+                        try {
+                            boolean status = response.getBoolean("status");
+                            String message = response.getString("message");
+                            requestHandler.onGetInfo(null, message, status);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            requestHandler.onGetError(null);
+                        }
+                    }, requestHandler::onGetError) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Accept", "application/json");
+                    params.put("Content-Language", new UserSharedPrefManager(context).getLocal());
+                    return params;
+                }
+            };
+            request.setShouldCache(false);
+            request.setRetryPolicy(new DefaultRetryPolicy(18000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            Volley.newRequestQueue(context).add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public void verify(String phone, String code, final HttpHandler.RequestHandler requestHandler) {

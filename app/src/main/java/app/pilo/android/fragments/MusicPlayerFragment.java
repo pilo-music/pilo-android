@@ -254,8 +254,8 @@ public class MusicPlayerFragment extends Fragment {
         if (currentSlug.equals("")) {
             return;
         }
+//        playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
         musicModule.getMusicPlayer().togglePlay();
-        playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
     }
 
     void previous() {

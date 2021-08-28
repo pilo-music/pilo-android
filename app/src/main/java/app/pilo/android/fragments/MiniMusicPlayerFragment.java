@@ -130,7 +130,7 @@ public class MiniMusicPlayerFragment extends Fragment {
                 return;
             }
             musicModule.getMusicPlayer().togglePlay();
-            playButtonAnimation.showBonceAnimation(binding.imgMusicPlayerCollapsedPlay);
+//            playButtonAnimation.showBonceAnimation(binding.imgMusicPlayerCollapsedPlay);
         });
         binding.imgMusicPlayerCollapsedNext.setOnClickListener(v -> {
             if (musicLoading) {

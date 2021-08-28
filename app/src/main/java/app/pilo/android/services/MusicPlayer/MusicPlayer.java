@@ -109,6 +109,7 @@ public class MusicPlayer implements iMusicPlayer {
             String url = utils.getMp3UrlForStreaming(context, music);
             if (!url.equals("")) {
                 context.prepareExoPlayerFromURL(Uri.parse(url), true);
+
             }
         }
 

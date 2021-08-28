@@ -38,6 +38,7 @@
             android:enabled="false"
             android:fontFamily="@font/font"
             android:hint="@string/phone"
+            android:maxLength="11"
             android:inputType="textEmailAddress"
             android:paddingHorizontal="@dimen/activity_vertical_margin"
             android:textColor="@color/colorDark"
@@ -54,7 +55,8 @@
             android:background="@drawable/gray_light_round_box_background"
             android:fontFamily="@font/font"
             android:hint="@string/verify_code"
-            android:inputType="text"
+            android:inputType="number"
+            android:maxLength="6"
             android:paddingHorizontal="@dimen/activity_vertical_margin"
             android:textColor="@color/colorDark"
             android:textSize="@dimen/normal_font_size" />
