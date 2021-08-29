@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,6 @@ public class MiniMusicPlayerFragment extends Fragment {
         setupControls();
         setupSlidingUpPanel();
         initPlayerUi();
-        setPlayerChangeState();
         return view;
     }
 
@@ -84,23 +84,20 @@ public class MiniMusicPlayerFragment extends Fragment {
             return;
         }
 
-        if (intent.getBooleanExtra("play", false)) {
-            binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
-        } else if (intent.getBooleanExtra("pause", false)) {
-            binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
-        }
-
-        if (intent.hasExtra("loading")) {
+        if (!intent.hasExtra("progress")){
             musicLoading = intent.getBooleanExtra("loading", false);
+            initPlayerUi();
         }
-        initPlayerUi();
     }
 
     private void initPlayerUi() {
-        if (binding == null || musicLoading)
-            return;
-
         if (!getCurrentSlug().equals("")) {
+            if (musicLoading) {
+                binding.imgMusicPlayerCollapsedPlay.setVisibility(View.GONE);
+                binding.llExtendedMusicPlayerLoading.setVisibility(View.VISIBLE);
+                return;
+            }
+
             if (isPlayerReady()) {
                 binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
             } else {
@@ -110,6 +107,9 @@ public class MiniMusicPlayerFragment extends Fragment {
             if (music != null) {
                 binding.tvMusicPlayerCollapsedTitle.setText(music.getTitle());
                 binding.tvMusicPlayerCollapsedArtist.setText(music.getArtist().getName());
+                binding.imgMusicPlayerCollapsedPlay.setVisibility(View.VISIBLE);
+                binding.llExtendedMusicPlayerLoading.setVisibility(View.GONE);
+
                 Glide.with(context)
                         .load(music.getImage())
                         .placeholder(R.drawable.ic_music_placeholder)
@@ -129,8 +129,9 @@ public class MiniMusicPlayerFragment extends Fragment {
             if (musicLoading) {
                 return;
             }
+            playButtonAnimation.showBonceAnimation(binding.imgMusicPlayerCollapsedPlay);
+
             musicModule.getMusicPlayer().togglePlay();
-//            playButtonAnimation.showBonceAnimation(binding.imgMusicPlayerCollapsedPlay);
         });
         binding.imgMusicPlayerCollapsedNext.setOnClickListener(v -> {
             if (musicLoading) {
@@ -177,20 +178,6 @@ public class MiniMusicPlayerFragment extends Fragment {
         });
     }
 
-    void setPlayerChangeState() {
-        musicModule.getMusicPlayer().getExoPlayer().addListener(new Player.Listener() {
-            @Override
-            public void onIsLoadingChanged(boolean isLoading) {
-                if (isLoading) {
-                    binding.imgMusicPlayerCollapsedPlay.setVisibility(View.GONE);
-                    binding.llExtendedMusicPlayerLoading.setVisibility(View.VISIBLE);
-                } else {
-                    binding.imgMusicPlayerCollapsedPlay.setVisibility(View.VISIBLE);
-                    binding.llExtendedMusicPlayerLoading.setVisibility(View.GONE);
-                }
-            }
-        });
-    }
 
     @Override
     public void onDestroyView() {

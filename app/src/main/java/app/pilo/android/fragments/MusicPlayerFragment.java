@@ -12,12 +12,9 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.google.android.exoplayer2.Player;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,6 +51,7 @@ public class MusicPlayerFragment extends Fragment {
     private UserSharedPrefManager userSharedPrefManager;
     private Context context;
     private MusicUtils musicUtils;
+    private Boolean musicLoading = false;
 
     private FragmentMusicPlayerBinding binding;
 
@@ -77,8 +75,6 @@ public class MusicPlayerFragment extends Fragment {
         setRepeatAndShuffle();
         initPlayerUi();
         setupViews();
-        setPlayerChangeState();
-
         return view;
     }
 
@@ -142,6 +138,12 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
 
+        if (musicLoading) {
+            binding.fabExtendedMusicPlayerPlay.setVisibility(View.GONE);
+            binding.llExtendedMusicPlayerLoading.setVisibility(View.VISIBLE);
+            return;
+        }
+
         if (musics.size() == 0) {
             musics.addAll(AppDatabase.getInstance(context).musicDao().getAll());
             playerViewPagerAdapter.notifyDataSetChanged();
@@ -159,6 +161,8 @@ public class MusicPlayerFragment extends Fragment {
                 binding.tvExtendedMusicPlayerTitle.setText(music.getTitle());
                 binding.tvExtendedMusicPlayerArtist.setText(music.getArtist().getName());
                 binding.viewPagerExtendedMusicPlayer.setCurrentItem(musicUtils.findCurrentMusicIndex(musics), true);
+                binding.fabExtendedMusicPlayerPlay.setVisibility(View.VISIBLE);
+                binding.llExtendedMusicPlayerLoading.setVisibility(View.GONE);
             }
         }
     }
@@ -230,12 +234,16 @@ public class MusicPlayerFragment extends Fragment {
                 binding.seekbarMusic.setProgress(intent.getIntExtra("progress", 0));
             }
         } else if (intent.getBooleanExtra("play", false)) {
-            binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
-        } else if (intent.getBooleanExtra("pause", false)) {
             binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
+        } else if (intent.getBooleanExtra("pause", false)) {
+            binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
         }
 
-        initPlayerUi();
+
+        if (!intent.hasExtra("progress")){
+            musicLoading = intent.getBooleanExtra("loading",false);
+            initPlayerUi();
+        }
 
     }
 
@@ -254,7 +262,7 @@ public class MusicPlayerFragment extends Fragment {
         if (currentSlug.equals("")) {
             return;
         }
-//        playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
+        playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
         musicModule.getMusicPlayer().togglePlay();
     }
 
@@ -282,22 +290,6 @@ public class MusicPlayerFragment extends Fragment {
     void shuffle() {
         userSharedPrefManager.setShuffleMode(!userSharedPrefManager.getShuffleMode());
         setRepeatAndShuffle();
-    }
-
-
-    void setPlayerChangeState() {
-        musicModule.getMusicPlayer().getExoPlayer().addListener(new Player.Listener() {
-            @Override
-            public void onIsLoadingChanged(boolean isLoading) {
-                if (isLoading) {
-                    binding.fabExtendedMusicPlayerPlay.setVisibility(View.GONE);
-                    binding.llExtendedMusicPlayerLoading.setVisibility(View.VISIBLE);
-                } else {
-                    binding.fabExtendedMusicPlayerPlay.setVisibility(View.VISIBLE);
-                    binding.llExtendedMusicPlayerLoading.setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
     private String getCurrentSlug() {

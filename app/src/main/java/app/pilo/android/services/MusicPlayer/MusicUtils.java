@@ -44,22 +44,23 @@ public class MusicUtils {
         params.put("page", 1);
         params.put("count", 20);
         params.put("related", musicSlug);
+
         musicApi.get(params, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
+                sendIntent(false);
+
                 if (status) {
                     EventBus.getDefault().post(new MusicEvent(context, (List<Music>) data, musicSlug, true));
                 } else {
                     EventBus.getDefault().post(new MusicEvent(context, musicListItems, musicSlug, true));
                 }
-
-                sendIntent(false);
             }
 
             @Override
             public void onGetError(@Nullable VolleyError error) {
-                EventBus.getDefault().post(new MusicEvent(context, musicListItems, musicSlug, true));
                 sendIntent(false);
+                EventBus.getDefault().post(new MusicEvent(context, musicListItems, musicSlug, true));
             }
         });
     }
