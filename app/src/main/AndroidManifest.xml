@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="app.pilo.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -28,7 +29,8 @@
             android:required="false" />
 
         <activity
-            android:name=".activities.SplashScreenActivity">
+            android:name=".activities.SplashScreenActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,7 +49,8 @@
             android:name=".services.PlayerService"
             android:enabled="true"
             android:exported="false"
-            android:stopWithTask="false">
+            android:stopWithTask="false"
+            tools:node="merge">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.browse.MediaBrowserService" />

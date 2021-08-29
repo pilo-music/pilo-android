@@ -9,12 +9,9 @@ import app.pilo.android.api.UserApi;
 import app.pilo.android.databinding.ActivityVerifyBinding;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-import co.pushe.plus.Pushe;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 
 import com.android.volley.error.VolleyError;
@@ -88,7 +85,7 @@ public class VerifyActivity extends BaseActivity {
             user.setAlbum_notification(data.isAlbum_notification());
             user.setVideo_notification(data.isVideo_notification());
             UserRepo.getInstance(this).insert(user);
-            Pushe.setUserEmail(data.getEmail());
+//            Pushe.setUserEmail(data.getEmail());
             startActivity(new Intent(VerifyActivity.this, MainActivity.class));
             finishAffinity();
         }

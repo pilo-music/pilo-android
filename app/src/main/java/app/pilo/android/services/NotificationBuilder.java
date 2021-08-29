@@ -55,28 +55,28 @@ public class NotificationBuilder {
         notificationIntent.setAction(Intent.ACTION_MEDIA_BUTTON);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                notificationIntent,PendingIntent.FLAG_IMMUTABLE);
 
         //Intent for Play
         Intent playIntent = new Intent(context, PlayerService.class);
         playIntent.setAction("toggle");
-        PendingIntent pplayIntent = PendingIntent.getService(context, 0, playIntent, 0);
+        PendingIntent pplayIntent = PendingIntent.getService(context, 0, playIntent, PendingIntent.FLAG_IMMUTABLE);
 
 
         //Intent for next
         Intent nextIntent = new Intent(context, PlayerService.class);
         nextIntent.setAction("next");
-        PendingIntent nextPIntent = PendingIntent.getService(context, 0, nextIntent, 0);
+        PendingIntent nextPIntent = PendingIntent.getService(context, 0, nextIntent, PendingIntent.FLAG_IMMUTABLE);
 
         //Intent for previous
         Intent previousIntent = new Intent(context, PlayerService.class);
         previousIntent.setAction("previous");
-        PendingIntent ppreviousIntent = PendingIntent.getService(context, 0, previousIntent, 0);
+        PendingIntent ppreviousIntent = PendingIntent.getService(context, 0, previousIntent, PendingIntent.FLAG_IMMUTABLE);
 
         //Intent for close
         Intent closeIntent = new Intent(context, PlayerService.class);
         closeIntent.setAction("close");
-        PendingIntent pcloseIntent = PendingIntent.getService(context, 0, closeIntent, 0);
+        PendingIntent pcloseIntent = PendingIntent.getService(context, 0, closeIntent, PendingIntent.FLAG_IMMUTABLE);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

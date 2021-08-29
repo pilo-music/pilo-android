@@ -34,7 +34,7 @@ public class MediaSession {
     public void updateMediaSessionMetaData() {
         mMediaSession.setCaptioningEnabled(true);
 
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(context, PlayerService.class), 0);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, new Intent(context, PlayerService.class), PendingIntent.FLAG_IMMUTABLE);
         if (pi != null) {
             mMediaSession.setMediaButtonReceiver(pi);
         }

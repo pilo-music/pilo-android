@@ -8,8 +8,8 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.activity_video_player.*
 
 class VideoPlayerActivity : BaseActivity() {
 
@@ -26,10 +26,11 @@ class VideoPlayerActivity : BaseActivity() {
         player = SimpleExoPlayer.Builder(this).build();
         val url = intent.getStringExtra("url")
 
-        mediaDataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"))
+        mediaDataSourceFactory =
+            DefaultDataSourceFactory(this, Util.getUserAgent(this, "mediaPlayerSample"))
 
         val mediaSource = ProgressiveMediaSource.Factory(mediaDataSourceFactory)
-                .createMediaSource(Uri.parse(url))
+            .createMediaSource(Uri.parse(url))
 
 
         with(player) {
@@ -37,7 +38,7 @@ class VideoPlayerActivity : BaseActivity() {
             playWhenReady = true
         }
 
-
+        val playerView = findViewById<PlayerView>(R.id.playerView)
         playerView.setShutterBackgroundColor(Color.TRANSPARENT)
         playerView.player = player
         playerView.requestFocus()
