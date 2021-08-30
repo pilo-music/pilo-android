@@ -114,13 +114,18 @@ public class MusicPlayerActionsFragment extends Fragment {
 
 
     void setupViews() {
-        binding.imgSync.setOnClickListener(view -> download());
+        binding.llSync.setOnClickListener(view -> download());
         binding.downloadProgressExtendedMusicPlayer.setOnClickListener(view -> clickDownloadProgress());
         binding.llLike.setOnClickListener(view -> like());
         binding.imgMore.setOnClickListener(view -> new MusicActionsDialog(context, currentMusic).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
     }
 
     void download() {
+        if (fileDownloadId != 0) {
+            this.clickDownloadProgress();
+            return;
+        }
+
         binding.imgSync.setVisibility(View.GONE);
         binding.downloadProgressExtendedMusicPlayer.setVisibility(View.VISIBLE);
         binding.downloadProgressExtendedMusicPlayer.setIndeterminate();
@@ -178,7 +183,6 @@ public class MusicPlayerActionsFragment extends Fragment {
                 }
             });
         }
-
     }
 
     void clickDownloadProgress() {
@@ -186,6 +190,7 @@ public class MusicPlayerActionsFragment extends Fragment {
             PRDownloader.cancel(fileDownloadId);
             binding.imgSync.setVisibility(View.VISIBLE);
             binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
+            fileDownloadId = 0;
         }
     }
 
