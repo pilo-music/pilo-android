@@ -240,8 +240,8 @@ public class MusicPlayerFragment extends Fragment {
         }
 
 
-        if (!intent.hasExtra("progress")){
-            musicLoading = intent.getBooleanExtra("loading",false);
+        if (!intent.hasExtra("progress")) {
+            musicLoading = intent.getBooleanExtra("loading", false);
             initPlayerUi();
         }
 
@@ -263,7 +263,7 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
         playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
-        musicModule.getMusicPlayer().togglePlay();
+        new Handler().postDelayed(() -> musicModule.getMusicPlayer().togglePlay(),400);
     }
 
     void previous() {

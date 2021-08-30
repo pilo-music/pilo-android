@@ -84,7 +84,7 @@ public class MiniMusicPlayerFragment extends Fragment {
             return;
         }
 
-        if (!intent.hasExtra("progress")){
+        if (!intent.hasExtra("progress")) {
             musicLoading = intent.getBooleanExtra("loading", false);
             initPlayerUi();
         }
@@ -130,8 +130,7 @@ public class MiniMusicPlayerFragment extends Fragment {
                 return;
             }
             playButtonAnimation.showBonceAnimation(binding.imgMusicPlayerCollapsedPlay);
-
-            musicModule.getMusicPlayer().togglePlay();
+            new Handler().postDelayed(() -> musicModule.getMusicPlayer().togglePlay(), 400);
         });
         binding.imgMusicPlayerCollapsedNext.setOnClickListener(v -> {
             if (musicLoading) {
