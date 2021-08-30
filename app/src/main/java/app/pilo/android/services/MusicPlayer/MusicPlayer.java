@@ -3,7 +3,9 @@ package app.pilo.android.services.MusicPlayer;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
@@ -101,8 +103,8 @@ public class MusicPlayer implements iMusicPlayer {
         // For playing from file if downloaded
         Download downloaded = AppDatabase.getInstance(context).downloadDao().findById(slug);
         if (downloaded != null && MusicDownloader.checkExists(context, music, userSharedPrefManager.getStreamQuality())) {
-            String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath128() : downloaded.getPath128();
-            File file = new File(downloadedFile);
+            String downloadedFile = userSharedPrefManager.getStreamQuality().equals("320") ? downloaded.getPath320() : downloaded.getPath128();
+            File file = MusicDownloader.getFile(context, downloadedFile);
             Uri uri = Uri.fromFile(file);
             context.prepareExoPlayerFromURL(uri, true);
         } else {
@@ -147,9 +149,9 @@ public class MusicPlayer implements iMusicPlayer {
             return;
         }
 
-        if (exoPlayer.getPlaybackState() == Player.STATE_IDLE){
+        if (exoPlayer.getPlaybackState() == Player.STATE_IDLE) {
             List<Music> musics = getCurrentPlaylist();
-            playTrack(musics,currentMusicSlug());
+            playTrack(musics, currentMusicSlug());
             return;
         }
 
@@ -189,11 +191,11 @@ public class MusicPlayer implements iMusicPlayer {
         return userSharedPrefManager.getActiveMusicSlug();
     }
 
-    private List<Music> getCurrentPlaylist(){
+    private List<Music> getCurrentPlaylist() {
         return AppDatabase.getInstance(context).musicDao().getAll();
     }
 
-    private void sendIntent(String action){
+    private void sendIntent(String action) {
         Intent intent = new Intent();
         intent.setAction(CUSTOM_PLAYER_INTENT);
         intent.putExtra(action, true);

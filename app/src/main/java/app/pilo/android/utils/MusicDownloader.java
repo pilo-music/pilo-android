@@ -1,12 +1,16 @@
 package app.pilo.android.utils;
 
 import android.content.Context;
+import android.os.Environment;
+
 import com.downloader.Error;
 import com.downloader.OnDownloadListener;
 import com.downloader.PRDownloader;
 import com.downloader.Progress;
+
 import java.io.File;
 import java.util.Random;
+
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Download;
@@ -27,20 +31,20 @@ public class MusicDownloader {
         if (checkExists(context, music, downloadQuality))
             return 0;
 
-        File file = context.getExternalFilesDir(null);
+        File file = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
         String path = file.getPath();
 
         long tsLong = System.currentTimeMillis() / 1000;
         String ts = Long.toString(tsLong);
         Random random = new Random();
 
-        String fileName = ts + random.nextInt(1000) + ".mp3";
-
-
+        String fileName;
         if (downloadQuality.equals("320")) {
-            download.setPath320(path + "/" + fileName);
+            fileName = ts + random.nextInt(1000) + "-320.mp3";
+            download.setPath320(fileName);
         } else {
-            download.setPath128(path + "/" + fileName);
+            fileName = ts + random.nextInt(1000) + "-120.mp3";
+            download.setPath128(fileName);
         }
 
 
@@ -66,22 +70,38 @@ public class MusicDownloader {
                 });
     }
 
-    public static boolean checkExists(Context context, Music music, String quality) {
+    public static boolean checkExists(Context context, Download download, String quality) {
+        if (download == null)
+            return false;
+        if (quality.equals("320")) {
+            if (download.getPath320() != null && !download.getPath320().isEmpty())
+                return getFile(context, download.getPath320()).exists();
+        } else {
+            return getFile(context, download.getPath128()).exists();
+        }
 
+        return false;
+    }
+
+    public static boolean checkExists(Context context, Music music, String quality) {
         Download download = AppDatabase.getInstance(context).downloadDao().findById(music.getSlug());
         if (download == null)
             return false;
 
         if (quality.equals("320")) {
             if (download.getPath320() != null && !download.getPath320().isEmpty())
-                return new File(download.getPath320()).exists();
+                return getFile(context, download.getPath320()).exists();
         } else {
-            return new File(download.getPath128()).exists();
+            return getFile(context, download.getPath128()).exists();
         }
 
         return false;
     }
 
+
+    public static File getFile(Context context, String filename) {
+        return new File(context.getExternalFilesDir(Environment.DIRECTORY_MUSIC), filename);
+    }
 
     public interface iDownload {
         void onStartOrResumeListener();

@@ -95,21 +95,21 @@ public class DownloadsFragment extends BaseFragment {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getActivity()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAdapterPosition();
+                final int position = viewHolder.getBindingAdapterPosition();
                 final Download item = downloadsAdapter.getData().get(position);
 
+                if (MusicDownloader.checkExists(getActivity(), item, "320")) {
+                    MusicDownloader.getFile(getActivity(), item.getPath320()).delete();
+                } else if (MusicDownloader.checkExists(getActivity(), item, "128")) {
+                    MusicDownloader.getFile(getActivity(), item.getPath128()).delete();
+                }
+
+                MusicDownloader.getFile(getActivity(), item.getPath128()).delete();
+                AppDatabase.getInstance(getActivity()).downloadDao().delete(item);
                 downloadsAdapter.removeItem(position);
-
-
                 Snackbar snackbar = Snackbar.make(coordinatorlayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", view -> {
-                    downloadsAdapter.restoreItem(item, position);
-                    recyclerView.scrollToPosition(position);
-                });
-
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.show();
-
             }
         };
 

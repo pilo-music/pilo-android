@@ -271,6 +271,7 @@ public class MusicPlayerActionsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {
         initPlayerUi();
+        this.clickDownloadProgress();
     }
 
     @Override

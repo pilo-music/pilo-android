@@ -90,8 +90,7 @@ public class MusicPlayerQueueFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {
-        musics.clear();
-        musics.addAll(event.musics);
+        musics = event.musics;
         musicVerticalListAdapter.notifyDataSetChanged();
     }
 
