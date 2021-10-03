@@ -1,4 +1,4 @@
-package app.pilo.android.views;
+package app.pilo.android.views.dialogs;
 
 import android.app.Activity;
 import android.content.Intent;

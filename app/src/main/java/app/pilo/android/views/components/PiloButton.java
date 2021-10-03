@@ -1,4 +1,4 @@
-package app.pilo.android.views;
+package app.pilo.android.views.components;
 
 import android.content.Context;
 import android.content.res.TypedArray;

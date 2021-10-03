@@ -24,7 +24,7 @@ import app.pilo.android.activities.MainActivity;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.models.Music;
-import app.pilo.android.views.MusicActionsDialog;
+import app.pilo.android.views.dialogs.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

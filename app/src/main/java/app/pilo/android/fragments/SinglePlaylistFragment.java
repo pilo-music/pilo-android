@@ -39,7 +39,7 @@ import app.pilo.android.models.Music;
 import app.pilo.android.models.Playlist;
 import app.pilo.android.models.SinglePlaylist;
 import app.pilo.android.utils.Utils;
-import app.pilo.android.views.EditPlaylistDialog;
+import app.pilo.android.views.dialogs.EditPlaylistDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

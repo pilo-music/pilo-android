@@ -1,4 +1,4 @@
-package app.pilo.android.views;
+package app.pilo.android.views.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,15 +20,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CustomDialog extends BottomSheetDialogFragment {
-    private String title;
-    private String body;
-    private String successButton;
-    private String failButton;
+    private final String title;
+    private final String body;
+    private final String successButton;
+    private final String failButton;
     private boolean showSuccess = true;
     private boolean showFail = true;
     private boolean cancelable = true;
     private boolean showProgress = false;
-    private onClient onClient;
+    private onClick onClick;
     private Context context;
 
     public final static String TAG = "CustomDialog";
@@ -48,26 +48,26 @@ public class CustomDialog extends BottomSheetDialogFragment {
     ProgressBar progress_bar;
 
 
-    public CustomDialog(Context context, String title, String body, String successButton, String failButton, onClient onClient) {
+    public CustomDialog(Context context, String title, String body, String successButton, String failButton, onClick onClient) {
         this.title = title;
         this.body = body;
         this.successButton = successButton;
         this.failButton = failButton;
-        this.onClient = onClient;
+        this.onClick = onClient;
         this.context = context;
     }
 
-    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showProgress, onClient onClient) {
+    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showProgress, onClick onClient) {
         this.title = title;
         this.body = body;
         this.successButton = successButton;
         this.failButton = failButton;
-        this.onClient = onClient;
+        this.onClick = onClient;
         this.context = context;
         this.showProgress = showProgress;
     }
 
-    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showSuccess, boolean showFail, boolean cancelable, onClient onClient) {
+    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showSuccess, boolean showFail, boolean cancelable, onClick onClient) {
         this.title = title;
         this.body = body;
         this.successButton = successButton;
@@ -75,11 +75,11 @@ public class CustomDialog extends BottomSheetDialogFragment {
         this.showSuccess = showSuccess;
         this.showFail = showFail;
         this.cancelable = cancelable;
-        this.onClient = onClient;
+        this.onClick = onClient;
         this.context = context;
     }
 
-    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showSuccess, boolean showFail, boolean cancelable, boolean showProgress, onClient onClient) {
+    public CustomDialog(Context context, String title, String body, String successButton, String failButton, boolean showSuccess, boolean showFail, boolean cancelable, boolean showProgress, onClick onClient) {
         this.title = title;
         this.body = body;
         this.successButton = successButton;
@@ -87,7 +87,7 @@ public class CustomDialog extends BottomSheetDialogFragment {
         this.showSuccess = showSuccess;
         this.showFail = showFail;
         this.cancelable = cancelable;
-        this.onClient = onClient;
+        this.onClick = onClient;
         this.context = context;
         this.showProgress = showProgress;
     }
@@ -115,14 +115,14 @@ public class CustomDialog extends BottomSheetDialogFragment {
             ll_success.setEnabled(false);
             tv_success.setVisibility(View.GONE);
             progress_bar.setVisibility(View.VISIBLE);
-            onClient.onSuccessClick(this);
+            onClick.onSuccessClick(this);
         });
-        btn_fail.setOnClickListener(v -> onClient.onFailClick(this));
+        btn_fail.setOnClickListener(v -> onClick.onFailClick(this));
 
         return view;
     }
 
-    public interface onClient {
+    public interface onClick {
         void onSuccessClick(BottomSheetDialogFragment dialog);
 
         void onFailClick(BottomSheetDialogFragment dialog);

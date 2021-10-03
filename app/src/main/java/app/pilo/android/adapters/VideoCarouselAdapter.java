@@ -69,7 +69,6 @@ public class VideoCarouselAdapter extends RecyclerView.Adapter<VideoCarouselAdap
         private TextView tv_video_item_title;
         private TextView tv_video_item_artist;
         private LinearLayout ll_video_item;
-        private CardView cv_label;
 
         VideoCarouselAdapterViewHolder(View itemView) {
             super(itemView);
@@ -77,7 +76,6 @@ public class VideoCarouselAdapter extends RecyclerView.Adapter<VideoCarouselAdap
             tv_video_item_title = itemView.findViewById(R.id.tv_video_item_title);
             tv_video_item_artist = itemView.findViewById(R.id.tv_video_item_artist);
             ll_video_item = itemView.findViewById(R.id.ll_video_item);
-            cv_label = itemView.findViewById(R.id.cv_label);
         }
     }
 }

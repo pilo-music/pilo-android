@@ -8,7 +8,7 @@ import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.VersionApi;
 import app.pilo.android.databinding.ActivitySplashScreenBinding;
 import app.pilo.android.repositories.UserRepo;
-import app.pilo.android.views.UpdateDialog;
+import app.pilo.android.views.dialogs.UpdateDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

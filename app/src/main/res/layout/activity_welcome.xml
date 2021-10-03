@@ -41,7 +41,7 @@
             android:orientation="horizontal" />
     </FrameLayout>
 
-    <app.pilo.android.views.PiloButton
+    <app.pilo.android.views.components.PiloButton
         android:id="@+id/ll_login"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pilo_button_height"

@@ -1,4 +1,4 @@
-package app.pilo.android.views;
+package app.pilo.android.views.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -30,7 +30,7 @@ public class EditPlaylistDialog {
     private Playlist playlist;
     private PlaylistApi playlistApi;
     private Dialog dialog;
-    private onClick onClick;
+    private EditPlaylistDialog.onClick onClick;
 
     @BindView(R.id.et_edit_playlist_name)
     EditText et_edit_playlist_name;
@@ -40,7 +40,7 @@ public class EditPlaylistDialog {
     TextView tv_edit_playlist;
 
 
-    public EditPlaylistDialog(Context context, Playlist playlist, onClick onClick) {
+    public EditPlaylistDialog(Context context, Playlist playlist, EditPlaylistDialog.onClick onClick) {
         this.context = context;
         this.playlist = playlist;
         playlistApi = new PlaylistApi(context);
@@ -101,7 +101,7 @@ public class EditPlaylistDialog {
 
     @OnClick(R.id.ll_edit_playlist_delete)
     void ll_edit_playlist_delete() {
-        new CustomDialog(context, context.getString(R.string.play_list_delete), context.getString(R.string.play_list_delete_body), context.getString(R.string.yes), context.getString(R.string.no), new CustomDialog.onClient() {
+        new CustomDialog(context, context.getString(R.string.play_list_delete), context.getString(R.string.play_list_delete_body), context.getString(R.string.yes), context.getString(R.string.no), new CustomDialog.onClick() {
             @Override
             public void onSuccessClick(BottomSheetDialogFragment dialog1) {
                 playlistApi.delete(playlist.getSlug(), new HttpHandler.RequestHandler() {

@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import app.pilo.android.R;
-import app.pilo.android.views.PiloButton;
+import app.pilo.android.views.components.PiloButton;
 
 public class OperatorDetectHelper {
     private String[] operators = new String[]{"irancell", "mtn", "mci", "rightel", "righ", "rtl", "iran"};

@@ -34,7 +34,7 @@ import app.pilo.android.models.Download;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.SingleMusic;
 import app.pilo.android.utils.Utils;
-import app.pilo.android.views.MusicActionsDialog;
+import app.pilo.android.views.dialogs.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

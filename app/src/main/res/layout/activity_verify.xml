@@ -62,7 +62,7 @@
             android:textSize="@dimen/normal_font_size" />
 
 
-        <app.pilo.android.views.PiloButton
+        <app.pilo.android.views.components.PiloButton
             android:id="@+id/pb_verify"
             android:layout_width="match_parent"
             android:layout_height="@dimen/pilo_button_height"

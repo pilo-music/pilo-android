@@ -35,7 +35,7 @@
         android:textColor="@color/colorDark"
         android:textSize="@dimen/normal_font_size" />
 
-    <app.pilo.android.views.PiloButton
+    <app.pilo.android.views.components.PiloButton
         android:id="@+id/pb_first_lunch_send"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pilo_button_height"

@@ -1,7 +1,6 @@
 package app.pilo.android.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,9 @@ import app.pilo.android.R;
 import app.pilo.android.activities.SplashScreenActivity;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.models.Download;
-import app.pilo.android.views.CustomDialog;
-import app.pilo.android.views.NotificationsSettingDialog;
-import app.pilo.android.views.QualitySettingDialog;
+import app.pilo.android.views.dialogs.CustomDialog;
+import app.pilo.android.views.dialogs.NotificationsSettingDialog;
+import app.pilo.android.views.dialogs.QualitySettingDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -40,7 +39,7 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.ll_settings_logout)
     void ll_settings_logout() {
-        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
+        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClick() {
             @Override
             public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 AppDatabase.NukeAllTables(getActivity());
@@ -69,7 +68,7 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.tv_settings_clear_downloads)
     void tv_settings_clear_downloads() {
-        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), true, new CustomDialog.onClient() {
+        new CustomDialog(getActivity(), getString(R.string.exit_dialog_title), getString(R.string.exit_dialog_body), getString(R.string.yes), getString(R.string.no), true, new CustomDialog.onClick() {
             @Override
             public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 List<Download> downloads = AppDatabase.getInstance(getActivity()).downloadDao().get();
@@ -97,7 +96,7 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.tv_settings_clear_music_history)
     void tv_settings_clear_music_history() {
-        new CustomDialog(getActivity(), getString(R.string.clear_music_history), getString(R.string.clear_music_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
+        new CustomDialog(getActivity(), getString(R.string.clear_music_history), getString(R.string.clear_music_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClick() {
             @Override
             public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 AppDatabase.getInstance(getContext()).playHistoryDao().deleteAll();
@@ -113,7 +112,7 @@ public class SettingsFragment extends BaseFragment {
 
     @OnClick(R.id.tv_settings_clear_search_history)
     void tv_settings_clear_search_history() {
-        new CustomDialog(getActivity(), getString(R.string.clear_search_history), getString(R.string.clear_search_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClient() {
+        new CustomDialog(getActivity(), getString(R.string.clear_search_history), getString(R.string.clear_search_history_body), getString(R.string.yes), getString(R.string.no), new CustomDialog.onClick() {
             @Override
             public void onSuccessClick(BottomSheetDialogFragment dialog) {
                 AppDatabase.getInstance(getContext()).searchHistoryDao().nukeTable();

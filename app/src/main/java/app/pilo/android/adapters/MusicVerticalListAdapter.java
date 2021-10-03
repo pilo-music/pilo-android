@@ -22,13 +22,11 @@ import java.util.List;
 
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
-import app.pilo.android.api.LikeApi;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.event.MusicRelatedEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.utils.Utils;
-import app.pilo.android.views.MusicActionsDialog;
+import app.pilo.android.views.dialogs.MusicActionsDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

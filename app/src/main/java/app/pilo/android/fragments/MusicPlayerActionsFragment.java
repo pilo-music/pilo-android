@@ -15,8 +15,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.error.VolleyError;
-import com.downloader.PRDownloader;
-import com.downloader.Progress;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,9 +32,8 @@ import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
-import app.pilo.android.views.MusicActionsDialog;
+import app.pilo.android.views.dialogs.MusicActionsDialog;
 
 import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
@@ -46,8 +43,6 @@ public class MusicPlayerActionsFragment extends Fragment {
     private Utils utils;
     private UserSharedPrefManager userSharedPrefManager;
 
-    private boolean hasDownloadComplete = false;
-    private int fileDownloadId = 0;
     private boolean likeProcess = false;
 
     private Music currentMusic;
@@ -96,14 +91,6 @@ public class MusicPlayerActionsFragment extends Fragment {
         }
         currentMusic = getCurrentMusic();
         if (currentMusic != null) {
-            if (MusicDownloader.checkExists(getActivity(), currentMusic, userSharedPrefManager.getDownloadQuality())) {
-                binding.imgSync.setEnabled(false);
-                binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
-            } else {
-                binding.imgSync.setEnabled(true);
-                binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_download));
-            }
-
             if (currentMusic.isHas_like()) {
                 binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
             } else {
@@ -114,84 +101,10 @@ public class MusicPlayerActionsFragment extends Fragment {
 
 
     void setupViews() {
-        binding.llSync.setOnClickListener(view -> download());
-        binding.downloadProgressExtendedMusicPlayer.setOnClickListener(view -> clickDownloadProgress());
+        binding.piloDb.setMusic(currentMusic);
+        binding.llSync.setOnClickListener(view -> binding.piloDb.download());
         binding.llLike.setOnClickListener(view -> like());
         binding.imgMore.setOnClickListener(view -> new MusicActionsDialog(context, currentMusic).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
-    }
-
-    void download() {
-        if (fileDownloadId != 0) {
-            this.clickDownloadProgress();
-            return;
-        }
-
-        binding.imgSync.setVisibility(View.GONE);
-        binding.downloadProgressExtendedMusicPlayer.setVisibility(View.VISIBLE);
-        binding.downloadProgressExtendedMusicPlayer.setIndeterminate();
-        if (getSlidingLayout().getPanelState() != SlidingUpPanelLayout.PanelState.HIDDEN) {
-            Music music = getCurrentMusic();
-            if (music == null)
-                return;
-
-
-            hasDownloadComplete = false;
-            fileDownloadId = 0;
-            fileDownloadId = MusicDownloader.download(context, music, new MusicDownloader.iDownload() {
-                @Override
-                public void onStartOrResumeListener() {
-                    binding.downloadProgressExtendedMusicPlayer.setDeterminate();
-                    binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-                    binding.downloadProgressExtendedMusicPlayer.setVisibility(View.VISIBLE);
-                    binding.downloadProgressExtendedMusicPlayer.setCurrentProgress(0);
-                }
-
-                @Override
-                public void onProgressListener(Progress progress) {
-                    long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-                    // Displays the progress bar for the first time.
-                    binding.downloadProgressExtendedMusicPlayer.setCurrentProgress((int) progressPercent);
-                }
-
-                @Override
-                public void onPauseListener() {
-
-                }
-
-                @Override
-                public void onCancelListener() {
-
-                }
-
-                @Override
-                public void onStart() {
-
-                }
-
-                @Override
-                public void onError() {
-
-                }
-
-                @Override
-                public void onComplete() {
-                    hasDownloadComplete = true;
-                    binding.imgSync.setEnabled(false);
-                    binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-                    binding.imgSync.setVisibility(View.VISIBLE);
-                    binding.imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
-                }
-            });
-        }
-    }
-
-    void clickDownloadProgress() {
-        if (!hasDownloadComplete && fileDownloadId != 0) {
-            PRDownloader.cancel(fileDownloadId);
-            binding.imgSync.setVisibility(View.VISIBLE);
-            binding.downloadProgressExtendedMusicPlayer.setVisibility(View.GONE);
-            fileDownloadId = 0;
-        }
     }
 
     void like() {
@@ -271,7 +184,7 @@ public class MusicPlayerActionsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {
         initPlayerUi();
-        this.clickDownloadProgress();
+        binding.piloDb.cancel();
     }
 
     @Override

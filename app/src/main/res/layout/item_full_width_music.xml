@@ -9,10 +9,6 @@
     android:layoutDirection="ltr"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/riv_music_item_image"
             android:layout_width="match_parent"
@@ -23,32 +19,13 @@
             app:riv_mutate_background="true"
             tools:src="@drawable/ic_music_placeholder" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|left"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.8"
-            android:background="@drawable/dark_round_box_background"
-            android:fontFamily="@font/font"
-            android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingTop="3dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="3dp"
-            android:text="MP3"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/extra_small_font_size" />
-    </FrameLayout>
-
     <TextView
         android:id="@+id/tv_music_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
-        android:fontFamily="@font/font"
+        android:fontFamily="@font/font_medium"
         android:gravity="start"
         android:maxLines="1"
         android:paddingStart="8dp"
