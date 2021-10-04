@@ -36,6 +36,7 @@ public class PiloDownloadButton extends LinearLayout {
 
     public void setMusic(Music music) {
         this.music = music;
+        fileDownloadId= 0;
 
         if (MusicDownloader.checkExists(context, music, userSharedPrefManager.getDownloadQuality())) {
             imgSync.setEnabled(false);
@@ -62,6 +63,9 @@ public class PiloDownloadButton extends LinearLayout {
 
         imgSync = (ImageView) getChildAt(0);
         dbProgress = (DownloadButtonProgress) getChildAt(1);
+
+        imgSync.setOnClickListener(view -> download());
+        dbProgress.setOnClickListener(view -> download());
     }
 
     public void download() {
@@ -120,6 +124,8 @@ public class PiloDownloadButton extends LinearLayout {
                 imgSync.setEnabled(false);
                 imgSync.setVisibility(View.VISIBLE);
                 imgSync.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
+
+                fileDownloadId = 0;
             }
         });
 

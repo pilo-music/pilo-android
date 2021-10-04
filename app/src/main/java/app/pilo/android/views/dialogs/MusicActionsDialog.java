@@ -1,7 +1,6 @@
 package app.pilo.android.views.dialogs;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import androidx.core.app.ShareCompat;
 import com.android.volley.error.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.downloader.Progress;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -25,9 +23,7 @@ import app.pilo.android.api.LikeApi;
 import app.pilo.android.databinding.DialogMusicActionsBinding;
 import app.pilo.android.fragments.AddToPlaylistFragment;
 import app.pilo.android.fragments.SingleArtistFragment;
-import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
-import app.pilo.android.utils.MusicDownloader;
 import app.pilo.android.utils.Utils;
 
 public class MusicActionsDialog extends BottomSheetDialogFragment {
@@ -39,8 +35,6 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
     private final Utils utils;
 
     public final static String TAG = "MusicActionsDialog";
-
-    private UserSharedPrefManager userSharedPrefManager;
 
 
     private DialogMusicActionsBinding binding;
@@ -59,12 +53,9 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
         inflater = LayoutInflater.from(requireContext());
         binding = DialogMusicActionsBinding.inflate(inflater);
         View view = binding.getRoot();
-        userSharedPrefManager = new UserSharedPrefManager(context);
 
         setupViews();
-        setupDownload();
         setupLike();
-        setupDownload();
 
         return view;
     }
@@ -127,61 +118,10 @@ public class MusicActionsDialog extends BottomSheetDialogFragment {
         });
     }
 
-    private void setupDownload() {
-        binding.llMusicActionsDownload.setOnClickListener(v -> MusicDownloader.download(context, music, new MusicDownloader.iDownload() {
-            @Override
-            public void onStartOrResumeListener() {
-                binding.imgMusicActionsDownload.setVisibility(View.GONE);
-                binding.downloadprogressMusicActions.setVisibility(View.VISIBLE);
-                binding.downloadprogressMusicActions.setCurrentProgress(0);
-            }
-
-            @Override
-            public void onProgressListener(Progress progress) {
-                long progressPercent = progress.currentBytes * 100 / progress.totalBytes;
-                // Displays the progress bar for the first time.
-                binding.downloadprogressMusicActions.setCurrentProgress((int) progressPercent);
-            }
-
-            @Override
-            public void onPauseListener() {
-
-            }
-
-            @Override
-            public void onCancelListener() {
-
-            }
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-
-            @Override
-            public void onComplete() {
-                binding.imgMusicActionsDownload.setEnabled(false);
-                binding.imgMusicActionsDownload.setBackgroundColor(Color.parseColor("#f9f9f9"));
-                binding.downloadprogressMusicActions.setVisibility(View.GONE);
-                binding.imgMusicActionsDownload.setVisibility(View.VISIBLE);
-                binding.imgMusicActionsDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
-            }
-        }));
-    }
 
     private void setupViews() {
-
-        if (MusicDownloader.checkExists(context, music, userSharedPrefManager.getDownloadQuality())) {
-            binding.imgMusicActionsDownload.setEnabled(false);
-            binding.imgMusicActionsDownload.setBackgroundColor(Color.parseColor("#f9f9f9"));
-            binding.imgMusicActionsDownload.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_checkmark));
-        }
-
+        binding.piloDb.setMusic(music);
+        binding.llMusicActionsDownload.setOnClickListener(view -> binding.piloDb.download());
 
         binding.llMusicActionsGoToArtist.setOnClickListener(v -> {
             SingleArtistFragment singleArtistFragment = new SingleArtistFragment(music.getArtist());

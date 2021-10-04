@@ -176,31 +176,10 @@
         android:orientation="horizontal"
         android:padding="@dimen/activity_vertical_margin">
 
-
-        <ImageView
-            android:id="@+id/img_music_actions_download"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:src="@drawable/ic_download" />
-
-
-        <com.github.abdularis.buttonprogress.DownloadButtonProgress
-            android:id="@+id/downloadprogress_music_actions"
-            android:layout_width="28.0dip"
-            android:layout_height="28.0dip"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:currentProgress="20"
-            app:determinateBackgroundDrawable="@drawable/download_determinate_drawable"
-            app:finishBackgroundDrawable="@drawable/download_idle_drawable"
-            app:idleBackgroundDrawable="@drawable/download_idle_drawable"
-            app:idleIconDrawable="@drawable/ic_download"
-            app:indeterminateBackgroundDrawable="@drawable/download_idle_drawable"
-            app:maxProgress="100"
-            app:progressDeterminateColor="@color/colorPrimary"
-            app:progressIndeterminateColor="@color/colorPrimary"
-            app:progressWidth="2.0dip"
-            app:state="DETERMINATE" />
+        <app.pilo.android.views.components.PiloDownloadButton
+            android:id="@+id/pilo_db"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
         <TextView

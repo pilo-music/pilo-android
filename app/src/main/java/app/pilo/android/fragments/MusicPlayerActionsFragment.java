@@ -90,6 +90,7 @@ public class MusicPlayerActionsFragment extends Fragment {
             return;
         }
         currentMusic = getCurrentMusic();
+        binding.piloDb.setMusic(currentMusic);
         if (currentMusic != null) {
             if (currentMusic.isHas_like()) {
                 binding.imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
