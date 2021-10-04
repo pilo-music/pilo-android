@@ -55,9 +55,6 @@ public class PiloDownloadButton extends LinearLayout {
         inflater.inflate(R.layout.pilo_download_button, this, true);
         userSharedPrefManager = new UserSharedPrefManager(context);
 
-        setOrientation(LinearLayout.HORIZONTAL);
-        setGravity(Gravity.CENTER);
-
         setClickable(true);
         setFocusable(true);
 
@@ -69,6 +66,11 @@ public class PiloDownloadButton extends LinearLayout {
     }
 
     public void download() {
+        if (music == null){
+            return;
+        }
+
+
         if (fileDownloadId != 0) {
             this.cancel();
             return;
