@@ -70,13 +70,10 @@
             </LinearLayout>
 
 
-            <ImageView
-                android:id="@+id/img_music_actions_like"
-                android:layout_width="@dimen/_18sdp"
-                android:layout_height="@dimen/_18sdp"
-                android:layout_gravity="center"
-                android:layout_marginStart="@dimen/activity_vertical_margin"
-                android:src="@drawable/ic_like_off" />
+            <app.pilo.android.views.components.PiloLikeButton
+                android:id="@+id/pilo_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

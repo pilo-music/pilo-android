@@ -64,7 +64,7 @@ public class MusicPlayerActionsFragment extends Fragment {
         binding.piloLike.setMusic(currentMusic);
         binding.llLike.setOnClickListener(view -> binding.piloLike.callOnClick());
 
-        binding.imgMore.setOnClickListener(view -> new MusicActionsDialog(context, currentMusic).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
+        binding.imgMore.setOnClickListener(view -> new MusicActionsDialog(context, currentMusic, false, false).show(((MainActivity) (context)).getSupportFragmentManager(), MusicActionsDialog.TAG));
     }
 
 

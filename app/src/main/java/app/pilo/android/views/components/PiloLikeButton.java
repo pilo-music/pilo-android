@@ -118,14 +118,6 @@ public class PiloLikeButton extends LinearLayout {
         return super.callOnClick();
     }
 
-    private MainActivity getMainActivity() {
-        return ((MainActivity) context);
-    }
-
-    private SlidingUpPanelLayout getSlidingLayout() {
-        return ((MainActivity) context).getSliding_layout();
-    }
-
     private void changeLikeResource(){
         musicApi.single(music.getSlug(), new HttpHandler.RequestHandler() {
             @Override
@@ -145,6 +137,14 @@ public class PiloLikeButton extends LinearLayout {
 
             }
         });
-
     }
+
+    private MainActivity getMainActivity() {
+        return ((MainActivity) context);
+    }
+
+    private SlidingUpPanelLayout getSlidingLayout() {
+        return ((MainActivity) context).getSliding_layout();
+    }
+
 }
