@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -40,28 +41,32 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-
-//        binding.btnLogin.setProgress(true);
-//        UserApi userApi = new UserApi(this);
-//        userApi.login(phone, new HttpHandler.RequestHandler() {
-//            @Override
-//            public void onGetInfo(Object data, String message, boolean status) {
-//                binding.btnLogin.setProgress(false);
-//                if (status) {
+        binding.btnLogin.setProgress(true);
+        UserApi userApi = new UserApi(this);
+        userApi.login(phone, new HttpHandler.RequestHandler() {
+            @Override
+            public void onGetInfo(Object data, String message, boolean status) {
+                binding.btnLogin.setProgress(false);
+                if (status) {
                     Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
                     intent.putExtra("phone", phone);
                     startActivity(intent);
-//                } else {
-//                    new HttpErrorHandler(LoginActivity.this, message);
-//                }
-//            }
-//
-//            @Override
-//            public void onGetError(@Nullable VolleyError error) {
-//                binding.btnLogin.setProgress(false);
-//                new HttpErrorHandler(LoginActivity.this);
-//            }
-//        });
+                } else {
+                    new HttpErrorHandler(LoginActivity.this, message);
+                    new Handler().postDelayed(() -> {
+                        Intent intent = new Intent(LoginActivity.this, VerifyActivity.class);
+                        intent.putExtra("phone", phone);
+                        startActivity(intent);
+                    },1000);
+                }
+            }
+
+            @Override
+            public void onGetError(@Nullable VolleyError error) {
+                binding.btnLogin.setProgress(false);
+                new HttpErrorHandler(LoginActivity.this);
+            }
+        });
     }
 
 

@@ -27,7 +27,7 @@ import app.pilo.android.models.SinglePlaylist;
 import app.pilo.android.repositories.UserRepo;
 
 public class PlaylistApi {
-    private Context context;
+    private final Context context;
 
     public PlaylistApi(Context context) {
         this.context = context;

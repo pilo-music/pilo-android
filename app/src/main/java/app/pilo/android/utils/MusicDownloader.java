@@ -84,6 +84,10 @@ public class MusicDownloader {
     }
 
     public static boolean checkExists(Context context, Music music, String quality) {
+        if (music == null){
+            return false;
+        }
+
         Download download = AppDatabase.getInstance(context).downloadDao().findById(music.getSlug());
         if (download == null)
             return false;

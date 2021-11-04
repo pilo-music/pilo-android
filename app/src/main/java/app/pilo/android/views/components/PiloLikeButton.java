@@ -5,10 +5,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+
 import com.android.volley.error.VolleyError;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpErrorHandler;
@@ -31,11 +34,12 @@ public class PiloLikeButton extends LinearLayout {
 
     public void setMusic(Music music) {
         this.music = music;
-        changeLikeResource();
+        if (music != null)
+            changeLikeResource();
     }
 
     public PiloLikeButton(Context context, @Nullable AttributeSet attrs) {
-        super(context,attrs);
+        super(context, attrs);
 
         this.context = context;
 
@@ -77,14 +81,14 @@ public class PiloLikeButton extends LinearLayout {
                     } else {
                         music.setHas_like(true);
                     }
-                    likeProcess=false;
+                    likeProcess = false;
                 }
 
                 @Override
                 public void onGetError(@Nullable VolleyError error) {
                     new HttpErrorHandler(getMainActivity());
                     imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                    likeProcess=false;
+                    likeProcess = false;
                 }
             });
         } else {
@@ -99,14 +103,14 @@ public class PiloLikeButton extends LinearLayout {
                     } else {
                         music.setHas_like(false);
                     }
-                    likeProcess=false;
+                    likeProcess = false;
                 }
 
                 @Override
                 public void onGetError(@Nullable VolleyError error) {
                     new HttpErrorHandler(getMainActivity());
                     imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                    likeProcess=false;
+                    likeProcess = false;
                 }
             });
         }
@@ -118,18 +122,18 @@ public class PiloLikeButton extends LinearLayout {
         return super.callOnClick();
     }
 
-    private void changeLikeResource(){
+    private void changeLikeResource() {
         musicApi.single(music.getSlug(), new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
-               if (status){
-                   Music m = ((SingleMusic) data).getMusic();
-                   if (m.isHas_like()) {
-                       imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
-                   } else {
-                       imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
-                   }
-               }
+                if (status) {
+                    Music m = ((SingleMusic) data).getMusic();
+                    if (m.isHas_like()) {
+                        imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_on));
+                    } else {
+                        imgLike.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_like_off));
+                    }
+                }
             }
 
             @Override

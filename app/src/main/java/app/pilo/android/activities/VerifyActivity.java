@@ -9,9 +9,10 @@ import app.pilo.android.api.UserApi;
 import app.pilo.android.databinding.ActivityVerifyBinding;
 import app.pilo.android.models.User;
 import app.pilo.android.repositories.UserRepo;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 
 import com.android.volley.error.VolleyError;
@@ -35,8 +36,16 @@ public class VerifyActivity extends BaseActivity {
         }
         binding.etPhone.setText(phone);
         binding.pbVerify.setOnClickListener(v -> verify());
-    }
 
+        binding.tvResend.setOnClickListener(v -> {
+            Intent intent = new Intent(VerifyActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finishAffinity();
+        });
+
+
+        setupCountDown();
+    }
 
     private void verify() {
         String phone = binding.etPhone.getText().toString();
@@ -52,7 +61,7 @@ public class VerifyActivity extends BaseActivity {
         }
 
         binding.pbVerify.setProgress(true);
-        new UserApi(VerifyActivity.this).login(new HttpHandler.RequestHandler() {
+        new UserApi(VerifyActivity.this).verify(phone, code, new HttpHandler.RequestHandler() {
             @Override
             public void onGetInfo(Object data, String message, boolean status) {
                 binding.pbVerify.setProgress(false);
@@ -93,5 +102,21 @@ public class VerifyActivity extends BaseActivity {
 
     public static boolean isValidPhoneNumber(String target) {
         return target.length() == 11;
+    }
+    private void setupCountDown() {
+        new CountDownTimer(120000, 1000) {
+            @SuppressLint("DefaultLocale")
+            public void onTick(long millisUntilFinished) {
+                int seconds = (int) (millisUntilFinished / 1000);
+                int minutes = seconds / 60;
+                seconds = seconds % 60;
+                binding.tvCountDown.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+            }
+
+            public void onFinish() {
+                binding.tvCountDown.setVisibility(View.GONE);
+                binding.tvResend.setVisibility(View.VISIBLE);
+            }
+        }.start();
     }
 }
