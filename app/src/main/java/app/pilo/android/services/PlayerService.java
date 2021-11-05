@@ -138,7 +138,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             @Override
             public void onPlaybackStateChanged(int state) {
                 if (state == STATE_ENDED) {
-                    musicModule.getMusicPlayer().skip(false);
+                    musicModule.getMusicPlayer().skip(true);
                 } else if (state == STATE_READY) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, getExpoPlayer().getCurrentPosition(), 1f);
                     musicModule.getMediaSession().getMediaSession().setPlaybackState(mStateBuilder.build());

@@ -14,7 +14,7 @@ android {
         versionCode 11
         versionName "1.4.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [PUSHE_TOKEN: PUSHE_TOKEN, 'SENTRY_DNS': SENTRY_DNS]
+        manifestPlaceholders = ['SENTRY_DNS': SENTRY_DNS]
         multiDexEnabled true
         resConfigs "en"
     }
