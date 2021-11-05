@@ -1,5 +1,7 @@
 package app.pilo.android.fragments;
 
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,8 +40,6 @@ import app.pilo.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class SingleVideoFragment extends BaseFragment {
     private VideoApi videoApi;

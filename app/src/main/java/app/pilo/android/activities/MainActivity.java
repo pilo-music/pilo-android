@@ -1,5 +1,7 @@
 package app.pilo.android.activities;
 
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
+
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -44,13 +46,11 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.services.MusicPlayer.MusicUtils;
 import app.pilo.android.services.PlayerService;
-import app.pilo.android.utils.Constant;
+import app.pilo.android.services.MusicPlayer.Constant;
 import app.pilo.android.utils.FragmentHistory;
 import app.pilo.android.views.FragNavController;
 import app.pilo.android.views.NestedScrollableViewHelper;
-import io.sentry.Sentry;
 
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MainActivity extends BaseActivity implements BaseFragment.FragmentNavigation, FragNavController.TransactionListener, FragNavController.RootFragmentListener {
 
@@ -215,23 +215,10 @@ public class MainActivity extends BaseActivity implements BaseFragment.FragmentN
     }
 
     private void handleIncomingBroadcast(Intent intent) {
-        if (intent.getBooleanExtra("notify", false)) {
+        if (intent.getBooleanExtra(Constant.INTENT_NOTIFY, false)) {
             initPlayerUi();
-        } else if (intent.getBooleanExtra("close", false)) {
-            if (active) {
-                finish();
-            }
-        } else if (intent.getBooleanExtra("ended", false)) {
-            switch (userSharedPrefManager.getRepeatMode()) {
-                case Constant.REPEAT_MODE_NONE: {
-                    playerService.getMusicModule().getMusicPlayer().skip(true);
-                    break;
-                }
-                case Constant.REPEAT_MODE_ONE: {
-                    playerService.getMusicModule().getMusicPlayer().playTrack(musics, getCurrentSlug());
-                    break;
-                }
-            }
+        } else if (intent.getBooleanExtra(Constant.INTENT_CLOSE, false) && active) {
+            finish();
         }
     }
 

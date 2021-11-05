@@ -1,8 +1,9 @@
 package app.pilo.android.services.MusicPlayer;
 
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
+
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
@@ -13,7 +14,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.List;
 
-import app.pilo.android.activities.MainActivity;
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.MusicApi;
 import app.pilo.android.api.PlayHistoryApi;
@@ -22,8 +22,6 @@ import app.pilo.android.event.MusicEvent;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.models.PlayHistory;
-
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MusicUtils {
     private final Context context;
@@ -127,8 +125,9 @@ public class MusicUtils {
     private void sendIntent(boolean value) {
         Intent intent = new Intent();
         intent.setAction(CUSTOM_PLAYER_INTENT);
-        intent.putExtra("loading", value);
+        intent.putExtra(Constant.INTENT_LOADING, value);
         context.sendBroadcast(intent);
+//        Constant.isMusicLoading = true;
     }
 
 }

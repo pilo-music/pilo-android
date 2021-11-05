@@ -1,12 +1,13 @@
 package app.pilo.android.fragments;
 
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.exoplayer2.Player;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,9 +29,8 @@ import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.services.MusicModule;
+import app.pilo.android.services.MusicPlayer.Constant;
 import app.pilo.android.utils.PlayButtonAnimation;
-
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MiniMusicPlayerFragment extends Fragment {
 
@@ -84,8 +83,8 @@ public class MiniMusicPlayerFragment extends Fragment {
             return;
         }
 
-        if (!intent.hasExtra("progress")) {
-            musicLoading = intent.getBooleanExtra("loading", false);
+        if (!intent.hasExtra(Constant.INTENT_PROGRESS)) {
+            musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
             initPlayerUi();
         }
     }
@@ -142,12 +141,7 @@ public class MiniMusicPlayerFragment extends Fragment {
             if (musicLoading) {
                 return;
             }
-
-            if (((musicModule.getMusicPlayer().getCurrentMusicPosition() * 100) / musicModule.getMusicPlayer().getDuration() > 5)) {
-                musicModule.getMusicPlayer().seekTo(0);
-            } else {
-                musicModule.getMusicPlayer().skip(false);
-            }
+            musicModule.getMusicPlayer().skip(false);
         });
     }
 

@@ -1,5 +1,7 @@
 package app.pilo.android.fragments;
 
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,10 +35,8 @@ import app.pilo.android.helpers.UserSharedPrefManager;
 import app.pilo.android.models.Music;
 import app.pilo.android.services.MusicModule;
 import app.pilo.android.services.MusicPlayer.MusicUtils;
-import app.pilo.android.utils.Constant;
+import app.pilo.android.services.MusicPlayer.Constant;
 import app.pilo.android.utils.PlayButtonAnimation;
-
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MusicPlayerFragment extends Fragment {
 
@@ -209,10 +209,10 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
 
-        if (intent.getIntExtra("progress", -100) != -100) {
+        if (intent.getIntExtra(Constant.INTENT_PROGRESS, -100) != -100) {
             if (!is_seeking) {
-                binding.seekbarMusic.setMax(intent.getIntExtra("max", 0));
-                long elapsed = intent.getIntExtra("progress", 0);
+                binding.seekbarMusic.setMax(intent.getIntExtra(Constant.INTENT_MAX, 0));
+                long elapsed = intent.getIntExtra(Constant.INTENT_PROGRESS, 0);
                 long remaining = binding.seekbarMusic.getMax();
 
                 long minutes_elapsed = (elapsed / 1000) / 60;
@@ -233,15 +233,15 @@ public class MusicPlayerFragment extends Fragment {
                 binding.tvExtendedMusicPlayerDuration.setText(minutes_remaining + ":" + remaining_seconds_string);
                 binding.seekbarMusic.setProgress(intent.getIntExtra("progress", 0));
             }
-        } else if (intent.getBooleanExtra("play", false)) {
+        } else if (intent.getBooleanExtra(Constant.INTENT_PLAY, false)) {
             binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
-        } else if (intent.getBooleanExtra("pause", false)) {
+        } else if (intent.getBooleanExtra(Constant.INTENT_PAUSE, false)) {
             binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
         }
 
 
         if (!intent.hasExtra("progress")) {
-            musicLoading = intent.getBooleanExtra("loading", false);
+            musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
             initPlayerUi();
         }
 
@@ -263,15 +263,11 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
         playButtonAnimation.showBonceAnimation(binding.fabExtendedMusicPlayerPlay);
-        new Handler().postDelayed(() -> musicModule.getMusicPlayer().togglePlay(),400);
+        new Handler().postDelayed(() -> musicModule.getMusicPlayer().togglePlay(), 400);
     }
 
     void previous() {
-        if (((musicModule.getMusicPlayer().getCurrentMusicPosition() * 100) / musicModule.getMusicPlayer().getDuration() > 5)) {
-            musicModule.getMusicPlayer().seekTo(0);
-        } else {
-            musicModule.getMusicPlayer().skip(false);
-        }
+        musicModule.getMusicPlayer().skip(false);
     }
 
     void next() {

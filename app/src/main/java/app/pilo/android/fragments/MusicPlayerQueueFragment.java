@@ -1,9 +1,5 @@
 package app.pilo.android.fragments;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.pilo.android.R;
@@ -30,8 +27,6 @@ import app.pilo.android.databinding.FragmentMusicPlayerQueueBinding;
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.event.MusicEvent;
 import app.pilo.android.models.Music;
-
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
 
 public class MusicPlayerQueueFragment extends Fragment {
 
@@ -54,25 +49,7 @@ public class MusicPlayerQueueFragment extends Fragment {
         musics = AppDatabase.getInstance(context).musicDao().getAll();
         musicVerticalListAdapter = new MusicDraggableVerticalListAdapter(new WeakReference<>(context), musics, viewHolder -> itemTouchHelper.startDrag(viewHolder));
         setupMusicVerticalList();
-        setupService();
         return view;
-    }
-
-    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(CUSTOM_PLAYER_INTENT)) {
-                setupMusicVerticalList();
-            }
-        }
-    };
-
-
-    private void setupService() {
-        IntentFilter intentToReceiveFilter = new IntentFilter();
-        intentToReceiveFilter.addAction(CUSTOM_PLAYER_INTENT);
-        intentToReceiveFilter.setPriority(999);
-        context.registerReceiver(mIntentReceiver, intentToReceiveFilter, null, null);
     }
 
 
@@ -90,8 +67,9 @@ public class MusicPlayerQueueFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {
+        List<Music> newList = new ArrayList<>(event.musics);
         musics.clear();
-        musics.addAll(event.musics);
+        musics.addAll(newList);
         musicVerticalListAdapter.notifyDataSetChanged();
     }
 

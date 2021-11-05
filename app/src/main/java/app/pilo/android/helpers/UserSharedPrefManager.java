@@ -3,7 +3,7 @@ package app.pilo.android.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import app.pilo.android.utils.Constant;
+import app.pilo.android.services.MusicPlayer.Constant;
 
 public class UserSharedPrefManager {
     private static final String USER_SHARED_PREF_NAME = "user_shared_pref";

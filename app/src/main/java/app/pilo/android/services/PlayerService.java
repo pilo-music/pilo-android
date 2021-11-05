@@ -11,15 +11,20 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
+
 import androidx.annotation.Nullable;
 import androidx.media.session.MediaButtonReceiver;
+
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import static app.pilo.android.services.MusicPlayer.MusicPlayer.CUSTOM_PLAYER_INTENT;
+
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
+
+import app.pilo.android.services.MusicPlayer.Constant;
 
 public class PlayerService extends Service implements AudioManager.OnAudioFocusChangeListener {
 
@@ -65,20 +70,25 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
         mStateBuilder = new PlaybackStateCompat.Builder();
         musicModule.getMediaSession().updateMediaSessionMetaData();
 
-        if (intent != null) {
 
-            if (intent.getBooleanExtra("start", false)) {
-                musicModule.getMusicPlayer().togglePlay();
-            } else if (intent.getAction() != null && intent.getAction().equals("toggle")) {
-                musicModule.getMusicPlayer().togglePlay();
-            } else if (intent.getAction() != null && intent.getAction().equals("next")) {
-                musicModule.getMusicPlayer().skip(true);
-            } else if (intent.getAction() != null && intent.getAction().equals("previous")) {
-                musicModule.getMusicPlayer().skip(false);
-            } else if (intent.getAction() != null && intent.getAction().equals("close")) {
-                stopPiloService();
-            } else {
-                musicModule.getNotificationBuilder().show();
+        if (intent != null && intent.getAction() != null) {
+            switch (intent.getAction()) {
+                case Constant.INTENT_START:
+                case Constant.INTENT_TOGGLE:
+                    musicModule.getMusicPlayer().togglePlay();
+                    break;
+                case Constant.INTENT_NEXT:
+                    musicModule.getMusicPlayer().skip(true);
+                    break;
+                case Constant.INTENT_PREVIOUS:
+                    musicModule.getMusicPlayer().skip(false);
+                    break;
+                case Constant.INTENT_CLOSE:
+                    stopPiloService();
+                    break;
+                default:
+                    musicModule.getNotificationBuilder().show();
+                    break;
             }
         }
 
@@ -115,8 +125,8 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     public void prepareExoPlayerFromURL(Uri uri, boolean play_when_ready) {
         Intent intent = new Intent();
         intent.setAction(CUSTOM_PLAYER_INTENT);
-        intent.putExtra("progress", 0);
-        intent.putExtra("max", 0);
+        intent.putExtra(Constant.INTENT_PROGRESS, 0);
+        intent.putExtra(Constant.INTENT_MAX, 0);
         sendBroadcast(intent);
 
         if (getExpoPlayer() == null) {
@@ -138,7 +148,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             @Override
             public void onPlaybackStateChanged(int state) {
                 if (state == STATE_ENDED) {
-                    musicModule.getMusicPlayer().skip(true);
+                    musicModule.getMusicPlayer().ended();
                 } else if (state == STATE_READY) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, getExpoPlayer().getCurrentPosition(), 1f);
                     musicModule.getMediaSession().getMediaSession().setPlaybackState(mStateBuilder.build());
@@ -158,7 +168,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
         Intent intent1 = new Intent();
         intent1.setAction(CUSTOM_PLAYER_INTENT);
-        intent1.putExtra("notify", true);
+        intent1.putExtra(Constant.INTENT_NOTIFY, true);
         sendBroadcast(intent1);
 
         musicModule.getNotificationBuilder().show();
@@ -182,7 +192,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private void stopPiloService() {
         Intent i = new Intent();
         i.setAction(CUSTOM_PLAYER_INTENT);
-        i.putExtra("close", true);
+        i.putExtra(Constant.INTENT_CLOSE, true);
         sendBroadcast(i);
         musicModule.getNotificationBuilder().cancelAll();
         if (getExpoPlayer() != null) {

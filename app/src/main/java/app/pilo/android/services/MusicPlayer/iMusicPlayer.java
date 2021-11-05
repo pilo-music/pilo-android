@@ -11,6 +11,7 @@ public interface iMusicPlayer {
     void skip(boolean next);
 
     void playTrack(List<Music> musics, String slug);
+
     void playTrack(List<Music> musics, String slug, boolean loadRelative);
 
     void seekTo(long progress);
@@ -18,4 +19,6 @@ public interface iMusicPlayer {
     Runnable updateProgress();
 
     void togglePlay();
+
+    void ended();
 }

@@ -1,9 +1,10 @@
 package app.pilo.android.services.MusicPlayer;
 
+import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
+
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 
 import com.google.android.exoplayer2.Player;
@@ -32,7 +33,6 @@ public class MusicPlayer implements iMusicPlayer {
     private final NotificationBuilder notificationBuilder;
     private final MusicUtils utils;
 
-    public static String CUSTOM_PLAYER_INTENT = "app.pilo.android.Services.custom_broadcast_intent";
     List<Music> musics;
 
     public MusicPlayer(PlayerService context, SimpleExoPlayer exoPlayer, AudioManager audioManager, NotificationBuilder notificationBuilder) {
@@ -115,7 +115,7 @@ public class MusicPlayer implements iMusicPlayer {
             }
         }
 
-        sendIntent("notify");
+        sendIntent(Constant.INTENT_NOTIFY);
         audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
     }
 
@@ -129,8 +129,8 @@ public class MusicPlayer implements iMusicPlayer {
         if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
             Intent intent = new Intent();
             intent.setAction(CUSTOM_PLAYER_INTENT);
-            intent.putExtra("progress", (int) exoPlayer.getCurrentPosition());
-            intent.putExtra("max", (int) exoPlayer.getDuration());
+            intent.putExtra(Constant.INTENT_PROGRESS, (int) exoPlayer.getCurrentPosition());
+            intent.putExtra(Constant.INTENT_MAX, (int) exoPlayer.getDuration());
             if (exoPlayer.getCurrentPosition() != 0) {
                 context.sendBroadcast(intent);
             }
@@ -157,10 +157,10 @@ public class MusicPlayer implements iMusicPlayer {
 
         if (exoPlayer.getPlayWhenReady()) {
             exoPlayer.setPlayWhenReady(false);
-            sendIntent("pause");
+            sendIntent(Constant.INTENT_PAUSE);
         } else {
             exoPlayer.setPlayWhenReady(true);
-            sendIntent("play");
+            sendIntent(Constant.INTENT_PLAY);
             handler.post(updateProgressAction);
             if (audioManager != null) {
                 audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -168,6 +168,20 @@ public class MusicPlayer implements iMusicPlayer {
         }
 
         notificationBuilder.show();
+    }
+
+    @Override
+    public void ended() {
+        switch (userSharedPrefManager.getRepeatMode()) {
+            case Constant.REPEAT_MODE_NONE: {
+                skip(true);
+                break;
+            }
+            case Constant.REPEAT_MODE_ONE: {
+                playTrack(getCurrentPlaylist(), currentMusicSlug());
+                break;
+            }
+        }
     }
 
 
