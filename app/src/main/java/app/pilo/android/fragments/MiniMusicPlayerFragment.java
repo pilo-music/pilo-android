@@ -22,6 +22,8 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+
 import app.pilo.android.R;
 import app.pilo.android.activities.MainActivity;
 import app.pilo.android.databinding.FragmentMiniMusicPlayerBinding;
@@ -65,28 +67,37 @@ public class MiniMusicPlayerFragment extends Fragment {
         IntentFilter intentToReceiveFilter = new IntentFilter();
         intentToReceiveFilter.addAction(CUSTOM_PLAYER_INTENT);
         intentToReceiveFilter.setPriority(999);
-        context.registerReceiver(mIntentReceiver, intentToReceiveFilter, null, mHandler);
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction() != null && intent.getAction().equals(CUSTOM_PLAYER_INTENT) && active) {
+                    handleIncomingBroadcast(intent);
+                }
+            }
+        }, intentToReceiveFilter, null, mHandler);
         active = true;
     }
-
-    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(CUSTOM_PLAYER_INTENT) && active) {
-                handleIncomingBroadcast(intent);
-            }
-        }
-    };
 
     private void handleIncomingBroadcast(Intent intent) {
         if (binding == null) {
             return;
         }
 
-        if (!intent.hasExtra(Constant.INTENT_PROGRESS)) {
-            musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
-            initPlayerUi();
+        Bundle extras = intent.getExtras();
+        Set<String> ks = extras.keySet();
+        for (String key : ks) {
+            switch (key) {
+                case Constant.INTENT_NOTIFY:
+                    initPlayerUi();
+                case Constant.INTENT_PLAY:
+                    binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
+                    break;
+                case Constant.INTENT_PAUSE:
+                    binding.imgMusicPlayerCollapsedPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
+                    break;
+            }
         }
+//        musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
     }
 
     private void initPlayerUi() {

@@ -5,7 +5,6 @@ import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTEN
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Handler;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -13,7 +12,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
@@ -28,8 +26,6 @@ public class MusicPlayer implements iMusicPlayer {
     private final AudioManager audioManager;
     private final UserSharedPrefManager userSharedPrefManager;
     private final PlayerService context;
-    private final Handler handler;
-    private final Runnable updateProgressAction = this::updateProgress;
     private final NotificationBuilder notificationBuilder;
     private final MusicUtils utils;
 
@@ -43,7 +39,6 @@ public class MusicPlayer implements iMusicPlayer {
         this.userSharedPrefManager = new UserSharedPrefManager(context);
         this.notificationBuilder = notificationBuilder;
         this.utils = new MusicUtils(context);
-        handler = new Handler();
     }
 
 
@@ -67,6 +62,8 @@ public class MusicPlayer implements iMusicPlayer {
                 }
             }
         }
+
+        sendIntent(isNext ? Constant.INTENT_NEXT : Constant.INTENT_PREVIOUS);
     }
 
     @Override
@@ -125,25 +122,6 @@ public class MusicPlayer implements iMusicPlayer {
     }
 
     @Override
-    public Runnable updateProgress() {
-        if (exoPlayer != null && exoPlayer.getPlayWhenReady()) {
-            Intent intent = new Intent();
-            intent.setAction(CUSTOM_PLAYER_INTENT);
-            intent.putExtra(Constant.INTENT_PROGRESS, (int) exoPlayer.getCurrentPosition());
-            intent.putExtra(Constant.INTENT_MAX, (int) exoPlayer.getDuration());
-            if (exoPlayer.getCurrentPosition() != 0) {
-                context.sendBroadcast(intent);
-            }
-
-            long delayMs = TimeUnit.SECONDS.toMillis(1);
-            if (exoPlayer.getPlayWhenReady()) {
-                handler.postDelayed(updateProgressAction, delayMs);
-            }
-        }
-        return this::updateProgress;
-    }
-
-    @Override
     public void togglePlay() {
         if (exoPlayer == null) {
             return;
@@ -161,7 +139,6 @@ public class MusicPlayer implements iMusicPlayer {
         } else {
             exoPlayer.setPlayWhenReady(true);
             sendIntent(Constant.INTENT_PLAY);
-            handler.post(updateProgressAction);
             if (audioManager != null) {
                 audioManager.requestAudioFocus(context, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             }

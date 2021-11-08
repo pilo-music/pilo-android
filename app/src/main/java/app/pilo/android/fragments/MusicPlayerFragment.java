@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import app.pilo.android.R;
+import app.pilo.android.activities.MainActivity;
 import app.pilo.android.adapters.PlayerViewPagerAdapter;
 import app.pilo.android.databinding.FragmentMusicPlayerBinding;
 import app.pilo.android.db.AppDatabase;
@@ -82,27 +86,6 @@ public class MusicPlayerFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-
-    private void setupPlayerSeekbar() {
-        binding.seekbarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                is_seeking = false;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                is_seeking = true;
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                musicModule.getMusicPlayer().seekTo(seekBar.getProgress());
-                is_seeking = false;
-            }
-        });
     }
 
     private void setupPlayerViewPager() {
@@ -186,20 +169,18 @@ public class MusicPlayerFragment extends Fragment {
         }
     }
 
-    private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(CUSTOM_PLAYER_INTENT) && active) {
-                handleIncomingBroadcast(intent);
-            }
-        }
-    };
-
     private void setupService() {
         IntentFilter intentToReceiveFilter = new IntentFilter();
         intentToReceiveFilter.addAction(CUSTOM_PLAYER_INTENT);
         intentToReceiveFilter.setPriority(999);
-        context.registerReceiver(mIntentReceiver, intentToReceiveFilter, null, mHandler);
+        context.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent != null && intent.getAction() != null && intent.getAction().equals(CUSTOM_PLAYER_INTENT) && active) {
+                    handleIncomingBroadcast(intent);
+                }
+            }
+        }, intentToReceiveFilter, null, mHandler);
         active = true;
     }
 
@@ -209,44 +190,92 @@ public class MusicPlayerFragment extends Fragment {
             return;
         }
 
-        if (intent.getIntExtra(Constant.INTENT_PROGRESS, -100) != -100) {
-            if (!is_seeking) {
-                binding.seekbarMusic.setMax(intent.getIntExtra(Constant.INTENT_MAX, 0));
-                long elapsed = intent.getIntExtra(Constant.INTENT_PROGRESS, 0);
-                long remaining = binding.seekbarMusic.getMax();
-
-                long minutes_elapsed = (elapsed / 1000) / 60;
-                long seconds_elapsed = ((elapsed / 1000) % 60);
-
-                long minutes_remaining = (remaining / 1000) / 60;
-                long seconds_remaining = ((remaining / 1000) % 60);
-
-                String remaining_seconds_string = "" + seconds_remaining;
-                String elapsed_seconds_string = "" + seconds_elapsed;
-                if (seconds_remaining < 10) {
-                    remaining_seconds_string = "0" + seconds_remaining;
-                }
-                if (seconds_elapsed < 10) {
-                    elapsed_seconds_string = "0" + seconds_elapsed;
-                }
-                binding.tvExtendedMusicPlayerTime.setText(minutes_elapsed + ":" + elapsed_seconds_string);
-                binding.tvExtendedMusicPlayerDuration.setText(minutes_remaining + ":" + remaining_seconds_string);
-                binding.seekbarMusic.setProgress(intent.getIntExtra("progress", 0));
+        Bundle extras = intent.getExtras();
+        Set<String> ks = extras.keySet();
+        for (String key : ks) {
+            switch (key) {
+                case Constant.INTENT_START:
+                case Constant.INTENT_NEXT:
+                case Constant.INTENT_PREVIOUS:
+                    resetSeekbar();
+                    break;
+                case Constant.INTENT_NOTIFY:
+                    initPlayerUi();
+                case Constant.INTENT_PLAY:
+                    binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
+                    setupSeekbarHandler();
+                    break;
+                case Constant.INTENT_PAUSE:
+                    binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
+                    break;
             }
-        } else if (intent.getBooleanExtra(Constant.INTENT_PLAY, false)) {
-            binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_play_icon));
-        } else if (intent.getBooleanExtra(Constant.INTENT_PAUSE, false)) {
-            binding.fabExtendedMusicPlayerPlay.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_pause_icon));
         }
 
-
-        if (!intent.hasExtra("progress")) {
-            musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
-            initPlayerUi();
-        }
-
+//        if (!intent.hasExtra("progress")) {
+//        musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
+//        }
     }
 
+    private void setupPlayerSeekbar() {
+        binding.seekbarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                is_seeking = false;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                is_seeking = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                musicModule.getMusicPlayer().seekTo(seekBar.getProgress());
+                is_seeking = false;
+            }
+        });
+    }
+
+    private void resetSeekbar() {
+        binding.seekbarMusic.setMax(0);
+        binding.seekbarMusic.setProgress(0);
+    }
+
+    private void setupSeekbarHandler() {
+        ((MainActivity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (musicModule.getMusicPlayer().isPlayerReady() && !is_seeking) {
+                    calculateSeekbar();
+                }
+                mHandler.postDelayed(this, TimeUnit.SECONDS.toMillis(1));
+            }
+        });
+    }
+
+    private void calculateSeekbar() {
+        binding.seekbarMusic.setMax((int) musicModule.getMusicPlayer().getDuration());
+        long elapsed = (int) musicModule.getMusicPlayer().getCurrentMusicPosition();
+        long remaining = binding.seekbarMusic.getMax();
+
+        long minutes_elapsed = (elapsed / 1000) / 60;
+        long seconds_elapsed = ((elapsed / 1000) % 60);
+
+        long minutes_remaining = (remaining / 1000) / 60;
+        long seconds_remaining = ((remaining / 1000) % 60);
+
+        String remaining_seconds_string = "" + seconds_remaining;
+        String elapsed_seconds_string = "" + seconds_elapsed;
+        if (seconds_remaining < 10) {
+            remaining_seconds_string = "0" + seconds_remaining;
+        }
+        if (seconds_elapsed < 10) {
+            elapsed_seconds_string = "0" + seconds_elapsed;
+        }
+        binding.tvExtendedMusicPlayerTime.setText(minutes_elapsed + ":" + elapsed_seconds_string);
+        binding.tvExtendedMusicPlayerDuration.setText(minutes_remaining + ":" + remaining_seconds_string);
+        binding.seekbarMusic.setProgress((int) musicModule.getMusicPlayer().getCurrentMusicPosition());
+    }
 
     private void setupViews() {
         binding.fabExtendedMusicPlayerPlay.setOnClickListener(view -> play());
@@ -256,8 +285,7 @@ public class MusicPlayerFragment extends Fragment {
         binding.imgExtendedMusicPlayerRepeat.setOnClickListener(view -> repeat());
     }
 
-
-    void play() {
+    private void play() {
         String currentSlug = getCurrentSlug();
         if (currentSlug.equals("")) {
             return;
@@ -266,15 +294,15 @@ public class MusicPlayerFragment extends Fragment {
         new Handler().postDelayed(() -> musicModule.getMusicPlayer().togglePlay(), 400);
     }
 
-    void previous() {
+    private void previous() {
         musicModule.getMusicPlayer().skip(false);
     }
 
-    void next() {
+    private void next() {
         musicModule.getMusicPlayer().skip(true);
     }
 
-    void repeat() {
+    private void repeat() {
         if (userSharedPrefManager.getRepeatMode() == Constant.REPEAT_MODE_NONE)
             userSharedPrefManager.setRepeatMode(Constant.REPEAT_MODE_ONE);
         else
@@ -283,7 +311,7 @@ public class MusicPlayerFragment extends Fragment {
         setRepeatAndShuffle();
     }
 
-    void shuffle() {
+    private void shuffle() {
         userSharedPrefManager.setShuffleMode(!userSharedPrefManager.getShuffleMode());
         setRepeatAndShuffle();
     }
@@ -295,7 +323,6 @@ public class MusicPlayerFragment extends Fragment {
     private boolean isPlayerReady() {
         return musicModule.getMusicPlayer().isPlayerReady();
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MusicEvent event) {

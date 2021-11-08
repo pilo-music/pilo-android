@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -31,7 +30,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private boolean mReceiversRegistered = false;
 
     private IBinder mBinder;
-    private Handler mHandler;
     private PlaybackStateCompat.Builder mStateBuilder;
     private MediaBroadcastReceiver mediaBroadcastReceiver;
     private MusicModule musicModule;
@@ -123,12 +121,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     }
 
     public void prepareExoPlayerFromURL(Uri uri, boolean play_when_ready) {
-        Intent intent = new Intent();
-        intent.setAction(CUSTOM_PLAYER_INTENT);
-        intent.putExtra(Constant.INTENT_PROGRESS, 0);
-        intent.putExtra(Constant.INTENT_MAX, 0);
-        sendBroadcast(intent);
-
         if (getExpoPlayer() == null) {
             musicModule = new MusicModule(this);
         }
@@ -158,19 +150,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
                 }
             }
         });
-
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-
-        mHandler.post(musicModule.getMusicPlayer().updateProgress());
-
-
-        Intent intent1 = new Intent();
-        intent1.setAction(CUSTOM_PLAYER_INTENT);
-        intent1.putExtra(Constant.INTENT_NOTIFY, true);
-        sendBroadcast(intent1);
-
         musicModule.getNotificationBuilder().show();
     }
 

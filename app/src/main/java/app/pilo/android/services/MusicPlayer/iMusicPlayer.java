@@ -16,8 +16,6 @@ public interface iMusicPlayer {
 
     void seekTo(long progress);
 
-    Runnable updateProgress();
-
     void togglePlay();
 
     void ended();
