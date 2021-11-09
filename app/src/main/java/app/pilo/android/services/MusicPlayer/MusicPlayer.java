@@ -1,12 +1,10 @@
 package app.pilo.android.services.MusicPlayer;
 
-import static app.pilo.android.R2.string.login;
 import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
 
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.util.Log;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
