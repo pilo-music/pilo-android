@@ -71,7 +71,6 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
 
         if (intent != null && intent.getAction() != null) {
             switch (intent.getAction()) {
-                case Constant.INTENT_START:
                 case Constant.INTENT_TOGGLE:
                     musicModule.getMusicPlayer().togglePlay();
                     break;
