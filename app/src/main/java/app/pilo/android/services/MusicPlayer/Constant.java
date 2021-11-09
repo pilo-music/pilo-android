@@ -21,6 +21,5 @@ public class Constant implements Serializable {
     public static final String INTENT_PREVIOUS = "previous";
     public static final String INTENT_CLOSE = "close";
     public static final String INTENT_NOTIFY = "notify";
-    public static final String INTENT_LOADING = "loading";
     public static final String INTENT_ENDED = "ended";
 }

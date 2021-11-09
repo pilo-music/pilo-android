@@ -13,7 +13,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import app.pilo.android.api.HttpHandler;
 import app.pilo.android.api.MusicApi;
@@ -124,11 +123,11 @@ public class MusicUtils {
 
 
     private void sendIntent(boolean value) {
+        Constant.isMusicLoading = value;
         Intent intent = new Intent();
         intent.setAction(CUSTOM_PLAYER_INTENT);
-        intent.putExtra(Constant.INTENT_LOADING, value);
+        intent.putExtra(Constant.INTENT_NOTIFY, value);
         context.sendBroadcast(intent);
-//        Constant.isMusicLoading = true;
     }
 
 }

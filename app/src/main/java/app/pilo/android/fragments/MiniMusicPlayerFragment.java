@@ -97,10 +97,10 @@ public class MiniMusicPlayerFragment extends Fragment {
                     break;
             }
         }
-//        musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
     }
 
     private void initPlayerUi() {
+        musicLoading = Constant.isMusicLoading;
         if (!getCurrentSlug().equals("")) {
             if (musicLoading) {
                 binding.imgMusicPlayerCollapsedPlay.setVisibility(View.GONE);

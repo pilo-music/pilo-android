@@ -116,6 +116,7 @@ public class MusicPlayerFragment extends Fragment {
     }
 
     private void initPlayerUi() {
+        musicLoading = Constant.isMusicLoading;
         setRepeatAndShuffle();
         if (binding == null) {
             return;
@@ -210,10 +211,6 @@ public class MusicPlayerFragment extends Fragment {
                     break;
             }
         }
-
-//        if (!intent.hasExtra("progress")) {
-//        musicLoading = intent.getBooleanExtra(Constant.INTENT_LOADING, false);
-//        }
     }
 
     private void setupPlayerSeekbar() {
