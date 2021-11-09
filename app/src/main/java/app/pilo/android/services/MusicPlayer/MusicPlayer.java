@@ -1,10 +1,12 @@
 package app.pilo.android.services.MusicPlayer;
 
+import static app.pilo.android.R2.string.login;
 import static app.pilo.android.services.MusicPlayer.Constant.CUSTOM_PLAYER_INTENT;
 
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -12,6 +14,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import app.pilo.android.db.AppDatabase;
 import app.pilo.android.helpers.UserSharedPrefManager;
@@ -46,6 +49,11 @@ public class MusicPlayer implements iMusicPlayer {
     public void skip(boolean isNext) {
         List<Music> musics = getCurrentPlaylist();
         int activeIndex = utils.findCurrentMusicIndex(musics);
+
+        if (userSharedPrefManager.getShuffleMode()) {
+            Random random = new Random();
+            activeIndex = random.nextInt(musics.size());
+        }
 
         if (isNext) {
             if (activeIndex != -1 && (activeIndex + 1) < musics.size()) {
@@ -155,7 +163,7 @@ public class MusicPlayer implements iMusicPlayer {
                 break;
             }
             case Constant.REPEAT_MODE_ONE: {
-                playTrack(getCurrentPlaylist(), currentMusicSlug());
+                exoPlayer.seekTo(0);
                 break;
             }
         }

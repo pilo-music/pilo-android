@@ -33,6 +33,7 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
     private PlaybackStateCompat.Builder mStateBuilder;
     private MediaBroadcastReceiver mediaBroadcastReceiver;
     private MusicModule musicModule;
+    private boolean isPlayerEnded = false;
 
     @Nullable
     @Override
@@ -139,10 +140,14 @@ public class PlayerService extends Service implements AudioManager.OnAudioFocusC
             @Override
             public void onPlaybackStateChanged(int state) {
                 if (state == STATE_ENDED) {
-                    musicModule.getMusicPlayer().ended();
+                    if (!isPlayerEnded) {
+                        musicModule.getMusicPlayer().ended();
+                        isPlayerEnded = true;
+                    }
                 } else if (state == STATE_READY) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, getExpoPlayer().getCurrentPosition(), 1f);
                     musicModule.getMediaSession().getMediaSession().setPlaybackState(mStateBuilder.build());
+                    isPlayerEnded = false;
                 } else if (state == STATE_BUFFERING) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_BUFFERING, getExpoPlayer().getCurrentPosition(), 1f);
                     musicModule.getMediaSession().getMediaSession().setPlaybackState(mStateBuilder.build());
