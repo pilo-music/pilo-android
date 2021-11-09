@@ -11,8 +11,8 @@ android {
         applicationId "app.pilo.android"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 12
-        versionName "1.4.1"
+        versionCode 13
+        versionName "1.4.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = ['SENTRY_DNS': SENTRY_DNS]
         multiDexEnabled true
