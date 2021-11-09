@@ -123,7 +123,7 @@ public class HomeItemHelper {
         View view = inflater.inflate(R.layout.layout_browse_dock, parent);
         LinearLayout ll_browse_dock_musics = view.findViewById(R.id.ll_browse_dock_musics);
         LinearLayout ll_browse_dock_albums = view.findViewById(R.id.ll_browse_dock_albums);
-        LinearLayout ll_browse_dock_videos = view.findViewById(R.id.ll_browse_dock_videos);
+//        LinearLayout ll_browse_dock_videos = view.findViewById(R.id.ll_browse_dock_videos);
 
         if (ll_browse_dock_musics != null) {
             ll_browse_dock_albums.setOnClickListener(v -> {
@@ -146,15 +146,15 @@ public class HomeItemHelper {
                 ((MainActivity) fragment.getActivity()).pushFragment(musicsFragment);
             });
 
-            ll_browse_dock_videos.setOnClickListener(v -> {
-                HashMap<String, Object> params = new HashMap<>();
-                params.put("sort", "latest");
-                VideosFragment videosFragment = new VideosFragment(params);
-                Bundle bundle = new Bundle();
-                bundle.putString("title", fragment.getString(R.string.videos));
-                videosFragment.setArguments(bundle);
-                ((MainActivity) fragment.getActivity()).pushFragment(videosFragment);
-            });
+//            ll_browse_dock_videos.setOnClickListener(v -> {
+//                HashMap<String, Object> params = new HashMap<>();
+//                params.put("sort", "latest");
+//                VideosFragment videosFragment = new VideosFragment(params);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("title", fragment.getString(R.string.videos));
+//                videosFragment.setArguments(bundle);
+//                ((MainActivity) fragment.getActivity()).pushFragment(videosFragment);
+//            });
 
         }
     }

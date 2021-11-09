@@ -80,42 +80,42 @@
             android:src="@drawable/ic_left_arrow_primary" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_browse_dock_videos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        android:background="@drawable/primary_light_round_box_background"
-        android:foreground="?selectableItemBackgroundBorderless"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/activity_vertical_margin"
-        android:paddingTop="10dp"
-        android:paddingEnd="@dimen/activity_vertical_margin"
-        android:paddingBottom="10dp">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/ll_browse_dock_videos"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="@dimen/activity_vertical_margin"-->
+<!--        android:layout_marginTop="@dimen/activity_vertical_margin"-->
+<!--        android:layout_marginEnd="@dimen/activity_vertical_margin"-->
+<!--        android:background="@drawable/primary_light_round_box_background"-->
+<!--        android:foreground="?selectableItemBackgroundBorderless"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingStart="@dimen/activity_vertical_margin"-->
+<!--        android:paddingTop="10dp"-->
+<!--        android:paddingEnd="@dimen/activity_vertical_margin"-->
+<!--        android:paddingBottom="10dp">-->
 
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:src="@drawable/ic_music_video_primary" />
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_20sdp"-->
+<!--            android:layout_height="@dimen/_20sdp"-->
+<!--            android:src="@drawable/ic_music_video_primary" />-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
-            android:layout_weight="1"
-            android:fontFamily="@font/font"
-            android:text="@string/videos"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/normal_font_size" />
+<!--        <TextView-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="@dimen/activity_vertical_margin"-->
+<!--            android:layout_marginEnd="@dimen/activity_vertical_margin"-->
+<!--            android:layout_weight="1"-->
+<!--            android:fontFamily="@font/font"-->
+<!--            android:text="@string/videos"-->
+<!--            android:textColor="@color/colorPrimaryDark"-->
+<!--            android:textSize="@dimen/normal_font_size" />-->
 
-        <ImageView
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:src="@drawable/ic_left_arrow_primary" />
-    </LinearLayout>
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_15sdp"-->
+<!--            android:layout_height="@dimen/_15sdp"-->
+<!--            android:src="@drawable/ic_left_arrow_primary" />-->
+<!--    </LinearLayout>-->
 
 </LinearLayout>
